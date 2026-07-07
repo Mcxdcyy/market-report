@@ -12,11 +12,11 @@ alwaysApply: true
 
 **手机访问（局域网）**：`python3 serve_mobile.py`
 
-**外网访问（GitHub Pages）**：https://mcxdcyy.github.io/market-report/
+**外网（GitHub Pages）**：https://mcxdcyy.github.io/market-report/
 
-**首次部署**：在终端运行 `bash push_github.sh`（需先在 GitHub 创建空仓库 `Mcxdcyy/market-report`）
+**Pages 设置**：Settings → Pages → Deploy from a branch → **main** / **docs**（不用 GitHub Actions，Token 只需 **repo** 权限）
 
-**日常更新**：`python3 generate_report.py` → `git add docs && git commit -m "update" && git push`
+**推送**：`bash push_github.sh` 或 `git add docs && git push`
 
 ## 报表六段（固定）
 

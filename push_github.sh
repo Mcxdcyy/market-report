@@ -1,5 +1,5 @@
 #!/bin/bash
-# 首次部署 GitHub Pages（在终端运行一次）
+# 推送 GitHub Pages（docs/ 文件夹发布，无需 workflow 权限）
 # 仓库: https://github.com/Mcxdcyy/market-report
 # 访问: https://mcxdcyy.github.io/market-report/
 
@@ -9,7 +9,6 @@ cd "/Users/machengxiang/Desktop/增长2026"
 echo "-> 生成最新报表并同步 docs/ ..."
 python3 generate_report.py
 
-# 上次 init 失败会留下残缺 .git，需清理后重来
 if [ -d .git ] && [ ! -f .git/HEAD ]; then
   echo "-> 清理损坏的 .git ..."
   rm -rf .git
@@ -24,7 +23,7 @@ else
     git remote add origin https://github.com/Mcxdcyy/market-report.git
 fi
 
-git add .gitignore .github generate_report.py market_news.json event_catalog.json serve_mobile.py docs .cursor/rules/ push_github.sh
+git add .gitignore generate_report.py market_news.json event_catalog.json serve_mobile.py docs .cursor/rules/ push_github.sh
 git status --short
 
 if git diff --cached --quiet; then
@@ -38,5 +37,7 @@ echo "-> 推送到 GitHub ..."
 git push -u origin main
 
 echo ""
-echo "完成。请到 Settings -> Pages 选 GitHub Actions，然后访问:"
-echo "https://mcxdcyy.github.io/market-report/"
+echo "完成。首次请在 GitHub 设置 Pages:"
+echo "  Settings -> Pages -> Deploy from a branch"
+echo "  Branch: main  Folder: /docs"
+echo "访问: https://mcxdcyy.github.io/market-report/"
