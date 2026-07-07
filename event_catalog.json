@@ -1,0 +1,87 @@
+[
+  {
+    "month": 7,
+    "day": 10,
+    "dot": "机",
+    "label": "7/10",
+    "title": "2026中国具身智能机器人产业展7月10-12日举行",
+    "short": "具身",
+    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-07-07"
+  },
+  {
+    "month": 7,
+    "day": 11,
+    "dot": "机",
+    "label": "7/11",
+    "title": "2026“机器人+”创新发展大会7月11-13日举行",
+    "short": "机器人",
+    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-07-07"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "AI",
+    "label": "7/15",
+    "title": "中国（西部）国际人工智能与具身智能机器人产业链大会",
+    "short": "具身",
+    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-07-07"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "15",
+    "label": "7/15",
+    "title": "中报预告截止",
+    "short": "预告截止",
+    "brief": "沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。7月上旬常为「预增抢跑」窗口，截止日前后转入验牌分化——真预增与蹭概念分化加剧。",
+    "hot": true,
+    "importance": 2,
+    "source": "seed",
+    "fetched_at": "2026-07-07"
+  },
+  {
+    "month": 7,
+    "day": 17,
+    "dot": "AI",
+    "label": "7/17–20",
+    "title": "WAIC 世界人工智能大会",
+    "short": "WAIC",
+    "brief": "上海年度AI顶会（7/17–20），聚焦大模型、具身智能、AI+行业应用与政策导向。7/7 起上海官方发布会介绍筹备进展，会前1周为预热窗口；历年有新品发布、龙头演讲与地方产业政策，会中看主题龙头竞价与分化。",
+    "hot": true,
+    "importance": 3,
+    "source": "seed",
+    "fetched_at": "2026-07-07",
+    "span_end": [
+      7,
+      20
+    ]
+  },
+  {
+    "month": 7,
+    "day": 22,
+    "dot": "药",
+    "label": "7/22–24",
+    "title": "CPIC 中国国际医药创新大会",
+    "short": "CPIC预热",
+    "brief": "医药创新领域重要行业会议，覆盖创新药、CXO、BD授权与审评政策。关注临床数据、合作签约与医保/集采预期，创新药板块常提前1–2周博弈会议催化。",
+    "hot": false,
+    "span_end": [
+      7,
+      24
+    ],
+    "source": "seed",
+    "importance": 0
+  }
+]

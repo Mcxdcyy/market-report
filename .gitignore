@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.pyc
+.Python
+.env
+
+# 本地数据源不上传（含交易数据）
+*.numbers
+
+# 根目录 HTML 为本地副本，Pages 发布 docs/
+/复盘概览-*.html
+/index.html
+
+# 历史归档（可选本地保留）
+/历史复盘文档/

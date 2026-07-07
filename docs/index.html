@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a84ff">
+<title>增长2026 · 复盘</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --surface: #fff; --text: #1c1c1e; --sub: #636366;
+    --muted: #8e8e93; --accent: #0a84ff; --border: rgba(0,0,0,.06);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: max(12px, env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom));
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 480px; margin: 0 auto; }
+  .head {
+    background: linear-gradient(135deg, #0a84ff, #0066cc);
+    color: #fff; border-radius: var(--radius); padding: 20px 18px; margin-bottom: 14px;
+  }
+  .head h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+  .head p { font-size: 13px; opacity: .9; margin-top: 6px; }
+  .idx-hero-btn {
+    display: block; margin-top: 14px; background: #fff; color: var(--accent);
+    text-align: center; text-decoration: none; font-weight: 700; font-size: 15px;
+    padding: 12px; border-radius: 10px;
+  }
+  .idx-list { display: flex; flex-direction: column; gap: 8px; }
+  .idx-card {
+    display: block; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px; text-decoration: none; color: inherit;
+  }
+  .idx-card.featured { border-color: #0a84ff40; background: #f8fbff; }
+  .idx-card-top { display: flex; align-items: center; gap: 8px; }
+  .idx-date { font-size: 18px; font-weight: 800; }
+  .idx-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+    background: #eef2f6; color: var(--sub);
+  }
+  .idx-badge.latest { background: #ffebee; color: #c62828; }
+  .idx-mode { font-size: 13px; color: var(--sub); margin-top: 4px; }
+  .idx-arrow { font-size: 12px; color: var(--accent); margin-top: 8px; font-weight: 600; }
+  .idx-empty { color: var(--muted); font-size: 14px; padding: 20px; text-align: center; }
+  .tip {
+    margin-top: 16px; padding: 12px 14px; background: var(--surface);
+    border-radius: var(--radius); border: 1px solid var(--border);
+    font-size: 12px; color: var(--sub); line-height: 1.6;
+  }
+  .tip code {
+    background: #f2f2f7; padding: 2px 6px; border-radius: 4px; font-size: 11px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>增长2026 · 复盘</h1>
+    <p>手机端浏览 · 同一 WiFi 下可局域网访问</p>
+    <a class="idx-hero-btn" href="复盘概览-07-06.html">打开最新复盘 · 07/06</a>
+  </div>
+  <div class="idx-list"><a class="idx-card featured" href="复盘概览-07-06.html">
+      <div class="idx-card-top"><span class="idx-date">07/06</span><span class="idx-badge latest">最新</span></div>
+      <div class="idx-mode">空仓观望</div>
+      <div class="idx-arrow">查看 ›</div>
+    </a><a class="idx-card" href="复盘概览-07-03.html">
+      <div class="idx-card-top"><span class="idx-date">07/03</span></div>
+      <div class="idx-mode">空仓观望</div>
+      <div class="idx-arrow">查看 ›</div>
+    </a></div>
+  <div class="tip">
+    <strong>外网：</strong><a href="https://mcxdcyy.github.io/market-report/">mcxdcyy.github.io/market-report</a>
+    <br><strong>更新：</strong><code>python3 generate_report.py</code> → <code>git add docs && git push</code>
+  </div>
+</div>
+</body>
+</html>

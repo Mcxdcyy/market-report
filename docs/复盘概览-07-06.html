@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f5f5f7">
+<title>复盘概览-07/06</title>
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --text: #1c1c1e;
+    --sub: #636366;
+    --muted: #8e8e93;
+    --ok: #30d158;
+    --ok-bg: #30d15812;
+    --warn: #ff9f0a;
+    --warn-bg: #ff9f0a12;
+    --bad: #ff453a;
+    --bad-bg: #ff453a12;
+    --accent: #0a84ff;
+    --accent-bg: #0a84ff0d;
+    --bar-ok: #E53935;
+    --bar-warn: #ff9f0a;
+    --bar-bad: #34C759;
+    --border: rgba(0,0,0,.06);
+    --shadow: 0 1px 2px rgba(0,0,0,.03), 0 4px 16px rgba(0,0,0,.04);
+    --radius: 14px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 12px 12px 40px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1120px; margin: 0 auto; }
+
+  /* ── 页头 Hero ── */
+  .hero {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 16px 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .hero-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .hero h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+  .hero-meta { font-size: 12px; color: var(--sub); margin-top: 4px; }
+  .hero-tag {
+    display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 600;
+    color: var(--accent); background: var(--accent-bg); padding: 4px 10px; border-radius: 6px;
+  }
+  .hero-decision {
+    text-align: right; padding: 12px 18px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); min-width: 140px;
+  }
+  .hero-decision.ok { background: linear-gradient(135deg, #f0fdf4, #fff); border-color: #30d15840; }
+  .hero-decision.warn { background: linear-gradient(135deg, #fffbf0, #fff); border-color: #ff9f0a40; }
+  .hero-decision.bad { background: linear-gradient(135deg, #fff5f5, #fff); border-color: #ff453a40; }
+  .hero-status {
+    display: block; font-size: 10px; font-weight: 700; letter-spacing: .6px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+  }
+  .hero-mode { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+  .hero-decision.ok .hero-mode { color: #1a7a34; }
+  .hero-decision.warn .hero-mode { color: #b25000; }
+  .hero-decision.bad .hero-mode { color: #c41e16; }
+
+  .page-nav {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
+  }
+  .page-nav a {
+    font-size: 11px; font-weight: 600; color: var(--sub); text-decoration: none;
+    padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--border);
+    transition: background .15s, color .15s;
+  }
+  .page-nav a:hover { background: var(--accent-bg); color: var(--accent); border-color: #0a84ff30; }
+
+  /* ── 区块 ── */
+  .section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .section-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 22px; height: 22px; border-radius: 6px; background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .section-title { font-size: 15px; font-weight: 700; }
+  .section-sub { font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .section-sub.event-meta {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+    white-space: normal; text-align: right; line-height: 1.45; max-width: 52%;
+  }
+  .section-sub.event-meta .event-sync-note { font-size: 11px; color: var(--sub); }
+
+  .sub-block { margin-top: 4px; }
+  .sub-block + .sub-block { margin-top: 20px; padding-top: 18px; border-top: 1px dashed var(--border); }
+  .sub-block-head {
+    font-size: 12px; font-weight: 700; color: var(--sub); letter-spacing: .2px;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .sub-block-head::before {
+    content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px;
+  }
+  .sub-note { font-size: 11px; font-weight: 500; color: var(--muted); }
+
+  .callout {
+    background: var(--accent-bg); border-left: 3px solid var(--accent);
+    padding: 8px 12px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 12px; line-height: 1.55; margin-top: 10px;
+  }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn); }
+  .callout.bad { background: var(--bad-bg); border-color: var(--bad); }
+  .callout-row { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+
+  /* ── 八维 ── */
+  .score-groups { display: flex; flex-direction: column; gap: 16px; }
+  .score-grid-8 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) { .score-grid-8 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .score-grid-8 { grid-template-columns: 1fr; } }
+  .score-group-label {
+    font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .5px; margin-bottom: 4px;
+  }
+  .score-group-hint {
+    font-size: 11px; color: var(--muted); line-height: 1.45; margin-bottom: 8px;
+  }
+  .score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  @media (max-width: 520px) { .score-grid { grid-template-columns: 1fr; } }
+  .score-card {
+    background: #fff; border-radius: var(--radius-sm); padding: 10px 11px;
+    border: 1px solid var(--border);
+  }
+  .score-card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .score-name { font-size: 11px; font-weight: 600; color: var(--sub); }
+  .score-val { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .bar-track { height: 4px; background: #e5e5ea; border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; }
+  .score-foot {
+    display: flex; align-items: center; gap: 5px; margin-top: 6px;
+    font-size: 10px; color: var(--muted); flex-wrap: wrap; line-height: 1.45;
+  }
+
+  /* ── 10日趋势表格（日期竖轴） ── */
+  .trend-matrix-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .trend-matrix {
+    width: 90%; border-collapse: collapse; font-size: 12px; min-width: 468px;
+  }
+  .trend-matrix th, .trend-matrix td {
+    border: 1px solid var(--border); padding: 8px 10px; text-align: center;
+  }
+  .trend-matrix thead th {
+    font-size: 12px; font-weight: 800; color: var(--text);
+    background: #ececf1; border-bottom: 2px solid #c8c8d0;
+    padding: 10px 10px; letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .trend-corner {
+    text-align: left; color: var(--text);
+  }
+  .trend-date-cell {
+    text-align: left; white-space: nowrap; background: #f7f7fa;
+    font-weight: 600; color: var(--sub);
+  }
+  .trend-date-md { display: block; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .trend-date-wd { display: block; font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .trend-row-latest { background: #fafbff; }
+  .trend-row-latest .trend-date-md { color: var(--accent); }
+  .trend-cell {
+    font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .trend-cell.ok { color: #c62828; }
+  .trend-cell.warn { color: #e65100; }
+  .trend-cell.bad { color: #2e7d32; }
+
+  /* ── 涨停板块 ── */
+  .sector-list { display: flex; flex-direction: column; gap: 10px; }
+  .sector-row {
+    position: relative;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px; background: #fff;
+  }
+  .sector-head {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+    padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #f0f0f5;
+  }
+  .sector-head-left {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    flex: 1; min-width: 0; padding-right: 8px;
+  }
+  .sector-forecast-corner {
+    flex-shrink: 0; text-align: right;
+  }
+  .sector-persist-pill { font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }
+  .sector-rank {
+    width: 22px; height: 22px; border-radius: 5px; background: var(--accent); color: #fff;
+    font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sector-name { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; margin-right: 4px; }
+  .sector-stat {
+    font-size: 11px; font-weight: 700; color: var(--sub);
+    background: #f2f2f7; padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .sector-stat.hot { color: var(--bad); background: var(--bad-bg); }
+  .sector-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
+  }
+  @media (max-width: 640px) { .sector-cols { grid-template-columns: 1fr; gap: 10px; } }
+  .sector-col-left { min-width: 0; flex: 1; }
+  .sector-col-right {
+    min-width: 0; flex: 1; padding-left: 16px; border-left: 1px solid #f0f0f5;
+  }
+  @media (max-width: 640px) {
+    .sector-col-right { padding-left: 0; border-left: none; padding-top: 10px; border-top: 1px solid #f0f0f5; }
+  }
+  .sector-block { margin-bottom: 8px; }
+  .sector-block:last-child { margin-bottom: 0; }
+  .sector-block-empty { opacity: .5; }
+  .sector-muted { color: var(--muted); font-size: 12px; }
+  .sector-label {
+    display: inline-block;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+  .sector-label-logic { color: #b25000; }
+  .sector-label-event { color: #b25000; }
+  .sector-label-forecast { color: #b25000; }
+  .sector-text { font-size: 12px; color: var(--sub); line-height: 1.55; }
+
+  /* ── 盘后公告 ── */
+  .post-list {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  }
+  @media (max-width: 720px) { .post-list { grid-template-columns: 1fr; } }
+  .post-row {
+    display: flex; flex-direction: column; gap: 6px; height: 100%;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 11px 13px; background: #fff;
+    border-left: 2px solid var(--border);
+  }
+  .post-row.ok { border-left-color: var(--bar-ok); }
+  .post-row.warn { border-left-color: var(--bar-warn); }
+  .post-row.bad { border-left-color: var(--bar-bad); }
+  .post-type {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    align-self: flex-start;
+  }
+  .post-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }
+  .post-summary { font-size: 12px; color: var(--sub); line-height: 1.55; margin: 0; }
+  .news-empty { font-size: 12px; color: var(--muted); padding: 4px 0; }
+  .module-summary {
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
+  }
+
+  /* ── 事件 ── */
+  .event-upper { display: flex; flex-direction: column; gap: 14px; }
+  .event-track-wrap {
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
+    padding: 14px 14px 16px;
+  }
+  .event-track-label {
+    font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .3px;
+    margin-bottom: 12px;
+  }
+  .event-track-scroll {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .event-track {
+    display: flex; align-items: flex-start; position: relative; gap: 0;
+    min-width: max-content; padding: 0 6px;
+  }
+  .event-track::before {
+    content: ''; position: absolute; top: 18px; left: 24px; right: 24px;
+    height: 1px; background: #d1d1d6; z-index: 0;
+  }
+  .event-node {
+    flex: 0 0 auto; width: 108px; text-align: center; position: relative; z-index: 1;
+    padding: 0 6px;
+  }
+  .event-track .event-dot {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; box-shadow: 0 1px 4px rgba(10,132,255,.18);
+    margin: 0 auto;
+  }
+  .event-track .event-dot.hot { background: #ff6b63; box-shadow: 0 1px 4px rgba(255,69,58,.22); }
+  .event-node-copy { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .event-label { font-size: 12px; font-weight: 700; line-height: 1.4; color: var(--text); }
+  .event-sub {
+    font-size: 11px; color: var(--muted); line-height: 1.45;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  .event-detail-list { display: flex; flex-direction: column; gap: 12px; }
+  .event-item {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 16px; background: #fff;
+    border-left: 3px solid var(--accent);
+  }
+  .event-item.hot { border-left-color: var(--bad); }
+  .event-item-top {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;
+  }
+  .event-date-pill {
+    flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--accent);
+    background: var(--accent-bg); border: 1px solid #0a84ff22;
+    padding: 3px 8px; border-radius: 6px; line-height: 1.3; margin-top: 1px;
+  }
+  .event-date-pill.hot {
+    color: #c41e16; background: var(--bad-bg); border-color: #ff453a28;
+  }
+  .event-item-title {
+    font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--text); margin: 0;
+  }
+  .event-item-body {
+    font-size: 13px; line-height: 1.65; color: var(--sub); margin: 0;
+  }
+
+  .dir-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }
+  @media (max-width: 560px) { .dir-grid { grid-template-columns: 1fr; } }
+  .dir-card {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 11px 13px; background: #fff;
+  }
+  /* 题材方向：A股配色 红=好 绿=不好 */
+  .dir-card.ok { border-left: 3px solid #E53935; }
+  .dir-card.warn { border-left: 3px solid var(--warn); }
+  .dir-card.bad { border-left: 3px solid #34C759; }
+  .dir-grid .pill.ok { background: #ffebee; color: #c62828; }
+  .dir-grid .pill.warn { background: var(--warn-bg); color: #b25000; }
+  .dir-grid .pill.bad { background: #e8f5e9; color: #2e7d32; }
+  .dir-card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .dir-name { font-size: 13px; font-weight: 700; }
+  .dir-drivers { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 8px; }
+  .dir-driver {
+    font-size: 10px; padding: 3px 8px; border-radius: 6px;
+    background: #f0f4ff; color: #3a5a9a; border: 1px solid #d8e2f4;
+  }
+  .dir-logic { font-size: 12px; color: var(--sub); line-height: 1.55; }
+  .dir-note { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+  .rhythm-line {
+    margin-top: 14px; padding: 11px 14px; background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm); font-size: 13px;
+  }
+
+  /* ── 开仓建议 ── */
+  .trade-panel { display: flex; flex-direction: column; gap: 8px; }
+  .trade-banner {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  }
+  .trade-banner.ok { background: linear-gradient(135deg, #f0fdf4, #fff); border-color: #30d15850; }
+  .trade-banner.warn { background: linear-gradient(135deg, #fffbf0, #fff); border-color: #ff9f0a50; }
+  .trade-banner.bad { background: linear-gradient(135deg, #fff5f5, #fff); border-color: #ff453a50; }
+  .trade-status {
+    font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 5px; margin-bottom: 4px; display: inline-block;
+  }
+  .trade-banner.ok .trade-status { background: var(--ok-bg); color: #1a7a34; }
+  .trade-banner.warn .trade-status { background: var(--warn-bg); color: #b25000; }
+  .trade-banner.bad .trade-status { background: var(--bad-bg); color: #c41e16; }
+  .trade-label { font-size: 18px; font-weight: 800; }
+  .trade-date { font-size: 12px; color: var(--muted); }
+  .trade-summary { font-size: 13px; color: var(--sub); line-height: 1.6; padding: 0 2px; }
+
+  .gauge-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .gauge-row { grid-template-columns: 1fr; } }
+  .gauge-block {
+    background: #f9f9fb; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px;
+  }
+  .gauge-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .gauge-name { font-size: 12px; font-weight: 600; color: var(--sub); }
+  .gauge-score { font-size: 24px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+  .gauge-track {
+    position: relative; height: 8px; background: #e5e5ea; border-radius: 99px; overflow: visible;
+  }
+  .gauge-fill { height: 100%; border-radius: 99px; }
+  .g-mark {
+    position: absolute; top: -3px; width: 2px; height: 14px;
+    background: var(--muted); opacity: .6; z-index: 2; transform: translateX(-50%);
+  }
+  .g-mark.major { background: var(--text); opacity: .35; }
+  .gauge-hint { font-size: 11px; color: var(--muted); margin-top: 7px; }
+
+  .reason-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .reason-tag {
+    font-size: 11px; padding: 5px 10px; background: #f0f0f5;
+    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
+  }
+  .reason-label { font-size: 10px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: .3px; }
+  .trade-alert {
+    font-size: 12px; color: #a01810; background: var(--bad-bg);
+    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 11px 13px;
+  }
+
+  .pill {
+    display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;
+    font-weight: 600; white-space: nowrap;
+  }
+  .pill.ok { background: var(--ok-bg); color: #1a7a34; }
+  .pill.warn { background: var(--warn-bg); color: #b25000; }
+  .pill.bad { background: var(--bad-bg); color: #c41e16; }
+  .pill.weak { background: #eef2f6; color: #5a6472; }
+
+  .footer {
+    text-align: center; color: var(--muted); font-size: 11px;
+    margin-top: 16px; padding-top: 14px;
+  }
+
+  /* ── 手机端优化 ── */
+  @media (max-width: 640px) {
+    body {
+      padding: 8px 8px calc(72px + env(safe-area-inset-bottom, 0px));
+      padding-top: max(8px, env(safe-area-inset-top, 0px));
+    }
+    .hero {
+      position: sticky; top: 0; z-index: 200;
+      margin-bottom: 8px; padding: 12px 12px 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+    .hero-top { flex-direction: column; gap: 10px; }
+    .hero h1 { font-size: 20px; }
+    .hero-decision { width: 100%; text-align: left; min-width: 0; }
+    .hero-mode { font-size: 18px; }
+    .page-nav {
+      flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      gap: 6px; padding-bottom: 2px; margin-top: 8px;
+      scrollbar-width: none;
+    }
+    .page-nav::-webkit-scrollbar { display: none; }
+    .page-nav a {
+      flex-shrink: 0; padding: 8px 14px; font-size: 12px;
+      min-height: 36px; display: inline-flex; align-items: center;
+    }
+    .section { padding: 12px; margin-bottom: 8px; }
+    .section-head { flex-wrap: wrap; gap: 6px; }
+    .section-sub {
+      margin-left: 0; white-space: normal; width: 100%;
+      text-align: left; order: 3;
+    }
+    .section-sub.event-meta {
+      align-items: flex-start; text-align: left; max-width: 100%;
+    }
+    .trend-matrix { width: 100%; min-width: 520px; font-size: 11px; }
+    .trend-matrix th, .trend-matrix td { padding: 6px 8px; }
+    .score-val { font-size: 26px; }
+    .event-track-scroll { margin: 0 -4px; }
+    .trade-label { font-size: 16px; }
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page-nav { display: none; }
+    .section { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div>
+        <h1>复盘概览 · 07/06</h1>
+        <div class="hero-meta">
+          数据 2026-07-06（周一）｜下一交易日 2026-07-07（周二）
+        </div>
+        <span class="hero-tag">5/10日线试单 & 新高加仓</span>
+      </div>
+      <div class="hero-decision bad">
+        <span class="hero-status">空仓</span>
+        <div class="hero-mode">空仓观望</div>
+      </div>
+    </div>
+    <nav class="page-nav">
+      <a href="index.html">首页</a>
+      <a href="#sec-trend">10日趋势</a>
+      <a href="#sec-env">环境评分</a>
+      <a href="#sec-sectors">涨停板块</a>
+      <a href="#sec-post">盘后公告</a>
+      <a href="#sec-event">事件方向</a>
+      <a href="#sec-trade">开仓建议</a>
+    </nav>
+  </header>
+
+  <!-- 1 10日 -->
+  <div class="section" id="sec-trend">
+    <div class="section-head">
+      <div class="section-num">1</div>
+      <div class="section-title">10日趋势</div>
+      <div class="section-sub">06/23–07/06</div>
+    </div>
+    <div class="trend-matrix-wrap">
+    <table class="trend-matrix">
+      <thead>
+        <tr>
+          <th class="trend-corner">日期</th>
+          <th>大盘量能</th><th>趋势强度</th><th>主板活跃</th><th>创板活跃</th><th>主追效应</th><th>创追效应</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">06/23</span>
+        <span class="trend-date-wd">周二</span>
+      </th>
+      <td class="trend-cell warn">50</td><td class="trend-cell ok">69</td><td class="trend-cell ok">98</td><td class="trend-cell ok">93</td><td class="trend-cell bad">35</td><td class="trend-cell bad">38</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">06/24</span>
+        <span class="trend-date-wd">周三</span>
+      </th>
+      <td class="trend-cell bad">30</td><td class="trend-cell ok">72</td><td class="trend-cell ok">91</td><td class="trend-cell ok">95</td><td class="trend-cell warn">40</td><td class="trend-cell warn">42</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">06/25</span>
+        <span class="trend-date-wd">周四</span>
+      </th>
+      <td class="trend-cell warn">51</td><td class="trend-cell ok">94</td><td class="trend-cell ok">94</td><td class="trend-cell ok">92</td><td class="trend-cell ok">60</td><td class="trend-cell ok">65</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">06/26</span>
+        <span class="trend-date-wd">周五</span>
+      </th>
+      <td class="trend-cell warn">51</td><td class="trend-cell ok">90</td><td class="trend-cell ok">65</td><td class="trend-cell ok">88</td><td class="trend-cell bad">2</td><td class="trend-cell warn">57</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">06/29</span>
+        <span class="trend-date-wd">周一</span>
+      </th>
+      <td class="trend-cell warn">50</td><td class="trend-cell ok">67</td><td class="trend-cell ok">98</td><td class="trend-cell ok">99</td><td class="trend-cell bad">30</td><td class="trend-cell bad">36</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">06/30</span>
+        <span class="trend-date-wd">周二</span>
+      </th>
+      <td class="trend-cell bad">22</td><td class="trend-cell ok">82</td><td class="trend-cell ok">99</td><td class="trend-cell ok">100</td><td class="trend-cell ok">71</td><td class="trend-cell ok">94</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">07/01</span>
+        <span class="trend-date-wd">周三</span>
+      </th>
+      <td class="trend-cell ok">73</td><td class="trend-cell ok">90</td><td class="trend-cell ok">100</td><td class="trend-cell ok">99</td><td class="trend-cell ok">82</td><td class="trend-cell ok">70</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">07/02</span>
+        <span class="trend-date-wd">周四</span>
+      </th>
+      <td class="trend-cell bad">30</td><td class="trend-cell bad">3</td><td class="trend-cell ok">97</td><td class="trend-cell ok">92</td><td class="trend-cell bad">17</td><td class="trend-cell bad">8</td>
+    </tr><tr class="">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">07/03</span>
+        <span class="trend-date-wd">周五</span>
+      </th>
+      <td class="trend-cell bad">30</td><td class="trend-cell bad">2</td><td class="trend-cell ok">99</td><td class="trend-cell ok">98</td><td class="trend-cell warn">45</td><td class="trend-cell warn">52</td>
+    </tr><tr class="trend-row-latest">
+      <th class="trend-date-cell">
+        <span class="trend-date-md">07/06</span>
+        <span class="trend-date-wd">周一</span>
+      </th>
+      <td class="trend-cell bad">22</td><td class="trend-cell bad">1</td><td class="trend-cell ok">92</td><td class="trend-cell ok">91</td><td class="trend-cell bad">2</td><td class="trend-cell bad">5</td>
+    </tr></tbody>
+    </table>
+  </div>
+    <div class="callout">06/23→07/06：昨追赚钱效应偏弱。当前处于<strong>退潮/弱势段</strong>。</div>
+  </div>
+
+  <!-- 2 环境 -->
+  <div class="section" id="sec-env">
+    <div class="section-head">
+      <div class="section-num">2</div>
+      <div class="section-title">环境评分 · 趋势与承接</div>
+      <div class="section-sub">八维评分</div>
+    </div>
+    <div class="score-groups"><div class="score-grid score-grid-8"><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">大盘量能</span>
+        <span class="score-val" style="color:#FF3B30">22</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:22%;background:#FF3B30"></div></div>
+      <div class="score-foot"><span class="pill bad">连续缩量3日</span><span>3.09万亿，近3日均3.43万亿（90%），较前日-2.9%；连续缩量3日，缩量且低于前三日均，资金在场偏弱</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">趋势强度</span>
+        <span class="score-val" style="color:#FF3B30">1</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:1%;background:#FF3B30"></div></div>
+      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位2%（+1），当日新高25家，均值81家（偏离值-25.0，偏离度0）；近5日新高收缩</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">主板活跃度</span>
+        <span class="score-val" style="color:#34C759">92</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:92%;background:#34C759"></div></div>
+      <div class="score-foot"><span class="pill ok">偏强</span><span>分位85%（+42），当日主追207家，均值161家（偏离值+25.0，偏离度50）</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">创业板活跃度</span>
+        <span class="score-val" style="color:#34C759">91</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:91%;background:#34C759"></div></div>
+      <div class="score-foot"><span class="pill ok">偏强</span><span>分位84%（+42），当日创活跃70，均值52（偏离值+24.4，偏离度49）</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">主板昨追赚钱效应</span>
+        <span class="score-val" style="color:#FF3B30">5</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:5%;background:#FF3B30"></div></div>
+      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位11%（+5），赚差-13.2%，均值+2.3%（偏离值-25.0，偏离度0）</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">创板昨追赚钱效应</span>
+        <span class="score-val" style="color:#FF3B30">5</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:5%;background:#FF3B30"></div></div>
+      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位9%（+5），赚差-37.6%，均值-13.6%（偏离值-25.0，偏离度0）</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">主板今追赚钱效应</span>
+        <span class="score-val" style="color:#FF3B30">0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:0%;background:#FF3B30"></div></div>
+      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位0%（+0），冲高未回落占比71%（61家），均值84%（偏离值-25.0，偏离度0）</span></div>
+    </div><div class="score-card">
+      <div class="score-card-top">
+        <span class="score-name">创板今追赚钱效应</span>
+        <span class="score-val" style="color:#FF3B30">5</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:5%;background:#FF3B30"></div></div>
+      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位10%（+5），冲高未回落占比67%（23家），均值81%（偏离值-25.0，偏离度0）</span></div>
+    </div></div></div>
+    <div class="callout bad"><strong>环境偏弱，宜防守精选</strong> 主追207家仍热，昨追难兑现（-13.2%/-37.6%）；连续3日偏弱；今追效应一般（主0/创5）。</div>
+  </div>
+
+  <!-- 3 涨停板块 -->
+  <div class="section" id="sec-sectors">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div class="section-title">涨停板块 Top5</div>
+      <div class="section-sub">2026-07-06</div>
+    </div>
+    <div class="sector-list"><div class="sector-row">
+      <div class="sector-head">
+        <div class="sector-head-left">
+          <span class="sector-rank">1</span>
+          <span class="sector-name">创新药</span>
+          <span class="sector-stat hot">13 涨停</span>
+          <span class="sector-stat">已持续 1 天</span>
+        </div>
+        <div class="sector-forecast-corner">
+          <span class="pill warn sector-persist-pill">预估持续2–3天</span>
+        </div>
+      </div>
+      <div class="sector-cols">
+        <div class="sector-col-left">
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">CGT审评30日通道征求意见+BD出海逻辑；甘李/罗欣/华海等批量涨停，资金从高估值科技切向医药</div></div>
+        </div>
+        <div class="sector-col-right">
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">暂无直接催化｜药监局 CGT 纳入创新药 30 日审评通道（7/3 征求意见稿）是持续性政策利好，不是一日游；</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-forecast">预判</div><div class="sector-text">还有惯性，分化加剧，只做核心</div></div>
+        </div>
+      </div>
+    </div><div class="sector-row">
+      <div class="sector-head">
+        <div class="sector-head-left">
+          <span class="sector-rank">2</span>
+          <span class="sector-name">机器人</span>
+          <span class="sector-stat hot">9 涨停</span>
+          <span class="sector-stat hot">已持续 5 天</span>
+        </div>
+        <div class="sector-forecast-corner">
+          <span class="pill warn sector-persist-pill">预估持续2–3天</span>
+        </div>
+      </div>
+      <div class="sector-cols">
+        <div class="sector-col-left">
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">具身智能/减速器延续；晋拓股份、先锋电子2连板，板块与AI硬件分化后仍获资金回流</div></div>
+        </div>
+        <div class="sector-col-right">
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">7/17 WAIC 开幕（+11天）｜7/10–13 连续三场具身/机器人主题展会是未来2周最密集的产业催化，WAIC 正会在 7/1</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-forecast">预判</div><div class="sector-text">还有惯性，分化加剧，只做核心</div></div>
+        </div>
+      </div>
+    </div><div class="sector-row">
+      <div class="sector-head">
+        <div class="sector-head-left">
+          <span class="sector-rank">3</span>
+          <span class="sector-name">液冷服务器</span>
+          <span class="sector-stat hot">7 涨停</span>
+          <span class="sector-stat">已持续 1 天</span>
+        </div>
+        <div class="sector-forecast-corner">
+          <span class="pill weak sector-persist-pill">预估持续1–2天</span>
+        </div>
+      </div>
+      <div class="sector-cols">
+        <div class="sector-col-left">
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">AI算力外溢至散热/泵阀链；大元泵业、宏盛股份、海鸥股份涨停，算力硬件高低切换</div></div>
+        </div>
+        <div class="sector-col-right">
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">暂无直接催化</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-forecast">预判</div><div class="sector-text">高潮透支或承接弱，谨防一日游</div></div>
+        </div>
+      </div>
+    </div><div class="sector-row">
+      <div class="sector-head">
+        <div class="sector-head-left">
+          <span class="sector-rank">4</span>
+          <span class="sector-name">猪肉</span>
+          <span class="sector-stat hot">6 涨停</span>
+          <span class="sector-stat">已持续 1 天</span>
+        </div>
+        <div class="sector-forecast-corner">
+          <span class="pill weak sector-persist-pill">预估持续1–2天</span>
+        </div>
+      </div>
+      <div class="sector-cols">
+        <div class="sector-col-left">
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">7月初猪价反弹（外三元均价约10.7元/kg）；巨星农牧涨停，农林牧渔低位轮动</div></div>
+        </div>
+        <div class="sector-col-right">
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">暂无直接催化</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-forecast">预判</div><div class="sector-text">高潮透支或承接弱，谨防一日游</div></div>
+        </div>
+      </div>
+    </div><div class="sector-row">
+      <div class="sector-head">
+        <div class="sector-head-left">
+          <span class="sector-rank">5</span>
+          <span class="sector-name">贵金属</span>
+          <span class="sector-stat hot">6 涨停</span>
+          <span class="sector-stat">已持续 1 天</span>
+        </div>
+        <div class="sector-forecast-corner">
+          <span class="pill weak sector-persist-pill">预估持续1–2天</span>
+        </div>
+      </div>
+      <div class="sector-cols">
+        <div class="sector-col-left">
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">国际金价偏强+避险；与机器人并列早盘领涨方向，资源品防御属性</div></div>
+        </div>
+        <div class="sector-col-right">
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">暂无直接催化｜弱环境下资金配置防御：贵金属看国际金价与避险需求，猪肉看 7 月初猪价反弹（外三元约 10.7 </div></div>
+          <div class="sector-block"><div class="sector-label sector-label-forecast">预判</div><div class="sector-text">高潮透支或承接弱，谨防一日游</div></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="module-summary">当日涨停 59 家 · Top5 板块 5 项</div>
+    
+  </div>
+
+  <!-- 4 盘后公告 -->
+  <div class="section" id="sec-post">
+    <div class="section-head">
+      <div class="section-num">4</div>
+      <div class="section-title">盘后公告</div>
+      <div class="section-sub">仅盘后披露 · 精选摘要</div>
+    </div>
+    <div class="post-list"><div class="post-row ok">
+      <div class="post-type">预告</div>
+      <div class="post-title">华海药业（600521）：2026H1 净利预增 85%–95%</div>
+      <p class="post-summary">预计H1归母净利7.57亿–7.99亿元；全球渠道拓展+新品上量，缬沙坦仲裁胜诉及处置子公司收益。7/6涨停，业绩与CGT政策共振。</p>
+    </div><div class="post-row ok">
+      <div class="post-type">政策</div>
+      <div class="post-title">药监局：细胞与基因治疗药品拟纳入创新药30日审评通道</div>
+      <p class="post-summary">CGT品种或享30日临床试验审评；创新药/CXO板块获政策催化，与7/6创新药涨停形成共振。</p>
+    </div><div class="post-row ok">
+      <div class="post-type">预告</div>
+      <div class="post-title">恒力石化（600346）：2026H1 净利预增约 136%</div>
+      <p class="post-summary">预计H1归母净利约72亿元；炼化/PTA/聚酯链产销顺畅，加工价差修复，产业链盈利放大。7/6晚间披露。</p>
+    </div><div class="post-row ok">
+      <div class="post-type">预告</div>
+      <div class="post-title">万华化学（600309）：2026H1 净利预增 60%–70%</div>
+      <p class="post-summary">预计H1归母净利98亿–104亿元；化工原料涨价+产品提价，乙烯一期改造后石化成本优势提升。7/6晚间披露。</p>
+    </div><div class="post-row ok">
+      <div class="post-type">公告</div>
+      <div class="post-title">中远海控（601919）：拟 7.7亿–15.4 亿元回购并注销</div>
+      <p class="post-summary">7/6晚间披露回购方案，回购股份全部注销并减少注册资本，传递信心。</p>
+    </div><div class="post-row warn">
+      <div class="post-type">公告</div>
+      <div class="post-title">恒尚节能（603137）：5连板异动风险提示</div>
+      <p class="post-summary">建筑装饰板块5连板；公司提示股价偏离基本面，请投资者注意交易风险。</p>
+    </div></div>
+    <div class="module-summary">候选池 13 条 → 精选 6 条（环境偏弱）</div>
+  </div>
+
+  <!-- 5 事件 -->
+  <div class="section" id="sec-event">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div class="section-title">未来2周 · 事件与方向</div>
+      <div class="section-sub event-meta">
+        <span>7/6–7/20</span>
+        <span class="event-sync-note">已同步 3 条炒作线索</span>
+      </div>
+    </div>
+    <div class="event-block"><div class="event-upper">
+      <div class="event-track-wrap">
+        <div class="event-track-label">时间轴</div>
+        <div class="event-track-scroll">
+          <div class="event-track"><div class="event-node">
+      <div class="event-dot">机</div>
+      <div class="event-node-copy">
+        <div class="event-label">7/10</div>
+        <div class="event-sub">具身</div>
+      </div>
+    </div><div class="event-node">
+      <div class="event-dot">机</div>
+      <div class="event-node-copy">
+        <div class="event-label">7/11</div>
+        <div class="event-sub">机器人</div>
+      </div>
+    </div><div class="event-node">
+      <div class="event-dot">AI</div>
+      <div class="event-node-copy">
+        <div class="event-label">7/15</div>
+        <div class="event-sub">具身</div>
+      </div>
+    </div><div class="event-node hot">
+      <div class="event-dot hot">15</div>
+      <div class="event-node-copy">
+        <div class="event-label">7/15</div>
+        <div class="event-sub">预告截止</div>
+      </div>
+    </div><div class="event-node hot">
+      <div class="event-dot hot">AI</div>
+      <div class="event-node-copy">
+        <div class="event-label">7/17–20</div>
+        <div class="event-sub">WAIC</div>
+      </div>
+    </div><div class="event-node">
+      <div class="event-dot">药</div>
+      <div class="event-node-copy">
+        <div class="event-label">7/22–24</div>
+        <div class="event-sub">CPIC预热</div>
+      </div>
+    </div></div>
+        </div>
+      </div>
+      <div class="event-detail-list"><div class="event-item">
+      <div class="event-item-top">
+        <span class="event-date-pill">7/10</span>
+        <h4 class="event-item-title">2026中国具身智能机器人产业展7月10-12日举行</h4>
+      </div>
+      <p class="event-item-body">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p>
+    </div><div class="event-item">
+      <div class="event-item-top">
+        <span class="event-date-pill">7/11</span>
+        <h4 class="event-item-title">2026“机器人+”创新发展大会7月11-13日举行</h4>
+      </div>
+      <p class="event-item-body">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p>
+    </div><div class="event-item">
+      <div class="event-item-top">
+        <span class="event-date-pill">7/15</span>
+        <h4 class="event-item-title">中国（西部）国际人工智能与具身智能机器人产业链大会</h4>
+      </div>
+      <p class="event-item-body">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p>
+    </div><div class="event-item hot">
+      <div class="event-item-top">
+        <span class="event-date-pill hot">7/15</span>
+        <h4 class="event-item-title">中报预告截止</h4>
+      </div>
+      <p class="event-item-body">沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。7月上旬常为「预增抢跑」窗口，截止日前后转入验牌分化——真预增与蹭概念分化加剧。</p>
+    </div><div class="event-item hot">
+      <div class="event-item-top">
+        <span class="event-date-pill hot">7/17–20</span>
+        <h4 class="event-item-title">WAIC 世界人工智能大会</h4>
+      </div>
+      <p class="event-item-body">上海年度AI顶会（7/17–20），聚焦大模型、具身智能、AI+行业应用与政策导向。7/7 起上海官方发布会介绍筹备进展，会前1周为预热窗口；历年有新品发布、龙头演讲与地方产业政策，会中看主题龙头竞价与分化。</p>
+    </div><div class="event-item">
+      <div class="event-item-top">
+        <span class="event-date-pill">7/22–24</span>
+        <h4 class="event-item-title">CPIC 中国国际医药创新大会</h4>
+      </div>
+      <p class="event-item-body">医药创新领域重要行业会议，覆盖创新药、CXO、BD授权与审评政策。关注临床数据、合作签约与医保/集采预期，创新药板块常提前1–2周博弈会议催化。</p>
+    </div></div>
+    </div></div>
+    <div class="callout warn">7/14–7/18 为事件叠加峰值：中报截止 + WAIC 会前/会中，题材轮动最快、分化最剧烈</div>
+    <div class="sub-block-head" style="margin-top:16px">题材方向研判</div>
+    <div class="dir-note">结合未来2周事件/政策/公告的全网信息主观判断，非算法加权评分</div>
+    <div class="callout">未来2周主线：政策+业绩双驱动的创新药，叠加 WAIC/具身会议预热；存储/PCB 等 AI 硬件高位退潮，资金高低切。弱环境下防御线（贵金属/猪肉）有配置价值，但非进攻主线。</div>
+    <div class="dir-grid"><div class="dir-card ok">
+      <div class="dir-card-top"><span class="dir-name">创新药 / CXO</span><span class="pill ok">优先</span></div>
+      <div class="dir-drivers"><span class="dir-driver">CGT 30日审评</span><span class="dir-driver">中报预增</span><span class="dir-driver">CPIC 7/22</span><span class="dir-driver">BD出海</span></div>
+      <div class="dir-logic">药监局 CGT 纳入创新药 30 日审评通道（7/3 征求意见稿）是持续性政策利好，不是一日游；叠加 7/15 中报预告窗口，华海等真预增已验证。7/22 CPIC 大会在前，资金从高位 AI 硬件切向医药的逻辑仍在。风险在于蹭 CGT/创新药概念的伪标的，7/15 后验牌分化会加剧——只做有临床/BD/业绩支撑的龙头。</div>
+    </div><div class="dir-card ok">
+      <div class="dir-card-top"><span class="dir-name">中报预增 / 化工出海</span><span class="pill ok">可做</span></div>
+      <div class="dir-drivers"><span class="dir-driver">7/15 预告截止</span><span class="dir-driver">存储/化工预增公告</span><span class="dir-driver">验牌分化</span></div>
+      <div class="dir-logic">7/15 是硬性节点：真预增（江波龙、永鼎、奥来德等）与蹭概念会在截止日前后剧烈分化。化工/出海/存储等方向有业绩支撑，但存储/通信已处高位，更适合低位首曝预增的轮动，而非追已涨停的龙头。7/15 后是「验牌期」，逻辑不硬的一律回避。</div>
+    </div><div class="dir-card ok">
+      <div class="dir-card-top"><span class="dir-name">贵金属 / 防御轮动</span><span class="pill ok">可做</span></div>
+      <div class="dir-drivers"><span class="dir-driver">金价偏强</span><span class="dir-driver">环境偏弱</span><span class="dir-driver">猪肉猪价反弹</span></div>
+      <div class="dir-logic">弱环境下资金配置防御：贵金属看国际金价与避险需求，猪肉看 7 月初猪价反弹（外三元约 10.7 元/kg）。二者偏独立节奏，不参与主线博弈，但可作为仓位补充。黄金不追板，猪肉看龙头能否延续。</div>
+    </div><div class="dir-card warn">
+      <div class="dir-card-top"><span class="dir-name">机器人 / 具身智能</span><span class="pill warn">观察</span></div>
+      <div class="dir-drivers"><span class="dir-driver">具身产业展 7/10</span><span class="dir-driver">机器人+大会 7/11</span><span class="dir-driver">WAIC 7/17</span><span class="dir-driver">埃斯顿收购</span></div>
+      <div class="dir-logic">7/10–13 连续三场具身/机器人主题展会是未来2周最密集的产业催化，WAIC 正会在 7/17 进一步放大 AI+具身叙事。但宇树 IPO 已定价、埃斯顿收购属旧闻余波，板块已历多轮炒作；当前环境偏弱，更适合等 WAIC 新品/政策落地后看核心（减速器/本体/丝杠），不宜盲目追扩散补涨。</div>
+    </div><div class="dir-card warn">
+      <div class="dir-card-top"><span class="dir-name">WAIC / AI 应用</span><span class="pill warn">观察</span></div>
+      <div class="dir-drivers"><span class="dir-driver">WAIC 7/17–20</span><span class="dir-driver">会前预热</span><span class="dir-driver">大模型/Agent</span></div>
+      <div class="dir-logic">WAIC 是 7 月 AI 链最大单一催化，历年会中有新品发布、龙头演讲、地方产业政策，大模型/Agent/AI+行业应用可能在会前 1 周启动预热。但 7/15 中报验牌会先洗一遍伪 AI 概念，建议验牌后再布局会议线，会中看竞价强度选龙头，会后谨防利好兑现。</div>
+    </div><div class="dir-card warn">
+      <div class="dir-card-top"><span class="dir-name">液冷 / 算力散热</span><span class="pill warn">观察</span></div>
+      <div class="dir-drivers"><span class="dir-driver">算力高低切</span><span class="dir-driver">液冷服务器涨停</span><span class="dir-driver">AI 基建外溢</span></div>
+      <div class="dir-logic">存储/PCB/玻纤高位回调后，资金外溢至液冷泵阀/散热等「算力基建二线」，当日已有涨停验证。但这是轮动补涨逻辑，持续性取决于 AI 硬件主线能否企稳；若存储/通信继续走弱，液冷也只是一日游。观察大元泵业等核心能否走出 2–3 天，不追跟风小票。</div>
+    </div><div class="dir-card bad">
+      <div class="dir-card-top"><span class="dir-name">AI 硬件 / 存储·PCB</span><span class="pill bad">回避</span></div>
+      <div class="dir-drivers"><span class="dir-driver">中国巨石跌停</span><span class="dir-driver">高位回调</span><span class="dir-driver">筹码重</span></div>
+      <div class="dir-logic">PCB/玻纤链高位股大幅回调（中国巨石触及跌停），存储/通信虽有个别预增公告，但板块处于「业绩兑现+筹码松动」阶段。在弱承接环境下，AI 硬件主线退潮未结束，不宜抄底。等 WAIC 或新订单/新涨价逻辑出现再评估。</div>
+    </div></div>
+    <div class="rhythm-line"><strong>2周节奏：</strong>创新药抢跑 → 7/10–13 具身/机器人展会密集 → 7/15 中报验牌 → 7/17–20 WAIC 正会 → 7/22 CPIC 医药</div>
+  </div>
+
+  <!-- 6 开仓 -->
+  <div class="section" id="sec-trade">
+    <div class="section-head">
+      <div class="section-num">6</div>
+      <div class="section-title">开仓建议</div>
+      <div class="section-sub">07/07 周二</div>
+    </div>
+    <div class="trade-panel">
+      <div class="trade-banner bad">
+        <div>
+          <span class="trade-status">空仓</span>
+          <div class="trade-label">空仓观望</div>
+        </div>
+        <div class="trade-date">07/07 周二</div>
+      </div>
+      <div class="gauge-row"><div class="gauge-block">
+      <div class="gauge-top"><span class="gauge-name">承接得分</span><span class="gauge-score" style="color:#FF3B30">0</span></div>
+      <div class="gauge-track"><div class="g-mark major" style="left:55%" title="承接线55"></div><div class="gauge-fill" style="width:0%;background:#FF3B30"></div></div>
+      <div class="gauge-hint">昨追赚钱效应 + 活跃度背离 + 今追赚钱效应</div>
+    </div><div class="gauge-block">
+      <div class="gauge-top"><span class="gauge-name">模式得分</span><span class="gauge-score" style="color:#FF3B30">0</span></div>
+      <div class="gauge-track"><div class="g-mark" style="left:40%" title="试单线40"></div><div class="g-mark major" style="left:60%" title="主用线60"></div><div class="gauge-fill" style="width:0%;background:#FF3B30"></div></div>
+      <div class="gauge-hint">结构是否支持试单/加仓</div>
+    </div></div>
+      <div class="trade-summary">模式或承接不足，空仓等待昨追赚钱效应修复、新高回升。</div>
+      <div>
+        <div class="reason-label">判断依据</div>
+        <div class="reason-tags"><span class="reason-tag">新高仅25家</span><span class="reason-tag">市场缩量，趋势难续航</span><span class="reason-tag">连续3日缩量，危险信号</span><span class="reason-tag">情绪弱或昨追赚钱效应偏弱</span></div>
+      </div>
+      <div class="trade-alert">情绪29分（弱）｜3日急降44分｜新高25家（趋势强度不足）｜连续3日缩量（危险）</div>
+    </div>
+  </div>
+
+  <div class="footer">大盘数据.numbers · 生成于 2026-07-07 11:31</div>
+</div>
+</body>
+</html>
