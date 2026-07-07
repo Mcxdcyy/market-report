@@ -2561,7 +2561,7 @@ def render_html(ctx: dict) -> str:
     .score-label {{ font-size: 13px; }}
     .score-hint {{ font-size: 13px; }}
     .score-name {{ font-size: 13px; }}
-    #sec-env .score-val {{ font-size: 18px; letter-spacing: -0.3px; }}
+    #sec-env .score-val {{ font-size: 22px; letter-spacing: -0.3px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -2573,7 +2573,7 @@ def render_html(ctx: dict) -> str:
     .trend-matrix {{ width: 100%; min-width: 520px; font-size: 13px; }}
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
-    #sec-trend .trend-cell {{ font-size: 17px; }}
+    #sec-trend .trend-cell {{ font-size: 15px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
@@ -2601,7 +2601,7 @@ def render_html(ctx: dict) -> str:
     .trade-date {{ font-size: 14px; }}
     .trade-summary {{ font-size: 15px; }}
     .gauge-name {{ font-size: 14px; }}
-    #sec-trade .gauge-score {{ font-size: 18px; }}
+    #sec-trade .gauge-score {{ font-size: 22px; }}
     .gauge-hint {{ font-size: 13px; }}
     .trade-alert {{ font-size: 14px; }}
     .reason-label {{ font-size: 12px; }}
