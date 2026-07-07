@@ -2561,7 +2561,7 @@ def render_html(ctx: dict) -> str:
     .score-label {{ font-size: 13px; }}
     .score-hint {{ font-size: 13px; }}
     .score-name {{ font-size: 13px; }}
-    #sec-env .score-val {{ font-size: 20px; }}
+    #sec-env .score-val {{ font-size: 17px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -2601,7 +2601,7 @@ def render_html(ctx: dict) -> str:
     .trade-date {{ font-size: 14px; }}
     .trade-summary {{ font-size: 15px; }}
     .gauge-name {{ font-size: 14px; }}
-    #sec-trade .gauge-score {{ font-size: 20px; }}
+    #sec-trade .gauge-score {{ font-size: 18px; }}
     .gauge-hint {{ font-size: 13px; }}
     .trade-alert {{ font-size: 14px; }}
     .reason-label {{ font-size: 12px; }}
