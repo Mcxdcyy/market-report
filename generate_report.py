@@ -2094,8 +2094,9 @@ def render_html(ctx: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="复">
 <meta name="theme-color" content="#f5f5f7">
-<title>复盘概览-{ctx['title_date']}</title>
+<title>复盘报告 · {ctx['title_date']}</title>
 <style>
   :root {{
     --bg: #f5f5f7;
@@ -2572,7 +2573,7 @@ def render_html(ctx: dict) -> str:
   <header class="hero">
     <div class="hero-top">
       <div>
-        <h1>复盘概览 · {ctx['title_date']}</h1>
+        <h1>复盘报告 · {ctx['title_date']}</h1>
         <div class="hero-meta">
           数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
         </div>
@@ -2835,8 +2836,9 @@ def write_index_html() -> Path:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="复">
 <meta name="theme-color" content="#0a84ff">
-<title>增长2026 · 复盘</title>
+<title>复盘报告</title>
 <style>
   :root {{
     --bg: #f5f5f7; --surface: #fff; --text: #1c1c1e; --sub: #636366;
@@ -2891,7 +2893,7 @@ def write_index_html() -> Path:
 <body>
 <div class="wrap">
   <div class="head">
-    <h1>增长2026 · 复盘</h1>
+    <h1>复盘报告</h1>
     <p>手机端浏览 · 同一 WiFi 下可局域网访问</p>
     {latest_btn}
   </div>
