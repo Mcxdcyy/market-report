@@ -2573,7 +2573,7 @@ def render_html(ctx: dict) -> str:
     .trend-matrix {{ width: 100%; min-width: 520px; font-size: 13px; }}
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
-    #sec-trend .trend-cell {{ font-size: 15px; }}
+    #sec-trend .trend-cell {{ font-size: 13px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
