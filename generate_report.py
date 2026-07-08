@@ -762,12 +762,43 @@ def _curate_sort_key(item: dict, sector_names: list[str], env_weak: bool) -> tup
     return (match, impact + tag_boost, tier)
 
 
+def _is_same_day_post_close(item: dict, as_of: datetime) -> bool:
+    """仅保留报表当日收盘后披露（排除盘前/盘中及其他交易日盘后）。"""
+    if item.get("pre_close") is True:
+        return False
+    timing = str(item.get("timing") or "").strip()
+    if not timing:
+        return False
+    if any(k in timing for k in ("盘前", "盘中", "午间", "早盘", "开盘")):
+        return False
+    if not any(k in timing for k in ("盘后", "晚间", "收盘后")):
+        return False
+    m, d = as_of.month, as_of.day
+    same_day_refs = (
+        f"{m}/{d}",
+        f"{m:02d}/{d:02d}",
+        as_of.strftime("%Y-%m-%d"),
+        f"{m}月{d}日",
+        f"{m}月{d}日晚间",
+        f"{m}月{d}日晚上",
+    )
+    if any(ref in timing for ref in same_day_refs):
+        return True
+    if timing in ("盘后", "收盘后"):
+        return True
+    for om, od in re.findall(r"(\d{1,2})/(\d{1,2})", timing):
+        if int(om) != m or int(od) != d:
+            return False
+    return False
+
+
 def curate_post_close(
     pool: list,
     top_sectors: list,
     env_weak: bool,
+    as_of: datetime,
 ) -> tuple[list, dict]:
-    """从候选池精选 8–15 条盘后披露。返回 (精选列表, 统计)。"""
+    """从候选池精选盘后披露（仅当日收盘后）。返回 (精选列表, 统计)。"""
     sector_names = [s.get("name", "") for s in top_sectors]
     caps = CURATE_CAPS_WEAK if env_weak else CURATE_CAPS_OK
 
@@ -775,7 +806,7 @@ def curate_post_close(
     for item in pool:
         if item.get("skip") or item.get("routine"):
             continue
-        if item.get("timing") == "盘前" or item.get("pre_close") is True:
+        if not _is_same_day_post_close(item, as_of):
             continue
         if not (item.get("title") or item.get("content")):
             continue
@@ -968,7 +999,7 @@ def load_market_news(
     sectors = [sync_sector_count(dict(s)) for s in (day.get("top_sectors") or [])]
     sectors = [s for s in sectors if int(s.get("count") or 0) >= 4][:5]
     pool = day.get("post_close_pool") or day.get("post_close") or []
-    curated, stats = curate_post_close(pool, sectors, env_weak)
+    curated, stats = curate_post_close(pool, sectors, env_weak, as_of)
     return {
         "top_sectors": sectors,
         "post_close": curated,
@@ -2519,7 +2550,7 @@ def render_html(ctx: dict) -> str:
     margin-top: 16px; padding-top: 14px;
   }}
 
-  /* ── 手机端优化（字号整体 +2~4px，便于阅读）── */
+  /* ── 手机端字号（固定标准，勿随意改动；用户确认 2026-07-07）── */
   @media (max-width: 640px) {{
     body {{
       font-size: 15px;
@@ -2684,7 +2715,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">4</div>
       <div class="section-title">盘后公告</div>
-      <div class="section-sub">仅盘后披露 · 精选摘要</div>
+      <div class="section-sub">仅当日收盘后披露 · 精选摘要</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}

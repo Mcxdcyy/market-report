@@ -25,7 +25,7 @@ alwaysApply: true
 | 1 | 10日趋势 | 近10日竖轴、6指标横轴；无综合环境分 |
 | 2 | 环境评分 · 趋势与承接 | 八维（大盘量能+趋势强度+六维）；趋势强度同 hybrid_hist_score；A股红强绿弱 |
 | 3 | 涨停板块 Top5 | `market_news.json` → 左逻辑 / 右后续事件+预判 |
-| 4 | 盘后公告 | `post_close_pool` → `curate_post_close` 精选；排除盘面点评/旧闻 |
+| 4 | 盘后公告 | `post_close_pool` → `curate_post_close` 精选；**仅报表当日收盘后**正式披露 |
 | 5 | 未来2周 · 事件与方向 | 事件时间轴 + **题材方向研判**（主观分析） |
 | 6 | 开仓建议 | 状态横幅 + 承接/模式得分 + 总结 + 判断依据；**无**仓位/试单/加仓/止损四格 |
 
@@ -37,7 +37,10 @@ alwaysApply: true
 
 1. 读取最新 `大盘数据.numbers` 并运行 `python3 generate_report.py`
 2. **涨停板块 Top5**：检索当日市场，写入 `market_news.json` 对应日 `top_sectors`（name/count/reason/codes/stocks）
-3. **盘后公告**：同文件 `post_close_pool`，由 `curate_post_close` 精选（仅正式披露，非盘面点评）
+3. **盘后公告**：同文件 `post_close_pool`，由 `curate_post_close` 精选
+   - **必须**是报表当日 **15:00 收盘后** 披露的正式公告（`timing`: `7/8盘后` 或 `盘后`）
+   - **禁止**写入：前一交易日盘后、当日盘前/盘中、无 `timing` 的旧闻/政策复述、盘面点评
+   - 代码层 `_is_same_day_post_close` 会自动过滤不符合项
 4. **未来2周事件**：板块级炒作节点；弱展会/WAIC筹备吹风并入主节点
 5. **题材方向研判**：全网检索后撰写 `direction_analysis`（主观深度分析，**非**算法加权）
 
@@ -86,3 +89,24 @@ alwaysApply: true
 - **大盘量能**（大盘成交金额）：差=连续2日总缩量>15% / 连续3日缩量 / 缩量且低于前三日均；好=连续2日放量 / 突破前三日最大量；其余中性（42–58，随近3日均比偏移）
 - **环境结论**：`build_env_callout` 单条 callout
 - **10日趋势**：近 10 个交易日竖轴、6 项指标横轴；A股配色红=偏强、绿=偏弱
+
+## 手机端字号（固定，更新报表时保持不变）
+
+断点：`@media (max-width: 640px)`，定义在 `generate_report.py` 模板 CSS。**除非用户明确要求调整，否则每次生成报表不得改动以下字号。**
+
+### 各模块评分数字（用户指定）
+
+| 模块 | 选择器 | 字号 |
+|------|--------|------|
+| 1 · 10日趋势 | `#sec-trend .trend-cell` | **13px** |
+| 2 · 环境评分 | `#sec-env .score-val` | **22px** |
+| 6 · 开仓建议 | `#sec-trade .gauge-score` | **22px** |
+
+### 其余手机端正文（同期确认）
+
+- 正文基准 `body`：**15px**
+- 页头标题 `.hero h1`：**24px**；主模式 `.hero-mode`：**22px**
+- 模块标题 `.section-title`：**18px**；导航 `.page-nav a`：**14px**
+- 板块名 `.sector-name`：**17px**；板块正文 `.sector-text`：**14px**
+- 公告标题 `.post-title`：**15px**；公告摘要 `.post-summary`：**14px**
+- 开仓主标签 `.trade-label`：**20px**；callout：**15px**
