@@ -1600,7 +1600,13 @@ def forecast_sector_persistence(
     env_weak: bool,
     post_close: list,
 ) -> list[dict]:
-    """结合涨停广度 + 近端事件 + 环境，预判板块炒作持续性。"""
+    """结合涨停广度 + 近端事件 + 环境，预判板块炒作持续性。
+
+    自报表次一交易日起算：
+    - 不认可持续性：不看好次日进一步走强
+    - 预估持续2天：看好次日延续，预计还能走 2 个交易日（含次日）
+    - 预估持续3天及以上：看好多日延续，可沿主线缩圈跟龙头
+    """
     if not sectors:
         return []
     vm = volume_metrics(row, df)
@@ -1666,32 +1672,32 @@ def forecast_sector_persistence(
             persist_score += 4
 
         if persist_score >= 72:
-            persist_label, persist_tag = "3–5天", "ok"
-            persist_note = "事件/业绩窗口仍在，可沿主线缩圈跟龙头"
+            persist_label, persist_tag = "预估持续3天及以上", "ok"
+            persist_note = "看好次日延续，题材预计还能走3个交易日及以上，可沿主线缩圈跟龙头"
         elif persist_score >= 52:
-            persist_label, persist_tag = "2–3天", "warn"
-            persist_note = "还有惯性，分化加剧，只做核心"
+            persist_label, persist_tag = "预估持续2天", "warn"
+            persist_note = "看好次日延续，题材预计还能走2个交易日（含次日），分化中只做核心"
         else:
-            persist_label, persist_tag = "1–2天", "weak"
-            persist_note = "高潮透支或承接弱，谨防一日游"
+            persist_label, persist_tag = "不认可持续性", "weak"
+            persist_note = "不看好次日进一步走强，谨防一日游或快速退潮"
 
         reason_blob = s.get("reason") or ""
         has_hard_catalyst = any(k in reason_blob for k in ("IPO", "收购", "注册生效", "订单", "预增"))
 
         if name == "机器人" and env_weak and count >= 15:
-            persist_label, persist_tag = "2–3天", "warn"
-            persist_note = "宇树IPO已定价+埃斯顿收购，逻辑在但环境弱，周一分化看减速器/本体核心"
+            persist_label, persist_tag = "预估持续2天", "warn"
+            persist_note = "宇树IPO已定价+埃斯顿收购，逻辑在但环境弱，次日或有惯性、随后看分化"
         elif name == "化学制品":
             persist_note = "7/15预告窗口支撑，低位预增可轮动，追高慎"
         elif name == "黄金":
             persist_note = "避险+金价驱动，偏独立节奏，看期货不追板"
         elif name in ("通用设备", "汽车零部件") and count < 10:
             if persist_tag == "ok":
-                persist_label, persist_tag = "2–3天", "warn"
+                persist_label, persist_tag = "预估持续2天", "warn"
             persist_note = "主线扩散补涨，弹性弱于龙头，跟随不领涨"
         elif has_hard_catalyst and pc_score > 0 and persist_tag == "weak":
-            persist_label, persist_tag = "2–3天", "warn"
-            persist_note = "有硬催化但环境/量能拖累，缩圈做核心"
+            persist_label, persist_tag = "预估持续2天", "warn"
+            persist_note = "有硬催化但环境/量能拖累，次日或有惯性，缩圈做核心"
 
         enriched.append({
             **s,
@@ -2017,7 +2023,7 @@ def render_html(ctx: dict) -> str:
           <span class="sector-stat{" hot" if int(s.get("streak_days") or 0) >= 3 else ""}">已持续 {int(s.get("streak_days") or 0)} 天</span>
         </div>
         <div class="sector-forecast-corner">
-          <span class="pill {s.get("persist_tag", "warn")} sector-persist-pill">预估持续{s.get("persist", "—")}</span>
+          <span class="pill {s.get("persist_tag", "warn")} sector-persist-pill">{s.get("persist", "—")}</span>
         </div>
       </div>
       <div class="sector-cols">
