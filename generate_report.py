@@ -1603,7 +1603,7 @@ def forecast_sector_persistence(
     """结合涨停广度 + 近端事件 + 环境，预判板块炒作持续性。
 
     自报表次一交易日起算：
-    - 不认可持续性：不看好次日进一步走强
+    - 不认可持续：不看好次日进一步走强
     - 预估持续2天：看好次日延续，预计还能走 2 个交易日（含次日）
     - 预估持续3天及以上：看好多日延续，可沿主线缩圈跟龙头
     """
@@ -1678,7 +1678,7 @@ def forecast_sector_persistence(
             persist_label, persist_tag = "预估持续2天", "warn"
             persist_note = "看好次日延续，题材预计还能走2个交易日（含次日），分化中只做核心"
         else:
-            persist_label, persist_tag = "不认可持续性", "weak"
+            persist_label, persist_tag = "不认可持续", "weak"
             persist_note = "不看好次日进一步走强，谨防一日游或快速退潮"
 
         reason_blob = s.get("reason") or ""
