@@ -1959,6 +1959,274 @@ def compute_six_dim(row: pd.Series, df: pd.DataFrame) -> dict:
     }
 
 
+def _parse_cal_sort_key(label: str) -> tuple[int, int]:
+    m = re.search(r"(\d{1,2})[/月](\d{1,2})", label or "")
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    return 99, 99
+
+
+def _peak_tags_for_label(label: str, peak: str) -> list[str]:
+    """从 peak 文案为日历节点匹配标注（催化峰值 / 情绪高点）。"""
+    if not peak or not label:
+        return []
+    tags: list[str] = []
+    lbl = label.replace("–", "-").replace("—", "-")
+    title_blob = lbl
+    if ("催化" in peak or "轮动" in peak) and re.search(r"7[-/]1[4-8]", lbl):
+        tags.append("催化峰值")
+    if ("WAIC" in peak or "情绪高点" in peak) and (
+        "17" in lbl or "18" in lbl or "19" in lbl or "20" in lbl
+    ):
+        tags.append("情绪高点")
+    return tags
+
+
+def _extra_milestones_from_rhythm(rhythm: str) -> list[dict]:
+    """节奏里有关键节点但事件库未收录时，补入日历。"""
+    extras: list[dict] = []
+    if rhythm and "长鑫" in rhythm:
+        extras.append({
+            "label": "7/16",
+            "title": "长鑫科技 IPO 申购",
+            "short": "长鑫IPO",
+            "brief": "存储链事件性兑现窗口，申购日前后波动加大。",
+            "hot": True,
+            "dot": "存",
+        })
+    return extras
+
+
+def _filter_summary_points(summary: str, rhythm: str) -> list[str]:
+    """去掉与日历重复的 summary 要点。"""
+    points = [s.strip() for s in re.split(r"[。！？]", summary or "") if s.strip()]
+    out: list[str] = []
+    for p in points:
+        if p.count("→") >= 2:
+            continue
+        if "→" in p and rhythm:
+            arrow_parts = [part.strip() for part in p.split("→")]
+            if all(part in rhythm for part in arrow_parts if part):
+                continue
+        if p.startswith("未来2周日历") or p.startswith("未来两周日历"):
+            continue
+        out.append(p)
+    return out
+
+
+def _parse_summary_sections(summary: str, rhythm: str) -> tuple[str, str]:
+    """拆成 (2周主线, 当日背景)。"""
+    s = (summary or "").strip()
+    for sep in ("当日背景：", "今日背景：", "当日背景:", "今日背景:"):
+        if sep in s:
+            left, right = s.split(sep, 1)
+            outlook = left.strip().rstrip("。；;")
+            today = right.strip().rstrip("。；;")
+            for prefix in ("2周主线：", "未来2周主线：", "未来2周：", "未来两周："):
+                if outlook.startswith(prefix):
+                    outlook = outlook[len(prefix) :].strip()
+            return outlook, today
+    points = _filter_summary_points(s, rhythm)
+    if len(points) >= 2 and any(
+        k in points[-1] for k in ("普跌", "大涨", "当日", "今日", "不改变上述")
+    ):
+        return "。".join(points[:-1]), points[-1]
+    if points:
+        return "。".join(points), ""
+    return s, ""
+
+
+def _render_fwd_lead_html(peak: str, summary: str, rhythm: str) -> str:
+    """研判摘要：节奏峰值 + 2周主线 + 当日背景（置于模块末尾）。"""
+    outlook, today_note = _parse_summary_sections(summary, rhythm)
+    rows: list[str] = []
+    if peak:
+        peak_line = re.sub(r"[;；]", " · ", peak)
+        rows.append(
+            '<div class="fwd-lead-row">'
+            '<span class="fwd-lead-tag peak">节奏峰值</span>'
+            f'<p class="fwd-lead-text peak">{peak_line}</p></div>'
+        )
+    if outlook:
+        rows.append(
+            '<div class="fwd-lead-row">'
+            '<span class="fwd-lead-tag">2周主线</span>'
+            f'<p class="fwd-lead-text">{outlook}</p></div>'
+        )
+    if today_note:
+        rows.append(
+            '<div class="fwd-lead-row">'
+            '<span class="fwd-lead-tag muted">当日背景</span>'
+            f'<p class="fwd-lead-text muted">{today_note}</p></div>'
+        )
+    if not rows:
+        return ""
+    return (
+        '<div class="fwd-lead-wrap">'
+        '<div class="fwd-block-label">研判摘要 '
+        '<span class="fwd-block-hint">未来2周总览</span></div>'
+        f'<div class="fwd-lead">{"".join(rows)}</div></div>'
+    )
+
+
+def _timeline_nodes_from_cal(cal_items: list[dict], peak: str) -> list[dict]:
+    """按日期合并节点，供横向时间轴展示（每日期一个点）。"""
+    by_label: dict[str, list[dict]] = {}
+    for n in cal_items:
+        label = n.get("label", "")
+        by_label.setdefault(label, []).append(n)
+    nodes: list[dict] = []
+    for label in sorted(by_label.keys(), key=_parse_cal_sort_key):
+        items = by_label[label]
+        primary = sorted(
+            items,
+            key=lambda x: (
+                not x.get("hot"),
+                len(x.get("short") or x.get("title") or ""),
+            ),
+        )[0]
+        shorts = []
+        for it in items:
+            s = it.get("short") or it.get("title", "")
+            if s and s not in shorts:
+                shorts.append(s)
+        if len(shorts) == 1:
+            sub = shorts[0]
+        elif len(shorts) == 2:
+            sub = f"{shorts[0]}·{shorts[1]}"
+        else:
+            sub = f"{shorts[0]}+{len(shorts) - 1}"
+        dot = primary.get("dot") or re.sub(r"[^\dA-Za-z\u4e00-\u9fff]", "", label)[:2] or "·"
+        hot = any(it.get("hot") for it in items) or bool(_peak_tags_for_label(label, peak))
+        nodes.append({
+            "label": label,
+            "sub": sub,
+            "dot": dot,
+            "hot": hot,
+        })
+    return nodes
+
+
+def _render_fwd_timeline_html(nodes: list[dict]) -> str:
+    if not nodes:
+        return ""
+    cells = []
+    for n in nodes:
+        hot = " hot" if n.get("hot") else ""
+        cells.append(
+            f'<div class="fwd-tnode{hot}">'
+            f'<div class="fwd-tdot{hot}">{n.get("dot", "·")}</div>'
+            f'<div class="fwd-tlabel">{n.get("label", "")}</div>'
+            f'<div class="fwd-tsub">{n.get("sub", "")}</div>'
+            f"</div>"
+        )
+    return (
+        '<div class="fwd-track-wrap">'
+        '<div class="fwd-track-scroll"><div class="fwd-track">'
+        + "".join(cells)
+        + "</div></div></div>"
+    )
+
+
+def render_fwd_section_html(
+    event_nodes: list,
+    peak: str,
+    summary: str,
+    rhythm: str,
+    directions: list,
+    as_of: datetime | None = None,
+) -> tuple[str, str]:
+    """未来2周模块：时间轴 → 事件详情 → 题材卡片 → 研判摘要。"""
+    lead_html = _render_fwd_lead_html(peak, summary, rhythm)
+
+    # ── 融合日历（事件库 + 节奏补点；跳过已过期节点）──
+    cal_items: list[dict] = []
+    seen: set[str] = set()
+    cutoff = None
+    if as_of is not None:
+        cutoff = as_of.date() if hasattr(as_of, "date") else as_of
+    for n in event_nodes or []:
+        if cutoff:
+            em, ed = _parse_cal_sort_key(n.get("label", ""))
+            if datetime(as_of.year if as_of else 2026, em, ed).date() < cutoff:
+                continue
+        key = f"{n.get('label', '')}|{n.get('title', '')}"
+        if key in seen:
+            continue
+        seen.add(key)
+        cal_items.append(n)
+    for ex in _extra_milestones_from_rhythm(rhythm):
+        key = f"{ex.get('label', '')}|{ex.get('title', '')}"
+        if key not in seen:
+            seen.add(key)
+            cal_items.append(ex)
+    cal_items.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
+
+    timeline_html = _render_fwd_timeline_html(
+        _timeline_nodes_from_cal(cal_items, peak)
+    )
+
+    cal_rows: list[str] = []
+    for n in cal_items:
+        label = n.get("label", "")
+        title = n.get("title", n.get("short", ""))
+        note = n.get("brief", "")
+        if len(note) > 88:
+            note = note[:85].rstrip() + "…"
+        tags = _peak_tags_for_label(label, peak)
+        tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
+        hot = n.get("hot") or bool(tags)
+        cal_rows.append(
+            f'<div class="fwd-cal-item{" hot" if hot else ""}">'
+            f'<div class="fwd-cal-date">{label}</div>'
+            f'<div class="fwd-cal-body">'
+            f'<div class="fwd-cal-top">'
+            f'<span class="fwd-cal-title">{title}</span>'
+            f'{tag_html}</div>'
+            f'<p class="fwd-cal-note">{note}</p>'
+            f"</div></div>"
+        )
+    cal_html = (
+        f'<div class="fwd-cal-wrap">'
+        f'<div class="fwd-block-label">事件详情</div>'
+        f'<div class="fwd-cal">{"".join(cal_rows)}</div></div>'
+        if cal_rows else ""
+    )
+
+    # ── 题材方向 ──
+    dir_card_parts: list[str] = []
+    for t in directions:
+        drivers = t.get("drivers") or []
+        drivers_html = (
+            '<div class="dir-drivers">'
+            + "".join(f'<span class="dir-driver">{d}</span>' for d in drivers)
+            + "</div>"
+            if drivers else ""
+        )
+        dir_card_parts.append(
+            f'<div class="dir-card {t["tag"]}">'
+            f'<div class="dir-card-top"><span class="dir-name">{t["name"]}</span>'
+            f'<span class="pill {t["tag"]}">{t["stance"]}</span></div>'
+            f"{drivers_html}"
+            f'<div class="dir-logic">{t.get("logic", "")}</div></div>'
+        )
+    themes_html = (
+        f'<div class="fwd-themes-wrap">'
+        f'<div class="fwd-block-label">题材方向 <span class="fwd-block-hint">主观判断 · 非算法加权</span></div>'
+        f'<div class="dir-grid">{"".join(dir_card_parts)}</div></div>'
+        if dir_card_parts else
+        '<div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>'
+    )
+
+    body = f"{timeline_html}{cal_html}{themes_html}{lead_html}"
+    return body, lead_html
+
+
+def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
+    """已并入 render_fwd_section_html，保留兼容。"""
+    return ""
+
+
 def render_html(ctx: dict) -> str:
     def score_card(s: tuple) -> str:
         n, sc, t, note = s
@@ -2064,57 +2332,13 @@ def render_html(ctx: dict) -> str:
     post_summary = news.get("post_summary", "")
     post_block = post_close_html(news["post_close"])
 
-    event_html = "".join(
-        f'''<div class="event-node{" hot" if n.get("hot") else ""}">
-      <div class="event-dot{" hot" if n.get("hot") else ""}">{n.get("dot", "—")}</div>
-      <div class="event-node-copy">
-        <div class="event-label">{n.get("label", "")}</div>
-        <div class="event-sub">{n.get("sub", n.get("title", ""))}</div>
-      </div>
-    </div>'''
-        for n in ctx["event_nodes"]
-    )
-    event_cards = "".join(
-        f'''<div class="event-item{" hot" if n.get("hot") else ""}">
-      <div class="event-item-top">
-        <span class="event-date-pill{" hot" if n.get("hot") else ""}">{n.get("label", "")}</span>
-        <h4 class="event-item-title">{n.get("title", "")}</h4>
-      </div>
-      <p class="event-item-body">{n.get("brief", "")}</p>
-    </div>'''
-        for n in ctx["event_nodes"]
-    )
-    event_block = f'''<div class="event-upper">
-      <div class="event-track-wrap">
-        <div class="event-track-label">时间轴</div>
-        <div class="event-track-scroll">
-          <div class="event-track">{event_html}</div>
-        </div>
-      </div>
-      <div class="event-detail-list">{event_cards}</div>
-    </div>'''
-    dir_card_parts: list[str] = []
-    for t in ctx["directions"]:
-        drivers = t.get("drivers") or []
-        if drivers:
-            chips = "".join(f'<span class="dir-driver">{d}</span>' for d in drivers)
-            drivers_html = f'<div class="dir-drivers">{chips}</div>'
-        else:
-            drivers_html = ""
-        dir_card_parts.append(
-            f'''<div class="dir-card {t["tag"]}">
-      <div class="dir-card-top"><span class="dir-name">{t["name"]}</span><span class="pill {t["tag"]}">{t["stance"]}</span></div>
-      {drivers_html}
-      <div class="dir-logic">{t.get("logic", "")}</div>
-    </div>'''
-        )
-    dir_cards = "".join(dir_card_parts) if dir_card_parts else (
-        '<div class="news-empty">暂无题材研判。更新报表时请结合全网事件/政策/公告，'
-        '在 market_news.json 写入 direction_analysis。</div>'
-    )
-    dir_summary = ctx.get("dir_summary") or ""
-    dir_summary_html = (
-        f'<div class="callout">{dir_summary}</div>' if dir_summary else ""
+    fwd_section_html, _ = render_fwd_section_html(
+        ctx.get("event_nodes") or [],
+        ctx.get("event_peak") or "",
+        ctx.get("dir_summary") or "",
+        ctx.get("rhythm") or "",
+        ctx.get("directions") or [],
+        ctx.get("as_of"),
     )
 
     m = ctx["modes"]
@@ -2417,72 +2641,100 @@ def render_html(ctx: dict) -> str:
     background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }}
 
-  /* ── 事件 ── */
-  .event-upper {{ display: flex; flex-direction: column; gap: 14px; }}
-  .event-track-wrap {{
+  /* ── 未来2周 · 事件与方向（融合版）── */
+  .fwd-track-wrap {{
     background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
-    padding: 14px 14px 16px;
+    padding: 14px 12px 16px; margin-bottom: 12px;
   }}
-  .event-track-label {{
-    font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .3px;
-    margin-bottom: 12px;
+  .fwd-track-scroll {{
+    overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px;
   }}
-  .event-track-scroll {{
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
-  }}
-  .event-track {{
+  .fwd-track {{
     display: flex; align-items: flex-start; position: relative; gap: 0;
-    min-width: max-content; padding: 0 6px;
+    min-width: max-content; padding: 0 4px;
   }}
-  .event-track::before {{
-    content: ''; position: absolute; top: 18px; left: 24px; right: 24px;
-    height: 1px; background: #d1d1d6; z-index: 0;
+  .fwd-track::before {{
+    content: ''; position: absolute; top: 18px; left: 28px; right: 28px;
+    height: 2px; background: linear-gradient(90deg, #d1d1d6, #0a84ff44, #d1d1d6);
+    z-index: 0; border-radius: 1px;
   }}
-  .event-node {{
-    flex: 0 0 auto; width: 108px; text-align: center; position: relative; z-index: 1;
-    padding: 0 6px;
+  .fwd-tnode {{
+    flex: 0 0 auto; width: 100px; text-align: center; position: relative; z-index: 1;
+    padding: 0 4px;
   }}
-  .event-track .event-dot {{
+  .fwd-tdot {{
     width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff;
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 800; box-shadow: 0 1px 4px rgba(10,132,255,.18);
+    font-size: 10px; font-weight: 800; box-shadow: 0 1px 4px rgba(10,132,255,.2);
     margin: 0 auto;
   }}
-  .event-track .event-dot.hot {{ background: #ff6b63; box-shadow: 0 1px 4px rgba(255,69,58,.22); }}
-  .event-node-copy {{ margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }}
-  .event-label {{ font-size: 12px; font-weight: 700; line-height: 1.4; color: var(--text); }}
-  .event-sub {{
-    font-size: 11px; color: var(--muted); line-height: 1.45;
+  .fwd-tdot.hot {{ background: #ff6b63; box-shadow: 0 1px 4px rgba(255,69,58,.25); }}
+  .fwd-tlabel {{
+    margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.35;
+  }}
+  .fwd-tsub {{
+    margin-top: 3px; font-size: 10px; color: var(--muted); line-height: 1.4;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }}
 
-  .event-detail-list {{ display: flex; flex-direction: column; gap: 12px; }}
-  .event-item {{
+  .fwd-lead-wrap {{ margin-top: 16px; }}
+  .fwd-lead {{
+    padding: 12px 14px;
+    background: linear-gradient(180deg, #f8f9fc 0%, #fff 100%);
     border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 14px 16px; background: #fff;
-    border-left: 3px solid var(--accent);
+    display: flex; flex-direction: column; gap: 12px;
   }}
-  .event-item.hot {{ border-left-color: var(--bad); }}
-  .event-item-top {{
-    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;
+  .fwd-lead-row {{
+    display: grid; grid-template-columns: 68px 1fr; gap: 8px 10px; align-items: start;
   }}
-  .event-date-pill {{
-    flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--accent);
-    background: var(--accent-bg); border: 1px solid #0a84ff22;
-    padding: 3px 8px; border-radius: 6px; line-height: 1.3; margin-top: 1px;
+  .fwd-lead-tag {{
+    font-size: 10px; font-weight: 700; letter-spacing: .2px;
+    color: var(--muted); padding-top: 2px; line-height: 1.4;
   }}
-  .event-date-pill.hot {{
-    color: #c41e16; background: var(--bad-bg); border-color: #ff453a28;
+  .fwd-lead-tag.peak {{ color: #b25000; }}
+  .fwd-lead-tag.muted {{ color: #8e8e93; }}
+  .fwd-lead-text {{
+    margin: 0; font-size: 13px; line-height: 1.7; color: var(--text);
   }}
-  .event-item-title {{
-    font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--text); margin: 0;
+  .fwd-lead-text.peak {{ font-weight: 600; color: #b25000; }}
+  .fwd-lead-text.muted {{ color: var(--sub); }}
+  .fwd-block-label {{
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    letter-spacing: .3px; margin-bottom: 10px;
   }}
-  .event-item-body {{
-    font-size: 13px; line-height: 1.65; color: var(--sub); margin: 0;
+  .fwd-block-hint {{
+    font-size: 10px; font-weight: 500; color: var(--muted); margin-left: 6px;
   }}
+  .fwd-cal-wrap {{ margin-top: 14px; }}
+  .fwd-cal {{
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: #fff; overflow: hidden;
+  }}
+  .fwd-cal-item {{
+    display: grid; grid-template-columns: 76px 1fr; gap: 10px 12px;
+    padding: 12px 14px; border-bottom: 1px solid #f0f0f5;
+    position: relative;
+  }}
+  .fwd-cal-item:last-child {{ border-bottom: none; }}
+  .fwd-cal-item.hot {{ background: #fffbf5; }}
+  .fwd-cal-date {{
+    font-size: 12px; font-weight: 800; color: var(--accent);
+    line-height: 1.4; padding-top: 2px;
+  }}
+  .fwd-cal-top {{
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+  }}
+  .fwd-cal-title {{ font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.45; }}
+  .fwd-cal-badge {{
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+    background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
+  }}
+  .fwd-cal-note {{
+    font-size: 12px; line-height: 1.6; color: var(--sub); margin: 4px 0 0;
+  }}
+  .fwd-themes-wrap {{ margin-top: 16px; }}
 
-  .dir-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }}
+  .dir-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 0; }}
   @media (max-width: 560px) {{ .dir-grid {{ grid-template-columns: 1fr; }} }}
   .dir-card {{
     border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -2502,14 +2754,7 @@ def render_html(ctx: dict) -> str:
     font-size: 10px; padding: 3px 8px; border-radius: 6px;
     background: #f0f4ff; color: #3a5a9a; border: 1px solid #d8e2f4;
   }}
-  .dir-logic {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  .dir-note {{ font-size: 11px; color: var(--muted); margin-top: 10px; }}
-
-  .rhythm-line {{
-    margin-top: 14px; padding: 11px 14px; background: #fff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm); font-size: 13px;
-  }}
+  .dir-logic {{ font-size: 12px; color: var(--sub); line-height: 1.65; }}
 
   /* ── 开仓建议 ── */
   .trade-panel {{ display: flex; flex-direction: column; gap: 8px; }}
@@ -2650,8 +2895,15 @@ def render_html(ctx: dict) -> str:
     .event-block-body {{ font-size: 14px; }}
     .dir-name {{ font-size: 15px; }}
     .dir-badge {{ font-size: 12px; }}
-    .dir-logic {{ font-size: 14px; }}
-    .dir-note {{ font-size: 13px; }}
+    .dir-logic {{ font-size: 14px; line-height: 1.7; }}
+    .fwd-lead-text {{ font-size: 15px; line-height: 1.75; }}
+    .fwd-lead-row {{ grid-template-columns: 72px 1fr; }}
+    .fwd-tdot {{ width: 40px; height: 40px; font-size: 11px; }}
+    .fwd-tlabel {{ font-size: 13px; }}
+    .fwd-tsub {{ font-size: 11px; }}
+    .fwd-cal-title {{ font-size: 14px; }}
+    .fwd-cal-note {{ font-size: 14px; line-height: 1.7; }}
+    .fwd-cal-date {{ font-size: 13px; }}
     .trade-status {{ font-size: 12px; }}
     .trade-label {{ font-size: 20px; }}
     .trade-date {{ font-size: 14px; }}
@@ -2663,7 +2915,6 @@ def render_html(ctx: dict) -> str:
     .reason-label {{ font-size: 12px; }}
     .reason-tag {{ font-size: 13px; }}
     .footer {{ font-size: 13px; }}
-    .event-track-scroll {{ margin: 0 -4px; }}
   }}
 
   @media print {{
@@ -2756,13 +3007,7 @@ def render_html(ctx: dict) -> str:
         <span class="event-sync-note">{ctx['event_sync']}</span>
       </div>
     </div>
-    <div class="event-block">{event_block}</div>
-    <div class="callout warn">{ctx['event_peak']}</div>
-    <div class="sub-block-head" style="margin-top:16px">题材方向研判</div>
-    <div class="dir-note">结合未来2周事件/政策/公告的全网信息主观判断，非算法加权评分</div>
-    {dir_summary_html}
-    <div class="dir-grid">{dir_cards}</div>
-    {f'<div class="rhythm-line"><strong>2周节奏：</strong>{ctx["rhythm"]}</div>' if ctx.get("rhythm") else ""}
+    {fwd_section_html}
   </div>
 
   <!-- 6 开仓 -->
@@ -2895,6 +3140,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "rhythm": rhythm,
         "event_peak": event_peak,
         "event_sync": event_sync,
+        "as_of": dt,
         "modes": modes,
         "advice": advice,
         "emo": emo,

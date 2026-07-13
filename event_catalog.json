@@ -10,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-07-07"
+    "fetched_at": "2026-07-13"
   },
   {
     "month": 7,
@@ -23,7 +23,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-07-07"
+    "fetched_at": "2026-07-13"
   },
   {
     "month": 7,
@@ -36,7 +36,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-07-07"
+    "fetched_at": "2026-07-13"
   },
   {
     "month": 7,
@@ -47,9 +47,9 @@
     "short": "预告截止",
     "brief": "沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。7月上旬常为「预增抢跑」窗口，截止日前后转入验牌分化——真预增与蹭概念分化加剧。",
     "hot": true,
-    "importance": 2,
+    "importance": 3,
     "source": "seed",
-    "fetched_at": "2026-07-07"
+    "fetched_at": "2026-07-13"
   },
   {
     "month": 7,
@@ -60,9 +60,9 @@
     "short": "WAIC",
     "brief": "上海年度AI顶会（7/17–20），聚焦大模型、具身智能、AI+行业应用与政策导向。7/7 起上海官方发布会介绍筹备进展，会前1周为预热窗口；历年有新品发布、龙头演讲与地方产业政策，会中看主题龙头竞价与分化。",
     "hot": true,
-    "importance": 3,
+    "importance": 4,
     "source": "seed",
-    "fetched_at": "2026-07-07",
+    "fetched_at": "2026-07-13",
     "span_end": [
       7,
       20
