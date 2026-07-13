@@ -611,7 +611,8 @@
         "tag": "warn",
         "sectors": ["券商"],
         "tier": "中军",
-        "impact": "medium"
+        "impact": "medium",
+        "timing": "7/6施行"
       },
       {
         "type": "政策",
@@ -621,7 +622,8 @@
         "tag": "ok",
         "sectors": ["创新药"],
         "tier": "中军",
-        "impact": "high"
+        "impact": "high",
+        "timing": "7/3发布"
       },
       {
         "type": "公告",
@@ -847,7 +849,8 @@
         "tag": "ok",
         "sectors": ["跨境支付"],
         "tier": "中军",
-        "impact": "high"
+        "impact": "high",
+        "timing": "7/7发布"
       }
     ],
     "direction_analysis": {
@@ -1469,6 +1472,28 @@
       }
     ],
     "post_close_pool": [
+      {
+        "type": "政策",
+        "category": "D",
+        "title": "商务部·海关总署（2026年第29号）：对氦气实施临时禁止出口",
+        "content": "7/10盘后公告，即日起对氦气（海关编号2804290010）实施临时禁止出口管理；保障半导体/医疗/航天战略资源供给，7/13燃气、电子特气板块联动。",
+        "tag": "ok",
+        "sectors": ["燃气", "化学制品"],
+        "tier": "龙头",
+        "impact": "high",
+        "timing": "7/10盘后"
+      },
+      {
+        "type": "政策",
+        "category": "D",
+        "title": "国务院批复《中医药振兴发展「十五五」规划》",
+        "content": "7/10原则同意规划实施；完善中医药传承创新机制、加快推进中医药现代化，为后续中药板块政策预期升温。",
+        "tag": "ok",
+        "sectors": ["中药"],
+        "tier": "龙头",
+        "impact": "high",
+        "timing": "7/10发布"
+      },
       {
         "type": "预告",
         "category": "A",

@@ -700,7 +700,7 @@ def env_synthesis(dim: dict, dims_3d: list) -> str:
 
 # 盘后公告精选：A业绩 B主线强化/证伪 C异动 D政策节点
 CURATE_CAPS_OK = {"A": 5, "B": 4, "C": 3, "D": 2}
-CURATE_CAPS_WEAK = {"A": 3, "B": 2, "C": 4, "D": 1}
+CURATE_CAPS_WEAK = {"A": 3, "B": 2, "C": 3, "D": 2}
 CURATE_CAT_LABEL = {"A": "业绩", "B": "主线", "C": "异动", "D": "节点"}
 TIER_RANK = {"龙头": 3, "中军": 2, "边缘": 1}
 IMPACT_RANK = {"high": 3, "medium": 2, "low": 1}
@@ -737,7 +737,9 @@ def infer_announce_category(item: dict) -> str:
         return "B"
     if any(k in blob for k in ("收购", "订单", "涨价", "量产", "合作", "注册生效", "IPO")):
         return "B"
-    if item.get("type") in ("政策", "事件") or "IPO" in blob or "国标" in blob:
+    if item.get("type") in ("政策", "事件") or any(
+        k in blob for k in ("国务院", "商务部", "发改委", "工信部", "药监局", "央行", "出口管制", "国标")
+    ):
         return "D"
     return "B"
 
@@ -762,17 +764,7 @@ def _curate_sort_key(item: dict, sector_names: list[str], env_weak: bool) -> tup
     return (match, impact + tag_boost, tier)
 
 
-def _is_same_day_post_close(item: dict, as_of: datetime) -> bool:
-    """仅保留报表当日收盘后披露（排除盘前/盘中及其他交易日盘后）。"""
-    if item.get("pre_close") is True:
-        return False
-    timing = str(item.get("timing") or "").strip()
-    if not timing:
-        return False
-    if any(k in timing for k in ("盘前", "盘中", "午间", "早盘", "开盘")):
-        return False
-    if not any(k in timing for k in ("盘后", "晚间", "收盘后")):
-        return False
+def _timing_matches_report_day(timing: str, as_of: datetime) -> bool:
     m, d = as_of.month, as_of.day
     same_day_refs = (
         f"{m}/{d}",
@@ -784,12 +776,39 @@ def _is_same_day_post_close(item: dict, as_of: datetime) -> bool:
     )
     if any(ref in timing for ref in same_day_refs):
         return True
+    for om, od in re.findall(r"(\d{1,2})/(\d{1,2})", timing):
+        if int(om) == m and int(od) == d:
+            return True
+    return False
+
+
+def _is_same_day_post_close(item: dict, as_of: datetime) -> bool:
+    """保留报表当日上市公司盘后披露，或当日公开发布的重要国家政策。"""
+    if item.get("pre_close") is True:
+        return False
+    timing = str(item.get("timing") or "").strip()
+    if not timing:
+        return False
+
+    # 国家政策：当日发布即可（含盘中/盘后/印发/批复等），不要求 15:00 后
+    if item.get("type") == "政策":
+        if not _timing_matches_report_day(timing, as_of):
+            return False
+        policy_markers = ("发布", "印发", "实施", "批复", "出台", "公告", "施行", "盘后", "晚间", "收盘后")
+        if timing in ("盘后", "收盘后"):
+            return True
+        return any(k in timing for k in policy_markers)
+
+    # 上市公司公告：须当日收盘后披露
+    if any(k in timing for k in ("盘前", "盘中", "午间", "早盘", "开盘")):
+        return False
+    if not any(k in timing for k in ("盘后", "晚间", "收盘后")):
+        return False
+    if not _timing_matches_report_day(timing, as_of):
+        return False
     if timing in ("盘后", "收盘后"):
         return True
-    for om, od in re.findall(r"(\d{1,2})/(\d{1,2})", timing):
-        if int(om) != m or int(od) != d:
-            return False
-    return False
+    return True
 
 
 def curate_post_close(
@@ -2676,7 +2695,7 @@ def render_html(ctx: dict) -> str:
       <a href="#sec-trend">10日趋势</a>
       <a href="#sec-env">环境评分</a>
       <a href="#sec-sectors">涨停板块</a>
-      <a href="#sec-post">盘后公告</a>
+      <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
       <a href="#sec-trade">开仓建议</a>
     </nav>
@@ -2716,12 +2735,12 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 4 盘后公告 -->
+  <!-- 4 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
       <div class="section-num">4</div>
-      <div class="section-title">盘后公告</div>
-      <div class="section-sub">仅当日收盘后披露 · 精选摘要</div>
+      <div class="section-title">公告与政策</div>
+      <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
