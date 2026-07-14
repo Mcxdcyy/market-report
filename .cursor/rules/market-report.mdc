@@ -12,11 +12,11 @@ alwaysApply: true
 
 **手机访问（局域网）**：`python3 serve_mobile.py`
 
+**推送**：每次更新报表后 **必须** `git add` 相关文件并 `git push` 到外网（`bash push_github.sh` 或等价命令）；**不要等用户再催**。Token 只需 **repo** 权限。
+
+**Pages 设置**：Settings → Pages → Deploy from a branch → **main** / **docs**（不用 GitHub Actions）
+
 **外网（GitHub Pages）**：https://mcxdcyy.github.io/market-report/
-
-**Pages 设置**：Settings → Pages → Deploy from a branch → **main** / **docs**（不用 GitHub Actions，Token 只需 **repo** 权限）
-
-**推送**：`bash push_github.sh` 或 `git add docs && git push`
 
 ## 报表六段（固定）
 
@@ -43,6 +43,7 @@ alwaysApply: true
    - **禁止**写入：前一交易日盘后、无 `timing` 的旧闻复述、盘面点评
    - 代码层 `_is_same_day_post_close` 会自动过滤不符合项（政策允许当日发布，不要求收盘后）
 5. **未来2周 · 事件与方向**：按 §5 固定四层排版更新 `direction_analysis` + 事件库；`summary` 必写 `2周主线：…` + `当日背景：…`
+6. **推送外网**：`git add`（含 `docs/`、`market_news.json`、`generate_report.py` 等）→ `commit` → `git push`；完成后给出 https://mcxdcyy.github.io/market-report/ 链接。**禁止只更新本地不 push。**
 
 ## 公告与政策（固定标准 · 每次更新必做）
 
@@ -141,6 +142,8 @@ themes[] → 每主题独立卡片；logic 写 2 周内催化、验牌/兑现窗
 - **大盘量能**（大盘成交金额）：差=连续2日总缩量>15% / 连续3日缩量 / 缩量且低于前三日均；好=连续2日放量 / 突破前三日最大量；其余中性（42–58，随近3日均比偏移）
 - **环境结论**：`build_env_callout` 单条 callout
 - **10日趋势**：近 10 个交易日竖轴、6 项指标横轴；A股配色红=偏强、绿=偏弱
+- **主追效应 / 创追效应**（固定权重，勿改回 5:5）：
+  `昨追赚钱效应 × 0.4 + 今追赚钱效应 × 0.6`（今追占比更重；`CHASE_YDAY_W`/`CHASE_TODAY_W`）
 
 ## 涨停板块 · 持续性标签（固定三档）
 

@@ -548,12 +548,24 @@ TREND_SCORE_KEYS = (
 )
 
 
+# 10日趋势 · 主追/创追效应：昨追赚钱效应 : 今追赚钱效应 = 4 : 6（固定）
+CHASE_YDAY_W = 0.4
+CHASE_TODAY_W = 0.6
+
+
 def day_trend_scores(row: pd.Series, full_df: pd.DataFrame) -> dict[str, int]:
-    """单日 10 日趋势用 6 项评分（与八维环境同一套算法）。"""
+    """单日 10 日趋势用 6 项评分（与八维环境同一套算法）。
+
+    主追/创追效应 = 昨追赚钱效应×0.4 + 今追赚钱效应×0.6（今追权重更重）。
+    """
     sub = full_df[full_df["date"] <= row["date"]]
     dim = compute_six_dim(row, sub)
-    main_chase = clamp100(int(round((dim["main_money"] + dim["main_close"]["score"]) / 2)))
-    chuang_chase = clamp100(int(round((dim["chuang_money"] + dim["chuang_close"]["score"]) / 2)))
+    main_chase = clamp100(
+        int(round(dim["main_money"] * CHASE_YDAY_W + dim["main_close"]["score"] * CHASE_TODAY_W))
+    )
+    chuang_chase = clamp100(
+        int(round(dim["chuang_money"] * CHASE_YDAY_W + dim["chuang_close"]["score"] * CHASE_TODAY_W))
+    )
     return {
         "vol": int(dim["vol_score"]),
         "depth": int(dim["depth"]),
