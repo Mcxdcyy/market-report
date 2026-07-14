@@ -2716,7 +2716,6 @@ def render_html(ctx: dict) -> str:
     position: relative;
   }}
   .fwd-cal-item:last-child {{ border-bottom: none; }}
-  .fwd-cal-item.hot {{ background: #fffbf5; }}
   .fwd-cal-date {{
     font-size: 12px; font-weight: 800; color: var(--accent);
     line-height: 1.4; padding-top: 2px;
