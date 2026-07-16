@@ -1052,7 +1052,7 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "预告截止",
         "brief": (
             "沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。"
-            "7月上旬常为「预增抢跑」窗口，截止日前后转入验牌分化——真预增与蹭概念分化加剧。"
+            "截止日后转入验牌分化——真预增与蹭概念分化加剧，资金从预期切换到兑现。"
         ),
         "hot": True,
         "source": "seed",
@@ -1065,9 +1065,10 @@ SEED_EVENT_CATALOG: list[dict] = [
         "title": "WAIC 世界人工智能大会",
         "short": "WAIC",
         "brief": (
-            "上海年度AI顶会（7/17–20），聚焦大模型、具身智能、AI+行业应用与政策导向。"
-            "7/7 起上海官方发布会介绍筹备进展，会前1周为预热窗口；"
-            "历年有新品发布、龙头演讲与地方产业政策，会中看主题龙头竞价与分化。"
+            "上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；"
+            "外交部确认最高领导人出席开幕式并阐述 AI 治理立场。"
+            "会中看点：华为 Atlas 950 真机首展、具身/大模型新品、拟人化互动新规落地后的官方解读；"
+            "应用与政策叙事强于纯硬件二波。"
         ),
         "hot": True,
         "span_end": (7, 20),
@@ -1079,13 +1080,43 @@ SEED_EVENT_CATALOG: list[dict] = [
         "dot": "药",
         "label": "7/22–24",
         "title": "CPIC 中国国际医药创新大会",
-        "short": "CPIC预热",
+        "short": "CPIC",
         "brief": (
-            "医药创新领域重要行业会议，覆盖创新药、CXO、BD授权与审评政策。"
-            "关注临床数据、合作签约与医保/集采预期，创新药板块常提前1–2周博弈会议催化。"
+            "国家会展中心（上海）举办，覆盖创新药、CXO、BD 授权与审评政策。"
+            "关注临床数据、合作签约与医保/集采预期；与同周低空展并行，医药线仍看 BD/业绩锚。"
         ),
         "hot": False,
         "span_end": (7, 24),
+        "source": "seed",
+    },
+    {
+        "month": 7,
+        "day": 22,
+        "dot": "空",
+        "label": "7/22–25",
+        "title": "国际低空经济博览会",
+        "short": "低空展",
+        "brief": (
+            "国家会展中心（上海）7/22–25，低空经济全产业链专业展（约 10 万㎡）。"
+            "关注整机/eVTOL、基础设施与地方政策落地叙事，属板块级会议催化，谨防一日游。"
+        ),
+        "hot": False,
+        "span_end": (7, 25),
+        "source": "seed",
+    },
+    {
+        "month": 7,
+        "day": 25,
+        "dot": "政",
+        "label": "7/25–31",
+        "title": "年中政治局会议窗口",
+        "short": "政治局",
+        "brief": (
+            "历年 7 月下旬召开，分析上半年经济形势、部署下半年工作；具体日期待新华社通稿。"
+            "定调稳增长与资本市场表述，影响消费、高股息与总量预期。"
+        ),
+        "hot": True,
+        "span_end": (7, 31),
         "source": "seed",
     },
 ]
@@ -1128,10 +1159,10 @@ def _event_has_strong_theme(title: str) -> bool:
 
 
 def _event_is_waic_prep_noise(title: str) -> bool:
-    """WAIC 会前官方吹风/筹备发布会，不单列为节点，说明并入 WAIC seed。"""
+    """WAIC 会前吹风/筹备/亮相预告/闭幕日，不单列，说明并入 WAIC seed。"""
     if not any(k in title for k in ("世界人工智能", "WAIC", "人工智能大会")):
         return False
-    if any(k in title for k in ("筹备", "预热", "吹风")):
+    if any(k in title for k in ("筹备", "预热", "吹风", "闭幕", "亮相", "即将")):
         return True
     return "发布会" in title and "介绍" in title
 
@@ -1266,9 +1297,8 @@ def _event_short(title: str) -> str:
 def _event_brief(title: str) -> str:
     if "WAIC" in title or "世界人工智能大会" in title:
         return (
-            "上海年度AI顶会（7/17–20），聚焦大模型、具身智能、AI+行业应用与政策导向。"
-            "7/7 起上海官方发布会介绍筹备进展，会前1周为预热窗口；"
-            "历年有新品发布、龙头演讲与地方产业政策，会中看主题龙头竞价与分化。"
+            "上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；"
+            "最高领导人出席开幕式。会中看 Atlas 950、具身/大模型新品与治理政策叙事。"
         )
     if "预告" in title or "中报" in title:
         return "财报验证节点，预增抢跑与蹭概念分化，截止日前后波动通常放大。"
@@ -1403,29 +1433,62 @@ def save_event_catalog(catalog: list[dict]) -> None:
     )
 
 
+def _seed_covers_event(seed: dict, ev: dict) -> bool:
+    """同日或落在 seed 跨度内的同主题事件，并入 seed，不单列。"""
+    if seed.get("source") != "seed":
+        return False
+    sm, sd = seed["month"], seed["day"]
+    em, ed = ev["month"], ev["day"]
+    span = seed.get("span_end")
+    if span:
+        start = (sm, sd)
+        end = (int(span[0]), int(span[1]))
+        point = (em, ed)
+        if not (start <= point <= end):
+            return False
+    elif sm != em or sd != ed:
+        return False
+    st, et = seed.get("title", ""), ev.get("title", "")
+    keys = (
+        "WAIC", "人工智能大会", "中报", "预告", "CPIC", "医药创新",
+        "低空", "政治局", "具身", "机器人",
+    )
+    return any(k in st and k in et for k in keys) or st in et or et in st
+
+
 def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
+    """优先用当日联网抓取；抓取成功时不再堆叠过期本地缓存。"""
     as_of = _as_cn_dt(as_of).replace(tzinfo=None)
     year = as_of.year
     fetched = fetch_wscn_events(as_of)
     catalog: list[dict] = [dict(ev) for ev in SEED_EVENT_CATALOG]
-    for old in load_event_catalog_file():
-        matched = False
-        for i, cur in enumerate(catalog):
-            if _events_match(old, cur):
-                catalog[i] = _merge_event(cur, old)
-                matched = True
-                break
-        if not matched:
-            catalog.append(old)
+
+    def _merge_into(catalog_list: list[dict], inc: dict) -> None:
+        for i, cur in enumerate(catalog_list):
+            if _events_match(cur, inc) or _seed_covers_event(cur, inc):
+                catalog_list[i] = _merge_event(cur, inc)
+                return
+        catalog_list.append(inc)
+
     for inc in fetched:
-        matched = False
-        for i, cur in enumerate(catalog):
-            if _events_match(cur, inc):
-                catalog[i] = _merge_event(cur, inc)
-                matched = True
-                break
-        if not matched:
-            catalog.append(inc)
+        if _event_is_waic_prep_noise(inc.get("title", "")):
+            # 仍把新信息并入 WAIC seed brief（seed brief 已人工维护，只标 hot）
+            for i, cur in enumerate(catalog):
+                if _seed_covers_event(cur, inc) or (
+                    cur.get("source") == "seed" and "WAIC" in cur.get("title", "")
+                ):
+                    catalog[i]["hot"] = bool(catalog[i].get("hot") or inc.get("hot"))
+                    break
+            continue
+        _merge_into(catalog, inc)
+
+    # 仅抓取失败时回退本地文件，避免「沿用本地」堆出过期节点
+    if not fetched:
+        for old in load_event_catalog_file():
+            if _event_is_waic_prep_noise(old.get("title", "")):
+                continue
+            _merge_into(catalog, old)
+
     cutoff = as_of - timedelta(days=3)
     pruned: list[dict] = []
     for ev in catalog:
@@ -1434,17 +1497,10 @@ def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
     pruned.sort(key=lambda e: (e["month"], e["day"], e.get("title", "")))
     pruned = [ev for ev in pruned if _event_is_catalyst(ev.get("title", ""), ev)]
     save_event_catalog(pruned)
-    today = as_of.strftime("%Y-%m-%d")
-    wscn_today = sum(
-        1 for ev in pruned if ev.get("source") == "wscn" and ev.get("fetched_at") == today
-    )
     if fetched:
-        kept = sum(1 for ev in pruned if ev.get("source") == "wscn")
-        note = f"已同步 {kept} 条炒作线索"
-    elif wscn_today:
-        note = f"本地事件库（含今日 {wscn_today} 条炒作线索）"
+        note = f"已同步 {len(fetched)} 条日历线索"
     else:
-        note = "沿用本地事件库"
+        note = "网络抓取失败，暂用种子事件"
     return pruned, note
 
 
@@ -2160,8 +2216,9 @@ def render_fwd_section_html(
     for n in event_nodes or []:
         if cutoff:
             em, ed = _parse_cal_sort_key(n.get("label", ""))
-            if datetime(as_of.year if as_of else 2026, em, ed).date() < cutoff:
-                continue
+            if 1 <= em <= 12 and 1 <= ed <= 31:
+                if datetime(as_of.year if as_of else 2026, em, ed).date() < cutoff:
+                    continue
         key = f"{n.get('label', '')}|{n.get('title', '')}"
         if key in seen:
             continue
