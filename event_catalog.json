@@ -1,45 +1,6 @@
 [
   {
     "month": 7,
-    "day": 10,
-    "dot": "机",
-    "label": "7/10",
-    "title": "2026中国具身智能机器人产业展7月10-12日举行",
-    "short": "具身",
-    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-07-16"
-  },
-  {
-    "month": 7,
-    "day": 11,
-    "dot": "机",
-    "label": "7/11",
-    "title": "2026“机器人+”创新发展大会7月11-13日举行",
-    "short": "机器人",
-    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-07-16"
-  },
-  {
-    "month": 7,
-    "day": 15,
-    "dot": "AI",
-    "label": "7/15",
-    "title": "中国（西部）国际人工智能与具身智能机器人产业链大会",
-    "short": "具身",
-    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-07-16"
-  },
-  {
-    "month": 7,
     "day": 15,
     "dot": "15",
     "label": "7/15",
@@ -47,22 +8,7 @@
     "short": "预告截止",
     "brief": "沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。截止日后转入验牌分化——真预增与蹭概念分化加剧，资金从预期切换到兑现。",
     "hot": true,
-    "importance": 3,
-    "source": "seed",
-    "fetched_at": "2026-07-16"
-  },
-  {
-    "month": 7,
-    "day": 15,
-    "dot": "15",
-    "label": "7/15",
-    "title": "国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况",
-    "short": "国新办举行新闻发…",
-    "brief": "国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况。关注相关板块竞价与持续性。",
-    "hot": false,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-07-16"
+    "source": "seed"
   },
   {
     "month": 7,
@@ -105,11 +51,13 @@
     "short": "低空展",
     "brief": "国家会展中心（上海）7/22–25，低空经济全产业链专业展（约 10 万㎡）。关注整机/eVTOL、基础设施与地方政策落地叙事，属板块级会议催化，谨防一日游。",
     "hot": false,
+    "importance": 3,
+    "source": "seed",
+    "fetched_at": "2026-07-16",
     "span_end": [
       7,
       25
-    ],
-    "source": "seed"
+    ]
   },
   {
     "month": 7,
