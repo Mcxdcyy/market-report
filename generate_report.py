@@ -17,6 +17,7 @@ import re
 import shutil
 import ssl
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -1387,43 +1388,42 @@ def _merge_event(base: dict, incoming: dict) -> dict:
     return merged
 
 
-def fetch_wscn_events(as_of: datetime, days: int = 14) -> list[dict]:
+def fetch_wscn_events(as_of: datetime, days: int = 14, retries: int = 3) -> list[dict]:
+    """联网抓取未来日历。失败自动重试；全部失败则抛错——禁止静默沿用本地事件库。"""
     start = _as_cn_dt(as_of).replace(hour=0, minute=0, second=0, microsecond=0)
     end = start + timedelta(days=days, hours=23, minutes=59, seconds=59)
     params = {"start": int(start.timestamp()), "end": int(end.timestamp())}
-    try:
-        data = _http_json(WSCN_CAL_URL, params)
-        items = (data.get("data") or {}).get("items") or []
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
-        print(f"事件抓取失败，使用本地缓存: {exc}", file=sys.stderr)
-        return []
-    out: list[dict] = []
-    seen: set[str] = set()
-    for item in items:
-        if not _wscn_relevant(item):
-            continue
-        ev = _wscn_to_catalog(item)
-        if not ev:
-            continue
-        key = f"{ev['month']:02d}-{ev['day']:02d}-{ev['title'][:16]}"
-        if key in seen:
-            continue
-        seen.add(key)
-        out.append(ev)
-    return out
-
-
-def load_event_catalog_file() -> list[dict]:
-    if not EVENT_CATALOG_FILE.exists():
-        return []
-    try:
-        raw = json.loads(EVENT_CATALOG_FILE.read_text(encoding="utf-8"))
-        return raw if isinstance(raw, list) else []
-    except (json.JSONDecodeError, OSError):
-        return []
+    last_exc: Exception | None = None
+    for attempt in range(1, retries + 1):
+        try:
+            data = _http_json(WSCN_CAL_URL, params)
+            items = (data.get("data") or {}).get("items") or []
+            out: list[dict] = []
+            seen: set[str] = set()
+            for item in items:
+                if not _wscn_relevant(item):
+                    continue
+                ev = _wscn_to_catalog(item)
+                if not ev:
+                    continue
+                key = f"{ev['month']:02d}-{ev['day']:02d}-{ev['title'][:16]}"
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append(ev)
+            return out
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError, OSError) as exc:
+            last_exc = exc
+            print(f"事件抓取失败({attempt}/{retries}): {exc}", file=sys.stderr)
+            if attempt < retries:
+                time.sleep(1.5 * attempt)
+    raise RuntimeError(
+        f"事件日历抓取失败（已重试 {retries} 次），禁止沿用本地事件库，请检查网络后重新生成: {last_exc}"
+    )
 
 
 def save_event_catalog(catalog: list[dict]) -> None:
+    """仅写出本次同步结果，不作下次输入源。"""
     payload = []
     for ev in catalog:
         payload.append({k: v for k, v in ev.items() if not str(k).startswith("_")})
@@ -1457,10 +1457,10 @@ def _seed_covers_event(seed: dict, ev: dict) -> bool:
 
 
 def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
-    """优先用当日联网抓取；抓取成功时不再堆叠过期本地缓存。"""
+    """每次必须联网抓取：seed + 当日抓取；禁止读取/回退 event_catalog.json。"""
     as_of = _as_cn_dt(as_of).replace(tzinfo=None)
     year = as_of.year
-    fetched = fetch_wscn_events(as_of)
+    fetched = fetch_wscn_events(as_of)  # 失败会抛错并中断报表生成
     catalog: list[dict] = [dict(ev) for ev in SEED_EVENT_CATALOG]
 
     def _merge_into(catalog_list: list[dict], inc: dict) -> None:
@@ -1472,7 +1472,6 @@ def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
 
     for inc in fetched:
         if _event_is_waic_prep_noise(inc.get("title", "")):
-            # 仍把新信息并入 WAIC seed brief（seed brief 已人工维护，只标 hot）
             for i, cur in enumerate(catalog):
                 if _seed_covers_event(cur, inc) or (
                     cur.get("source") == "seed" and "WAIC" in cur.get("title", "")
@@ -1482,13 +1481,6 @@ def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
             continue
         _merge_into(catalog, inc)
 
-    # 仅抓取失败时回退本地文件，避免「沿用本地」堆出过期节点
-    if not fetched:
-        for old in load_event_catalog_file():
-            if _event_is_waic_prep_noise(old.get("title", "")):
-                continue
-            _merge_into(catalog, old)
-
     cutoff = as_of - timedelta(days=3)
     pruned: list[dict] = []
     for ev in catalog:
@@ -1497,10 +1489,7 @@ def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
     pruned.sort(key=lambda e: (e["month"], e["day"], e.get("title", "")))
     pruned = [ev for ev in pruned if _event_is_catalyst(ev.get("title", ""), ev)]
     save_event_catalog(pruned)
-    if fetched:
-        note = f"已同步 {len(fetched)} 条日历线索"
-    else:
-        note = "网络抓取失败，暂用种子事件"
+    note = f"已同步 {len(fetched)} 条日历线索"
     return pruned, note
 
 
