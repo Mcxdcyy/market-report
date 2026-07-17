@@ -2823,7 +2823,9 @@ def render_html(ctx: dict) -> str:
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }}
     .hero {{
+      position: static;
       margin-bottom: 8px; padding: 12px 12px 10px;
+      box-shadow: none;
     }}
     .hero-top {{ flex-direction: column; gap: 10px; }}
     .hero h1 {{ font-size: 24px; }}
