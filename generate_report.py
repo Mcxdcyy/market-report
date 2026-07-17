@@ -2401,29 +2401,11 @@ def render_html(ctx: dict) -> str:
 
     m = ctx["modes"]
     reason_tags = "".join(f'<span class="reason-tag">{r}</span>' for r in m["reasons"])
-
-    def gauge_block(label: str, score: int, hint: str, marks: list) -> str:
-        c = score_bar(score)
-        marks_html = "".join(
-            f'<div class="g-mark{" major" if "主用" in t or "承接" in t else ""}" style="left:{p}%" title="{t}"></div>'
-            for p, t in marks
-        )
-        return f'''<div class="gauge-block">
-      <div class="gauge-top"><span class="gauge-name">{label}</span><span class="gauge-score" style="color:{c}">{score}</span></div>
-      <div class="gauge-track">{marks_html}<div class="gauge-fill" style="width:{score}%;background:{c}"></div></div>
-      <div class="gauge-hint">{hint}</div>
-    </div>'''
-
-    gauge_html = (
-        gauge_block("承接得分", m["carry_score"], "昨追赚钱效应 + 活跃度背离 + 今追赚钱效应",
-                    [(55, "承接线55")])
-        + gauge_block("模式得分", m["trend_score"], "结构是否支持试单/加仓",
-                      [(m["threshold_try"], "试单线40"), (m["threshold_full"], "主用线60")])
-    )
-
-    alert_html = ""
+    carry_c = score_bar(m["carry_score"])
+    trend_c = score_bar(m["trend_score"])
+    hero_alert = ""
     if ctx["advice"]["alerts"] != "暂无极端信号":
-        alert_html = f'<div class="trade-alert">{ctx["advice"]["alerts"]}</div>'
+        hero_alert = f'<div class="hero-alert">{ctx["advice"]["alerts"]}</div>'
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -2503,6 +2485,22 @@ def render_html(ctx: dict) -> str:
   .hero-decision.ok .hero-mode {{ color: #1a7a34; }}
   .hero-decision.warn .hero-mode {{ color: #b25000; }}
   .hero-decision.bad .hero-mode {{ color: #c41e16; }}
+  .hero-body {{ margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }}
+  .hero-summary {{ font-size: 13px; color: var(--sub); line-height: 1.55; }}
+  .hero-metrics {{
+    display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px; align-items: baseline;
+  }}
+  .hero-metric {{ font-size: 12px; color: var(--muted); }}
+  .hero-metric b {{ font-size: 16px; font-weight: 800; letter-spacing: -0.4px; margin-left: 4px; }}
+  .hero-reasons {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }}
+  .reason-tag {{
+    font-size: 11px; padding: 4px 9px; background: #f0f0f5;
+    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
+  }}
+  .hero-alert {{
+    margin-top: 8px; font-size: 12px; color: #a01810; background: var(--bad-bg);
+    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 8px 11px;
+  }}
 
   .page-nav {{
     display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
@@ -2813,56 +2811,6 @@ def render_html(ctx: dict) -> str:
   }}
   .dir-logic {{ font-size: 12px; color: var(--sub); line-height: 1.65; }}
 
-  /* ── 开仓建议 ── */
-  .trade-panel {{ display: flex; flex-direction: column; gap: 8px; }}
-  .trade-banner {{
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);
-  }}
-  .trade-banner.ok {{ background: linear-gradient(135deg, #f0fdf4, #fff); border-color: #30d15850; }}
-  .trade-banner.warn {{ background: linear-gradient(135deg, #fffbf0, #fff); border-color: #ff9f0a50; }}
-  .trade-banner.bad {{ background: linear-gradient(135deg, #fff5f5, #fff); border-color: #ff453a50; }}
-  .trade-status {{
-    font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-    padding: 3px 8px; border-radius: 5px; margin-bottom: 4px; display: inline-block;
-  }}
-  .trade-banner.ok .trade-status {{ background: var(--ok-bg); color: #1a7a34; }}
-  .trade-banner.warn .trade-status {{ background: var(--warn-bg); color: #b25000; }}
-  .trade-banner.bad .trade-status {{ background: var(--bad-bg); color: #c41e16; }}
-  .trade-label {{ font-size: 18px; font-weight: 800; }}
-  .trade-date {{ font-size: 12px; color: var(--muted); }}
-  .trade-summary {{ font-size: 13px; color: var(--sub); line-height: 1.6; padding: 0 2px; }}
-
-  .gauge-row {{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }}
-  @media (max-width: 560px) {{ .gauge-row {{ grid-template-columns: 1fr; }} }}
-  .gauge-block {{
-    background: #f9f9fb; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px;
-  }}
-  .gauge-top {{ display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }}
-  .gauge-name {{ font-size: 12px; font-weight: 600; color: var(--sub); }}
-  .gauge-score {{ font-size: 24px; font-weight: 800; letter-spacing: -1px; line-height: 1; }}
-  .gauge-track {{
-    position: relative; height: 8px; background: #e5e5ea; border-radius: 99px; overflow: visible;
-  }}
-  .gauge-fill {{ height: 100%; border-radius: 99px; }}
-  .g-mark {{
-    position: absolute; top: -3px; width: 2px; height: 14px;
-    background: var(--muted); opacity: .6; z-index: 2; transform: translateX(-50%);
-  }}
-  .g-mark.major {{ background: var(--text); opacity: .35; }}
-  .gauge-hint {{ font-size: 11px; color: var(--muted); margin-top: 7px; }}
-
-  .reason-tags {{ display: flex; flex-wrap: wrap; gap: 6px; }}
-  .reason-tag {{
-    font-size: 11px; padding: 5px 10px; background: #f0f0f5;
-    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
-  }}
-  .reason-label {{ font-size: 10px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: .3px; }}
-  .trade-alert {{
-    font-size: 12px; color: #a01810; background: var(--bad-bg);
-    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 11px 13px;
-  }}
-
   .pill {{
     display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;
     font-weight: 600; white-space: nowrap;
@@ -2886,9 +2834,7 @@ def render_html(ctx: dict) -> str:
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }}
     .hero {{
-      position: sticky; top: 0; z-index: 200;
       margin-bottom: 8px; padding: 12px 12px 10px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.06);
     }}
     .hero-top {{ flex-direction: column; gap: 10px; }}
     .hero h1 {{ font-size: 24px; }}
@@ -2897,6 +2843,11 @@ def render_html(ctx: dict) -> str:
     .hero-status {{ font-size: 12px; }}
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
+    .hero-summary {{ font-size: 15px; }}
+    .hero-metric {{ font-size: 13px; }}
+    .hero-metric b {{ font-size: 18px; }}
+    .reason-tag {{ font-size: 13px; }}
+    .hero-alert {{ font-size: 14px; }}
     .page-nav {{
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       gap: 6px; padding-bottom: 2px; margin-top: 8px;
@@ -2961,16 +2912,6 @@ def render_html(ctx: dict) -> str:
     .fwd-cal-title {{ font-size: 14px; }}
     .fwd-cal-note {{ font-size: 14px; line-height: 1.7; }}
     .fwd-cal-date {{ font-size: 13px; }}
-    .trade-status {{ font-size: 12px; }}
-    .trade-label {{ font-size: 20px; }}
-    .trade-date {{ font-size: 14px; }}
-    .trade-summary {{ font-size: 15px; }}
-    .gauge-name {{ font-size: 14px; }}
-    #sec-trade .gauge-score {{ font-size: 22px; }}
-    .gauge-hint {{ font-size: 13px; }}
-    .trade-alert {{ font-size: 14px; }}
-    .reason-label {{ font-size: 12px; }}
-    .reason-tag {{ font-size: 13px; }}
     .footer {{ font-size: 13px; }}
   }}
 
@@ -2998,6 +2939,15 @@ def render_html(ctx: dict) -> str:
         <div class="hero-mode">{m['primary_label']}</div>
       </div>
     </div>
+    <div class="hero-body">
+      <div class="hero-summary">{m['summary']}</div>
+      <div class="hero-metrics">
+        <span class="hero-metric">承接<b style="color:{carry_c}">{m['carry_score']}</b></span>
+        <span class="hero-metric">模式<b style="color:{trend_c}">{m['trend_score']}</b></span>
+      </div>
+      <div class="hero-reasons">{reason_tags}</div>
+      {hero_alert}
+    </div>
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
@@ -3005,7 +2955,6 @@ def render_html(ctx: dict) -> str:
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
-      <a href="#sec-trade">开仓建议</a>
     </nav>
   </header>
 
@@ -3065,31 +3014,6 @@ def render_html(ctx: dict) -> str:
       </div>
     </div>
     {fwd_section_html}
-  </div>
-
-  <!-- 6 开仓 -->
-  <div class="section" id="sec-trade">
-    <div class="section-head">
-      <div class="section-num">6</div>
-      <div class="section-title">开仓建议</div>
-      <div class="section-sub">{ctx['advice']['nxt_label']}</div>
-    </div>
-    <div class="trade-panel">
-      <div class="trade-banner {m['pill']}">
-        <div>
-          <span class="trade-status">{m['status']}</span>
-          <div class="trade-label">{m['primary_label']}</div>
-        </div>
-        <div class="trade-date">{ctx['advice']['nxt_label']}</div>
-      </div>
-      <div class="gauge-row">{gauge_html}</div>
-      <div class="trade-summary">{m['summary']}</div>
-      <div>
-        <div class="reason-label">判断依据</div>
-        <div class="reason-tags">{reason_tags}</div>
-      </div>
-      {alert_html}
-    </div>
   </div>
 
   <div class="footer">大盘数据.numbers · 生成于 {ctx['generated']}</div>

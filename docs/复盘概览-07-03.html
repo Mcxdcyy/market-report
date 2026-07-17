@@ -76,6 +76,22 @@
   .hero-decision.ok .hero-mode { color: #1a7a34; }
   .hero-decision.warn .hero-mode { color: #b25000; }
   .hero-decision.bad .hero-mode { color: #c41e16; }
+  .hero-body { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .hero-summary { font-size: 13px; color: var(--sub); line-height: 1.55; }
+  .hero-metrics {
+    display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px; align-items: baseline;
+  }
+  .hero-metric { font-size: 12px; color: var(--muted); }
+  .hero-metric b { font-size: 16px; font-weight: 800; letter-spacing: -0.4px; margin-left: 4px; }
+  .hero-reasons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .reason-tag {
+    font-size: 11px; padding: 4px 9px; background: #f0f0f5;
+    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
+  }
+  .hero-alert {
+    margin-top: 8px; font-size: 12px; color: #a01810; background: var(--bad-bg);
+    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 8px 11px;
+  }
 
   .page-nav {
     display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
@@ -386,56 +402,6 @@
   }
   .dir-logic { font-size: 12px; color: var(--sub); line-height: 1.65; }
 
-  /* ── 开仓建议 ── */
-  .trade-panel { display: flex; flex-direction: column; gap: 8px; }
-  .trade-banner {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);
-  }
-  .trade-banner.ok { background: linear-gradient(135deg, #f0fdf4, #fff); border-color: #30d15850; }
-  .trade-banner.warn { background: linear-gradient(135deg, #fffbf0, #fff); border-color: #ff9f0a50; }
-  .trade-banner.bad { background: linear-gradient(135deg, #fff5f5, #fff); border-color: #ff453a50; }
-  .trade-status {
-    font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-    padding: 3px 8px; border-radius: 5px; margin-bottom: 4px; display: inline-block;
-  }
-  .trade-banner.ok .trade-status { background: var(--ok-bg); color: #1a7a34; }
-  .trade-banner.warn .trade-status { background: var(--warn-bg); color: #b25000; }
-  .trade-banner.bad .trade-status { background: var(--bad-bg); color: #c41e16; }
-  .trade-label { font-size: 18px; font-weight: 800; }
-  .trade-date { font-size: 12px; color: var(--muted); }
-  .trade-summary { font-size: 13px; color: var(--sub); line-height: 1.6; padding: 0 2px; }
-
-  .gauge-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  @media (max-width: 560px) { .gauge-row { grid-template-columns: 1fr; } }
-  .gauge-block {
-    background: #f9f9fb; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px;
-  }
-  .gauge-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-  .gauge-name { font-size: 12px; font-weight: 600; color: var(--sub); }
-  .gauge-score { font-size: 24px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
-  .gauge-track {
-    position: relative; height: 8px; background: #e5e5ea; border-radius: 99px; overflow: visible;
-  }
-  .gauge-fill { height: 100%; border-radius: 99px; }
-  .g-mark {
-    position: absolute; top: -3px; width: 2px; height: 14px;
-    background: var(--muted); opacity: .6; z-index: 2; transform: translateX(-50%);
-  }
-  .g-mark.major { background: var(--text); opacity: .35; }
-  .gauge-hint { font-size: 11px; color: var(--muted); margin-top: 7px; }
-
-  .reason-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .reason-tag {
-    font-size: 11px; padding: 5px 10px; background: #f0f0f5;
-    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
-  }
-  .reason-label { font-size: 10px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: .3px; }
-  .trade-alert {
-    font-size: 12px; color: #a01810; background: var(--bad-bg);
-    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 11px 13px;
-  }
-
   .pill {
     display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;
     font-weight: 600; white-space: nowrap;
@@ -459,9 +425,7 @@
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }
     .hero {
-      position: sticky; top: 0; z-index: 200;
       margin-bottom: 8px; padding: 12px 12px 10px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.06);
     }
     .hero-top { flex-direction: column; gap: 10px; }
     .hero h1 { font-size: 24px; }
@@ -470,6 +434,11 @@
     .hero-status { font-size: 12px; }
     .hero-decision { width: 100%; text-align: left; min-width: 0; }
     .hero-mode { font-size: 22px; }
+    .hero-summary { font-size: 15px; }
+    .hero-metric { font-size: 13px; }
+    .hero-metric b { font-size: 18px; }
+    .reason-tag { font-size: 13px; }
+    .hero-alert { font-size: 14px; }
     .page-nav {
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       gap: 6px; padding-bottom: 2px; margin-top: 8px;
@@ -534,16 +503,6 @@
     .fwd-cal-title { font-size: 14px; }
     .fwd-cal-note { font-size: 14px; line-height: 1.7; }
     .fwd-cal-date { font-size: 13px; }
-    .trade-status { font-size: 12px; }
-    .trade-label { font-size: 20px; }
-    .trade-date { font-size: 14px; }
-    .trade-summary { font-size: 15px; }
-    .gauge-name { font-size: 14px; }
-    #sec-trade .gauge-score { font-size: 22px; }
-    .gauge-hint { font-size: 13px; }
-    .trade-alert { font-size: 14px; }
-    .reason-label { font-size: 12px; }
-    .reason-tag { font-size: 13px; }
     .footer { font-size: 13px; }
   }
 
@@ -571,6 +530,15 @@
         <div class="hero-mode">空仓观望</div>
       </div>
     </div>
+    <div class="hero-body">
+      <div class="hero-summary">模式或承接不足，空仓等待昨追赚钱效应修复、新高回升。</div>
+      <div class="hero-metrics">
+        <span class="hero-metric">承接<b style="color:#FF3B30">13</b></span>
+        <span class="hero-metric">模式<b style="color:#FF3B30">0</b></span>
+      </div>
+      <div class="hero-reasons"><span class="reason-tag">新高仅27家</span><span class="reason-tag">市场缩量，趋势难续航</span><span class="reason-tag">情绪弱或昨追赚钱效应偏弱</span><span class="reason-tag">主板昨追赚钱效应-10.2%，效应枯竭</span></div>
+      <div class="hero-alert">3日急降28分｜新高27家（趋势强度不足）｜成交额缩量7.8%</div>
+    </div>
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
@@ -578,7 +546,6 @@
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
-      <a href="#sec-trade">开仓建议</a>
     </nav>
   </header>
 
@@ -871,40 +838,7 @@
     <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/10</div><div class="fwd-tsub">2026中国具身智能机器人产业展7月10-12日举行</div></div><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/11</div><div class="fwd-tsub">2026“机器人+”创新发展大会7月11-13日举行</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">15</div><div class="fwd-tlabel">7/15</div><div class="fwd-tsub">中国（西部）国际人工智能与具身智能机器人产业链大会+2</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">AI</div><div class="fwd-tlabel">7/17–20</div><div class="fwd-tsub">WAIC 世界人工智能大会</div></div><div class="fwd-tnode"><div class="fwd-tdot">药</div><div class="fwd-tlabel">7/22–24</div><div class="fwd-tsub">CPIC 中国国际医药创新大会</div></div><div class="fwd-tnode"><div class="fwd-tdot">空</div><div class="fwd-tlabel">7/22–25</div><div class="fwd-tsub">国际低空经济博览会</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-date">7/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026中国具身智能机器人产业展7月10-12日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/11</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026“机器人+”创新发展大会7月11-13日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（西部）国际人工智能与具身智能机器人产业链大会</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中报预告截止</span></div><p class="fwd-cal-note">沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。截止日后转入验牌分化——真预增与蹭概念分化加剧，资金从预期切换到兑现。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况</span></div><p class="fwd-cal-note">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/17–20</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">WAIC 世界人工智能大会</span></div><p class="fwd-cal-note">上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；外交部确认最高领导人出席开幕式并阐述 AI 治理立场。会中看点：华为 Atlas 950 真机…</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/22–24</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">CPIC 中国国际医药创新大会</span></div><p class="fwd-cal-note">国家会展中心（上海）举办，覆盖创新药、CXO、BD 授权与审评政策。关注临床数据、合作签约与医保/集采预期；与同周低空展并行，医药线仍看 BD/业绩锚。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/22–25</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国际低空经济博览会</span></div><p class="fwd-cal-note">国家会展中心（上海）7/22–25，低空经济全产业链专业展（约 10 万㎡）。关注整机/eVTOL、基础设施与地方政策落地叙事，属板块级会议催化，谨防一日游。</p></div></div></div></div><div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>
   </div>
 
-  <!-- 6 开仓 -->
-  <div class="section" id="sec-trade">
-    <div class="section-head">
-      <div class="section-num">6</div>
-      <div class="section-title">开仓建议</div>
-      <div class="section-sub">07/06 周一</div>
-    </div>
-    <div class="trade-panel">
-      <div class="trade-banner bad">
-        <div>
-          <span class="trade-status">空仓</span>
-          <div class="trade-label">空仓观望</div>
-        </div>
-        <div class="trade-date">07/06 周一</div>
-      </div>
-      <div class="gauge-row"><div class="gauge-block">
-      <div class="gauge-top"><span class="gauge-name">承接得分</span><span class="gauge-score" style="color:#FF3B30">13</span></div>
-      <div class="gauge-track"><div class="g-mark major" style="left:55%" title="承接线55"></div><div class="gauge-fill" style="width:13%;background:#FF3B30"></div></div>
-      <div class="gauge-hint">昨追赚钱效应 + 活跃度背离 + 今追赚钱效应</div>
-    </div><div class="gauge-block">
-      <div class="gauge-top"><span class="gauge-name">模式得分</span><span class="gauge-score" style="color:#FF3B30">0</span></div>
-      <div class="gauge-track"><div class="g-mark" style="left:40%" title="试单线40"></div><div class="g-mark major" style="left:60%" title="主用线60"></div><div class="gauge-fill" style="width:0%;background:#FF3B30"></div></div>
-      <div class="gauge-hint">结构是否支持试单/加仓</div>
-    </div></div>
-      <div class="trade-summary">模式或承接不足，空仓等待昨追赚钱效应修复、新高回升。</div>
-      <div>
-        <div class="reason-label">判断依据</div>
-        <div class="reason-tags"><span class="reason-tag">新高仅27家</span><span class="reason-tag">市场缩量，趋势难续航</span><span class="reason-tag">情绪弱或昨追赚钱效应偏弱</span><span class="reason-tag">主板昨追赚钱效应-10.2%，效应枯竭</span></div>
-      </div>
-      <div class="trade-alert">3日急降28分｜新高27家（趋势强度不足）｜成交额缩量7.8%</div>
-    </div>
-  </div>
-
-  <div class="footer">大盘数据.numbers · 生成于 2026-07-17 15:48</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-07-17 16:11</div>
 </div>
 </body>
 </html>
