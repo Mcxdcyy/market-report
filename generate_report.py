@@ -2489,7 +2489,7 @@ def render_html(ctx: dict) -> str:
   .hero-decision.bad .hero-mode {{ color: #c41e16; }}
   .hero-summary {{
     margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
-    font-size: 13px; line-height: 1.55; font-weight: 600;
+    font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }}
 
@@ -2838,7 +2838,7 @@ def render_html(ctx: dict) -> str:
     .hero-status {{ font-size: 12px; }}
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
-    .hero-summary {{ font-size: 15px; }}
+    .hero-summary {{ font-size: 14px; font-weight: 400; }}
     .page-nav {{
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       gap: 6px; padding-bottom: 2px; margin-top: 8px;
