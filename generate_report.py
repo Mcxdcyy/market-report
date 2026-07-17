@@ -2412,6 +2412,8 @@ def render_html(ctx: dict) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="复">
@@ -2823,7 +2825,9 @@ def render_html(ctx: dict) -> str:
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }}
     .hero {{
-      position: static;
+      position: static !important;
+      top: auto !important;
+      z-index: auto !important;
       margin-bottom: 8px; padding: 12px 12px 10px;
       box-shadow: none;
     }}
@@ -3126,12 +3130,14 @@ def write_index_html() -> Path:
         reports.append((label, p.name, mode))
 
     latest = reports[0] if reports else None
+    bust = datetime.now().strftime("%Y%m%d%H%M")
     cards = []
     for i, (label, fname, mode) in enumerate(reports):
         badge = '<span class="idx-badge latest">最新</span>' if i == 0 else ""
         mode_html = f'<div class="idx-mode">{mode}</div>' if mode else ""
+        href = f"{fname}?v={bust}"
         cards.append(
-            f'''<a class="idx-card{" featured" if i == 0 else ""}" href="{fname}">
+            f'''<a class="idx-card{" featured" if i == 0 else ""}" href="{href}">
       <div class="idx-card-top"><span class="idx-date">{label}</span>{badge}</div>
       {mode_html}
       <div class="idx-arrow">查看 ›</div>
@@ -3139,7 +3145,7 @@ def write_index_html() -> Path:
         )
     cards_html = "".join(cards) if cards else '<p class="idx-empty">暂无报告，请先运行 generate_report.py</p>'
     latest_btn = (
-        f'<a class="idx-hero-btn" href="{latest[1]}">打开最新复盘 · {latest[0]}</a>'
+        f'<a class="idx-hero-btn" href="{latest[1]}?v={bust}">打开最新复盘 · {latest[0]}</a>'
         if latest else ""
     )
     html = f"""<!DOCTYPE html>

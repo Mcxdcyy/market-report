@@ -438,10 +438,12 @@
       padding: 8px 8px calc(72px + env(safe-area-inset-bottom, 0px));
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }
-    .hero {
-      position: sticky; top: 0; z-index: 200;
+.hero {
+      position: static !important;
+      top: auto !important;
+      z-index: auto !important;
       margin-bottom: 8px; padding: 12px 12px 10px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      box-shadow: none;
     }
     .hero-top { flex-direction: column; gap: 10px; }
     .hero h1 { font-size: 24px; }
