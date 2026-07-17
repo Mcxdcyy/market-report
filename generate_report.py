@@ -2400,12 +2400,6 @@ def render_html(ctx: dict) -> str:
     )
 
     m = ctx["modes"]
-    reason_tags = "".join(f'<span class="reason-tag">{r}</span>' for r in m["reasons"])
-    carry_c = score_bar(m["carry_score"])
-    trend_c = score_bar(m["trend_score"])
-    hero_alert = ""
-    if ctx["advice"]["alerts"] != "暂无极端信号":
-        hero_alert = f'<div class="hero-alert">{ctx["advice"]["alerts"]}</div>'
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -2485,21 +2479,9 @@ def render_html(ctx: dict) -> str:
   .hero-decision.ok .hero-mode {{ color: #1a7a34; }}
   .hero-decision.warn .hero-mode {{ color: #b25000; }}
   .hero-decision.bad .hero-mode {{ color: #c41e16; }}
-  .hero-body {{ margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }}
-  .hero-summary {{ font-size: 13px; color: var(--sub); line-height: 1.55; }}
-  .hero-metrics {{
-    display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px; align-items: baseline;
-  }}
-  .hero-metric {{ font-size: 12px; color: var(--muted); }}
-  .hero-metric b {{ font-size: 16px; font-weight: 800; letter-spacing: -0.4px; margin-left: 4px; }}
-  .hero-reasons {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }}
-  .reason-tag {{
-    font-size: 11px; padding: 4px 9px; background: #f0f0f5;
-    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
-  }}
-  .hero-alert {{
-    margin-top: 8px; font-size: 12px; color: #a01810; background: var(--bad-bg);
-    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 8px 11px;
+  .hero-summary {{
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--sub); line-height: 1.55;
   }}
 
   .page-nav {{
@@ -2834,7 +2816,9 @@ def render_html(ctx: dict) -> str:
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }}
     .hero {{
+      position: sticky; top: 0; z-index: 200;
       margin-bottom: 8px; padding: 12px 12px 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
     }}
     .hero-top {{ flex-direction: column; gap: 10px; }}
     .hero h1 {{ font-size: 24px; }}
@@ -2844,10 +2828,6 @@ def render_html(ctx: dict) -> str:
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
     .hero-summary {{ font-size: 15px; }}
-    .hero-metric {{ font-size: 13px; }}
-    .hero-metric b {{ font-size: 18px; }}
-    .reason-tag {{ font-size: 13px; }}
-    .hero-alert {{ font-size: 14px; }}
     .page-nav {{
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       gap: 6px; padding-bottom: 2px; margin-top: 8px;
@@ -2939,15 +2919,7 @@ def render_html(ctx: dict) -> str:
         <div class="hero-mode">{m['primary_label']}</div>
       </div>
     </div>
-    <div class="hero-body">
-      <div class="hero-summary">{m['summary']}</div>
-      <div class="hero-metrics">
-        <span class="hero-metric">承接<b style="color:{carry_c}">{m['carry_score']}</b></span>
-        <span class="hero-metric">模式<b style="color:{trend_c}">{m['trend_score']}</b></span>
-      </div>
-      <div class="hero-reasons">{reason_tags}</div>
-      {hero_alert}
-    </div>
+    <div class="hero-summary">{m['summary']}</div>
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>

@@ -76,21 +76,9 @@
   .hero-decision.ok .hero-mode { color: #1a7a34; }
   .hero-decision.warn .hero-mode { color: #b25000; }
   .hero-decision.bad .hero-mode { color: #c41e16; }
-  .hero-body { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-  .hero-summary { font-size: 13px; color: var(--sub); line-height: 1.55; }
-  .hero-metrics {
-    display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px; align-items: baseline;
-  }
-  .hero-metric { font-size: 12px; color: var(--muted); }
-  .hero-metric b { font-size: 16px; font-weight: 800; letter-spacing: -0.4px; margin-left: 4px; }
-  .hero-reasons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .reason-tag {
-    font-size: 11px; padding: 4px 9px; background: #f0f0f5;
-    border-radius: 7px; color: var(--sub); border: 1px solid var(--border);
-  }
-  .hero-alert {
-    margin-top: 8px; font-size: 12px; color: #a01810; background: var(--bad-bg);
-    border: 1px solid #ff453a30; border-radius: var(--radius-sm); padding: 8px 11px;
+  .hero-summary {
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--sub); line-height: 1.55;
   }
 
   .page-nav {
@@ -425,7 +413,9 @@
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }
     .hero {
+      position: sticky; top: 0; z-index: 200;
       margin-bottom: 8px; padding: 12px 12px 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
     }
     .hero-top { flex-direction: column; gap: 10px; }
     .hero h1 { font-size: 24px; }
@@ -435,10 +425,6 @@
     .hero-decision { width: 100%; text-align: left; min-width: 0; }
     .hero-mode { font-size: 22px; }
     .hero-summary { font-size: 15px; }
-    .hero-metric { font-size: 13px; }
-    .hero-metric b { font-size: 18px; }
-    .reason-tag { font-size: 13px; }
-    .hero-alert { font-size: 14px; }
     .page-nav {
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       gap: 6px; padding-bottom: 2px; margin-top: 8px;
@@ -530,15 +516,7 @@
         <div class="hero-mode">空仓观望</div>
       </div>
     </div>
-    <div class="hero-body">
-      <div class="hero-summary">模式或承接不足，空仓等待昨追赚钱效应修复、新高回升。</div>
-      <div class="hero-metrics">
-        <span class="hero-metric">承接<b style="color:#FF3B30">5</b></span>
-        <span class="hero-metric">模式<b style="color:#FF3B30">0</b></span>
-      </div>
-      <div class="hero-reasons"><span class="reason-tag">新高仅3家</span><span class="reason-tag">情绪弱或昨追赚钱效应偏弱</span><span class="reason-tag">主板昨追赚钱效应-37.0%，效应枯竭</span><span class="reason-tag">创板昨追赚钱效应-73.7%，20cm效应更差</span></div>
-      <div class="hero-alert">情绪24分（弱）｜新高3家（趋势强度不足）</div>
-    </div>
+    <div class="hero-summary">模式或承接不足，空仓等待昨追赚钱效应修复、新高回升。</div>
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
@@ -770,7 +748,7 @@
     <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode hot"><div class="fwd-tdot hot">AI</div><div class="fwd-tlabel">7/17–20</div><div class="fwd-tsub">WAIC 世界人工智能大会</div></div><div class="fwd-tnode"><div class="fwd-tdot">药</div><div class="fwd-tlabel">7/22–24</div><div class="fwd-tsub">CPIC 中国国际医药创新大会</div></div><div class="fwd-tnode"><div class="fwd-tdot">空</div><div class="fwd-tlabel">7/22–25</div><div class="fwd-tsub">国际低空经济博览会</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">政</div><div class="fwd-tlabel">7/25–31</div><div class="fwd-tsub">年中政治局会议窗口</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/17–20</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">WAIC 世界人工智能大会</span><span class="fwd-cal-badge">情绪高点</span></div><p class="fwd-cal-note">上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；外交部确认最高领导人出席开幕式并阐述 AI 治理立场。会中看点：华为 Atlas 950 真机…</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/22–24</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">CPIC 中国国际医药创新大会</span></div><p class="fwd-cal-note">国家会展中心（上海）举办，覆盖创新药、CXO、BD 授权与审评政策。关注临床数据、合作签约与医保/集采预期；与同周低空展并行，医药线仍看 BD/业绩锚。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/22–25</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国际低空经济博览会</span></div><p class="fwd-cal-note">国家会展中心（上海）7/22–25，低空经济全产业链专业展（约 10 万㎡）。关注整机/eVTOL、基础设施与地方政策落地叙事，属板块级会议催化，谨防一日游。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/25–31</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">年中政治局会议窗口</span></div><p class="fwd-cal-note">历年 7 月下旬召开，分析上半年经济形势、部署下半年工作；具体日期待新华社通稿。定调稳增长与资本市场表述，影响消费、高股息与总量预期。</p></div></div></div></div><div class="fwd-themes-wrap"><div class="fwd-block-label">题材方向 <span class="fwd-block-hint">主观判断 · 非算法加权</span></div><div class="dir-grid"><div class="dir-card ok"><div class="dir-card-top"><span class="dir-name">电力 / 公用事业</span><span class="pill ok">可做</span></div><div class="dir-drivers"><span class="dir-driver">用电负荷新高</span><span class="dir-driver">多股涨停</span><span class="dir-driver">长协保供余温</span></div><div class="dir-logic">开幕日唯一成规模涨停集群。高温负荷是短催化，长协政策提供景气叙事；2周内可作弱市防守仓，防一日游后缩圈有电量/预增锚的标的。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">WAIC / AI 治理与应用</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">7/17主旨讲话</span><span class="dir-driver">Atlas950</span><span class="dir-driver">会中至7/20</span></div><div class="dir-logic">最高规格治理定调已落地，但开幕日科技与AI应用同步被杀——叙事≠盘面。会中后半段观察是否出现止跌反抽，只跟有订单/备案/业绩锚的应用侧，不追跌停硬件。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">互连芯片 / 真预增</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">澜起预增</span><span class="dir-driver">DDR5放量</span><span class="dir-driver">硬件杀跌后锚</span></div><div class="dir-logic">澜起等预增是少数硬锚，但今日半导体/CPO跌停潮说明情绪未修复。2周内等波动收敛后再评估，把预增当验票名单而非即刻抄底信号。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">创新药 / BD</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">艾力斯预增</span><span class="dir-driver">CRO跌停潮</span><span class="dir-driver">CPIC 7/22</span></div><div class="dir-logic">艾力斯业绩尚可，但医药近80股跌停说明连板资金瓦解。CPIC前不抢反弹；缩圈有BD/预增锚、等跌停潮降温后再看。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">机器人 / 具身</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">WAIC具身展</span><span class="dir-driver">开幕日跟跌</span><span class="dir-driver">会中窗口仍在</span></div><div class="dir-logic">会中窗口未结束，但今日机器人题材跟跌说明情绪退潮。只观察议题相关、有订单锚的标的，弱市不扩散。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">低空经济</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">7/22–25低空展</span><span class="dir-driver">弱市防御切题</span></div><div class="dir-logic">下周展开幕。大跌后题材脉冲更易一日游，展会前不提前埋伏大仓。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">稳增长 / 政治局窗口</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">7/25–31通稿窗口</span><span class="dir-driver">指数深调后总量预期</span></div><div class="dir-logic">日期未官宣前不抢跑。通稿落地后看稳增长表述，再决定消费/高股息是否接力电力防御。</div></div><div class="dir-card bad"><div class="dir-card-top"><span class="dir-name">算力硬件 / CPO / PCB</span><span class="pill bad">回避</span></div><div class="dir-drivers"><span class="dir-driver">开幕日跌停潮</span><span class="dir-driver">创指-7%</span><span class="dir-driver">新高仅3家</span></div><div class="dir-logic">WAIC开幕未能对冲硬件杀跌，亏钱效应极强。2周内回避抄底与追高，等跌停家数与炸板收敛。</div></div><div class="dir-card bad"><div class="dir-card-top"><span class="dir-name">半导体 / 存储</span><span class="pill bad">回避</span></div><div class="dir-drivers"><span class="dir-driver">长鑫余波</span><span class="dir-driver">海外抛售传导</span><span class="dir-driver">跌停扩散</span></div><div class="dir-logic">即便澜起预增亮眼也难挡情绪传导。先回避，把预增名单留作止跌后的优先观察池。</div></div></div></div><div class="fwd-lead-wrap"><div class="fwd-block-label">研判摘要 <span class="fwd-block-hint">未来2周总览</span></div><div class="fwd-lead"><div class="fwd-lead-row"><span class="fwd-lead-tag peak">节奏峰值</span><p class="fwd-lead-text peak">WAIC会中后半段（7/18–20）看治理/新品能否止跌反抽 · 7月底政治局通稿为总量政策第二峰值</p></div><div class="fwd-lead-row"><span class="fwd-lead-tag">2周主线</span><p class="fwd-lead-text">WAIC会中（至7/20）看治理讲话与应用/具身落地，澜起等真预增可作硬件情绪止跌锚；防御线看电力高温负荷，7/22起低空展+CPIC接力，月底盯政治局</p></div><div class="fwd-lead-row"><span class="fwd-lead-tag muted">当日背景</span><p class="fwd-lead-text muted">7/17开幕日指数暴跌、跌停约180家、电力逆势涨停，会议票验牌惨烈，不改变上述日历优先级但须先等情绪止跌</p></div></div></div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-07-17 16:11</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-07-17 16:17</div>
 </div>
 </body>
 </html>
