@@ -2488,10 +2488,8 @@ def render_html(ctx: dict) -> str:
   .hero-summary {{
     margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
     font-size: 13px; line-height: 1.55; font-weight: 600;
+    color: var(--accent);
   }}
-  .hero-summary.ok {{ color: #1a7a34; }}
-  .hero-summary.warn {{ color: #b25000; }}
-  .hero-summary.bad {{ color: #c41e16; }}
 
   .page-nav {{
     display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
@@ -2928,7 +2926,7 @@ def render_html(ctx: dict) -> str:
         <div class="hero-mode">{m['primary_label']}</div>
       </div>
     </div>
-    <div class="hero-summary {m['pill']}">{m['summary']}</div>
+    <div class="hero-summary">{m['summary']}</div>
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
