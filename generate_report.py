@@ -1897,7 +1897,7 @@ def analyze_trading_modes(row: pd.Series, df: pd.DataFrame, emo: int, dim: dict 
         add = "个股/板块放量创新高且主板昨追赚钱效应≥0时加仓"
         stop = "破10日线或趋势结构坏则减/清"
         primary_label = "5/10日线试单 & 新高加仓"
-        summary = "模式与承接均达标，可按策略试单并新高加仓。"
+        summary = "承接达标，可按策略试单并新高加仓。"
     elif trend_100 >= TREND_TRY:
         status, pill = "仅试单", "warn"
         pos = "≤1成试单，不加仓"
@@ -1905,12 +1905,18 @@ def analyze_trading_modes(row: pd.Series, df: pd.DataFrame, emo: int, dim: dict 
         add = "新高暂不加仓，等新高家数回升"
         stop = "破5日线走"
         primary_label = "5/10日线试单（极小仓）"
-        summary = "模式分达标但承接一般，极小仓试单，不加仓。"
+        if carry_ok:
+            summary = "可极小仓试单，暂不加仓。"
+        else:
+            summary = "承接一般，极小仓试单，不加仓。"
     else:
         status, pill = "空仓", "bad"
         pos = entry = add = stop = "不做"
         primary_label = "空仓观望"
-        summary = "模式或承接不足，空仓等待昨追赚钱效应修复、新高回升。"
+        if not carry_ok:
+            summary = "承接不足，空仓等待昨追赚钱效应修复、新高回升。"
+        else:
+            summary = "昨追效应与新高未达标，空仓等待修复后再试单。"
         trend_reasons = (trend_reasons + carry_reasons)[:4]
 
     return {
