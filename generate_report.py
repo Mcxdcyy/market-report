@@ -2488,7 +2488,7 @@ def render_html(ctx: dict) -> str:
   .hero-summary {{
     margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
     font-size: 13px; line-height: 1.55; font-weight: 600;
-    color: var(--accent);
+    color: var(--sub);
   }}
 
   .page-nav {{
@@ -2823,9 +2823,7 @@ def render_html(ctx: dict) -> str:
       padding-top: max(8px, env(safe-area-inset-top, 0px));
     }}
     .hero {{
-      position: sticky; top: 0; z-index: 200;
       margin-bottom: 8px; padding: 12px 12px 10px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.06);
     }}
     .hero-top {{ flex-direction: column; gap: 10px; }}
     .hero h1 {{ font-size: 24px; }}
