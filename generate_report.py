@@ -2029,6 +2029,21 @@ def _parse_cal_sort_key(label: str) -> tuple[int, int]:
     return 99, 99
 
 
+def _parse_cal_end_key(label: str) -> tuple[int, int]:
+    """取标签区间末日（如 7/22–24 → 7/24）；无区间则同起始日。用于「已过期」判断。"""
+    s = (label or "").replace("–", "-").replace("—", "-").replace("至", "-")
+    m = re.search(
+        r"(\d{1,2})[/月](\d{1,2})\s*-\s*(?:(\d{1,2})[/月])?(\d{1,2})",
+        s,
+    )
+    if m:
+        sm, sd = int(m.group(1)), int(m.group(2))
+        em = int(m.group(3)) if m.group(3) else sm
+        ed = int(m.group(4))
+        return em, ed
+    return _parse_cal_sort_key(label)
+
+
 def _peak_tags_for_label(label: str, peak: str) -> list[str]:
     """从 peak 文案为日历节点匹配标注（催化峰值 / 情绪高点）。"""
     if not peak or not label:
@@ -2210,7 +2225,8 @@ def render_fwd_section_html(
         cutoff = as_of.date() if hasattr(as_of, "date") else as_of
     for n in event_nodes or []:
         if cutoff:
-            em, ed = _parse_cal_sort_key(n.get("label", ""))
+            # 跨日节点按区间末日判断过期，避免 CPIC/低空展等进行中会议被误删
+            em, ed = _parse_cal_end_key(n.get("label", ""))
             if 1 <= em <= 12 and 1 <= ed <= 31:
                 if datetime(as_of.year if as_of else 2026, em, ed).date() < cutoff:
                     continue
