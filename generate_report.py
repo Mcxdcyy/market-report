@@ -1120,6 +1120,20 @@ SEED_EVENT_CATALOG: list[dict] = [
         "span_end": (7, 31),
         "source": "seed",
     },
+    {
+        "month": 7,
+        "day": 27,
+        "dot": "存",
+        "label": "7/27",
+        "title": "长鑫科技科创板上市",
+        "short": "长鑫上市",
+        "brief": (
+            "国产 DRAM 龙头长鑫科技 7/27 登陆科创板（发行价 8.66 元）。"
+            "影响整条存储链情绪与估值锚，上市前后波动加大；设备/材料/模组联动，谨防抽血与高开低走。"
+        ),
+        "hot": True,
+        "source": "seed",
+    },
 ]
 
 # 事件库：只保留未来2周可能形成板块级炒作的节点（会议/政策/财报窗口），不要单股解禁/IPO
@@ -2065,10 +2079,10 @@ def _extra_milestones_from_rhythm(rhythm: str) -> list[dict]:
     extras: list[dict] = []
     if rhythm and "长鑫" in rhythm:
         extras.append({
-            "label": "7/16",
-            "title": "长鑫科技 IPO 申购",
-            "short": "长鑫IPO",
-            "brief": "存储链事件性兑现窗口，申购日前后波动加大。",
+            "label": "7/27",
+            "title": "长鑫科技科创板上市",
+            "short": "长鑫上市",
+            "brief": "国产 DRAM 龙头上市窗口，存储链情绪与估值锚；谨防抽血与高开低走。",
             "hot": True,
             "dot": "存",
         })
