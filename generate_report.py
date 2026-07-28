@@ -1134,6 +1134,20 @@ SEED_EVENT_CATALOG: list[dict] = [
         "hot": True,
         "source": "seed",
     },
+    {
+        "month": 7,
+        "day": 30,
+        "dot": "光",
+        "label": "7/30",
+        "title": "中际旭创 H股上市",
+        "short": "旭创H股",
+        "brief": (
+            "中际旭创 H股定价 980 港元、拟募资约 534 亿港元，计划 7/30 登陆港交所。"
+            "影响整条 CPO/光模块定价锚与情绪；关注上市首日对 A 股龙头抽血或联动，缩圈绩优不追高。"
+        ),
+        "hot": True,
+        "source": "seed",
+    },
 ]
 
 # 事件库：只保留未来2周可能形成板块级炒作的节点（会议/政策/财报窗口），不要单股解禁/IPO
@@ -2085,6 +2099,15 @@ def _extra_milestones_from_rhythm(rhythm: str) -> list[dict]:
             "brief": "国产 DRAM 龙头上市窗口，存储链情绪与估值锚；谨防抽血与高开低走。",
             "hot": True,
             "dot": "存",
+        })
+    if rhythm and ("旭创" in rhythm or "中际旭创" in rhythm):
+        extras.append({
+            "label": "7/30",
+            "title": "中际旭创 H股上市",
+            "short": "旭创H股",
+            "brief": "光模块龙头 H股上市窗口，CPO 链定价锚与资金分流；谨防抽血与高低切。",
+            "hot": True,
+            "dot": "光",
         })
     return extras
 
