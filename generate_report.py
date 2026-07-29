@@ -594,6 +594,65 @@ def coalesce_trend_row(raw: pd.Series, prev: pd.Series | None) -> pd.Series:
     return row
 
 
+def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
+    """近 n 个交易日大盘成交金额柱状图数据（单位与表格一致：亿元）。"""
+    tail = df.tail(n)
+    bars: list[dict] = []
+    prev_v: float | None = None
+    vals = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
+    vmax = max(vals) if vals else 0.0
+    for i, (_, row) in enumerate(tail.iterrows()):
+        dt = row["date"].to_pydatetime() if hasattr(row["date"], "to_pydatetime") else row["date"]
+        v = float(row.get("成交额") or 0)
+        if prev_v is None or prev_v <= 0:
+            chg_tag = "flat"
+        elif v > prev_v * 1.005:
+            chg_tag = "up"
+        elif v < prev_v * 0.995:
+            chg_tag = "down"
+        else:
+            chg_tag = "flat"
+        pct = (v / vmax * 100) if vmax > 0 else 0
+        bars.append({
+            "date": fmt_md(dt),
+            "weekday": WEEKDAY[dt.weekday()],
+            "vol": v,
+            "vol_wy": v / 10000,
+            "label": f"{v / 10000:.2f}",
+            "height": max(4, round(pct, 1)),
+            "chg_tag": chg_tag,
+            "is_latest": i == len(tail) - 1,
+        })
+        prev_v = v
+    return bars
+
+
+def render_vol20_html(bars: list[dict]) -> str:
+    """近20日大盘成交金额柱状图（纯 HTML/CSS）。"""
+    if not bars:
+        return ""
+    cols = []
+    for b in bars:
+        latest = " latest" if b["is_latest"] else ""
+        cols.append(
+            f'<div class="vol20-col{latest}" title="{b["date"]} 周{b["weekday"]} · {b["vol_wy"]:.2f}万亿">'
+            f'<div class="vol20-val">{b["label"]}</div>'
+            f'<div class="vol20-track"><div class="vol20-bar {b["chg_tag"]}" style="height:{b["height"]}%"></div></div>'
+            f'<div class="vol20-date">{b["date"]}</div>'
+            f"</div>"
+        )
+    d0, d1 = bars[0]["date"], bars[-1]["date"]
+    return (
+        f'<div class="vol20-wrap">'
+        f'<div class="vol20-head">'
+        f'<span class="vol20-title">近20日成交金额</span>'
+        f'<span class="vol20-range">{d0}–{d1} · 单位：万亿</span>'
+        f"</div>"
+        f'<div class="vol20-chart">{"".join(cols)}</div>'
+        f"</div>"
+    )
+
+
 def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict], str]:
     """近10个交易日：6 项环境评分。"""
     days: list[dict] = []
@@ -643,6 +702,40 @@ def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict]
 
     headline = f"{fmt_md(d0_py)}→{fmt_md(d1_py)}：{summary}。当前处于<strong>{position}</strong>。"
     return days, headline
+
+
+def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
+    """近 n 个交易日大盘成交金额柱状图数据（单位：表格原值，展示换算为万亿）。"""
+    tail = df.tail(n)
+    bars: list[dict] = []
+    prev_vol: float | None = None
+    # 柱高参照：窗口内最大成交额
+    vols = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
+    vmax = max(vols) if vols else 0.0
+    for i, (_, row) in enumerate(tail.iterrows()):
+        vol = float(row.get("成交额") or 0)
+        dt = row["date"].to_pydatetime() if hasattr(row["date"], "to_pydatetime") else row["date"]
+        if prev_vol is None or prev_vol <= 0:
+            tag = "flat"
+        elif vol > prev_vol:
+            tag = "up"  # 放量 · A股红
+        elif vol < prev_vol:
+            tag = "down"  # 缩量 · A股绿
+        else:
+            tag = "flat"
+        pct = (vol / vmax * 100.0) if vmax > 0 else 0.0
+        bars.append({
+            "date": fmt_md(dt),
+            "weekday": WEEKDAY[dt.weekday()],
+            "vol": vol,
+            "vol_wy": vol / 10000.0,
+            "label": f"{vol / 10000.0:.2f}",
+            "height_pct": round(max(pct, 2.0 if vol > 0 else 0.0), 1),
+            "tag": tag,
+            "is_latest": i == len(tail) - 1,
+        })
+        prev_vol = vol
+    return bars
 
 
 def analyze_3d(df: pd.DataFrame, row: pd.Series) -> list[tuple[str, str]]:
@@ -2398,6 +2491,30 @@ def render_html(ctx: dict) -> str:
       <tbody>{trend_rows}</tbody>
     </table>
   </div>'''
+
+    vol20 = ctx.get("vol20_bars") or []
+    if vol20:
+        vol20_cols = "".join(
+            f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
+      <div class="vol20-val">{b["label"]}</div>
+      <div class="vol20-bar-track">
+        <div class="vol20-bar {b["tag"]}" style="height:{b["height_pct"]}%"></div>
+      </div>
+      <div class="vol20-date">{b["date"]}</div>
+    </div>'''
+            for b in vol20
+        )
+        d0, d1 = vol20[0]["date"], vol20[-1]["date"]
+        vol20_html = f'''<div class="vol20-wrap">
+    <div class="vol20-head">
+      <span class="vol20-title">近20日成交金额</span>
+      <span class="vol20-meta">{d0}–{d1} · 单位：万亿</span>
+    </div>
+    <div class="vol20-chart">{vol20_cols}</div>
+  </div>'''
+    else:
+        vol20_html = ""
+
     def post_close_html(items: list) -> str:
         if not items:
             return '<div class="news-empty">暂无盘后披露</div>'
@@ -2660,6 +2777,56 @@ def render_html(ctx: dict) -> str:
   .trend-cell.ok {{ color: #c62828; }}
   .trend-cell.warn {{ color: #e65100; }}
   .trend-cell.bad {{ color: #2e7d32; }}
+
+  /* ── 近20日成交金额柱状图 ── */
+  .vol20-wrap {{
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }}
+  .vol20-head {{
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+  }}
+  .vol20-title {{
+    font-size: 13px; font-weight: 700; color: var(--text);
+  }}
+  .vol20-meta {{
+    font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+  }}
+  .vol20-chart {{
+    display: flex; align-items: stretch; gap: 3px;
+    height: 148px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding: 2px 0 0;
+  }}
+  .vol20-col {{
+    flex: 1 0 26px; min-width: 26px; max-width: 44px;
+    display: flex; flex-direction: column; align-items: center;
+    height: 100%;
+  }}
+  .vol20-val {{
+    font-size: 9px; font-weight: 600; color: var(--sub);
+    font-variant-numeric: tabular-nums; line-height: 1.2;
+    margin-bottom: 3px; white-space: nowrap;
+  }}
+  .vol20-col.latest .vol20-val {{ color: var(--accent); font-weight: 700; }}
+  .vol20-bar-track {{
+    flex: 1; width: 100%;
+    display: flex; align-items: flex-end; justify-content: center;
+  }}
+  .vol20-bar {{
+    width: 72%; max-width: 28px; min-height: 2px;
+    border-radius: 3px 3px 1px 1px;
+    background: #8e8e93;
+  }}
+  .vol20-bar.up {{ background: var(--bar-ok); }}
+  .vol20-bar.down {{ background: var(--bar-bad); }}
+  .vol20-bar.flat {{ background: #8e8e93; }}
+  .vol20-col.latest .vol20-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
+  .vol20-date {{
+    margin-top: 4px; font-size: 9px; color: var(--muted);
+    font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 1.2;
+  }}
+  .vol20-col.latest .vol20-date {{ color: var(--accent); font-weight: 700; }}
 
   /* ── 涨停板块 ── */
   .sector-list {{ display: flex; flex-direction: column; gap: 10px; }}
@@ -2927,6 +3094,12 @@ def render_html(ctx: dict) -> str:
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
     #sec-trend .trend-cell {{ font-size: 13px; }}
+    .vol20-chart {{ height: 132px; gap: 2px; }}
+    .vol20-col {{ flex-basis: 22px; min-width: 22px; }}
+    .vol20-val {{ font-size: 8px; }}
+    .vol20-date {{ font-size: 8px; }}
+    .vol20-title {{ font-size: 14px; }}
+    .vol20-meta {{ font-size: 12px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
@@ -3002,6 +3175,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['trend_range']}</div>
     </div>
     {trend_html}
+    {vol20_html}
     <div class="callout">{ctx['trend_headline']}</div>
   </div>
 
@@ -3090,6 +3264,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     dim = compute_six_dim(row, work)
     trend_days, trend_headline = analyze_10d(last10, work)
     trend_range = f"{fmt_md(last10.iloc[0]['date'])}–{fmt_md(last10.iloc[-1]['date'])}"
+    vol20_bars = build_vol20_bars(work, 20)
     dims = analyze_3d(work, row)
     env_callout = build_env_callout(row, work, dim, dims)
     synth = env_callout["synth"]
@@ -3148,6 +3323,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "trend_days": trend_days,
         "trend_range": trend_range,
         "trend_headline": trend_headline,
+        "vol20_bars": vol20_bars,
         "synth": synth,
         "market_news": market_news,
         "event_window": event_window,
