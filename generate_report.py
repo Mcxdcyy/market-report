@@ -649,15 +649,30 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     """近 n 个交易日大盘成交金额柱状图数据（单位：表格原值亿元，展示换算为万亿）。
 
     柱高纵轴：下限 = 近 n 日最小值 × 0.9，上限 = 近 n 日最大值，放大波动可见度。
+    首日颜色：与窗口前一交易日成交额对比（放量红 / 缩量绿）。
     """
     tail = df.tail(n)
     bars: list[dict] = []
-    prev_vol: float | None = None
     vols = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
     vmax = max(vols) if vols else 0.0
     vmin = min(vols) if vols else 0.0
     y_min = vmin * 0.9  # 纵轴下限：最小值 × 0.9
     span = vmax - y_min
+
+    # 窗口前一交易日，用于首日红绿着色
+    if len(df) > len(tail):
+        prior_vol = float(df.iloc[-(len(tail) + 1)].get("成交额") or 0)
+        prev_vol: float | None = prior_vol if prior_vol > 0 else None
+    else:
+        prev_vol = None
+
+    n_bars = len(tail)
+    # 底部日期轴稀疏刻度：首、约 1/3、2/3、末
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+
     for i, (_, row) in enumerate(tail.iterrows()):
         vol = float(row.get("成交额") or 0)
         dt = row["date"].to_pydatetime() if hasattr(row["date"], "to_pydatetime") else row["date"]
@@ -681,7 +696,8 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
             "label": f"{vol / 10000.0:.2f}",
             "height_pct": round(max(pct, 2.0 if vol > 0 else 0.0), 1),
             "tag": tag,
-            "is_latest": i == len(tail) - 1,
+            "is_latest": i == n_bars - 1,
+            "show_tick": i in tick_idxs,
         })
         prev_vol = vol
     return bars
@@ -2449,17 +2465,25 @@ def render_html(ctx: dict) -> str:
       <div class="vol20-bar-track">
         <div class="vol20-bar {b["tag"]}" style="height:{b["height_pct"]}%"></div>
       </div>
-      <div class="vol20-date">{b["date"]}</div>
     </div>'''
             for b in vol20
         )
+        vol20_ticks = "".join(
+            f'<div class="vol20-tick{" show" if b.get("show_tick") else ""}{" latest" if b["is_latest"] else ""}">'
+            f'{b["date"] if b.get("show_tick") else ""}</div>'
+            for b in vol20
+        )
         d0, d1 = vol20[0]["date"], vol20[-1]["date"]
+        latest_lab = vol20[-1]["label"]
         vol20_html = f'''<div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
-      <span class="vol20-meta">{d0}–{d1} · 单位：万亿</span>
+      <span class="vol20-meta">{d0}–{d1} · 单位：万亿 · 最新 {latest_lab}</span>
     </div>
-    <div class="vol20-chart">{vol20_cols}</div>
+    <div class="vol20-chart">
+      <div class="vol20-bars">{vol20_cols}</div>
+      <div class="vol20-axis">{vol20_ticks}</div>
+    </div>
   </div>'''
     else:
         vol20_html = ""
@@ -2743,12 +2767,15 @@ def render_html(ctx: dict) -> str:
     font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
   }}
   .vol20-chart {{
+    display: flex; flex-direction: column; width: 100%;
+    overflow: hidden;
+  }}
+  .vol20-bars {{
     display: flex; align-items: stretch; gap: 3px;
-    height: 148px; width: 100%;
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    height: 132px; width: 100%;
   }}
   .vol20-col {{
-    flex: 1 0 26px; min-width: 26px; max-width: 44px;
+    flex: 1 1 0; min-width: 0;
     display: flex; flex-direction: column; align-items: center;
     height: 100%;
   }}
@@ -2759,7 +2786,7 @@ def render_html(ctx: dict) -> str:
   }}
   .vol20-col.latest .vol20-val {{ color: var(--accent); font-weight: 700; }}
   .vol20-bar-track {{
-    flex: 1; width: 100%;
+    flex: 1; width: 100%; min-height: 0;
     display: flex; align-items: flex-end; justify-content: center;
   }}
   .vol20-bar {{
@@ -2771,11 +2798,20 @@ def render_html(ctx: dict) -> str:
   .vol20-bar.down {{ background: var(--bar-bad); }}
   .vol20-bar.flat {{ background: #8e8e93; }}
   .vol20-col.latest .vol20-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
-  .vol20-date {{
-    margin-top: 4px; font-size: 9px; color: var(--muted);
-    font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 1.2;
+  .vol20-axis {{
+    display: flex; align-items: flex-start; gap: 3px;
+    width: 100%; margin-top: 6px; min-height: 16px;
   }}
-  .vol20-col.latest .vol20-date {{ color: var(--accent); font-weight: 700; }}
+  .vol20-tick {{
+    flex: 1 1 0; min-width: 0;
+    font-size: 9px; color: var(--muted);
+    font-variant-numeric: tabular-nums; line-height: 1.2;
+    text-align: center; white-space: nowrap;
+    overflow: visible;
+  }}
+  .vol20-tick:not(.show) {{ font-size: 0; line-height: 0; color: transparent; }}
+  .vol20-tick.show:first-child {{ text-align: left; }}
+  .vol20-tick.latest {{ color: var(--accent); font-weight: 700; text-align: right; }}
 
   /* ── 涨停板块 ── */
   .sector-list {{ display: flex; flex-direction: column; gap: 10px; }}
@@ -3044,28 +3080,23 @@ def render_html(ctx: dict) -> str:
     .trend-date-wd {{ font-size: 12px; }}
     #sec-trend .trend-cell {{ font-size: 13px; }}
     .vol20-chart {{
-      height: 128px; gap: 1px; width: 100%;
-      overflow-x: hidden; overflow-y: hidden;
-      -webkit-overflow-scrolling: auto;
+      width: 100%; overflow: hidden;
+    }}
+    .vol20-bars {{
+      height: 118px; gap: 1px;
     }}
     .vol20-col {{
       flex: 1 1 0; min-width: 0; max-width: none;
     }}
-    .vol20-val {{ display: none; }}
-    .vol20-col.latest .vol20-val {{
-      display: block; font-size: 8px; margin-bottom: 2px;
+    .vol20-val {{ display: none !important; }}
+    .vol20-axis {{
+      gap: 1px; margin-top: 8px; min-height: 18px;
     }}
-    .vol20-date {{
-      font-size: 0; line-height: 0; margin-top: 3px; overflow: hidden;
+    .vol20-tick.show {{
+      font-size: 10px; line-height: 1.2;
+      transform: none;
     }}
-    .vol20-col:first-child .vol20-date,
-    .vol20-col:nth-child(8) .vol20-date,
-    .vol20-col:nth-child(15) .vol20-date,
-    .vol20-col:nth-child(22) .vol20-date,
-    .vol20-col.latest .vol20-date {{
-      font-size: 8px; line-height: 1.2; color: var(--muted);
-    }}
-    .vol20-col.latest .vol20-date {{ color: var(--accent); font-weight: 700; }}
+    .vol20-tick.latest {{ font-size: 10px; }}
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
