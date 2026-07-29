@@ -2744,8 +2744,8 @@ def render_html(ctx: dict) -> str:
   }}
   .vol20-chart {{
     display: flex; align-items: stretch; gap: 3px;
-    height: 148px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-    padding: 2px 0 0;
+    height: 148px; width: 100%;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
   }}
   .vol20-col {{
     flex: 1 0 26px; min-width: 26px; max-width: 44px;
@@ -3043,13 +3043,32 @@ def render_html(ctx: dict) -> str:
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
     #sec-trend .trend-cell {{ font-size: 13px; }}
-    .vol20-chart {{ height: 132px; gap: 1px; }}
-    .vol20-col {{ flex-basis: 16px; min-width: 16px; }}
-    .vol20-val {{ font-size: 7px; }}
-    .vol20-date {{ font-size: 7px; }}
+    .vol20-chart {{
+      height: 128px; gap: 1px; width: 100%;
+      overflow-x: hidden; overflow-y: hidden;
+      -webkit-overflow-scrolling: auto;
+    }}
+    .vol20-col {{
+      flex: 1 1 0; min-width: 0; max-width: none;
+    }}
+    .vol20-val {{ display: none; }}
+    .vol20-col.latest .vol20-val {{
+      display: block; font-size: 8px; margin-bottom: 2px;
+    }}
+    .vol20-date {{
+      font-size: 0; line-height: 0; margin-top: 3px; overflow: hidden;
+    }}
+    .vol20-col:first-child .vol20-date,
+    .vol20-col:nth-child(8) .vol20-date,
+    .vol20-col:nth-child(15) .vol20-date,
+    .vol20-col:nth-child(22) .vol20-date,
+    .vol20-col.latest .vol20-date {{
+      font-size: 8px; line-height: 1.2; color: var(--muted);
+    }}
+    .vol20-col.latest .vol20-date {{ color: var(--accent); font-weight: 700; }}
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
-    .vol20-bar {{ width: 78%; max-width: 18px; }}
+    .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
