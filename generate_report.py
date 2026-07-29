@@ -648,7 +648,7 @@ def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict]
 def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     """近 n 个交易日大盘成交金额柱状图数据（单位：表格原值亿元，展示换算为万亿）。
 
-    柱高纵轴：下限 = 近 n 日最小值 × 0.9，上限 = 近 n 日最大值，放大波动可见度。
+    柱高纵轴：下限 = 近 n 日最小值 × 0.85，上限 = 近 n 日最大值，放大波动可见度。
     首日颜色：与窗口前一交易日成交额对比（放量红 / 缩量绿）。
     """
     tail = df.tail(n)
@@ -656,7 +656,7 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     vols = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
     vmax = max(vols) if vols else 0.0
     vmin = min(vols) if vols else 0.0
-    y_min = vmin * 0.9  # 纵轴下限：最小值 × 0.9
+    y_min = vmin * 0.85  # 纵轴下限：最小值 × 0.85
     span = vmax - y_min
 
     # 窗口前一交易日，用于首日红绿着色
