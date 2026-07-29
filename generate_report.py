@@ -645,10 +645,10 @@ def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict]
     return days, headline
 
 
-def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
+def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     """近 n 个交易日大盘成交金额柱状图数据（单位：表格原值亿元，展示换算为万亿）。
 
-    柱高纵轴：下限 = 近 n 日最小值 − 1000 亿，上限 = 近 n 日最大值，放大波动可见度。
+    柱高纵轴：下限 = 近 n 日最小值 × 0.9，上限 = 近 n 日最大值，放大波动可见度。
     """
     tail = df.tail(n)
     bars: list[dict] = []
@@ -656,7 +656,7 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
     vols = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
     vmax = max(vols) if vols else 0.0
     vmin = min(vols) if vols else 0.0
-    y_min = vmin - 1000.0  # 纵轴下限：最小值 − 1000 亿
+    y_min = vmin * 0.9  # 纵轴下限：最小值 × 0.9
     span = vmax - y_min
     for i, (_, row) in enumerate(tail.iterrows()):
         vol = float(row.get("成交额") or 0)
@@ -2456,7 +2456,7 @@ def render_html(ctx: dict) -> str:
         d0, d1 = vol20[0]["date"], vol20[-1]["date"]
         vol20_html = f'''<div class="vol20-wrap">
     <div class="vol20-head">
-      <span class="vol20-title">近20日成交金额</span>
+      <span class="vol20-title">近30日成交金额</span>
       <span class="vol20-meta">{d0}–{d1} · 单位：万亿</span>
     </div>
     <div class="vol20-chart">{vol20_cols}</div>
@@ -2727,7 +2727,7 @@ def render_html(ctx: dict) -> str:
   .trend-cell.warn {{ color: #e65100; }}
   .trend-cell.bad {{ color: #2e7d32; }}
 
-  /* ── 近20日成交金额柱状图 ── */
+  /* ── 近30日成交金额柱状图 ── */
   .vol20-wrap {{
     margin-top: 14px; padding-top: 12px;
     border-top: 1px solid var(--border);
@@ -3043,12 +3043,13 @@ def render_html(ctx: dict) -> str:
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
     #sec-trend .trend-cell {{ font-size: 13px; }}
-    .vol20-chart {{ height: 132px; gap: 2px; }}
-    .vol20-col {{ flex-basis: 22px; min-width: 22px; }}
-    .vol20-val {{ font-size: 8px; }}
-    .vol20-date {{ font-size: 8px; }}
+    .vol20-chart {{ height: 132px; gap: 1px; }}
+    .vol20-col {{ flex-basis: 16px; min-width: 16px; }}
+    .vol20-val {{ font-size: 7px; }}
+    .vol20-date {{ font-size: 7px; }}
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
+    .vol20-bar {{ width: 78%; max-width: 18px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
@@ -3213,7 +3214,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     dim = compute_six_dim(row, work)
     trend_days, trend_headline = analyze_10d(last10, work)
     trend_range = f"{fmt_md(last10.iloc[0]['date'])}–{fmt_md(last10.iloc[-1]['date'])}"
-    vol20_bars = build_vol20_bars(work, 20)
+    vol20_bars = build_vol20_bars(work, 30)
     dims = analyze_3d(work, row)
     env_callout = build_env_callout(row, work, dim, dims)
     synth = env_callout["synth"]
