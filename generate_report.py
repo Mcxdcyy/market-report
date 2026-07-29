@@ -594,65 +594,6 @@ def coalesce_trend_row(raw: pd.Series, prev: pd.Series | None) -> pd.Series:
     return row
 
 
-def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
-    """近 n 个交易日大盘成交金额柱状图数据（单位与表格一致：亿元）。"""
-    tail = df.tail(n)
-    bars: list[dict] = []
-    prev_v: float | None = None
-    vals = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
-    vmax = max(vals) if vals else 0.0
-    for i, (_, row) in enumerate(tail.iterrows()):
-        dt = row["date"].to_pydatetime() if hasattr(row["date"], "to_pydatetime") else row["date"]
-        v = float(row.get("成交额") or 0)
-        if prev_v is None or prev_v <= 0:
-            chg_tag = "flat"
-        elif v > prev_v * 1.005:
-            chg_tag = "up"
-        elif v < prev_v * 0.995:
-            chg_tag = "down"
-        else:
-            chg_tag = "flat"
-        pct = (v / vmax * 100) if vmax > 0 else 0
-        bars.append({
-            "date": fmt_md(dt),
-            "weekday": WEEKDAY[dt.weekday()],
-            "vol": v,
-            "vol_wy": v / 10000,
-            "label": f"{v / 10000:.2f}",
-            "height": max(4, round(pct, 1)),
-            "chg_tag": chg_tag,
-            "is_latest": i == len(tail) - 1,
-        })
-        prev_v = v
-    return bars
-
-
-def render_vol20_html(bars: list[dict]) -> str:
-    """近20日大盘成交金额柱状图（纯 HTML/CSS）。"""
-    if not bars:
-        return ""
-    cols = []
-    for b in bars:
-        latest = " latest" if b["is_latest"] else ""
-        cols.append(
-            f'<div class="vol20-col{latest}" title="{b["date"]} 周{b["weekday"]} · {b["vol_wy"]:.2f}万亿">'
-            f'<div class="vol20-val">{b["label"]}</div>'
-            f'<div class="vol20-track"><div class="vol20-bar {b["chg_tag"]}" style="height:{b["height"]}%"></div></div>'
-            f'<div class="vol20-date">{b["date"]}</div>'
-            f"</div>"
-        )
-    d0, d1 = bars[0]["date"], bars[-1]["date"]
-    return (
-        f'<div class="vol20-wrap">'
-        f'<div class="vol20-head">'
-        f'<span class="vol20-title">近20日成交金额</span>'
-        f'<span class="vol20-range">{d0}–{d1} · 单位：万亿</span>'
-        f"</div>"
-        f'<div class="vol20-chart">{"".join(cols)}</div>'
-        f"</div>"
-    )
-
-
 def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict], str]:
     """近10个交易日：6 项环境评分。"""
     days: list[dict] = []
@@ -705,13 +646,18 @@ def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict]
 
 
 def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
-    """近 n 个交易日大盘成交金额柱状图数据（单位：表格原值，展示换算为万亿）。"""
+    """近 n 个交易日大盘成交金额柱状图数据（单位：表格原值亿元，展示换算为万亿）。
+
+    柱高纵轴：下限 = 近 n 日最小值 − 1000 亿，上限 = 近 n 日最大值，放大波动可见度。
+    """
     tail = df.tail(n)
     bars: list[dict] = []
     prev_vol: float | None = None
-    # 柱高参照：窗口内最大成交额
     vols = [float(r.get("成交额") or 0) for _, r in tail.iterrows()]
     vmax = max(vols) if vols else 0.0
+    vmin = min(vols) if vols else 0.0
+    y_min = vmin - 1000.0  # 纵轴下限：最小值 − 1000 亿
+    span = vmax - y_min
     for i, (_, row) in enumerate(tail.iterrows()):
         vol = float(row.get("成交额") or 0)
         dt = row["date"].to_pydatetime() if hasattr(row["date"], "to_pydatetime") else row["date"]
@@ -723,7 +669,10 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 20) -> list[dict]:
             tag = "down"  # 缩量 · A股绿
         else:
             tag = "flat"
-        pct = (vol / vmax * 100.0) if vmax > 0 else 0.0
+        if span > 0:
+            pct = (vol - y_min) / span * 100.0
+        else:
+            pct = 50.0
         bars.append({
             "date": fmt_md(dt),
             "weekday": WEEKDAY[dt.weekday()],
