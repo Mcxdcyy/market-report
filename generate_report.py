@@ -2470,7 +2470,7 @@ def render_html(ctx: dict) -> str:
         )
         vol20_ticks = "".join(
             f'<div class="vol20-tick{" show" if b.get("show_tick") else ""}{" latest" if b["is_latest"] else ""}">'
-            f'{b["date"] if b.get("show_tick") else ""}</div>'
+            f'{"<span>" + b["date"] + "</span>" if b.get("show_tick") else ""}</div>'
             for b in vol20
         )
         d0, d1 = vol20[0]["date"], vol20[-1]["date"]
@@ -2768,7 +2768,7 @@ def render_html(ctx: dict) -> str:
   }}
   .vol20-chart {{
     display: flex; flex-direction: column; width: 100%;
-    overflow: hidden;
+    overflow: visible;
   }}
   .vol20-bars {{
     display: flex; align-items: stretch; gap: 3px;
@@ -2800,18 +2800,29 @@ def render_html(ctx: dict) -> str:
   .vol20-col.latest .vol20-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .vol20-axis {{
     display: flex; align-items: flex-start; gap: 3px;
-    width: 100%; margin-top: 6px; min-height: 16px;
+    position: relative;
+    width: 100%; margin-top: 6px; min-height: 18px;
+    overflow: visible;
   }}
   .vol20-tick {{
     flex: 1 1 0; min-width: 0;
+    position: relative;
+    height: 18px;
+  }}
+  .vol20-tick span {{
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
     font-size: 9px; color: var(--muted);
     font-variant-numeric: tabular-nums; line-height: 1.2;
-    text-align: center; white-space: nowrap;
-    overflow: visible;
+    white-space: nowrap;
   }}
-  .vol20-tick:not(.show) {{ font-size: 0; line-height: 0; color: transparent; }}
-  .vol20-tick.show:first-child {{ text-align: left; }}
-  .vol20-tick.latest {{ color: var(--accent); font-weight: 700; text-align: right; }}
+  .vol20-tick.show:first-child span {{
+    left: 0; transform: none;
+  }}
+  .vol20-tick.latest span {{
+    left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }}
 
   /* ── 涨停板块 ── */
   .sector-list {{ display: flex; flex-direction: column; gap: 10px; }}
@@ -3080,7 +3091,7 @@ def render_html(ctx: dict) -> str:
     .trend-date-wd {{ font-size: 12px; }}
     #sec-trend .trend-cell {{ font-size: 13px; }}
     .vol20-chart {{
-      width: 100%; overflow: hidden;
+      width: 100%; overflow: visible;
     }}
     .vol20-bars {{
       height: 118px; gap: 1px;
@@ -3090,13 +3101,12 @@ def render_html(ctx: dict) -> str:
     }}
     .vol20-val {{ display: none !important; }}
     .vol20-axis {{
-      gap: 1px; margin-top: 8px; min-height: 18px;
+      gap: 1px; margin-top: 8px; min-height: 20px;
+      overflow: visible;
     }}
-    .vol20-tick.show {{
-      font-size: 10px; line-height: 1.2;
-      transform: none;
-    }}
-    .vol20-tick.latest {{ font-size: 10px; }}
+    .vol20-tick {{ height: 20px; }}
+    .vol20-tick span {{ font-size: 10px; }}
+    .vol20-tick.latest span {{ font-size: 10px; }}
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}

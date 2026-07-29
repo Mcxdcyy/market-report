@@ -216,7 +216,7 @@
   }
   .vol20-chart {
     display: flex; flex-direction: column; width: 100%;
-    overflow: hidden;
+    overflow: visible;
   }
   .vol20-bars {
     display: flex; align-items: stretch; gap: 3px;
@@ -248,18 +248,29 @@
   .vol20-col.latest .vol20-bar { box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }
   .vol20-axis {
     display: flex; align-items: flex-start; gap: 3px;
-    width: 100%; margin-top: 6px; min-height: 16px;
+    position: relative;
+    width: 100%; margin-top: 6px; min-height: 18px;
+    overflow: visible;
   }
   .vol20-tick {
     flex: 1 1 0; min-width: 0;
+    position: relative;
+    height: 18px;
+  }
+  .vol20-tick span {
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
     font-size: 9px; color: var(--muted);
     font-variant-numeric: tabular-nums; line-height: 1.2;
-    text-align: center; white-space: nowrap;
-    overflow: visible;
+    white-space: nowrap;
   }
-  .vol20-tick:not(.show) { font-size: 0; line-height: 0; color: transparent; }
-  .vol20-tick.show:first-child { text-align: left; }
-  .vol20-tick.latest { color: var(--accent); font-weight: 700; text-align: right; }
+  .vol20-tick.show:first-child span {
+    left: 0; transform: none;
+  }
+  .vol20-tick.latest span {
+    left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }
 
   /* ── 涨停板块 ── */
   .sector-list { display: flex; flex-direction: column; gap: 10px; }
@@ -528,7 +539,7 @@
     .trend-date-wd { font-size: 12px; }
     #sec-trend .trend-cell { font-size: 13px; }
     .vol20-chart {
-      width: 100%; overflow: hidden;
+      width: 100%; overflow: visible;
     }
     .vol20-bars {
       height: 118px; gap: 1px;
@@ -538,13 +549,12 @@
     }
     .vol20-val { display: none !important; }
     .vol20-axis {
-      gap: 1px; margin-top: 8px; min-height: 18px;
+      gap: 1px; margin-top: 8px; min-height: 20px;
+      overflow: visible;
     }
-    .vol20-tick.show {
-      font-size: 10px; line-height: 1.2;
-      transform: none;
-    }
-    .vol20-tick.latest { font-size: 10px; }
+    .vol20-tick { height: 20px; }
+    .vol20-tick span { font-size: 10px; }
+    .vol20-tick.latest span { font-size: 10px; }
     .vol20-title { font-size: 14px; }
     .vol20-meta { font-size: 12px; }
     .vol20-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
@@ -850,7 +860,7 @@
         <div class="vol20-bar up" style="height:28.3%"></div>
       </div>
     </div></div>
-      <div class="vol20-axis"><div class="vol20-tick show">06/17</div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show">07/02</div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show">07/16</div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show latest">07/29</div></div>
+      <div class="vol20-axis"><div class="vol20-tick show"><span>06/17</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>07/02</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>07/16</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show latest"><span>07/29</span></div></div>
     </div>
   </div>
     <div class="callout">07/16→07/29：涨跌互现，结构分化。当前处于<strong>震荡轮动</strong>。</div>
@@ -959,7 +969,7 @@
     <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode hot"><div class="fwd-tdot hot">政</div><div class="fwd-tlabel">7/25–31</div><div class="fwd-tsub">年中政治局会议窗口</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">光</div><div class="fwd-tlabel">7/30</div><div class="fwd-tsub">中际旭创 H股上市</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/25–31</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">年中政治局会议窗口</span></div><p class="fwd-cal-note">历年 7 月下旬召开，分析上半年经济形势、部署下半年工作；具体日期待新华社通稿。定调稳增长与资本市场表述，影响消费、高股息与总量预期。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/30</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中际旭创 H股上市</span></div><p class="fwd-cal-note">中际旭创 H股定价 980 港元、拟募资约 534 亿港元，计划 7/30 登陆港交所。影响整条 CPO/光模块定价锚与情绪；关注上市首日对 A 股龙头抽血或联动，缩圈绩…</p></div></div></div></div><div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-07-29 17:30</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-07-29 17:57</div>
 </div>
 </body>
 </html>
