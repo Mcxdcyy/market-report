@@ -10,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-07-30"
+    "fetched_at": "2026-07-31"
   },
   {
     "month": 7,
@@ -23,7 +23,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-07-30"
+    "fetched_at": "2026-07-31"
   },
   {
     "month": 7,
@@ -36,7 +36,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-07-30"
+    "fetched_at": "2026-07-31"
   },
   {
     "month": 7,
@@ -49,7 +49,7 @@
     "hot": true,
     "importance": 3,
     "source": "seed",
-    "fetched_at": "2026-07-30"
+    "fetched_at": "2026-07-31"
   },
   {
     "month": 7,
@@ -62,7 +62,7 @@
     "hot": false,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-07-30"
+    "fetched_at": "2026-07-31"
   },
   {
     "month": 7,
@@ -75,7 +75,7 @@
     "hot": true,
     "importance": 4,
     "source": "seed",
-    "fetched_at": "2026-07-30",
+    "fetched_at": "2026-07-31",
     "span_end": [
       7,
       20
@@ -145,6 +145,17 @@
     "title": "中际旭创 H股上市",
     "short": "旭创H股",
     "brief": "7/30 登陆港交所：定价 980 港元，募资约 534 亿港元；港股首日破发，A 股龙头天量波动。CPO/光模块链情绪兑现窗口，谨防抽血与高低切，缩圈绩优不追高。",
+    "hot": true,
+    "source": "seed"
+  },
+  {
+    "month": 8,
+    "day": 10,
+    "dot": "机",
+    "label": "8/10",
+    "title": "宇树科技科创板申购",
+    "short": "宇树申购",
+    "brief": "人形机器人龙头宇树科技拟 8/10 启动科创板申购，被视为 A 股人形机器人关键标的。影响具身/机器人链情绪与估值锚；申购前后波动加大，谨防抽血与概念扩散一日游。",
     "hot": true,
     "source": "seed"
   }
