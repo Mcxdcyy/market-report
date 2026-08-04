@@ -1208,6 +1208,21 @@ SEED_EVENT_CATALOG: list[dict] = [
     },
     {
         "month": 8,
+        "day": 4,
+        "dot": "存",
+        "label": "8/4–6",
+        "title": "FMS 2026 闪存峰会",
+        "short": "闪存峰会",
+        "brief": (
+            "FMS 2026 闪存峰会（8/4–6），三星、SK 等存储巨头出席，关注 DRAM/NAND 供需与报价指引。"
+            "与国产存储、模组链情绪联动；中报验牌窗口叠加，谨防一日游与高低切。"
+        ),
+        "hot": True,
+        "span_end": (8, 6),
+        "source": "seed",
+    },
+    {
+        "month": 8,
         "day": 10,
         "dot": "机",
         "label": "8/10",
