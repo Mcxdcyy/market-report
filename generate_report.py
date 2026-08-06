@@ -921,6 +921,17 @@ def curate_post_close(
         for it in picked:
             selected.append({k: v for k, v in it.items() if k != "_sort"})
 
+    # pin=True：晚间补库等强制入选（不突破类别上限太多，按标题去重）
+    selected_titles = {str(x.get("title") or "") for x in selected}
+    for item in candidates:
+        if not item.get("pin"):
+            continue
+        title = str(item.get("title") or "")
+        if title in selected_titles:
+            continue
+        selected.append({k: v for k, v in item.items() if k != "_sort"})
+        selected_titles.add(title)
+
     # 总排序：板块匹配 > 类别优先级 A,B,C,D
     cat_order = {"A": 4, "B": 3, "C": 2, "D": 1}
     selected.sort(
