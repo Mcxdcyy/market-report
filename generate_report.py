@@ -1223,6 +1223,20 @@ SEED_EVENT_CATALOG: list[dict] = [
     },
     {
         "month": 8,
+        "day": 7,
+        "dot": "机",
+        "label": "8/7",
+        "title": "宇树科技网上路演",
+        "short": "宇树路演",
+        "brief": (
+            "人形机器人龙头宇树科技科创板发行前网上路演（约 8/7），申购日前情绪窗口。"
+            "与 8/10 申购连看；谨防路演日抽血与概念扩散一日游。"
+        ),
+        "hot": True,
+        "source": "seed",
+    },
+    {
+        "month": 8,
         "day": 10,
         "dot": "机",
         "label": "8/10",
@@ -1241,10 +1255,12 @@ SEED_EVENT_CATALOG: list[dict] = [
 EVENT_STRONG_THEME_KW = (
     "WAIC", "世界人工智能", "人工智能大会",
     "具身", "人形机器人", "机器人+", "智能机器人", "机器人产业",
+    "世界机器人大会", "机器人大会", "宇树",
     "CPIC", "创新药", "细胞与基因", "CGT", "医药创新",
     "中报", "业绩预告", "预告截止", "业绩快报", "财报",
     "政治局", "国务院常务", "证监会", "工信部", "药监局", "发改委",
     "低空经济", "半导体", "自主可控", "国产替代", "制裁", "突发",
+    "长鑫", "闪存", "DRAM", "NAND", "DeepSeek",
 )
 EVENT_POLICY_KW = (
     "政策", "意见", "方案", "规划", "试点", "通知", "征求", "条例", "办法",
@@ -1477,7 +1493,10 @@ def _events_match(a: dict, b: dict) -> bool:
     ta, tb = a.get("title", ""), b.get("title", "")
     if ta in tb or tb in ta:
         return True
-    keys = ("WAIC", "人工智能大会", "中报", "预告", "LPR", "GDP", "CPI", "具身", "机器人", "互联网大会")
+    keys = (
+        "WAIC", "人工智能大会", "中报", "预告", "LPR", "GDP", "CPI",
+        "具身", "机器人", "互联网大会", "宇树", "世界机器人大会",
+    )
     for kw in keys:
         if kw in ta and kw in tb:
             return True
@@ -1566,7 +1585,7 @@ def _seed_covers_event(seed: dict, ev: dict) -> bool:
     st, et = seed.get("title", ""), ev.get("title", "")
     keys = (
         "WAIC", "人工智能大会", "中报", "预告", "CPIC", "医药创新",
-        "低空", "政治局", "具身", "机器人",
+        "低空", "政治局", "具身", "机器人", "宇树", "世界机器人大会",
     )
     return any(k in st and k in et for k in keys) or st in et or et in st
 
