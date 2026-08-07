@@ -176,11 +176,12 @@ def hybrid_note(h: dict, val_fmt: str, mean_fmt: str | None = None) -> str:
 
 
 def score_bar(v: int) -> str:
+    """环境评分数字/进度条颜色：A股红强绿弱（好=红、中=橙、不好=绿）。"""
     if v >= 60:
-        return "#34C759"
+        return "#E53935"  # 偏强 · 红
     if v >= 40:
-        return "#FF9500"
-    return "#FF3B30"
+        return "#FF9500"  # 一般 · 橙
+    return "#34C759"  # 偏弱 · 绿
 
 
 def score_badge(v: int) -> tuple[str, str]:
@@ -2778,6 +2779,13 @@ def render_html(ctx: dict) -> str:
     display: flex; align-items: center; gap: 5px; margin-top: 6px;
     font-size: 10px; color: var(--muted); flex-wrap: wrap; line-height: 1.45;
   }}
+  /* §2 环境评分：A股红强绿弱（好=红、不好=绿）；勿改回西式绿好红坏 */
+  #sec-env .pill.ok {{ background: #ffebee; color: #c62828; }}
+  #sec-env .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
+  #sec-env .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
+  #sec-env .callout.ok {{ background: #ffebee; border-color: #E53935; }}
+  #sec-env .callout.warn {{ background: var(--warn-bg); border-color: var(--warn); }}
+  #sec-env .callout.bad {{ background: #e8f5e9; border-color: #34C759; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
