@@ -1735,14 +1735,18 @@ def build_events_window(as_of: datetime) -> tuple:
 
 # 板块 → 2周方向表关键词（用于事件/评级匹配）
 SECTOR_DIR_KEYS: dict[str, list[str]] = {
-    "机器人": ["机器人", "WAIC", "具身"],
+    "机器人": ["机器人", "WAIC", "具身", "宇树"],
     "通用设备": ["机器人", "WAIC", "机床"],
     "化学制品": ["化工", "预增", "出海"],
     "汽车零部件": ["汽车", "智能驾驶", "零部件"],
     "黄金": ["黄金", "避险"],
-    "存储": ["存储", "AI硬件"],
-    "通信": ["通信", "光通信"],
-    "创新药": ["创新药", "CXO", "CPIC"],
+    "存储": ["存储", "AI硬件", "长鑫"],
+    "通信": ["通信", "光通信", "PCB", "光模块", "CPO", "6G"],
+    "医药": ["医药", "创新药", "CRO", "CDMO", "CXO", "CPIC"],
+    "创新药": ["创新药", "CXO", "CPIC", "医药", "CRO"],
+    "芯片": ["芯片", "半导体", "存储", "电子特气", "长鑫"],
+    "算力": ["算力", "液冷", "AI", "服务器"],
+    "并购重组": ["并购", "重组"],
     "券商": ["券商", "金融"],
 }
 
@@ -1768,24 +1772,50 @@ def _find_sector_direction(sector_name: str, directions: list) -> tuple[str, str
 
 
 def _sector_near_events(sector_name: str, as_of: datetime) -> list[str]:
-    """近 10 个交易日内与板块相关的事件节点。"""
+    """未来 2 周内与板块相关的事件节点（优先读 event_catalog.json）。"""
     events: list[str] = []
     horizon = as_of + timedelta(days=14)
-    catalog = [
-        (7, 15, "7/15 预告截止", ["化学制品", "化工", "预增", "存储", "通信"]),
-        (7, 17, "7/17 WAIC 开幕", ["机器人", "通用设备", "WAIC", "AI"]),
-        (7, 22, "7/22 CPIC 开幕", ["创新药", "CXO", "医药"]),
-    ]
     keys = SECTOR_DIR_KEYS.get(sector_name, [sector_name])
-    for em, ed, label, tags in catalog:
-        ev = datetime(as_of.year, em, ed)
-        if not (as_of < ev <= horizon):
+    keys = list(dict.fromkeys([sector_name, *keys]))
+
+    catalog_rows: list[dict] = []
+    if EVENT_CATALOG_FILE.exists():
+        try:
+            catalog_rows = json.loads(EVENT_CATALOG_FILE.read_text(encoding="utf-8")) or []
+        except json.JSONDecodeError:
+            catalog_rows = []
+
+    for row in catalog_rows:
+        try:
+            ev = datetime(as_of.year, int(row["month"]), int(row["day"]))
+        except Exception:
             continue
-        days = (ev - as_of).days
-        if any(t in sector_name or any(k in t for k in keys) for t in tags):
-            events.append(f"{label}（+{days}天）")
+        if not (as_of.date() < ev.date() <= horizon.date()):
+            # 允许跨年简单兜底
+            try:
+                ev = datetime(as_of.year + 1, int(row["month"]), int(row["day"]))
+            except Exception:
+                continue
+            if not (as_of.date() < ev.date() <= horizon.date()):
+                continue
+        blob = f"{row.get('title', '')}{row.get('short', '')}{row.get('brief', '')}"
+        if not any(k and k in blob for k in keys):
+            # 板块名本身命中 title/short
+            if sector_name not in blob and not any(k in sector_name and k in blob for k in keys):
+                continue
+        label = row.get("short") or row.get("title") or ""
+        label = str(label).strip()
+        if not label:
+            continue
+        days = (ev.date() - as_of.date()).days
+        events.append(f"{ev.month}/{ev.day} {label}（+{days}天）")
+        if len(events) >= 2:
+            break
+
     if sector_name == "黄金" and not events:
         events.append("无固定节点·看金价/避险")
+    if sector_name in ("并购重组",) and not events:
+        events.append("无统一产业节点·看个股公告")
     return events[:2]
 
 
@@ -1872,7 +1902,13 @@ def forecast_sector_persistence(
         heat_score = max(20, min(95, heat_score))
 
         # ── 近端事件 + 方向评级 ──
-        events = _sector_near_events(name, as_of)
+        manual = s.get("events")
+        if isinstance(manual, str) and manual.strip():
+            events = [manual.strip()]
+        elif isinstance(manual, list) and manual:
+            events = [str(x).strip() for x in manual if str(x).strip()]
+        else:
+            events = _sector_near_events(name, as_of)
         dir_tag, dir_hint = _find_sector_direction(name, directions)
         events_near = "；".join(events) if events else "暂无直接催化"
 
