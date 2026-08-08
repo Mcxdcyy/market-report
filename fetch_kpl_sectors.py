@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""从开盘啦「市场情绪·股票列表」同款接口拉取当日涨停原因板块。
+"""从开盘啦「市场情绪·股票列表」拉取涨停原因板块。
 
 用法：
-  python3 fetch_kpl_sectors.py              # 默认最近交易日（大盘数据末日）
+  python3 fetch_kpl_sectors.py              # 默认最近交易日
   python3 fetch_kpl_sectors.py 2026-08-07
+  python3 fetch_kpl_sectors.py 2026-08-07 --history 8   # 回溯 N 个自然日并写入缓存
 """
 
 from __future__ import annotations
@@ -14,11 +15,15 @@ import sys
 import uuid
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from collections import Counter
+from datetime import datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-API = "https://apphwshhq.longhuvip.com/w1/api/index.php"
+API_LIVE = "https://apphwshhq.longhuvip.com/w1/api/index.php"
+API_HIS = "https://apphis.longhuvip.com/w1/api/index.php"
+HISTORY_FILE = ROOT / "kpl_sector_history.json"
+UA = "lhb/5.21.0.2 (iPhone; iOS 17.0; Scale/3.00)"
 
 
 def parse_days(board: str) -> int:
@@ -34,7 +39,21 @@ def parse_days(board: str) -> int:
     return 1
 
 
+def _post(url: str, params: dict) -> dict | None:
+    req = urllib.request.Request(
+        url,
+        data=urllib.parse.urlencode(params).encode(),
+        headers={"User-Agent": UA, "Content-Type": "application/x-www-form-urlencoded"},
+    )
+    with urllib.request.urlopen(req, timeout=20) as r:
+        body = r.read()
+    if not body:
+        return None
+    return json.loads(body.decode())
+
+
 def fetch_limit_up_sectors(day: str) -> dict:
+    """当日（或最近交易日）完整板块列表：与 App 市场情绪·股票列表一致。"""
     params = {
         "a": "GetPlateInfo_w38",
         "st": "100",
@@ -46,17 +65,8 @@ def fetch_limit_up_sectors(day: str) -> dict:
         "apiv": "w42",
         "Day": day,
     }
-    req = urllib.request.Request(
-        API,
-        data=urllib.parse.urlencode(params).encode(),
-        headers={
-            "User-Agent": "lhb/5.21.0.2 (iPhone; iOS 17.0; Scale/3.00)",
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=20) as r:
-        raw = json.loads(r.read().decode())
-    if raw.get("errcode") not in (0, "0"):
+    raw = _post(API_LIVE, params)
+    if not raw or raw.get("errcode") not in (0, "0"):
         raise RuntimeError(f"开盘啦接口失败: {raw}")
 
     sectors = []
@@ -89,9 +99,104 @@ def fetch_limit_up_sectors(day: str) -> dict:
         "nums": raw.get("nums") or {},
         "sectors": sectors,
         "display": display,
-        # 兼容旧字段名
         "top5": display,
     }
+
+
+def fetch_theme_counts(day: str) -> dict[str, int]:
+    """按开盘啦涨停原因统计家数（历史日可用）。
+
+    合并 HisHomeDingPan / DailyLimitPerformance 的 PidType=1..4
+    （约对应 1 板 / 2 板 / 3 板 / 4 板+），与当日股票列表口径一致。
+    """
+    seen: set[str] = set()
+    ctr: Counter[str] = Counter()
+    for pid in (1, 2, 3, 4):
+        params = {
+            "a": "DailyLimitPerformance",
+            "c": "HisHomeDingPan",
+            "PhoneOSNew": "1",
+            "DeviceID": str(uuid.uuid4()),
+            "VerSion": "5.21.0.2",
+            "apiv": "w42",
+            "Day": day,
+            "PidType": str(pid),
+            "Type": "4",
+            "Index": "0",
+            "st": "2000",
+        }
+        raw = _post(API_HIS, params) or {}
+        info = raw.get("info") or []
+        stocks = []
+        if info and isinstance(info[0], list) and info[0] and isinstance(info[0][0], list):
+            stocks = info[0]
+        elif info and isinstance(info[0], list) and info[0] and isinstance(info[0][0], str):
+            stocks = info
+        for s in stocks:
+            code = str(s[0])
+            if code in seen:
+                continue
+            seen.add(code)
+            theme = str(s[5]).strip() if len(s) > 5 and s[5] else ""
+            if theme:
+                ctr[theme] += 1
+    return dict(ctr)
+
+
+def load_history() -> dict:
+    if HISTORY_FILE.exists():
+        try:
+            return json.loads(HISTORY_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return {}
+    return {}
+
+
+def save_history(hist: dict) -> None:
+    HISTORY_FILE.write_text(
+        json.dumps(hist, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def ensure_history_day(day: str, hist: dict | None = None, *, force: bool = False) -> dict[str, int]:
+    hist = hist if hist is not None else load_history()
+    if not force and isinstance(hist.get(day), dict) and hist[day]:
+        return {k: int(v) for k, v in hist[day].items()}
+    counts = fetch_theme_counts(day)
+    if counts:
+        hist[day] = counts
+        save_history(hist)
+    return counts
+
+
+def backfill_history(end_day: str, lookback_calendar_days: int = 14) -> dict:
+    """回溯自然日，跳过明显无数据的周末空窗；写入 kpl_sector_history.json。"""
+    hist = load_history()
+    end = datetime.strptime(end_day, "%Y-%m-%d")
+    for i in range(lookback_calendar_days):
+        d = (end - timedelta(days=i)).strftime("%Y-%m-%d")
+        if d in hist and hist[d]:
+            continue
+        try:
+            counts = fetch_theme_counts(d)
+        except Exception as e:
+            print(f"skip {d}: {e}")
+            continue
+        if not counts:
+            continue
+        hist[d] = counts
+        top = sorted(counts.items(), key=lambda x: -x[1])[:5]
+        print(d, "ZT~", sum(counts.values()), "|", ", ".join(f"{n}:{c}" for n, c in top))
+    save_history(hist)
+    return hist
+
+
+def filter_display_counts(counts: dict[str, int]) -> list[tuple[str, int]]:
+    items = sorted(((n, int(c)) for n, c in counts.items() if int(c) > 0), key=lambda x: (-x[1], x[0]))
+    strong = [(n, c) for n, c in items if c >= 5]
+    if strong:
+        return strong
+    return items[:1]
 
 
 def default_day() -> str:
@@ -105,8 +210,22 @@ def default_day() -> str:
 
 
 def main() -> None:
-    day = sys.argv[1] if len(sys.argv) > 1 else default_day()
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    day = args[0] if args else default_day()
+    hist_n = None
+    if "--history" in sys.argv:
+        i = sys.argv.index("--history")
+        hist_n = int(sys.argv[i + 1]) if i + 1 < len(sys.argv) else 14
+
+    if hist_n:
+        backfill_history(day, hist_n)
+
     data = fetch_limit_up_sectors(day)
+    # 同步当日缓存（以列表接口为准）
+    hist = load_history()
+    hist[data["date"]] = {s["name"]: int(s["count"]) for s in data["sectors"]}
+    save_history(hist)
+
     nums = data["nums"]
     print(
         f"{data['date']} 涨停{nums.get('ZT', '?')} 跌停{nums.get('DT', '?')} "
@@ -118,7 +237,7 @@ def main() -> None:
     if "--json" in sys.argv:
         print(json.dumps(data, ensure_ascii=False, indent=2))
     else:
-        print("（reason/后续事件/预判仍人工写入 market_news.json；加 --json 可导出骨架）")
+        print("（reason/后续事件/预判仍人工写入 market_news.json）")
 
 
 if __name__ == "__main__":

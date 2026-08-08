@@ -1060,32 +1060,104 @@ def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:
     return days
 
 
-def sector_hot_streak(sector_name: str, as_of: datetime, raw: dict) -> int:
-    """连续天数：板块涨停家数≥5（从 as_of 往前，仅统计 market_news.json 有记录的交易日）。"""
-    if not sector_name or not raw:
+def _sector_count_on_day(sector_name: str, day_key: str, day_payload: dict | None, kpl_counts: dict[str, int] | None) -> int:
+    """优先开盘啦历史涨停原因家数；无则回退 market_news.json 同名板块。"""
+    if kpl_counts and sector_name in kpl_counts:
+        return int(kpl_counts.get(sector_name) or 0)
+    if not day_payload:
         return 0
-    end = as_of.date() if isinstance(as_of, datetime) else as_of
-    days = [(d, v) for d, v in _news_days_chronological(raw) if d.date() <= end]
-    days.sort(key=lambda x: x[0], reverse=True)
-    streak = 0
-    for _, day in days:
-        count = None
-        for sec in day.get("top_sectors") or []:
-            if sec.get("name") != sector_name:
+    for sec in day_payload.get("top_sectors") or []:
+        if sec.get("name") != sector_name:
+            continue
+        synced = sync_sector_count(dict(sec))
+        return int(synced.get("count") or 0)
+    return 0
+
+
+def sector_hot_streak(
+    sector_name: str,
+    as_of: datetime,
+    raw: dict,
+    *,
+    df: pd.DataFrame | None = None,
+) -> int:
+    """已持续天数（开盘啦涨停原因家数，交易日回溯）：
+
+    - 报表当日（首日相对本轮）：有上榜即可计入（允许 count<5）
+    - 再往前每一天：须 count≥5 才继续；若某日 0<count<5，该日算本轮起点（首日）后停止
+    - 某日 count=0 / 无该板块：停止
+    """
+    if not sector_name:
+        return 0
+    end = as_of.to_pydatetime() if hasattr(as_of, "to_pydatetime") else as_of
+    if not isinstance(end, datetime):
+        end = datetime.combine(end, datetime.min.time())
+
+    trade_days: list[datetime] = []
+    if df is not None and len(df) > 0 and "date" in df.columns:
+        for ts in df["date"]:
+            d = parse_date(ts)
+            if pd.isna(d):
                 continue
-            synced = sync_sector_count(dict(sec))
-            count = int(synced.get("count") or 0)
+            if hasattr(d, "to_pydatetime"):
+                d = d.to_pydatetime()
+            if not isinstance(d, datetime):
+                continue
+            if d.date() <= end.date():
+                trade_days.append(d)
+        trade_days.sort(reverse=True)
+    else:
+        trade_days = [d for d, _ in _news_days_chronological(raw or {}) if d.date() <= end.date()]
+        trade_days.sort(reverse=True)
+
+    if not trade_days:
+        return 0
+
+    # 开盘啦历史缓存（按交易日补齐）
+    kpl_hist: dict = {}
+    try:
+        from fetch_kpl_sectors import ensure_history_day, load_history
+
+        kpl_hist = load_history()
+        for d in trade_days[:12]:
+            key = d.strftime("%Y-%m-%d")
+            try:
+                ensure_history_day(key, kpl_hist, force=False)
+            except Exception:
+                break
+        kpl_hist = load_history()
+    except Exception:
+        kpl_hist = {}
+
+    streak = 0
+    for i, d in enumerate(trade_days):
+        key = d.strftime("%Y-%m-%d")
+        day_payload = (raw or {}).get(key) if raw else None
+        kpl_counts = kpl_hist.get(key) if isinstance(kpl_hist.get(key), dict) else None
+        count = _sector_count_on_day(sector_name, key, day_payload, kpl_counts)
+        if count <= 0:
             break
-        if count is not None and count >= 5:
+        if i == 0:
+            streak = 1
+            continue
+        if count >= 5:
             streak += 1
-        else:
-            break
+            continue
+        # 往前的首日：允许 <5，计入后结束
+        streak += 1
+        break
     return streak
 
 
-def enrich_sector_streaks(sectors: list, as_of: datetime, raw: dict) -> list:
+def enrich_sector_streaks(
+    sectors: list,
+    as_of: datetime,
+    raw: dict,
+    *,
+    df: pd.DataFrame | None = None,
+) -> list:
     for s in sectors:
-        s["streak_days"] = sector_hot_streak(s.get("name", ""), as_of, raw)
+        s["streak_days"] = sector_hot_streak(s.get("name", ""), as_of, raw, df=df)
     return sectors
 
 
@@ -3425,7 +3497,9 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         market_news.get("direction_analysis"),
     )
     if market_news["has_data"] and market_news["top_sectors"]:
-        market_news["top_sectors"] = enrich_sector_streaks(market_news["top_sectors"], dt, news_raw)
+        market_news["top_sectors"] = enrich_sector_streaks(
+            market_news["top_sectors"], dt, news_raw, df=work
+        )
         market_news["top_sectors"] = forecast_sector_persistence(
             market_news["top_sectors"],
             as_of=dt,
