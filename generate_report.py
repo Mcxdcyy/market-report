@@ -1031,6 +1031,22 @@ def sync_sector_count(sector: dict) -> dict:
     return sector
 
 
+def filter_display_sectors(sectors: list) -> list:
+    """涨停板块展示过滤（固定）：
+    - 若存在 count≥5：只展示所有 ≥5 的板块（按家数降序，数量不限 Top5）
+    - 若全部 <5：只展示家数最多的 1 个板块
+    """
+    synced = [sync_sector_count(dict(s)) for s in (sectors or [])]
+    synced = [s for s in synced if int(s.get("count") or 0) > 0]
+    if not synced:
+        return []
+    synced.sort(key=lambda s: (-int(s.get("count") or 0), s.get("name") or ""))
+    strong = [s for s in synced if int(s.get("count") or 0) >= 5]
+    if strong:
+        return strong
+    return synced[:1]
+
+
 def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:
     days: list[tuple[datetime, dict]] = []
     for key, val in raw.items():
@@ -1098,8 +1114,7 @@ def load_market_news(
     day = raw.get(key)
     if not day:
         return empty
-    sectors = [sync_sector_count(dict(s)) for s in (day.get("top_sectors") or [])]
-    sectors = [s for s in sectors if int(s.get("count") or 0) >= 4][:5]
+    sectors = filter_display_sectors(day.get("top_sectors") or [])
     pool = day.get("post_close_pool") or day.get("post_close") or []
     curated, stats = curate_post_close(pool, sectors, env_weak, as_of)
     return {
@@ -3307,7 +3322,7 @@ def render_html(ctx: dict) -> str:
   <div class="section" id="sec-sectors">
     <div class="section-head">
       <div class="section-num">3</div>
-      <div class="section-title">涨停板块 Top5</div>
+      <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
     {sector_block}
@@ -3398,7 +3413,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         pool_n = st.get("pool", n_post)
         zt = int(row.get("涨停") or 0)
         mode = "偏弱" if env_is_weak(main_money, synth, dims) else "尚可"
-        market_news["sector_summary"] = f"当日涨停 {zt} 家 · Top5 板块 {n_sec} 项"
+        market_news["sector_summary"] = f"当日涨停 {zt} 家 · 展示板块 {n_sec} 项"
         market_news["post_summary"] = (
             f"候选池 {pool_n} 条 → 精选 {n_post} 条（环境{mode}）"
         )

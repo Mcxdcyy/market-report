@@ -82,11 +82,15 @@ def fetch_limit_up_sectors(day: str) -> dict:
             }
         )
     sectors.sort(key=lambda x: -x["count"])
+    strong = [s for s in sectors if s["count"] >= 5]
+    display = strong if strong else sectors[:1]
     return {
         "date": raw.get("date") or day,
         "nums": raw.get("nums") or {},
         "sectors": sectors,
-        "top5": [s for s in sectors if s["count"] >= 4][:5],
+        "display": display,
+        # 兼容旧字段名
+        "top5": display,
     }
 
 
@@ -108,7 +112,7 @@ def main() -> None:
         f"{data['date']} 涨停{nums.get('ZT', '?')} 跌停{nums.get('DT', '?')} "
         f"炸板{nums.get('ZBL', '?')}"
     )
-    for i, s in enumerate(data["top5"], 1):
+    for i, s in enumerate(data["display"], 1):
         heads = "、".join(f"{x['name']}({x['days']})" for x in s["stocks"][:5])
         print(f"{i}. {s['name']} {s['count']}家 | {heads}")
     if "--json" in sys.argv:
