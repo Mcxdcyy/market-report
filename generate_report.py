@@ -1034,7 +1034,7 @@ def sync_sector_count(sector: dict) -> dict:
 def filter_display_sectors(sectors: list) -> list:
     """涨停板块展示过滤（固定）：
     - 若存在 count≥5：只展示所有 ≥5 的板块（按家数降序，数量不限 Top5）
-    - 若全部 <5：只展示家数最多的 1 个板块
+    - 若全部 <5：展示家数并列最高的全部板块（如两个都是 4，则都展示）
     """
     synced = [sync_sector_count(dict(s)) for s in (sectors or [])]
     synced = [s for s in synced if int(s.get("count") or 0) > 0]
@@ -1044,7 +1044,8 @@ def filter_display_sectors(sectors: list) -> list:
     strong = [s for s in synced if int(s.get("count") or 0) >= 5]
     if strong:
         return strong
-    return synced[:1]
+    top = int(synced[0].get("count") or 0)
+    return [s for s in synced if int(s.get("count") or 0) == top]
 
 
 def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:

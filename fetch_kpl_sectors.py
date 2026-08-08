@@ -93,7 +93,13 @@ def fetch_limit_up_sectors(day: str) -> dict:
         )
     sectors.sort(key=lambda x: -x["count"])
     strong = [s for s in sectors if s["count"] >= 5]
-    display = strong if strong else sectors[:1]
+    if strong:
+        display = strong
+    elif sectors:
+        top = sectors[0]["count"]
+        display = [s for s in sectors if s["count"] == top]
+    else:
+        display = []
     return {
         "date": raw.get("date") or day,
         "nums": raw.get("nums") or {},
@@ -196,7 +202,10 @@ def filter_display_counts(counts: dict[str, int]) -> list[tuple[str, int]]:
     strong = [(n, c) for n, c in items if c >= 5]
     if strong:
         return strong
-    return items[:1]
+    if not items:
+        return []
+    top = items[0][1]
+    return [(n, c) for n, c in items if c == top]
 
 
 def default_day() -> str:
