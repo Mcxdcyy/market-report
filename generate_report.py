@@ -3034,11 +3034,10 @@ def render_html(ctx: dict) -> str:
     flex-shrink: 0; text-align: right;
   }}
   .sector-persist-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
-  /* 与模块 .section-num（实心方块）区分：同形空心方框 */
+  /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
   .sector-rank {{
-    width: 22px; height: 22px; border-radius: 6px;
-    background: transparent; color: var(--accent);
-    border: 1.5px solid var(--accent);
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #64B5F6; color: #fff; border: none;
     font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
     display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   }}
