@@ -72,12 +72,12 @@ alwaysApply: true
 **不需要每日自动跑**；用户要求更新时，助手必须一并完成：
 
 1. 读取最新 `大盘数据.numbers` 并运行 `python3 generate_report.py`
-2. **涨停板块 Top5**：**口径 = 开盘啦「市场情绪 → 股票列表（涨停）」的涨停原因分组**（先取板块+成分股，再写逻辑/后续事件/预判）
+2. **涨停板块（固定 · 每次更新强制）**：**口径 = 开盘啦「市场情绪 → 股票列表（涨停）」的涨停原因分组**（先取板块+成分股，再写逻辑/后续事件/预判）
    - **主路径（不依赖 App 打开）**：`python3 fetch_kpl_sectors.py [YYYY-MM-DD]` → 同款接口 `DailyLimitResumption` / `GetPlateInfo_w38`（`apphwshhq.longhuvip.com`）；板块名/家数以 `ZSName` + `StockList` 为准
    - **备用（对齐同花顺涨停图片）**：接口失败时，读用户截图 `~/Desktop/同花顺板块/YYYYMMDD/`（或 `~/Desktop/开盘啦板块/YYYYMMDD/`）按板块图整理；**禁止**把「实时读屏/要求开盘啦开着」当主路径
-   - **禁止**：用东财涨停池自行拆分/重命名板块（如把开盘啦「通信」拆成 PCB+光通信）充当 Top5
+   - **禁止**：用东财涨停池自行拆分/重命名板块（如把开盘啦「通信」拆成 PCB+光通信）充当展示列表
    - **写入** `market_news.json` 对应日 `top_sectors`（name/count/reason/codes/stocks）；`reason` 写清开盘啦归并逻辑 + 龙头；右侧后续事件/预判结合日历与盘后公告
-   - **展示过滤（固定 · `filter_display_sectors`）**：
+   - **展示过滤（固定 · `filter_display_sectors` · 勿改回 ≥4 或强制 Top5）**：
      - 若有 `count ≥ 5` 的板块 → **只展示全部 ≥5 的板块**（按家数降序；可以是 Top3/Top4…，**不强制凑满 5**）
      - 若全部 `< 5` → **只展示家数最多的 1 个板块**
      - JSON 可多写候选，页面以过滤结果为准
