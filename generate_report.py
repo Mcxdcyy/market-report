@@ -3034,9 +3034,9 @@ def render_html(ctx: dict) -> str:
     flex-shrink: 0; text-align: right;
   }}
   .sector-persist-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
-  /* 与模块 .section-num（实心方块）区分：描边圆序号 */
+  /* 与模块 .section-num（实心方块）区分：同形空心方框 */
   .sector-rank {{
-    width: 22px; height: 22px; border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 6px;
     background: transparent; color: var(--accent);
     border: 1.5px solid var(--accent);
     font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
