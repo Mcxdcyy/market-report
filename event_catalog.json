@@ -1,5 +1,167 @@
 [
   {
+    "month": 7,
+    "day": 10,
+    "dot": "机",
+    "label": "7/10",
+    "title": "2026中国具身智能机器人产业展7月10-12日举行",
+    "short": "具身",
+    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-08-08"
+  },
+  {
+    "month": 7,
+    "day": 11,
+    "dot": "机",
+    "label": "7/11",
+    "title": "2026“机器人+”创新发展大会7月11-13日举行",
+    "short": "机器人",
+    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-08-08"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "AI",
+    "label": "7/15",
+    "title": "中国（西部）国际人工智能与具身智能机器人产业链大会",
+    "short": "具身",
+    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-08-08"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "15",
+    "label": "7/15",
+    "title": "中报预告截止",
+    "short": "预告截止",
+    "brief": "沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。截止日后转入验牌分化——真预增与蹭概念分化加剧，资金从预期切换到兑现。",
+    "hot": true,
+    "importance": 3,
+    "source": "seed",
+    "fetched_at": "2026-08-08"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "15",
+    "label": "7/15",
+    "title": "国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况",
+    "short": "国新办举行新闻发…",
+    "brief": "国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况。关注相关板块竞价与持续性。",
+    "hot": false,
+    "importance": 4,
+    "source": "wscn",
+    "fetched_at": "2026-08-08"
+  },
+  {
+    "month": 7,
+    "day": 16,
+    "dot": "16",
+    "label": "7/16",
+    "title": "长鑫科技7月16日打新",
+    "short": "长鑫科技7月16…",
+    "brief": "长鑫科技7月16日打新。关注相关板块竞价与持续性。",
+    "hot": false,
+    "importance": 4,
+    "source": "wscn",
+    "fetched_at": "2026-08-08"
+  },
+  {
+    "month": 7,
+    "day": 17,
+    "dot": "AI",
+    "label": "7/17–20",
+    "title": "WAIC 世界人工智能大会",
+    "short": "WAIC",
+    "brief": "上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；外交部确认最高领导人出席开幕式并阐述 AI 治理立场。会中看点：华为 Atlas 950 真机首展、具身/大模型新品、拟人化互动新规落地后的官方解读；应用与政策叙事强于纯硬件二波。",
+    "hot": true,
+    "importance": 4,
+    "source": "seed",
+    "fetched_at": "2026-08-08",
+    "span_end": [
+      7,
+      20
+    ]
+  },
+  {
+    "month": 7,
+    "day": 22,
+    "dot": "药",
+    "label": "7/22–24",
+    "title": "CPIC 中国国际医药创新大会",
+    "short": "CPIC",
+    "brief": "国家会展中心（上海）举办，覆盖创新药、CXO、BD 授权与审评政策。关注临床数据、合作签约与医保/集采预期；与同周低空展并行，医药线仍看 BD/业绩锚。",
+    "hot": false,
+    "span_end": [
+      7,
+      24
+    ],
+    "source": "seed"
+  },
+  {
+    "month": 7,
+    "day": 22,
+    "dot": "空",
+    "label": "7/22–25",
+    "title": "国际低空经济博览会",
+    "short": "低空展",
+    "brief": "国家会展中心（上海）7/22–25，低空经济全产业链专业展（约 10 万㎡）。关注整机/eVTOL、基础设施与地方政策落地叙事，属板块级会议催化，谨防一日游。",
+    "hot": false,
+    "span_end": [
+      7,
+      25
+    ],
+    "source": "seed"
+  },
+  {
+    "month": 7,
+    "day": 25,
+    "dot": "政",
+    "label": "7/25–31",
+    "title": "年中政治局会议窗口",
+    "short": "政治局",
+    "brief": "7/30 政治局会议已召开：加大逆周期调节、谋划增量政策；深入实施「人工智能+」。定调更加积极财政+适度宽松货币，影响消费、基建与 AI 应用预期。",
+    "hot": true,
+    "span_end": [
+      7,
+      31
+    ],
+    "source": "seed"
+  },
+  {
+    "month": 7,
+    "day": 27,
+    "dot": "存",
+    "label": "7/27",
+    "title": "长鑫科技科创板上市",
+    "short": "长鑫上市",
+    "brief": "国产 DRAM 龙头长鑫科技 7/27 登陆科创板（发行价 8.66 元）。影响整条存储链情绪与估值锚，上市前后波动加大；设备/材料/模组联动，谨防抽血与高开低走。",
+    "hot": true,
+    "source": "seed"
+  },
+  {
+    "month": 7,
+    "day": 30,
+    "dot": "光",
+    "label": "7/30",
+    "title": "中际旭创 H股上市",
+    "short": "旭创H股",
+    "brief": "7/30 登陆港交所：定价 980 港元，募资约 534 亿港元；港股首日破发，A 股龙头天量波动。CPO/光模块链情绪兑现窗口，谨防抽血与高低切，缩圈绩优不追高。",
+    "hot": true,
+    "source": "seed"
+  },
+  {
     "month": 8,
     "day": 4,
     "dot": "存",
@@ -28,70 +190,12 @@
   {
     "month": 8,
     "day": 10,
-    "dot": "10",
-    "label": "8/10",
-    "title": "DeepSeek-V4-Flash正式版已公测，将尽快发布",
-    "short": "DeepSeek…",
-    "brief": "DeepSeek-V4-Flash正式版已公测，将尽快发布。关注相关板块竞价与持续性。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-08-08"
-  },
-  {
-    "month": 8,
-    "day": 10,
-    "dot": "10",
-    "label": "8/10",
-    "title": "DeepSeek拟近期上调API服务定价，预计涨幅较大",
-    "short": "DeepSeek…",
-    "brief": "DeepSeek拟近期上调API服务定价，预计涨幅较大。关注相关板块竞价与持续性。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-08-08"
-  },
-  {
-    "month": 8,
-    "day": 10,
     "dot": "机",
     "label": "8/10",
     "title": "宇树科技科创板申购",
     "short": "宇树申购",
     "brief": "宇树科技科创板网上/网下申购日（8/10），发行价 150.80 元/股，预计募资约 61 亿元；DeepSeek 等战略配售。影响具身/机器人链情绪与估值锚；申购前后波动加大，谨防抽血与一日游。",
     "hot": true,
-    "importance": 4,
-    "source": "seed",
-    "fetched_at": "2026-08-08"
-  },
-  {
-    "month": 8,
-    "day": 10,
-    "dot": "10",
-    "label": "8/10",
-    "title": "长鑫科技获纳入MSCI中国全股票指数",
-    "short": "长鑫科技获纳入M…",
-    "brief": "长鑫科技获纳入MSCI中国全股票指数。关注相关板块竞价与持续性。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-08-08"
-  },
-  {
-    "month": 8,
-    "day": 19,
-    "dot": "机",
-    "label": "8/19–23",
-    "title": "世界机器人大会8月19日至23日在北京举行",
-    "short": "机器人",
-    "brief": "产业顶会/强主题展会，关注主题龙头竞价强度与分化。",
-    "hot": false,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-08-08",
-    "span_end": [
-      8,
-      23
-    ]
+    "source": "seed"
   }
 ]
