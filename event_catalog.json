@@ -10,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-08-08"
+    "fetched_at": "2026-08-10"
   },
   {
     "month": 7,
@@ -23,7 +23,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-08-08"
+    "fetched_at": "2026-08-10"
   },
   {
     "month": 7,
@@ -36,7 +36,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-08-08"
+    "fetched_at": "2026-08-10"
   },
   {
     "month": 7,
@@ -49,7 +49,7 @@
     "hot": true,
     "importance": 3,
     "source": "seed",
-    "fetched_at": "2026-08-08"
+    "fetched_at": "2026-08-10"
   },
   {
     "month": 7,
@@ -62,7 +62,7 @@
     "hot": false,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-08-08"
+    "fetched_at": "2026-08-10"
   },
   {
     "month": 7,
@@ -75,7 +75,7 @@
     "hot": false,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-08-08"
+    "fetched_at": "2026-08-10"
   },
   {
     "month": 7,
@@ -88,7 +88,7 @@
     "hot": true,
     "importance": 4,
     "source": "seed",
-    "fetched_at": "2026-08-08",
+    "fetched_at": "2026-08-10",
     "span_end": [
       7,
       20
@@ -196,6 +196,32 @@
     "short": "宇树申购",
     "brief": "宇树科技科创板网上/网下申购日（8/10），发行价 150.80 元/股，预计募资约 61 亿元；DeepSeek 等战略配售。影响具身/机器人链情绪与估值锚；申购前后波动加大，谨防抽血与一日游。",
     "hot": true,
+    "source": "seed"
+  },
+  {
+    "month": 8,
+    "day": 12,
+    "dot": "机",
+    "label": "8/12",
+    "title": "宇树科技申购缴款截止",
+    "short": "宇树缴款",
+    "brief": "宇树科技科创板网上申购缴款截止日（8/12）。中签缴款可能阶段性抽血，与具身/机器人链情绪联动；关注上市前波动与大会窗口衔接，谨防抽血与高低切。",
+    "hot": true,
+    "source": "seed"
+  },
+  {
+    "month": 8,
+    "day": 19,
+    "dot": "机",
+    "label": "8/19–23",
+    "title": "世界机器人大会",
+    "short": "机器人大会",
+    "brief": "2026世界机器人大会（8/19–23，北京经开区），主题「人机共生，产需共融」；同期博览会/大赛，首发新品与采购对接集中。影响具身/机器人全产业链情绪，属板块级会议催化，谨防会前透支与会中分化。",
+    "hot": true,
+    "span_end": [
+      8,
+      23
+    ],
     "source": "seed"
   }
 ]
