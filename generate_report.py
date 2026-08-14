@@ -1032,9 +1032,14 @@ def sync_sector_count(sector: dict) -> dict:
 
 
 def filter_display_sectors(sectors: list) -> list:
-    """涨停板块展示过滤（固定）：
-    - 若存在涨停家数 ≥5 的板块：只展示这些板块（按家数降序；数量不限 Top5）
-    - 若没有任何 ≥5 的板块：只展示家数并列最高的板块（最强可能不止 1 个）
+    """涨停板块展示过滤（固定 · 两段流水线）：
+
+    1) 资格筛选
+       - 若存在涨停家数 ≥5 的板块：只保留这些
+       - 若没有任何 ≥5：只保留家数并列最高（最强可能不止 1 个）
+    2) 数量上限
+       - 按家数降序，默认最多展示 5 个
+       - 若第 5 与第 6 家数相同，则一并展示第 6（及之后与第 5 家数相同的并列）
     """
     synced = [sync_sector_count(dict(s)) for s in (sectors or [])]
     synced = [s for s in synced if int(s.get("count") or 0) > 0]
@@ -1042,10 +1047,19 @@ def filter_display_sectors(sectors: list) -> list:
         return []
     synced.sort(key=lambda s: (-int(s.get("count") or 0), s.get("name") or ""))
     ge5 = [s for s in synced if int(s.get("count") or 0) >= 5]
-    if ge5:
-        return ge5
-    top = int(synced[0].get("count") or 0)
-    return [s for s in synced if int(s.get("count") or 0) == top]
+    qualified = ge5 if ge5 else [
+        s for s in synced if int(s.get("count") or 0) == int(synced[0].get("count") or 0)
+    ]
+    if len(qualified) <= 5:
+        return qualified
+    fifth_count = int(qualified[4].get("count") or 0)
+    out = qualified[:5]
+    for s in qualified[5:]:
+        if int(s.get("count") or 0) == fifth_count:
+            out.append(s)
+        else:
+            break
+    return out
 
 
 def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:
