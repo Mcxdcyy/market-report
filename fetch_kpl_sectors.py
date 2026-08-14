@@ -149,20 +149,15 @@ def _sectors_from_plate_list(raw_list: list, *, source: str) -> list[dict]:
 
 
 def _display_sectors(sectors: list[dict]) -> list[dict]:
-    """与 generate_report.filter_display_sectors 同口径：最多 Top5，第5/第6家数相同时并列扩展。"""
+    """与 generate_report.filter_display_sectors 同口径：有 ≥5 只显这些；否则显并列最强。"""
     if not sectors:
         return []
     ranked = sorted(sectors, key=lambda s: (-int(s["count"]), s.get("name") or ""))
-    if len(ranked) <= 5:
-        return ranked
-    fifth_count = int(ranked[4]["count"])
-    out = ranked[:5]
-    for s in ranked[5:]:
-        if int(s["count"]) == fifth_count:
-            out.append(s)
-        else:
-            break
-    return out
+    ge5 = [s for s in ranked if int(s["count"]) >= 5]
+    if ge5:
+        return ge5
+    top = int(ranked[0]["count"])
+    return [s for s in ranked if int(s["count"]) == top]
 
 
 def fetch_plate_info_w38(day: str) -> dict:
@@ -418,20 +413,15 @@ def backfill_history(end_day: str, lookback_calendar_days: int = 14) -> dict:
 
 
 def filter_display_counts(counts: dict[str, int]) -> list[tuple[str, int]]:
-    """与 filter_display_sectors 同口径：最多 Top5，第5/第6家数相同时并列扩展。"""
+    """与 filter_display_sectors 同口径：有 ≥5 只显这些；否则显并列最强。"""
     items = sorted(((n, int(c)) for n, c in counts.items() if int(c) > 0), key=lambda x: (-x[1], x[0]))
     if not items:
         return []
-    if len(items) <= 5:
-        return items
-    fifth_count = items[4][1]
-    out = items[:5]
-    for item in items[5:]:
-        if item[1] == fifth_count:
-            out.append(item)
-        else:
-            break
-    return out
+    ge5 = [it for it in items if it[1] >= 5]
+    if ge5:
+        return ge5
+    top = items[0][1]
+    return [it for it in items if it[1] == top]
 
 
 def default_day() -> str:

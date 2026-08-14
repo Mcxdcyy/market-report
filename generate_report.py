@@ -1033,25 +1033,19 @@ def sync_sector_count(sector: dict) -> dict:
 
 def filter_display_sectors(sectors: list) -> list:
     """涨停板块展示过滤（固定）：
-    - 按涨停家数降序，默认最多展示 5 个
-    - 若第 5 与第 6 家数相同，则一并展示第 6（及之后与第 5 家数相同的并列板块）
-    - 不足 5 个则有多少展示多少（不强制凑满）
+    - 若存在涨停家数 ≥5 的板块：只展示这些板块（按家数降序；数量不限 Top5）
+    - 若没有任何 ≥5 的板块：只展示家数并列最高的板块（最强可能不止 1 个）
     """
     synced = [sync_sector_count(dict(s)) for s in (sectors or [])]
     synced = [s for s in synced if int(s.get("count") or 0) > 0]
     if not synced:
         return []
     synced.sort(key=lambda s: (-int(s.get("count") or 0), s.get("name") or ""))
-    if len(synced) <= 5:
-        return synced
-    fifth_count = int(synced[4].get("count") or 0)
-    out = synced[:5]
-    for s in synced[5:]:
-        if int(s.get("count") or 0) == fifth_count:
-            out.append(s)
-        else:
-            break
-    return out
+    ge5 = [s for s in synced if int(s.get("count") or 0) >= 5]
+    if ge5:
+        return ge5
+    top = int(synced[0].get("count") or 0)
+    return [s for s in synced if int(s.get("count") or 0) == top]
 
 
 def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:
