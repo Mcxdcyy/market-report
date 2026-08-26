@@ -1215,182 +1215,20 @@ def load_market_news(
 
 
 # 种子事件库（含人工撰写的 brief；抓取结果会与之合并）
+# 只保留仍可能落入「报表日+未来2周」的 seed；已结束节点靠日期过滤剔除，不必长期堆在 seed 里。
 SEED_EVENT_CATALOG: list[dict] = [
     {
-        "month": 7,
-        "day": 15,
-        "dot": "15",
-        "label": "7/15",
-        "title": "中报预告截止",
-        "short": "预告截止",
-        "brief": (
-            "沪深交易所规定：触及披露标准的上市公司须在此时限前发布2026上半年业绩预告。"
-            "截止日后转入验牌分化——真预增与蹭概念分化加剧，资金从预期切换到兑现。"
-        ),
-        "hot": True,
-        "source": "seed",
-    },
-    {
-        "month": 7,
-        "day": 17,
-        "dot": "AI",
-        "label": "7/17–20",
-        "title": "WAIC 世界人工智能大会",
-        "short": "WAIC",
-        "brief": (
-            "上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；"
-            "外交部确认最高领导人出席开幕式并阐述 AI 治理立场。"
-            "会中看点：华为 Atlas 950 真机首展、具身/大模型新品、拟人化互动新规落地后的官方解读；"
-            "应用与政策叙事强于纯硬件二波。"
-        ),
-        "hot": True,
-        "span_end": (7, 20),
-        "source": "seed",
-    },
-    {
-        "month": 7,
-        "day": 22,
-        "dot": "药",
-        "label": "7/22–24",
-        "title": "CPIC 中国国际医药创新大会",
-        "short": "CPIC",
-        "brief": (
-            "国家会展中心（上海）举办，覆盖创新药、CXO、BD 授权与审评政策。"
-            "关注临床数据、合作签约与医保/集采预期；与同周低空展并行，医药线仍看 BD/业绩锚。"
-        ),
-        "hot": False,
-        "span_end": (7, 24),
-        "source": "seed",
-    },
-    {
-        "month": 7,
-        "day": 22,
-        "dot": "空",
-        "label": "7/22–25",
-        "title": "国际低空经济博览会",
-        "short": "低空展",
-        "brief": (
-            "国家会展中心（上海）7/22–25，低空经济全产业链专业展（约 10 万㎡）。"
-            "关注整机/eVTOL、基础设施与地方政策落地叙事，属板块级会议催化，谨防一日游。"
-        ),
-        "hot": False,
-        "span_end": (7, 25),
-        "source": "seed",
-    },
-    {
-        "month": 7,
-        "day": 25,
-        "dot": "政",
-        "label": "7/25–31",
-        "title": "年中政治局会议窗口",
-        "short": "政治局",
-        "brief": (
-            "7/30 政治局会议已召开：加大逆周期调节、谋划增量政策；深入实施「人工智能+」。"
-            "定调更加积极财政+适度宽松货币，影响消费、基建与 AI 应用预期。"
-        ),
-        "hot": True,
-        "span_end": (7, 31),
-        "source": "seed",
-    },
-    {
-        "month": 7,
-        "day": 27,
+        "month": 8,
+        "day": 29,
         "dot": "存",
-        "label": "7/27",
-        "title": "长鑫科技科创板上市",
-        "short": "长鑫上市",
+        "label": "8/29",
+        "title": "长鑫科技上市后首份半年报预计将公布",
+        "short": "长鑫半年报",
         "brief": (
-            "国产 DRAM 龙头长鑫科技 7/27 登陆科创板（发行价 8.66 元）。"
-            "影响整条存储链情绪与估值锚，上市前后波动加大；设备/材料/模组联动，谨防抽血与高开低走。"
+            "长鑫科技上市后首份半年度报告预计披露窗口。"
+            "关注存储链业绩验证与情绪再定价，谨防财报日高低切。"
         ),
         "hot": True,
-        "source": "seed",
-    },
-    {
-        "month": 7,
-        "day": 30,
-        "dot": "光",
-        "label": "7/30",
-        "title": "中际旭创 H股上市",
-        "short": "旭创H股",
-        "brief": (
-            "7/30 登陆港交所：定价 980 港元，募资约 534 亿港元；港股首日破发，A 股龙头天量波动。"
-            "CPO/光模块链情绪兑现窗口，谨防抽血与高低切，缩圈绩优不追高。"
-        ),
-        "hot": True,
-        "source": "seed",
-    },
-    {
-        "month": 8,
-        "day": 4,
-        "dot": "存",
-        "label": "8/4–6",
-        "title": "FMS 2026 闪存峰会",
-        "short": "闪存峰会",
-        "brief": (
-            "FMS 2026 闪存峰会（8/4–6），三星、SK 等存储巨头出席，关注 DRAM/NAND 供需与报价指引。"
-            "与国产存储、模组链情绪联动；中报验牌窗口叠加，谨防一日游与高低切。"
-        ),
-        "hot": True,
-        "span_end": (8, 6),
-        "source": "seed",
-    },
-    {
-        "month": 8,
-        "day": 7,
-        "dot": "机",
-        "label": "8/7",
-        "title": "宇树科技网上路演",
-        "short": "宇树路演",
-        "brief": (
-            "人形机器人龙头宇树科技科创板网上路演日（8/7）。发行价已定为 150.80 元/股，"
-            "DeepSeek 等参与战略配售；与 8/10 申购连看，谨防路演/定价日抽血与概念扩散一日游。"
-        ),
-        "hot": True,
-        "source": "seed",
-    },
-    {
-        "month": 8,
-        "day": 10,
-        "dot": "机",
-        "label": "8/10",
-        "title": "宇树科技科创板申购",
-        "short": "宇树申购",
-        "brief": (
-            "宇树科技科创板网上/网下申购日（8/10），发行价 150.80 元/股，预计募资约 61 亿元；"
-            "DeepSeek 等战略配售。影响具身/机器人链情绪与估值锚；申购前后波动加大，谨防抽血与一日游。"
-        ),
-        "hot": True,
-        "source": "seed",
-    },
-    {
-        "month": 8,
-        "day": 12,
-        "dot": "机",
-        "label": "8/12",
-        "title": "宇树科技申购缴款截止",
-        "short": "宇树缴款",
-        "brief": (
-            "宇树科技科创板网上申购缴款截止日（8/12）。中签缴款可能阶段性抽血，"
-            "与具身/机器人链情绪联动；关注上市前波动与大会窗口衔接，谨防抽血与高低切。"
-        ),
-        "hot": True,
-        "source": "seed",
-    },
-    {
-        "month": 8,
-        "day": 19,
-        "dot": "机",
-        "label": "8/19–23",
-        "title": "世界机器人大会",
-        "short": "机器人大会",
-        "brief": (
-            "2026世界机器人大会（8/19–23，北京经开区），主题「人机共生，产需共融」；"
-            "同期博览会/大赛，首发新品与采购对接集中。影响具身/机器人全产业链情绪，"
-            "属板块级会议催化，谨防会前透支与会中分化。"
-        ),
-        "hot": True,
-        "span_end": (8, 23),
         "source": "seed",
     },
 ]
@@ -1759,7 +1597,8 @@ def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
             continue
         _merge_into(catalog, inc)
 
-    cutoff = as_of - timedelta(days=3)
+    # 目录只保留「报表日及以后」仍有效的节点；已结束事件一律剔除
+    cutoff = as_of.replace(hour=0, minute=0, second=0, microsecond=0)
     pruned: list[dict] = []
     for ev in catalog:
         if _event_end_dt(ev, year).replace(tzinfo=None) >= cutoff:
@@ -1826,32 +1665,42 @@ def build_events_window(as_of: datetime) -> tuple:
     if getattr(as_of, "tzinfo", None) is not None:
         as_of = as_of.replace(tzinfo=None)
     catalog, sync_note = sync_event_catalog(as_of)
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
     end = as_of + timedelta(days=14)
+    end_d = end.date() if hasattr(end, "date") else end
     label = f"{as_of.month}/{as_of.day}–{end.month}/{end.day}"
     nodes: list[dict] = []
     for ev in catalog:
-        em, ed = ev["month"], ev["day"]
-        start = datetime(as_of.year, em, ed)
+        em, ed = int(ev["month"]), int(ev["day"])
+        try:
+            start = datetime(as_of.year, em, ed)
+        except ValueError:
+            continue
         span = ev.get("span_end")
         if span:
-            ev_end = datetime(as_of.year, int(span[0]), int(span[1]))
+            try:
+                ev_end = datetime(as_of.year, int(span[0]), int(span[1]))
+            except ValueError:
+                ev_end = start
         else:
             ev_end = start
-        if as_of <= ev_end and start <= end + timedelta(days=7):
-            if not _event_is_catalyst(ev.get("title", ""), ev):
-                continue
-            nodes.append({
-                "month": em,
-                "day": ed,
-                "dot": ev["dot"],
-                "label": ev["label"],
-                "title": ev["title"],
-                "sub": ev.get("short", ev["title"]),
-                "brief": ev["brief"],
-                "hot": ev.get("hot", False),
-                "importance": ev.get("importance", 0),
-                "source": ev.get("source", ""),
-            })
+        # 未来2周：事件区间须与 [报表日, +14天] 有交集；已结束的过去事件一律不进
+        if ev_end.date() < as_of_d or start.date() > end_d:
+            continue
+        if not _event_is_catalyst(ev.get("title", ""), ev):
+            continue
+        nodes.append({
+            "month": em,
+            "day": ed,
+            "dot": ev["dot"],
+            "label": ev["label"],
+            "title": ev["title"],
+            "sub": ev.get("short", ev["title"]),
+            "brief": ev["brief"],
+            "hot": ev.get("hot", False),
+            "importance": ev.get("importance", 0),
+            "source": ev.get("source", ""),
+        })
     nodes = _pick_event_nodes(nodes, as_of)
     if not nodes:
         nodes = [{
@@ -2374,28 +2223,10 @@ def _peak_tags_for_label(label: str, peak: str) -> list[str]:
     return tags
 
 
-def _extra_milestones_from_rhythm(rhythm: str) -> list[dict]:
-    """节奏里有关键节点但事件库未收录时，补入日历。"""
-    extras: list[dict] = []
-    if rhythm and "长鑫" in rhythm:
-        extras.append({
-            "label": "7/27",
-            "title": "长鑫科技科创板上市",
-            "short": "长鑫上市",
-            "brief": "国产 DRAM 龙头上市窗口，存储链情绪与估值锚；谨防抽血与高开低走。",
-            "hot": True,
-            "dot": "存",
-        })
-    if rhythm and ("旭创" in rhythm or "中际旭创" in rhythm):
-        extras.append({
-            "label": "7/30",
-            "title": "中际旭创 H股上市",
-            "short": "旭创H股",
-            "brief": "光模块龙头 H股上市窗口，CPO 链定价锚与资金分流；谨防抽血与高低切。",
-            "hot": True,
-            "dot": "光",
-        })
-    return extras
+def _extra_milestones_from_rhythm(rhythm: str, as_of: datetime | None = None) -> list[dict]:
+    """节奏补点已停用：不再因关键词硬编码历史节点（如长鑫7/27上市）回流到未来2周日历。"""
+    return []
+
 
 
 def _filter_summary_points(summary: str, rhythm: str) -> list[str]:
@@ -2558,7 +2389,12 @@ def render_fwd_section_html(
             continue
         seen.add(key)
         cal_items.append(n)
-    for ex in _extra_milestones_from_rhythm(rhythm):
+    for ex in _extra_milestones_from_rhythm(rhythm, as_of=as_of):
+        if cutoff:
+            em, ed = _parse_cal_end_key(ex.get("label", ""))
+            if 1 <= em <= 12 and 1 <= ed <= 31:
+                if datetime(as_of.year if as_of else 2026, em, ed).date() < cutoff:
+                    continue
         key = f"{ex.get('label', '')}|{ex.get('title', '')}"
         if key not in seen:
             seen.add(key)
