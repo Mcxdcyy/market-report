@@ -552,35 +552,35 @@ def payoff_streak(df: pd.DataFrame, board: str = "main", threshold: int = 40) ->
 
 
 TREND_SCORE_KEYS = (
-    "vol", "depth", "main_act", "chuang_act", "main_chase", "chuang_chase",
+    "vol",
+    "depth",
+    "main_act",
+    "chuang_act",
+    "main_yday",
+    "chuang_yday",
+    "main_today",
+    "chuang_today",
 )
 
 
-# 10日趋势 · 主追/创追效应：昨追赚钱效应 : 今追赚钱效应 = 4 : 6（固定）
+# 主追/创追合成权重（模式分析等仍可用；10日表已拆为昨追/今追八维）
 CHASE_YDAY_W = 0.4
 CHASE_TODAY_W = 0.6
 
 
 def day_trend_scores(row: pd.Series, full_df: pd.DataFrame) -> dict[str, int]:
-    """单日 10 日趋势用 6 项评分（与八维环境同一套算法）。
-
-    主追/创追效应 = 昨追赚钱效应×0.4 + 今追赚钱效应×0.6（今追权重更重）。
-    """
+    """单日 10 日趋势用八维评分（与原环境八维同一套算法）。"""
     sub = full_df[full_df["date"] <= row["date"]]
     dim = compute_six_dim(row, sub)
-    main_chase = clamp100(
-        int(round(dim["main_money"] * CHASE_YDAY_W + dim["main_close"]["score"] * CHASE_TODAY_W))
-    )
-    chuang_chase = clamp100(
-        int(round(dim["chuang_money"] * CHASE_YDAY_W + dim["chuang_close"]["score"] * CHASE_TODAY_W))
-    )
     return {
         "vol": int(dim["vol_score"]),
         "depth": int(dim["depth"]),
         "main_act": int(dim["main_act"]),
         "chuang_act": int(dim["chuang_act"]),
-        "main_chase": main_chase,
-        "chuang_chase": chuang_chase,
+        "main_yday": int(dim["main_money"]),
+        "chuang_yday": int(dim["chuang_money"]),
+        "main_today": int(dim["main_close"]["score"]),
+        "chuang_today": int(dim["chuang_close"]["score"]),
     }
 
 
@@ -602,7 +602,7 @@ def coalesce_trend_row(raw: pd.Series, prev: pd.Series | None) -> pd.Series:
 
 
 def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict], str]:
-    """近10个交易日：6 项环境评分。"""
+    """近10个交易日：八维环境评分。"""
     days: list[dict] = []
     coalesced_rows: list[pd.Series] = []
 
@@ -2460,23 +2460,6 @@ def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
 
 
 def render_html(ctx: dict) -> str:
-    def score_card(s: tuple) -> str:
-        n, sc, t, note = s
-        return f'''<div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">{n}</span>
-        <span class="score-val" style="color:{score_bar(sc)}">{sc}</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:{sc}%;background:{score_bar(sc)}"></div></div>
-      <div class="score-foot"><span class="pill {score_badge(sc)[0]}">{t}</span><span>{note}</span></div>
-    </div>'''
-
-    scores_html = (
-        f'<div class="score-grid score-grid-8">'
-        f'{"".join(score_card(s) for s in ctx["scores"])}'
-        f"</div>"
-    )
-
     def trend_score_cell(key: str, d: dict) -> str:
         val = d[key]
         tag = d[f"{key}_tag"]
@@ -2487,8 +2470,10 @@ def render_html(ctx: dict) -> str:
         ("depth", "新高指标"),
         ("main_act", "主板活跃"),
         ("chuang_act", "创板活跃"),
-        ("main_chase", "主追效应"),
-        ("chuang_chase", "创追效应"),
+        ("main_yday", "主板昨追"),
+        ("chuang_yday", "创板昨追"),
+        ("main_today", "主板今追"),
+        ("chuang_today", "创板今追"),
     )
     trend_days = ctx["trend_days"]
     trend_head_cells = "".join(f"<th>{label}</th>" for _, label in trend_cols)
@@ -2515,6 +2500,7 @@ def render_html(ctx: dict) -> str:
   </div>'''
 
     vol20 = ctx.get("vol20_bars") or []
+    vol_note = (ctx.get("vol_note") or "").strip()
     if vol20:
         vol20_cols = "".join(
             f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
@@ -2532,6 +2518,7 @@ def render_html(ctx: dict) -> str:
         )
         d0, d1 = vol20[0]["date"], vol20[-1]["date"]
         latest_lab = vol20[-1]["label"]
+        vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
         vol20_html = f'''<div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
@@ -2541,9 +2528,10 @@ def render_html(ctx: dict) -> str:
       <div class="vol20-bars">{vol20_cols}</div>
       <div class="vol20-axis">{vol20_ticks}</div>
     </div>
+    {vol_note_html}
   </div>'''
     else:
-        vol20_html = ""
+        vol20_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -2892,7 +2880,7 @@ def render_html(ctx: dict) -> str:
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
   .trend-matrix {{
-    width: 90%; border-collapse: collapse; font-size: 12px; min-width: 468px;
+    width: 100%; border-collapse: collapse; font-size: 12px; min-width: 640px;
   }}
   .trend-matrix th, .trend-matrix td {{
     border: 1px solid var(--border); padding: 8px 10px; text-align: center;
@@ -2991,6 +2979,12 @@ def render_html(ctx: dict) -> str:
   .vol20-tick.latest span {{
     left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
+  }}
+  .vol20-note {{
+    margin-top: 10px; padding: 8px 10px;
+    background: var(--accent-bg); border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 12px; line-height: 1.55; color: var(--text);
   }}
 
   /* ── 涨停板块 ── */
@@ -3267,7 +3261,7 @@ def render_html(ctx: dict) -> str:
     .section-sub.event-meta {{
       align-items: flex-start; text-align: left; max-width: 100%;
     }}
-    .trend-matrix {{ width: 100%; min-width: 520px; font-size: 13px; }}
+    .trend-matrix {{ width: 100%; min-width: 640px; font-size: 13px; }}
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
     #sec-trend .trend-cell {{ font-size: 13px; }}
@@ -3290,6 +3284,7 @@ def render_html(ctx: dict) -> str:
     .vol20-tick.latest span {{ font-size: 10px; }}
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
+    .vol20-note {{ font-size: 14px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
@@ -3351,7 +3346,6 @@ def render_html(ctx: dict) -> str:
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
-      <a href="#sec-env">环境评分</a>
       <a href="#sec-ts">趋势强度</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
@@ -3359,43 +3353,32 @@ def render_html(ctx: dict) -> str:
     </nav>
   </header>
 
-  <!-- 1 10日 -->
+  <!-- 1 10日 · 八维 -->
   <div class="section" id="sec-trend">
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">10日趋势</div>
-      <div class="section-sub">{ctx['trend_range']}</div>
+      <div class="section-sub">{ctx['trend_range']} · 八维</div>
     </div>
     {trend_html}
-    {vol20_html}
     <div class="callout">{ctx['trend_headline']}</div>
+    {vol20_html}
   </div>
 
-  <!-- 2 环境 -->
-  <div class="section" id="sec-env">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">环境评分 · 趋势与承接</div>
-      <div class="section-sub">八维评分</div>
-    </div>
-    <div class="score-groups">{scores_html}</div>
-    <div class="callout {ctx['env_callout']['tag']}">{ctx['env_callout']['text']}</div>
-  </div>
-
-  <!-- 3 趋势强度 -->
+  <!-- 2 趋势强度 -->
   <div class="section" id="sec-ts">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
   </div>
 
-  <!-- 4 涨停板块 -->
+  <!-- 3 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">3</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -3404,10 +3387,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 5 公告与政策 -->
+  <!-- 4 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -3415,10 +3398,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 6 事件 -->
+  <!-- 5 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span>{ctx['event_window']}</span>
@@ -3687,6 +3670,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "trend_range": trend_range,
         "trend_headline": trend_headline,
         "vol20_bars": vol20_bars,
+        "vol_note": dim.get("vol_note") or "",
         "synth": synth,
         "market_news": market_news,
         "event_window": event_window,

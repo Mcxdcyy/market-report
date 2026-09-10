@@ -281,7 +281,7 @@
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .trend-matrix {
-    width: 90%; border-collapse: collapse; font-size: 12px; min-width: 468px;
+    width: 100%; border-collapse: collapse; font-size: 12px; min-width: 640px;
   }
   .trend-matrix th, .trend-matrix td {
     border: 1px solid var(--border); padding: 8px 10px; text-align: center;
@@ -380,6 +380,12 @@
   .vol20-tick.latest span {
     left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
+  }
+  .vol20-note {
+    margin-top: 10px; padding: 8px 10px;
+    background: var(--accent-bg); border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 12px; line-height: 1.55; color: var(--text);
   }
 
   /* ── 涨停板块 ── */
@@ -656,7 +662,7 @@
     .section-sub.event-meta {
       align-items: flex-start; text-align: left; max-width: 100%;
     }
-    .trend-matrix { width: 100%; min-width: 520px; font-size: 13px; }
+    .trend-matrix { width: 100%; min-width: 640px; font-size: 13px; }
     .trend-matrix th, .trend-matrix td { padding: 7px 9px; }
     .trend-date-wd { font-size: 12px; }
     #sec-trend .trend-cell { font-size: 13px; }
@@ -679,6 +685,7 @@
     .vol20-tick.latest span { font-size: 10px; }
     .vol20-title { font-size: 14px; }
     .vol20-meta { font-size: 12px; }
+    .vol20-note { font-size: 14px; }
     .vol20-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
     .sector-rank { font-size: 13px; }
     .sector-name { font-size: 17px; }
@@ -740,7 +747,6 @@
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
-      <a href="#sec-env">环境评分</a>
       <a href="#sec-ts">趋势强度</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
@@ -748,19 +754,19 @@
     </nav>
   </header>
 
-  <!-- 1 10日 -->
+  <!-- 1 10日 · 八维 -->
   <div class="section" id="sec-trend">
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">10日趋势</div>
-      <div class="section-sub">08/28–09/10</div>
+      <div class="section-sub">08/28–09/10 · 八维</div>
     </div>
     <div class="trend-matrix-wrap">
     <table class="trend-matrix">
       <thead>
         <tr>
           <th class="trend-corner">日期</th>
-          <th>大盘量能</th><th>新高指标</th><th>主板活跃</th><th>创板活跃</th><th>主追效应</th><th>创追效应</th>
+          <th>大盘量能</th><th>新高指标</th><th>主板活跃</th><th>创板活跃</th><th>主板昨追</th><th>创板昨追</th><th>主板今追</th><th>创板今追</th>
         </tr>
       </thead>
       <tbody><tr class="">
@@ -768,64 +774,65 @@
         <span class="trend-date-md">08/28</span>
         <span class="trend-date-wd">周五</span>
       </th>
-      <td class="trend-cell warn">52</td><td class="trend-cell bad">12</td><td class="trend-cell warn">56</td><td class="trend-cell bad">14</td><td class="trend-cell ok">64</td><td class="trend-cell bad">26</td>
+      <td class="trend-cell warn">52</td><td class="trend-cell bad">12</td><td class="trend-cell warn">56</td><td class="trend-cell bad">14</td><td class="trend-cell ok">92</td><td class="trend-cell warn">57</td><td class="trend-cell warn">46</td><td class="trend-cell bad">6</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">08/31</span>
         <span class="trend-date-wd">周一</span>
       </th>
-      <td class="trend-cell ok">73</td><td class="trend-cell bad">17</td><td class="trend-cell ok">71</td><td class="trend-cell warn">54</td><td class="trend-cell warn">45</td><td class="trend-cell warn">55</td>
+      <td class="trend-cell ok">73</td><td class="trend-cell bad">17</td><td class="trend-cell ok">71</td><td class="trend-cell warn">54</td><td class="trend-cell ok">63</td><td class="trend-cell bad">9</td><td class="trend-cell bad">33</td><td class="trend-cell ok">85</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/01</span>
         <span class="trend-date-wd">周二</span>
       </th>
-      <td class="trend-cell bad">30</td><td class="trend-cell bad">22</td><td class="trend-cell warn">59</td><td class="trend-cell bad">4</td><td class="trend-cell ok">70</td><td class="trend-cell warn">52</td>
+      <td class="trend-cell bad">30</td><td class="trend-cell bad">22</td><td class="trend-cell warn">59</td><td class="trend-cell bad">4</td><td class="trend-cell warn">51</td><td class="trend-cell ok">87</td><td class="trend-cell ok">83</td><td class="trend-cell bad">28</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/02</span>
         <span class="trend-date-wd">周三</span>
       </th>
-      <td class="trend-cell bad">24</td><td class="trend-cell bad">17</td><td class="trend-cell bad">10</td><td class="trend-cell bad">0</td><td class="trend-cell bad">17</td><td class="trend-cell bad">11</td>
+      <td class="trend-cell bad">24</td><td class="trend-cell bad">17</td><td class="trend-cell bad">10</td><td class="trend-cell bad">0</td><td class="trend-cell bad">10</td><td class="trend-cell bad">1</td><td class="trend-cell bad">21</td><td class="trend-cell bad">18</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/03</span>
         <span class="trend-date-wd">周四</span>
       </th>
-      <td class="trend-cell bad">22</td><td class="trend-cell bad">22</td><td class="trend-cell bad">26</td><td class="trend-cell bad">3</td><td class="trend-cell bad">10</td><td class="trend-cell bad">37</td>
+      <td class="trend-cell bad">22</td><td class="trend-cell bad">22</td><td class="trend-cell bad">26</td><td class="trend-cell bad">3</td><td class="trend-cell bad">11</td><td class="trend-cell bad">2</td><td class="trend-cell bad">9</td><td class="trend-cell ok">60</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/04</span>
         <span class="trend-date-wd">周五</span>
       </th>
-      <td class="trend-cell warn">51</td><td class="trend-cell bad">15</td><td class="trend-cell warn">46</td><td class="trend-cell bad">5</td><td class="trend-cell bad">6</td><td class="trend-cell bad">5</td>
+      <td class="trend-cell warn">51</td><td class="trend-cell bad">15</td><td class="trend-cell warn">46</td><td class="trend-cell bad">5</td><td class="trend-cell bad">7</td><td class="trend-cell bad">10</td><td class="trend-cell bad">6</td><td class="trend-cell bad">2</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/07</span>
         <span class="trend-date-wd">周一</span>
       </th>
-      <td class="trend-cell warn">51</td><td class="trend-cell bad">11</td><td class="trend-cell ok">84</td><td class="trend-cell ok">70</td><td class="trend-cell ok">79</td><td class="trend-cell ok">69</td>
+      <td class="trend-cell warn">51</td><td class="trend-cell bad">11</td><td class="trend-cell ok">84</td><td class="trend-cell ok">70</td><td class="trend-cell warn">57</td><td class="trend-cell bad">38</td><td class="trend-cell ok">93</td><td class="trend-cell ok">90</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/08</span>
         <span class="trend-date-wd">周二</span>
       </th>
-      <td class="trend-cell warn">50</td><td class="trend-cell bad">8</td><td class="trend-cell ok">67</td><td class="trend-cell bad">5</td><td class="trend-cell ok">83</td><td class="trend-cell bad">25</td>
+      <td class="trend-cell warn">50</td><td class="trend-cell bad">8</td><td class="trend-cell ok">67</td><td class="trend-cell bad">5</td><td class="trend-cell ok">94</td><td class="trend-cell warn">49</td><td class="trend-cell ok">76</td><td class="trend-cell bad">9</td>
     </tr><tr class="">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/09</span>
         <span class="trend-date-wd">周三</span>
       </th>
-      <td class="trend-cell bad">30</td><td class="trend-cell bad">25</td><td class="trend-cell bad">20</td><td class="trend-cell bad">1</td><td class="trend-cell warn">44</td><td class="trend-cell bad">31</td>
+      <td class="trend-cell bad">30</td><td class="trend-cell bad">25</td><td class="trend-cell bad">20</td><td class="trend-cell bad">1</td><td class="trend-cell warn">52</td><td class="trend-cell bad">28</td><td class="trend-cell bad">38</td><td class="trend-cell bad">33</td>
     </tr><tr class="trend-row-latest">
       <th class="trend-date-cell">
         <span class="trend-date-md">09/10</span>
         <span class="trend-date-wd">周四</span>
       </th>
-      <td class="trend-cell bad">24</td><td class="trend-cell bad">23</td><td class="trend-cell bad">2</td><td class="trend-cell bad">0</td><td class="trend-cell bad">6</td><td class="trend-cell bad">24</td>
+      <td class="trend-cell bad">24</td><td class="trend-cell bad">23</td><td class="trend-cell bad">2</td><td class="trend-cell bad">0</td><td class="trend-cell bad">5</td><td class="trend-cell bad">4</td><td class="trend-cell bad">6</td><td class="trend-cell bad">37</td>
     </tr></tbody>
     </table>
   </div>
+    <div class="callout">08/28→09/10：昨追赚钱效应偏弱。当前处于<strong>退潮/弱势段</strong>。</div>
     <div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
@@ -985,81 +992,14 @@
     </div></div>
       <div class="vol20-axis"><div class="vol20-tick show"><span>07/31</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>08/14</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>08/28</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show latest"><span>09/10</span></div></div>
     </div>
+    <div class="vol20-note">1.66万亿，近3日均1.94万亿（86%），较前日-11.2%；连续2日总缩量16%，缩量且低于前三日均，资金在场偏弱</div>
   </div>
-    <div class="callout">08/28→09/10：昨追赚钱效应偏弱。当前处于<strong>退潮/弱势段</strong>。</div>
-  </div>
-
-  <!-- 2 环境 -->
-  <div class="section" id="sec-env">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">环境评分 · 趋势与承接</div>
-      <div class="section-sub">八维评分</div>
-    </div>
-    <div class="score-groups"><div class="score-grid score-grid-8"><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">大盘量能</span>
-        <span class="score-val" style="color:#34C759">24</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:24%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">2日总缩量超15%</span><span>1.66万亿，近3日均1.94万亿（86%），较前日-11.2%；连续2日总缩量16%，缩量且低于前三日均，资金在场偏弱</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">新高指标</span>
-        <span class="score-val" style="color:#34C759">23</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:23%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位39%（+20），当日新高12家，均值45家（偏离值-21.3，偏离度4）</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">主板活跃度</span>
-        <span class="score-val" style="color:#34C759">2</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:2%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位4%（+2），当日主追96家，均值164家（偏离值-25.0，偏离度0）</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">创业板活跃度</span>
-        <span class="score-val" style="color:#34C759">0</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:0%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位0%（+0），当日创活跃8，均值55（偏离值-25.0，偏离度0）</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">主板昨追赚钱效应</span>
-        <span class="score-val" style="color:#34C759">5</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:5%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位10%（+5），赚差-15.3%，均值+1.4%（偏离值-25.0，偏离度0）</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">创板昨追赚钱效应</span>
-        <span class="score-val" style="color:#34C759">4</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:4%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位9%（+4），赚差-42.1%，均值-14.7%（偏离值-25.0，偏离度0）</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">主板今追赚钱效应</span>
-        <span class="score-val" style="color:#34C759">6</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:6%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位12%（+6），冲高未回落占比72%（27家），均值84%（偏离值-25.0，偏离度0）</span></div>
-    </div><div class="score-card">
-      <div class="score-card-top">
-        <span class="score-name">创板今追赚钱效应</span>
-        <span class="score-val" style="color:#34C759">37</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:37%;background:#34C759"></div></div>
-      <div class="score-foot"><span class="pill bad">偏弱</span><span>分位36%（+18），冲高未回落占比75%（2家），均值78%（偏离值-6.0，偏离度19）</span></div>
-    </div></div></div>
-    <div class="callout bad"><strong>环境偏弱，宜防守精选</strong> 昨追赚钱效应 -15.3%/-42.1%；今追效应一般（主6/创37）；新高12家，趋势偏弱。</div>
   </div>
 
-  <!-- 3 趋势强度 -->
+  <!-- 2 趋势强度 -->
   <div class="section" id="sec-ts">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">2026-09-10 · 强趋势个股占比</div>
     </div>
@@ -1138,10 +1078,10 @@
   </div>
   </div>
 
-  <!-- 4 涨停板块 -->
+  <!-- 3 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">3</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">2026-09-10</div>
     </div>
@@ -1150,10 +1090,10 @@
     <div class="news-empty" style="margin-top:10px">请在 market_news.json 中补充 2026-09-10（top_sectors + post_close_pool + direction_analysis；codes/stocks 含创业板/科创板，剔除ST）</div>
   </div>
 
-  <!-- 5 公告与政策 -->
+  <!-- 4 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -1161,10 +1101,10 @@
     
   </div>
 
-  <!-- 6 事件 -->
+  <!-- 5 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span>9/10–9/24</span>
@@ -1174,7 +1114,7 @@
     <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode"><div class="fwd-tdot">10</div><div class="fwd-tlabel">9/10</div><div class="fwd-tsub">DeepSeek 开放平台 9/10 12:00 起调整 flash 系列定价+2</div></div><div class="fwd-tnode"><div class="fwd-tdot">16</div><div class="fwd-tlabel">9/16</div><div class="fwd-tsub">香港首个五年规划9月16日公布</div></div><div class="fwd-tnode"><div class="fwd-tdot">18</div><div class="fwd-tlabel">9/18</div><div class="fwd-tsub">恒生科技指数扩容与改组修订意见咨询截止</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-date">9/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">DeepSeek 开放平台 9/10 12:00 起调整 flash 系列定价</span></div><p class="fwd-cal-note">DeepSeek 开放平台 9/10 12:00 起调整 flash 系列定价。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">DeepSeek计划于9月10日前后正式发布V4.1 Flash模型</span></div><p class="fwd-cal-note">DeepSeek计划于9月10日前后正式发布V4.1 Flash模型。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国新办就金融领域贯彻落实“十五五”规划、推动金融强国建设有关情况举行新闻发布会</span></div><p class="fwd-cal-note">国新办就金融领域贯彻落实“十五五”规划、推动金融强国建设有关情况举行新闻发布会。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/16</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">香港首个五年规划9月16日公布</span></div><p class="fwd-cal-note">香港首个五年规划9月16日公布。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/18</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">恒生科技指数扩容与改组修订意见咨询截止</span></div><p class="fwd-cal-note">恒生科技指数扩容与改组修订意见咨询截止。关注相关板块竞价与持续性。</p></div></div></div></div><div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-10 18:03</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-10 18:10</div>
 </div>
 </body>
 </html>
