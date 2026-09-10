@@ -3357,7 +3357,6 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['trend_range']} · 八维</div>
     </div>
     {trend_html}
-    <div class="callout">{ctx['trend_headline']}</div>
     {vol20_html}
   </div>
 
