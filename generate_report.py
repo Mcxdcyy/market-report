@@ -634,7 +634,7 @@ def analyze_10d(last10: pd.DataFrame, full_df: pd.DataFrame) -> tuple[list[dict]
     if md1 < -0.08:
         summary, position = "昨追赚钱效应偏弱", "退潮/弱势段"
     elif xg_ratio < 0.6:
-        summary, position = "趋势强度明显回落", "趋势退潮段"
+        summary, position = "新高指标明显回落", "趋势退潮段"
     elif md_trend > 0.05:
         summary, position = "昨追赚钱效应修复", "情绪修复段"
     elif md_trend < -0.05:
@@ -735,7 +735,7 @@ def analyze_3d(df: pd.DataFrame, row: pd.Series) -> list[tuple[str, str]]:
     else:
         s3 = "warn"
 
-    return [("主板昨追赚钱效应", s1), ("趋势强度", s2), ("大盘量能", s3)]
+    return [("主板昨追赚钱效应", s1), ("新高指标", s2), ("大盘量能", s3)]
 
 
 def merge_env_scores(dim: dict) -> list[tuple]:
@@ -745,7 +745,7 @@ def merge_env_scores(dim: dict) -> list[tuple]:
     chuang_close = dim["chuang_close"]
     return [
         ("大盘量能", dim["vol_score"], vm["tag"], dim["vol_note"]),
-        ("趋势强度", dim["depth"], dim["depth_tag"], dim["depth_note"]),
+        ("新高指标", dim["depth"], dim["depth_tag"], dim["depth_note"]),
         ("主板活跃度", dim["main_act"], score_badge(dim["main_act"])[1], dim["main_act_note"]),
         ("创业板活跃度", dim["chuang_act"], score_badge(dim["chuang_act"])[1], dim["chuang_act_note"]),
         ("主板昨追赚钱效应", dim["main_money"], score_badge(dim["main_money"])[1], dim["main_money_note"]),
@@ -764,7 +764,7 @@ def env_synthesis(dim: dict, dims_3d: list) -> str:
     if mm <= 43:
         return "昨追赚钱效应弱，宜观望、不追"
     if depth < 35:
-        return "趋势强度不足，宜防守"
+        return "新高指标不足，宜防守"
     if all(d[1] == "ok" for d in dims_3d):
         return "趋势环境尚可，两种模式均可参与"
     return "结构分化，轻仓精选"
@@ -2102,7 +2102,7 @@ def opening_advice(row: pd.Series, emo: int, df: pd.DataFrame, nxt: datetime, mo
     if emo3 <= -20:
         alerts.append(f"3日急降{abs(emo3)}分")
     if xg < 40:
-        alerts.append(f"新高{int(xg)}家（趋势强度不足）")
+        alerts.append(f"新高{int(xg)}家（新高指标不足）")
     if vm["shrink_streak"] >= 3:
         alerts.append(f"连续{vm['shrink_streak']}日缩量（危险）")
     elif vol_chg < -0.05:
@@ -2478,7 +2478,7 @@ def render_html(ctx: dict) -> str:
 
     trend_cols = (
         ("vol", "大盘量能"),
-        ("depth", "趋势强度"),
+        ("depth", "新高指标"),
         ("main_act", "主板活跃"),
         ("chuang_act", "创板活跃"),
         ("main_chase", "主追效应"),
