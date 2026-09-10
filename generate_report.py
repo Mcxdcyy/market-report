@@ -2797,6 +2797,15 @@ def render_html(ctx: dict) -> str:
     border: 1px solid var(--border);
   }}
   .ts-card-all {{ border-color: #0a84ff55; background: #f5f9ff; }}
+  .ts-card-lead {{
+    border-color: #E53935; background: #fff5f5;
+    box-shadow: 0 0 0 1px #E5393520;
+  }}
+  .ts-lead-badge {{
+    display: inline-block; margin-left: 6px; padding: 1px 6px;
+    border-radius: 999px; font-size: 10px; font-weight: 700;
+    color: #c62828; background: #ffebee; vertical-align: middle;
+  }}
   .ts-card-top {{ display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }}
   .ts-name {{ font-size: 12px; font-weight: 700; color: var(--text); }}
   .ts-val {{ font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }}
@@ -3400,16 +3409,36 @@ def render_trend_strength_html(block: dict) -> str:
         return "bad", "偏弱"
 
     cards = []
+    board_ratios = [
+        float(it.get("ratio") or 0)
+        for it in items
+        if it.get("key") != "all" and int(it.get("total") or 0) > 0
+    ]
+    max_board_ratio = max(board_ratios) if board_ratios else None
+
     for it in items:
         pct = float(it.get("ratio") or 0)
         color = ratio_color(pct)
         tag, lab = ratio_tag(pct)
         bar_w = max(0.0, min(100.0, pct * 2.5))  # 40% 占比拉满进度条视觉
-        accent = " ts-card-all" if it.get("key") == "all" else ""
+        classes = ["ts-card"]
+        if it.get("key") == "all":
+            classes.append("ts-card-all")
+        is_lead = (
+            it.get("key") != "all"
+            and max_board_ratio is not None
+            and int(it.get("total") or 0) > 0
+            and abs(pct - max_board_ratio) < 1e-9
+        )
+        if is_lead:
+            classes.append("ts-card-lead")
+        name_html = it.get("name", "")
+        if is_lead:
+            name_html = f'{name_html}<span class="ts-lead-badge">最高</span>'
         cards.append(
-            f'''<div class="ts-card{accent}">
+            f'''<div class="{" ".join(classes)}">
       <div class="ts-card-top">
-        <span class="ts-name">{it.get("name", "")}</span>
+        <span class="ts-name">{name_html}</span>
         <span class="ts-val" style="color:{color}">{pct:.1f}%</span>
       </div>
       <div class="bar-track"><div class="bar-fill" style="width:{bar_w:.1f}%;background:{color}"></div></div>
