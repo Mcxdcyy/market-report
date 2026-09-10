@@ -1,0 +1,55 @@
+{
+  "as_of": "2026-09-10",
+  "generated": "2026-09-10 17:20:26",
+  "universe": 5759,
+  "skipped": {
+    "list_days": 11,
+    "bars": 205,
+    "no_kline": 12
+  },
+  "items": [
+    {
+      "key": "all",
+      "name": "全场",
+      "trend": 172,
+      "total": 5531,
+      "ratio": 3.11
+    },
+    {
+      "key": "main",
+      "name": "主板",
+      "trend": 106,
+      "total": 3044,
+      "ratio": 3.48
+    },
+    {
+      "key": "cyb",
+      "name": "创业板",
+      "trend": 35,
+      "total": 1356,
+      "ratio": 2.58
+    },
+    {
+      "key": "kcb",
+      "name": "科创板",
+      "trend": 13,
+      "total": 598,
+      "ratio": 2.17
+    },
+    {
+      "key": "bj",
+      "name": "北交所",
+      "trend": 6,
+      "total": 332,
+      "ratio": 1.81
+    },
+    {
+      "key": "st",
+      "name": "ST",
+      "trend": 12,
+      "total": 201,
+      "ratio": 5.97
+    }
+  ],
+  "note": "样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。"
+}
