@@ -2860,7 +2860,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch.lo {{ background: #B7C9D6; }}
   .ts-amt-swatch.hi {{ background: #8FAFC4; }}
   .ts-amt-row {{
-    display: grid; grid-template-columns: 72px 1fr 52px 78px;
+    display: grid; grid-template-columns: 72px 1fr;
     align-items: center; gap: 8px; margin-bottom: 8px;
   }}
   .ts-amt-row:last-child {{ margin-bottom: 0; }}
@@ -2882,16 +2882,6 @@ def render_html(ctx: dict) -> str:
   .ts-amt-seg.lo {{ background: #B7C9D6; }}
   .ts-amt-seg.hi {{ background: #8FAFC4; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
-  .ts-amt-pct {{
-    font-size: 13px; font-weight: 800; color: #5F7F96;
-    font-variant-numeric: tabular-nums; text-align: right;
-  }}
-  .ts-amt-cnt {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; text-align: right;
-    white-space: nowrap;
-  }}
-  .ts-amt-cnt b {{ color: var(--text); font-weight: 700; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
@@ -3263,8 +3253,6 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-amt-name {{ font-size: 13px; }}
     #sec-ts .ts-amt-stack {{ height: 24px; }}
     #sec-ts .ts-amt-seg {{ font-size: 11px; }}
-    #sec-ts .ts-amt-pct {{ font-size: 14px; }}
-    #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3567,14 +3555,12 @@ def render_trend_strength_html(block: dict) -> str:
                 f'''<div class="{row_cls}">
       <div class="ts-amt-name">{it.get("name", "")}</div>
       <div class="ts-amt-stack">{"".join(segs)}</div>
-      <div class="ts-amt-pct">{hi:.0f}%</div>
-      <div class="ts-amt-cnt"><b>{n_hi}</b>/{n_lo + n_hi} · {hi_yi:.0f}亿</div>
     </div>'''
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅符合条件个股 · 成交额加权 · 右侧为≥5亿占比</span>
+      <span class="ts-chart-meta">仅符合条件个股 · 成交额加权</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>

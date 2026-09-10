@@ -249,7 +249,7 @@
   .ts-amt-swatch.lo { background: #B7C9D6; }
   .ts-amt-swatch.hi { background: #8FAFC4; }
   .ts-amt-row {
-    display: grid; grid-template-columns: 72px 1fr 52px 78px;
+    display: grid; grid-template-columns: 72px 1fr;
     align-items: center; gap: 8px; margin-bottom: 8px;
   }
   .ts-amt-row:last-child { margin-bottom: 0; }
@@ -271,16 +271,6 @@
   .ts-amt-seg.lo { background: #B7C9D6; }
   .ts-amt-seg.hi { background: #8FAFC4; }
   .ts-amt-seg span { padding: 0 4px; }
-  .ts-amt-pct {
-    font-size: 13px; font-weight: 800; color: #5F7F96;
-    font-variant-numeric: tabular-nums; text-align: right;
-  }
-  .ts-amt-cnt {
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; text-align: right;
-    white-space: nowrap;
-  }
-  .ts-amt-cnt b { color: var(--text); font-weight: 700; }
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -652,8 +642,6 @@
     #sec-ts .ts-amt-name { font-size: 13px; }
     #sec-ts .ts-amt-stack { height: 24px; }
     #sec-ts .ts-amt-seg { font-size: 11px; }
-    #sec-ts .ts-amt-pct { font-size: 14px; }
-    #sec-ts .ts-amt-cnt { font-size: 12px; }
     .score-foot { font-size: 13px; }
     .section-sub {
       margin-left: 0; white-space: normal; width: 100%;
@@ -1108,7 +1096,7 @@
   </div><div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅符合条件个股 · 成交额加权 · 右侧为≥5亿占比</span>
+      <span class="ts-chart-meta">仅符合条件个股 · 成交额加权</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
@@ -1117,33 +1105,21 @@
     <div class="ts-amt-row all">
       <div class="ts-amt-name">全场</div>
       <div class="ts-amt-stack"><div class="ts-amt-seg lo" style="width:20.64%"><span>21%</span></div><div class="ts-amt-seg hi" style="width:79.36%"><span>79%</span></div></div>
-      <div class="ts-amt-pct">79%</div>
-      <div class="ts-amt-cnt"><b>53</b>/172 · 785亿</div>
     </div><div class="ts-amt-row">
       <div class="ts-amt-name">主板</div>
       <div class="ts-amt-stack"><div class="ts-amt-seg lo" style="width:17.97%"><span>18%</span></div><div class="ts-amt-seg hi" style="width:82.03%"><span>82%</span></div></div>
-      <div class="ts-amt-pct">82%</div>
-      <div class="ts-amt-cnt"><b>35</b>/106 · 579亿</div>
     </div><div class="ts-amt-row">
       <div class="ts-amt-name">创业板</div>
       <div class="ts-amt-stack"><div class="ts-amt-seg lo" style="width:27.51%"><span>28%</span></div><div class="ts-amt-seg hi" style="width:72.49%"><span>72%</span></div></div>
-      <div class="ts-amt-pct">72%</div>
-      <div class="ts-amt-cnt"><b>13</b>/35 · 117亿</div>
     </div><div class="ts-amt-row">
       <div class="ts-amt-name">科创板</div>
       <div class="ts-amt-stack"><div class="ts-amt-seg lo" style="width:17.25%"><span>17%</span></div><div class="ts-amt-seg hi" style="width:82.75%"><span>83%</span></div></div>
-      <div class="ts-amt-pct">83%</div>
-      <div class="ts-amt-cnt"><b>4</b>/13 · 80亿</div>
     </div><div class="ts-amt-row">
       <div class="ts-amt-name">北交所</div>
       <div class="ts-amt-stack"><div class="ts-amt-seg lo" style="width:100.00%"><span>100%</span></div></div>
-      <div class="ts-amt-pct">0%</div>
-      <div class="ts-amt-cnt"><b>0</b>/6 · 0亿</div>
     </div><div class="ts-amt-row">
       <div class="ts-amt-name">ST</div>
       <div class="ts-amt-stack"><div class="ts-amt-seg lo" style="width:47.57%"><span>48%</span></div><div class="ts-amt-seg hi" style="width:52.43%"><span>52%</span></div></div>
-      <div class="ts-amt-pct">52%</div>
-      <div class="ts-amt-cnt"><b>1</b>/12 · 9亿</div>
     </div>
   </div><div class="ts-note">全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。成交额分档仅统计符合趋势条件的个股，按当日成交额加权（阈值 5 亿元）。</div>
   </div>
