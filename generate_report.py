@@ -2551,7 +2551,7 @@ def render_html(ctx: dict) -> str:
         vol_tags_html = ""
         if vol_tags:
             pills = "".join(
-                f'<span class="vol20-tag {vol_tag_cls}">{t}</span>' for t in vol_tags
+                f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
             )
             vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
         vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
@@ -2571,7 +2571,7 @@ def render_html(ctx: dict) -> str:
         vol_tags_html = ""
         if vol_tags:
             pills = "".join(
-                f'<span class="vol20-tag {vol_tag_cls}">{t}</span>' for t in vol_tags
+                f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
             )
             vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
         vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
@@ -3038,13 +3038,10 @@ def render_html(ctx: dict) -> str:
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-top: 0;
   }}
-  .vol20-tag {{
-    display: inline-block; font-size: 11px; font-weight: 700;
-    padding: 3px 9px; border-radius: 999px; line-height: 1.35;
-  }}
-  .vol20-tag.ok {{ background: #ffebee; color: #c62828; }}
-  .vol20-tag.warn {{ background: var(--warn-bg); color: #b25000; }}
-  .vol20-tag.bad {{ background: #e8f5e9; color: #2e7d32; }}
+  /* 与题材方向「优先/可做」同一套 .pill 尺寸；配色用 A 股红强绿弱 */
+  .vol20-tags .pill.ok {{ background: #ffebee; color: #c62828; }}
+  .vol20-tags .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
+  .vol20-tags .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .vol20-note {{
     margin-top: 0; padding: 8px 10px;
     background: var(--accent-bg); border-left: 3px solid var(--accent);
@@ -3350,7 +3347,6 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; }}
-    .vol20-tag {{ font-size: 12px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .trend-group-row th.trend-group {{ font-size: 12px; }}
     .sector-rank {{ font-size: 13px; }}
