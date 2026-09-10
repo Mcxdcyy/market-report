@@ -32,6 +32,12 @@ DOCS_DIR = BASE / "docs"
 DATA_FILE = BASE / "大盘数据.numbers"
 NEWS_FILE = BASE / "market_news.json"
 EVENT_CATALOG_FILE = BASE / "event_catalog.json"
+
+try:
+    from trend_strength import compute_trend_strength, RESULT_DIR as TREND_RESULT_DIR
+except ImportError:  # pragma: no cover
+    compute_trend_strength = None  # type: ignore
+    TREND_RESULT_DIR = BASE / "trend_strength_results"
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
 WSCN_CAL_URL = "https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas"
@@ -2599,6 +2605,8 @@ def render_html(ctx: dict) -> str:
         ctx.get("as_of"),
     )
 
+    trend_strength_html = render_trend_strength_html(ctx.get("trend_strength") or {})
+
     m = ctx["modes"]
 
     return f"""<!DOCTYPE html>
@@ -2777,6 +2785,29 @@ def render_html(ctx: dict) -> str:
   #sec-env .callout.ok {{ background: #ffebee; border-color: #E53935; }}
   #sec-env .callout.warn {{ background: var(--warn-bg); border-color: var(--warn); }}
   #sec-env .callout.bad {{ background: #e8f5e9; border-color: #34C759; }}
+
+  /* ── 趋势强度（个股五条件占比）── */
+  .ts-grid {{
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }}
+  @media (max-width: 900px) {{ .ts-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
+  @media (max-width: 520px) {{ .ts-grid {{ grid-template-columns: 1fr; }} }}
+  .ts-card {{
+    background: #fff; border-radius: var(--radius-sm); padding: 10px 11px;
+    border: 1px solid var(--border);
+  }}
+  .ts-card-all {{ border-color: #0a84ff55; background: #f5f9ff; }}
+  .ts-card-top {{ display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }}
+  .ts-name {{ font-size: 12px; font-weight: 700; color: var(--text); }}
+  .ts-val {{ font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }}
+  .ts-foot {{
+    display: flex; align-items: center; gap: 5px; margin-top: 6px;
+    font-size: 11px; color: var(--muted); flex-wrap: wrap; line-height: 1.45;
+  }}
+  .ts-note {{ margin-top: 10px; font-size: 11px; color: var(--muted); line-height: 1.5; }}
+  #sec-ts .pill.ok {{ background: #ffebee; color: #c62828; }}
+  #sec-ts .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
+  #sec-ts .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
@@ -3139,6 +3170,10 @@ def render_html(ctx: dict) -> str:
     .score-hint {{ font-size: 13px; }}
     .score-name {{ font-size: 13px; }}
     #sec-env .score-val {{ font-size: 22px; letter-spacing: -0.3px; }}
+    #sec-ts .ts-val {{ font-size: 22px; letter-spacing: -0.3px; }}
+    #sec-ts .ts-name {{ font-size: 14px; }}
+    #sec-ts .ts-foot {{ font-size: 13px; }}
+    #sec-ts .ts-note {{ font-size: 13px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3232,6 +3267,7 @@ def render_html(ctx: dict) -> str:
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
       <a href="#sec-env">环境评分</a>
+      <a href="#sec-ts">趋势强度</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
@@ -3261,10 +3297,20 @@ def render_html(ctx: dict) -> str:
     <div class="callout {ctx['env_callout']['tag']}">{ctx['env_callout']['text']}</div>
   </div>
 
-  <!-- 3 涨停板块 -->
-  <div class="section" id="sec-sectors">
+  <!-- 3 趋势强度 -->
+  <div class="section" id="sec-ts">
     <div class="section-head">
       <div class="section-num">3</div>
+      <div class="section-title">趋势强度</div>
+      <div class="section-sub">{ctx['data_date']} · 符合五条件个股占比</div>
+    </div>
+    {trend_strength_html}
+  </div>
+
+  <!-- 4 涨停板块 -->
+  <div class="section" id="sec-sectors">
+    <div class="section-head">
+      <div class="section-num">4</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -3273,10 +3319,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 4 公告与政策 -->
+  <!-- 5 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">5</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -3284,10 +3330,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 5 事件 -->
+  <!-- 6 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">6</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span>{ctx['event_window']}</span>
@@ -3301,6 +3347,81 @@ def render_html(ctx: dict) -> str:
 </div>
 </body>
 </html>"""
+
+
+def load_trend_strength_block(as_of: datetime, latest_dt: datetime | None = None) -> dict:
+    """模块「趋势强度」：全场+五维占比。优先读当日结果缓存；最新若干日可联网重算。"""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    result_path = TREND_RESULT_DIR / f"{as_of_d.isoformat()}.json"
+    if result_path.exists():
+        try:
+            return json.loads(result_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+    if compute_trend_strength is None:
+        return {
+            "as_of": as_of_d.isoformat(),
+            "items": [],
+            "note": "趋势强度模块未安装",
+        }
+    # 仅对接近最新交易日的报表自动全市场扫描（避免历史日重生成时无足够 K 线）
+    allow_fetch = True
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+        allow_fetch = as_of_d >= latest_d - timedelta(days=3)
+    if not allow_fetch:
+        return {
+            "as_of": as_of_d.isoformat(),
+            "items": [],
+            "note": "该日暂无趋势强度统计缓存",
+        }
+    return compute_trend_strength(as_of_d, force=False, progress=True)
+
+
+def render_trend_strength_html(block: dict) -> str:
+    items = block.get("items") or []
+    if not items:
+        note = block.get("note") or "暂无趋势强度数据"
+        return f'<div class="news-empty">{note}</div>'
+
+    def ratio_color(pct: float) -> str:
+        # A股：高=红、中=橙、低=绿
+        if pct >= 20:
+            return "#E53935"
+        if pct >= 10:
+            return "#FF9500"
+        return "#34C759"
+
+    def ratio_tag(pct: float) -> tuple[str, str]:
+        if pct >= 20:
+            return "ok", "偏强"
+        if pct >= 10:
+            return "warn", "一般"
+        return "bad", "偏弱"
+
+    cards = []
+    for it in items:
+        pct = float(it.get("ratio") or 0)
+        color = ratio_color(pct)
+        tag, lab = ratio_tag(pct)
+        bar_w = max(0.0, min(100.0, pct * 2.5))  # 40% 占比拉满进度条视觉
+        accent = " ts-card-all" if it.get("key") == "all" else ""
+        cards.append(
+            f'''<div class="ts-card{accent}">
+      <div class="ts-card-top">
+        <span class="ts-name">{it.get("name", "")}</span>
+        <span class="ts-val" style="color:{color}">{pct:.1f}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:{bar_w:.1f}%;background:{color}"></div></div>
+      <div class="ts-foot">
+        <span class="pill {tag}">{lab}</span>
+        <span>{int(it.get("trend") or 0)} / {int(it.get("total") or 0)} 家</span>
+      </div>
+    </div>'''
+        )
+    note = block.get("note") or ""
+    foot = f'<div class="ts-note">{note}</div>' if note else ""
+    return f'<div class="ts-grid">{"".join(cards)}</div>{foot}'
 
 
 def coalesce_row(row: pd.Series, prev: pd.Series | None) -> pd.Series:
@@ -3383,6 +3504,10 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     emo = emotion_index(row)
     modes = analyze_trading_modes(row, work, emo, dim)
     advice = opening_advice(row, emo, work, nxt, modes)
+    latest_dt = df.iloc[-1]["date"]
+    if hasattr(latest_dt, "to_pydatetime"):
+        latest_dt = latest_dt.to_pydatetime()
+    trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
 
     return {
         "title_date": fmt_md(dt),
@@ -3410,6 +3535,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "modes": modes,
         "advice": advice,
         "emo": emo,
+        "trend_strength": trend_strength,
     }
 
 

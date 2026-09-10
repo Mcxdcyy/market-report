@@ -7,6 +7,9 @@ __pycache__/
 # 本地数据源不上传（含交易数据）
 *.numbers
 
+# 趋势强度 K 线缓存（体积大，按需重拉）
+/trend_klines_cache.json
+
 # 根目录 HTML 为本地副本，Pages 发布 docs/
 /复盘概览-*.html
 /index.html
