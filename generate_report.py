@@ -2838,6 +2838,55 @@ def render_html(ctx: dict) -> str:
   }}
   .ts-note {{ margin-top: 10px; font-size: 11px; color: var(--muted); line-height: 1.5; }}
 
+  /* 符合条件个股 · 成交额分档（100% 堆叠） */
+  .ts-amt-chart {{
+    margin-top: 12px; padding: 12px 12px 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: #fff;
+  }}
+  .ts-amt-legend {{
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    margin-bottom: 10px; font-size: 11px; color: var(--sub);
+  }}
+  .ts-amt-leg {{
+    display: inline-flex; align-items: center; gap: 5px; font-weight: 600;
+  }}
+  .ts-amt-swatch {{
+    width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
+  }}
+  .ts-amt-swatch.lo {{ background: #90A4AE; }}
+  .ts-amt-swatch.hi {{ background: #E53935; }}
+  .ts-amt-row {{
+    display: grid; grid-template-columns: 72px 1fr 88px;
+    align-items: center; gap: 8px; margin-bottom: 8px;
+  }}
+  .ts-amt-row:last-child {{ margin-bottom: 0; }}
+  .ts-amt-name {{
+    font-size: 12px; font-weight: 700; color: var(--sub);
+    text-align: right; white-space: nowrap;
+  }}
+  .ts-amt-row.all .ts-amt-name {{ color: var(--accent); }}
+  .ts-amt-stack {{
+    display: flex; height: 22px; border-radius: 4px; overflow: hidden;
+    background: #eceff1; min-width: 0;
+  }}
+  .ts-amt-seg {{
+    height: 100%; min-width: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #fff;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }}
+  .ts-amt-seg.lo {{ background: #90A4AE; }}
+  .ts-amt-seg.hi {{ background: #E53935; }}
+  .ts-amt-seg span {{ padding: 0 4px; }}
+  .ts-amt-right {{
+    text-align: right; line-height: 1.2;
+    font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+  }}
+  .ts-amt-right b {{
+    display: block; font-size: 12px; font-weight: 800; color: var(--text);
+  }}
+
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
   .trend-matrix {{
@@ -3205,6 +3254,11 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-hbar-sub {{ font-size: 12px; }}
     #sec-ts .ts-hbar-track {{ height: 22px; }}
     #sec-ts .ts-note {{ font-size: 13px; }}
+    #sec-ts .ts-amt-name {{ font-size: 13px; }}
+    #sec-ts .ts-amt-stack {{ height: 24px; }}
+    #sec-ts .ts-amt-seg {{ font-size: 11px; }}
+    #sec-ts .ts-amt-right {{ font-size: 12px; }}
+    #sec-ts .ts-amt-right b {{ font-size: 13px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3473,18 +3527,68 @@ def render_trend_strength_html(block: dict) -> str:
         )
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">占比对比</span>
+      <span class="ts-chart-title">趋势个股占比</span>
       <span class="ts-chart-meta">全场=各板块家数加权均值 · 横轴相对最高板块</span>
     </div>
     {"".join(hbars)}
   </div>'''
+
+    amt_rows = []
+    has_amt = any("amt_above_pct" in it for it in items)
+    if has_amt:
+        for it in items:
+            lo = float(it.get("amt_below_pct") or 0)
+            hi = float(it.get("amt_above_pct") or 0)
+            lo_yi = float(it.get("amt_below_yi") or 0)
+            hi_yi = float(it.get("amt_above_yi") or 0)
+            n_lo = int(it.get("n_below") or 0)
+            n_hi = int(it.get("n_above") or 0)
+            row_cls = "ts-amt-row all" if it.get("key") == "all" else "ts-amt-row"
+            segs = []
+            if lo > 0:
+                label = f"{lo:.0f}%" if lo >= 12 else ""
+                segs.append(
+                    f'<div class="ts-amt-seg lo" style="width:{lo:.2f}%">'
+                    f'{f"<span>{label}</span>" if label else ""}</div>'
+                )
+            if hi > 0:
+                label = f"{hi:.0f}%" if hi >= 12 else ""
+                segs.append(
+                    f'<div class="ts-amt-seg hi" style="width:{hi:.2f}%">'
+                    f'{f"<span>{label}</span>" if label else ""}</div>'
+                )
+            if not segs:
+                segs.append('<div class="ts-amt-seg lo" style="width:100%;opacity:.35"></div>')
+            amt_rows.append(
+                f'''<div class="{row_cls}">
+      <div class="ts-amt-name">{it.get("name", "")}</div>
+      <div class="ts-amt-stack">{"".join(segs)}</div>
+      <div class="ts-amt-right">
+        <b>≥5亿 {hi:.0f}%</b>
+        <span>{lo_yi:.1f}+{hi_yi:.1f}亿 · {n_lo}+{n_hi}家</span>
+      </div>
+    </div>'''
+            )
+        amt_chart = f'''<div class="ts-amt-chart">
+    <div class="ts-chart-head">
+      <span class="ts-chart-title">趋势股成交额结构</span>
+      <span class="ts-chart-meta">仅统计符合条件个股 · 按成交额加权</span>
+    </div>
+    <div class="ts-amt-legend">
+      <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
+      <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
+    </div>
+    {"".join(amt_rows)}
+  </div>'''
+    else:
+        amt_chart = ""
 
     note = block.get("note") or (
         "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。"
     )
     if "加权" not in note:
         note = "全场为各板块按样本家数加权的均值。" + note
-    return f'{chart}<div class="ts-note">{note}</div>'
+    return f'{chart}{amt_chart}<div class="ts-note">{note}</div>'
 
 
 def coalesce_row(row: pd.Series, prev: pd.Series | None) -> pd.Series:
