@@ -2776,19 +2776,19 @@ def render_html(ctx: dict) -> str:
 
   /* ── 趋势强度（个股五条件占比）── */
   .ts-chart {{
-    margin-bottom: 10px; padding: 12px 12px 10px;
+    margin-bottom: 12px; padding: 14px 14px 12px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fafafa;
   }}
   .ts-chart-head {{
     display: flex; align-items: baseline; justify-content: space-between;
-    gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+    gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
   }}
   .ts-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
   .ts-chart-meta {{ font-size: 11px; color: var(--muted); }}
   .ts-hbar {{
     display: grid; grid-template-columns: 72px 1fr 52px 78px;
-    align-items: center; gap: 8px; margin-bottom: 8px;
+    align-items: center; gap: 10px; margin-bottom: 12px;
   }}
   .ts-hbar:last-child {{ margin-bottom: 0; }}
   .ts-hbar-name {{
@@ -2798,7 +2798,7 @@ def render_html(ctx: dict) -> str:
   .ts-hbar-all .ts-hbar-name {{ color: var(--accent); }}
   .ts-hbar-lead .ts-hbar-name {{ color: #c62828; }}
   .ts-hbar-track {{
-    height: 20px; background: #e8e8ed; border-radius: 4px; overflow: hidden;
+    height: 22px; background: #e8e8ed; border-radius: 4px; overflow: hidden;
     position: relative;
   }}
   .ts-hbar-fill {{
@@ -2830,13 +2830,13 @@ def render_html(ctx: dict) -> str:
 
   /* 符合条件个股 · 成交额分档（100% 堆叠） */
   .ts-amt-chart {{
-    margin-top: 12px; padding: 12px 12px 10px;
+    margin-top: 14px; padding: 14px 14px 12px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fff;
   }}
   .ts-amt-legend {{
     display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
-    margin-bottom: 10px; font-size: 11px; color: var(--sub);
+    margin-bottom: 12px; font-size: 11px; color: var(--sub);
   }}
   .ts-amt-leg {{
     display: inline-flex; align-items: center; gap: 5px; font-weight: 600;
@@ -2848,7 +2848,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch.hi {{ background: #5B8FB9; }}
   .ts-amt-row {{
     display: grid; grid-template-columns: 72px 1fr;
-    align-items: center; gap: 8px; margin-bottom: 8px;
+    align-items: center; gap: 10px; margin-bottom: 12px;
   }}
   .ts-amt-row:last-child {{ margin-bottom: 0; }}
   .ts-amt-name {{
@@ -2857,7 +2857,7 @@ def render_html(ctx: dict) -> str:
   }}
   .ts-amt-row.all .ts-amt-name {{ color: var(--accent); }}
   .ts-amt-stack {{
-    display: flex; height: 22px; border-radius: 4px; overflow: hidden;
+    display: flex; height: 24px; border-radius: 4px; overflow: hidden;
     background: #eef2f5; min-width: 0;
   }}
   .ts-amt-seg {{
@@ -2870,12 +2870,8 @@ def render_html(ctx: dict) -> str:
   .ts-amt-seg.hi {{ background: #5B8FB9; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
   .ts-note {{
-    margin-top: 10px; font-size: 11px; color: var(--muted); line-height: 1.65;
+    margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
   }}
-  .ts-note ol {{
-    margin: 6px 0 0; padding-left: 1.35em;
-  }}
-  .ts-note li {{ margin: 2px 0; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
@@ -3559,16 +3555,12 @@ def render_trend_strength_html(block: dict) -> str:
     else:
         amt_chart = ""
 
-    note_html = '''<div class="ts-note">
-    <div>强趋势定义（须同时满足）：</div>
-    <ol>
-      <li>连续 3 个交易日收盘价位于五日均线上方；</li>
-      <li>连续 5 个交易日最低价位于十日均线上方；</li>
-      <li>近 3 个交易日最高价等于近 20 个交易日最高价；</li>
-      <li>当日五日均线严格高于前一交易日五日均线；</li>
-      <li>当日非跌停。</li>
-    </ol>
-  </div>'''
+    note_html = (
+        '<div class="ts-note">'
+        "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
+        "3日内创20日新高，五日线向上，非跌停。"
+        "</div>"
+    )
     return f"{chart}{amt_chart}{note_html}"
 
 

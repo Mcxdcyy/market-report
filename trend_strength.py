@@ -670,8 +670,8 @@ def compute_trend_strength(
         "amount_split_yi": 5,
         "items": items,
         "note": (
-            "强趋势须同时满足：连续3日收盘在五日线上方；连续5日最低价在十日线上方；"
-            "近3日最高价等于近20日最高价；当日五日线严格上行；当日非跌停。"
+            "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
+            "3日内创20日新高，五日线向上，非跌停。"
         ),
     }
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
