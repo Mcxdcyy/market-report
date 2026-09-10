@@ -2839,7 +2839,6 @@ def render_html(ctx: dict) -> str:
     border-radius: 999px; font-size: 10px; font-weight: 700;
     color: #c62828; background: #ffebee; vertical-align: middle;
   }}
-  .ts-note {{ margin-top: 10px; font-size: 11px; color: var(--muted); line-height: 1.5; }}
 
   /* 符合条件个股 · 成交额分档（100% 堆叠） */
   .ts-amt-chart {{
@@ -2858,7 +2857,7 @@ def render_html(ctx: dict) -> str:
     width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
   }}
   .ts-amt-swatch.lo {{ background: #E2C49A; }}
-  .ts-amt-swatch.hi {{ background: #5B8FB9; }}
+  .ts-amt-swatch.hi {{ background: #5FA89A; }}
   .ts-amt-row {{
     display: grid; grid-template-columns: 72px 1fr;
     align-items: center; gap: 8px; margin-bottom: 8px;
@@ -2880,8 +2879,15 @@ def render_html(ctx: dict) -> str:
     font-variant-numeric: tabular-nums; white-space: nowrap;
   }}
   .ts-amt-seg.lo {{ background: #E2C49A; color: #6a542e; }}
-  .ts-amt-seg.hi {{ background: #5B8FB9; }}
+  .ts-amt-seg.hi {{ background: #5FA89A; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
+  .ts-note {{
+    margin-top: 10px; font-size: 11px; color: var(--muted); line-height: 1.65;
+  }}
+  .ts-note ol {{
+    margin: 6px 0 0; padding-left: 1.35em;
+  }}
+  .ts-note li {{ margin: 2px 0; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
@@ -3381,7 +3387,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">3</div>
       <div class="section-title">趋势强度</div>
-      <div class="section-sub">{ctx['data_date']} · 符合五条件个股占比</div>
+      <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
   </div>
@@ -3519,7 +3525,7 @@ def render_trend_strength_html(block: dict) -> str:
         )
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">趋势占比</span>
+      <span class="ts-chart-title">强趋势占比</span>
       <span class="ts-chart-meta">全场=各板块家数加权均值 · 横轴相对最高板块</span>
     </div>
     {"".join(hbars)}
@@ -3559,8 +3565,8 @@ def render_trend_strength_html(block: dict) -> str:
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅符合条件个股 · 成交额加权</span>
+      <span class="ts-chart-title">强趋势股成交额结构</span>
+      <span class="ts-chart-meta">仅强趋势个股 · 成交额加权</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
@@ -3571,12 +3577,17 @@ def render_trend_strength_html(block: dict) -> str:
     else:
         amt_chart = ""
 
-    note = block.get("note") or (
-        "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。"
-    )
-    if "加权" not in note:
-        note = "全场为各板块按样本家数加权的均值。" + note
-    return f'{chart}{amt_chart}<div class="ts-note">{note}</div>'
+    note_html = '''<div class="ts-note">
+    <div>强趋势定义（须同时满足）：</div>
+    <ol>
+      <li>连续 3 个交易日收盘价位于五日均线上方；</li>
+      <li>连续 5 个交易日最低价位于十日均线上方；</li>
+      <li>近 3 个交易日最高价等于近 20 个交易日最高价；</li>
+      <li>当日五日均线严格高于前一交易日五日均线；</li>
+      <li>当日非跌停。</li>
+    </ol>
+  </div>'''
+    return f"{chart}{amt_chart}{note_html}"
 
 
 def coalesce_row(row: pd.Series, prev: pd.Series | None) -> pd.Series:
