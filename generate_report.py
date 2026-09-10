@@ -3526,7 +3526,6 @@ def render_trend_strength_html(block: dict) -> str:
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势占比</span>
-      <span class="ts-chart-meta">全场=各板块家数加权均值 · 横轴相对最高板块</span>
     </div>
     {"".join(hbars)}
   </div>'''
@@ -3543,16 +3542,16 @@ def render_trend_strength_html(block: dict) -> str:
             n_hi = int(it.get("n_above") or 0)
             row_cls = "ts-amt-row all" if it.get("key") == "all" else "ts-amt-row"
             segs = []
-            if lo > 0:
-                label = f"{lo:.0f}%" if lo >= 12 else ""
-                segs.append(
-                    f'<div class="ts-amt-seg lo" style="width:{lo:.2f}%">'
-                    f'{f"<span>{label}</span>" if label else ""}</div>'
-                )
             if hi > 0:
                 label = f"{hi:.0f}%" if hi >= 12 else ""
                 segs.append(
                     f'<div class="ts-amt-seg hi" style="width:{hi:.2f}%">'
+                    f'{f"<span>{label}</span>" if label else ""}</div>'
+                )
+            if lo > 0:
+                label = f"{lo:.0f}%" if lo >= 12 else ""
+                segs.append(
+                    f'<div class="ts-amt-seg lo" style="width:{lo:.2f}%">'
                     f'{f"<span>{label}</span>" if label else ""}</div>'
                 )
             if not segs:
@@ -3569,8 +3568,8 @@ def render_trend_strength_html(block: dict) -> str:
       <span class="ts-chart-meta">仅强趋势个股 · 成交额加权</span>
     </div>
     <div class="ts-amt-legend">
-      <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
       <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
+      <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
     </div>
     {"".join(amt_rows)}
   </div>'''
