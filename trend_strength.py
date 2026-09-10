@@ -670,8 +670,8 @@ def compute_trend_strength(
         "amount_split_yi": 5,
         "items": items,
         "note": (
-            "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；"
-            "ST 互斥计入。成交额分档仅统计符合趋势条件的个股，按当日成交额加权（阈值 5 亿元）。"
+            "强趋势须同时满足：连续3日收盘在五日线上方；连续5日最低价在十日线上方；"
+            "近3日最高价等于近20日最高价；当日五日线严格上行；当日非跌停。"
         ),
     }
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
