@@ -365,6 +365,11 @@ def volume_metrics(row: pd.Series, df: pd.DataFrame) -> dict:
     if reasons:
         note += "；" + "，".join(reasons)
 
+    # 展示用短标签：差/好有则展示；中性「较近3日均…」不单独打标签行
+    tags: list[str] = []
+    if regime in ("bad", "good"):
+        tags.extend(reasons)
+
     return {
         "score": score,
         "regime": regime,
@@ -381,6 +386,8 @@ def volume_metrics(row: pd.Series, df: pd.DataFrame) -> dict:
         "above_prev3_max": above_prev3_max,
         "oscillating": oscillating,
         "tag": tag,
+        "tags": tags,
+        "reasons": reasons,
         "note": note,
         "vol": vol,
     }
@@ -2148,8 +2155,11 @@ def compute_six_dim(row: pd.Series, df: pd.DataFrame) -> dict:
         depth_note += "；近5日新高扩张"
     vol_score = vm["score"]
     vol_note = vm["note"]
+    vol_tags = list(vm.get("tags") or [])
     if vol_score < 40:
         vol_note += "，资金在场偏弱"
+        if "资金在场偏弱" not in vol_tags:
+            vol_tags.append("资金在场偏弱")
     return {
         "vol_score": vol_score,
         "depth": depth,
@@ -2175,6 +2185,7 @@ def compute_six_dim(row: pd.Series, df: pd.DataFrame) -> dict:
         "depth_tag": depth_tag,
         "depth_note": depth_note,
         "vol_note": vol_note,
+        "vol_tags": vol_tags,
     }
 
 
@@ -2460,39 +2471,55 @@ def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
 
 
 def render_html(ctx: dict) -> str:
-    def trend_score_cell(key: str, d: dict) -> str:
+    def trend_score_cell(key: str, d: dict, *, split: bool = False) -> str:
         val = d[key]
         tag = d[f"{key}_tag"]
-        return f'<td class="trend-cell {tag}">{val}</td>'
+        cls = f"trend-cell {tag}"
+        if split:
+            cls += " trend-split"
+        return f'<td class="{cls}">{val}</td>'
 
-    trend_cols = (
+    # 前4维：环境活跃；后4维：追高效应（中间用 trend-split 分隔）
+    trend_cols_g1 = (
         ("vol", "大盘量能"),
         ("depth", "新高指标"),
         ("main_act", "主板活跃"),
         ("chuang_act", "创板活跃"),
+    )
+    trend_cols_g2 = (
         ("main_yday", "主板昨追"),
         ("chuang_yday", "创板昨追"),
         ("main_today", "主板今追"),
         ("chuang_today", "创板今追"),
     )
     trend_days = ctx["trend_days"]
-    trend_head_cells = "".join(f"<th>{label}</th>" for _, label in trend_cols)
+    trend_head_g1 = "".join(f'<th class="trend-g1">{label}</th>' for _, label in trend_cols_g1)
+    trend_head_g2 = "".join(
+        f'<th class="trend-g2{" trend-split" if i == 0 else ""}">{label}</th>'
+        for i, (_, label) in enumerate(trend_cols_g2)
+    )
     trend_rows = "".join(
         f'''<tr class="{"trend-row-latest" if d["is_latest"] else ""}">
       <th class="trend-date-cell">
         <span class="trend-date-md">{d["date"]}</span>
         <span class="trend-date-wd">周{d["weekday"]}</span>
       </th>
-      {"".join(trend_score_cell(k, d) for k, _ in trend_cols)}
+      {"".join(trend_score_cell(k, d) for k, _ in trend_cols_g1)}
+      {"".join(trend_score_cell(k, d, split=(i == 0)) for i, (k, _) in enumerate(trend_cols_g2))}
     </tr>'''
         for d in trend_days
     )
     trend_html = f'''<div class="trend-matrix-wrap">
     <table class="trend-matrix">
       <thead>
+        <tr class="trend-group-row">
+          <th class="trend-corner" rowspan="2">日期</th>
+          <th class="trend-group trend-g1" colspan="4">环境 · 活跃</th>
+          <th class="trend-group trend-g2 trend-split" colspan="4">追高效应</th>
+        </tr>
         <tr>
-          <th class="trend-corner">日期</th>
-          {trend_head_cells}
+          {trend_head_g1}
+          {trend_head_g2}
         </tr>
       </thead>
       <tbody>{trend_rows}</tbody>
@@ -2501,6 +2528,9 @@ def render_html(ctx: dict) -> str:
 
     vol20 = ctx.get("vol20_bars") or []
     vol_note = (ctx.get("vol_note") or "").strip()
+    vol_tags = [t for t in (ctx.get("vol_tags") or []) if str(t).strip()]
+    vol_regime = ctx.get("vol_regime") or "neutral"
+    vol_tag_cls = {"bad": "bad", "good": "ok", "neutral": "warn"}.get(vol_regime, "warn")
     if vol20:
         vol20_cols = "".join(
             f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
@@ -2518,6 +2548,12 @@ def render_html(ctx: dict) -> str:
         )
         d0, d1 = vol20[0]["date"], vol20[-1]["date"]
         latest_lab = vol20[-1]["label"]
+        vol_tags_html = ""
+        if vol_tags:
+            pills = "".join(
+                f'<span class="vol20-tag {vol_tag_cls}">{t}</span>' for t in vol_tags
+            )
+            vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
         vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
         vol20_html = f'''<div class="vol20-wrap">
     <div class="vol20-head">
@@ -2528,10 +2564,18 @@ def render_html(ctx: dict) -> str:
       <div class="vol20-bars">{vol20_cols}</div>
       <div class="vol20-axis">{vol20_ticks}</div>
     </div>
+    {vol_tags_html}
     {vol_note_html}
   </div>'''
     else:
-        vol20_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
+        vol_tags_html = ""
+        if vol_tags:
+            pills = "".join(
+                f'<span class="vol20-tag {vol_tag_cls}">{t}</span>' for t in vol_tags
+            )
+            vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
+        vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
+        vol20_html = f"{vol_tags_html}{vol_note_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -2886,8 +2930,20 @@ def render_html(ctx: dict) -> str:
     background: #ececf1; border-bottom: 2px solid #c8c8d0;
     padding: 10px 10px; letter-spacing: 0.02em; white-space: nowrap;
   }}
+  .trend-group-row th.trend-group {{
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    padding: 6px 10px; border-bottom: 1px solid #d8d8e0;
+  }}
+  .trend-matrix thead th.trend-g1 {{ background: #eef2f8; }}
+  .trend-matrix thead th.trend-group.trend-g1 {{ background: #e3ebf6; color: #3d5a80; }}
+  .trend-matrix thead th.trend-g2 {{ background: #f4f0f6; }}
+  .trend-matrix thead th.trend-group.trend-g2 {{ background: #ebe4f0; color: #5a4570; }}
+  .trend-matrix thead th.trend-split,
+  tbody td.trend-split {{
+    border-left: 2px solid #b8a9c4 !important;
+  }}
   .trend-corner {{
-    text-align: left; color: var(--text);
+    text-align: left; color: var(--text); vertical-align: middle;
   }}
   .trend-date-cell {{
     text-align: left; white-space: nowrap; background: #f7f7fa;
@@ -2976,6 +3032,17 @@ def render_html(ctx: dict) -> str:
     left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
   }}
+  .vol20-tags {{
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+  }}
+  .vol20-tag {{
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 999px; line-height: 1.35;
+  }}
+  .vol20-tag.ok {{ background: #ffebee; color: #c62828; }}
+  .vol20-tag.warn {{ background: var(--warn-bg); color: #b25000; }}
+  .vol20-tag.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .vol20-note {{
     margin-top: 10px; padding: 8px 10px;
     background: var(--accent-bg); border-left: 3px solid var(--accent);
@@ -3281,7 +3348,9 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; }}
+    .vol20-tag {{ font-size: 12px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
+    .trend-group-row th.trend-group {{ font-size: 12px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
@@ -3662,6 +3731,8 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "trend_headline": trend_headline,
         "vol20_bars": vol20_bars,
         "vol_note": dim.get("vol_note") or "",
+        "vol_tags": list(dim.get("vol_tags") or []),
+        "vol_regime": (dim.get("vm") or {}).get("regime") or "neutral",
         "synth": synth,
         "market_news": market_news,
         "event_window": event_window,
