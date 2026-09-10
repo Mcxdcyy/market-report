@@ -2926,13 +2926,13 @@ def render_html(ctx: dict) -> str:
     border: 1px solid var(--border); padding: 8px 10px; text-align: center;
   }}
   .trend-matrix thead th {{
-    font-size: 12px; font-weight: 800; color: var(--text);
-    background: #ececf1; border-bottom: 2px solid #c8c8d0;
-    padding: 10px 10px; letter-spacing: 0.02em; white-space: nowrap;
+    font-size: 12px; font-weight: 700; color: var(--text);
+    background: #ececf1; border-bottom: 1px solid #d0d0d8;
+    padding: 8px 10px; letter-spacing: 0.02em; white-space: nowrap;
   }}
   .trend-group-row th.trend-group {{
-    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
-    padding: 6px 10px; border-bottom: 1px solid #d8d8e0;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+    padding: 8px 10px; border-bottom: 1px solid #d0d0d8;
   }}
   .trend-matrix thead th.trend-g1 {{ background: #eef2f8; }}
   .trend-matrix thead th.trend-group.trend-g1 {{ background: #e3ebf6; color: #3d5a80; }}
@@ -2944,6 +2944,7 @@ def render_html(ctx: dict) -> str:
   }}
   .trend-corner {{
     text-align: left; color: var(--text); vertical-align: middle;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
   }}
   .trend-date-cell {{
     text-align: left; white-space: nowrap; background: #f7f7fa;
