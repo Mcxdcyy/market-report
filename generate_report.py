@@ -2799,7 +2799,7 @@ def render_html(ctx: dict) -> str:
   .ts-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
   .ts-chart-meta {{ font-size: 11px; color: var(--muted); }}
   .ts-hbar {{
-    display: grid; grid-template-columns: 72px 1fr 64px;
+    display: grid; grid-template-columns: 72px 1fr 52px 78px;
     align-items: center; gap: 8px; margin-bottom: 8px;
   }}
   .ts-hbar:last-child {{ margin-bottom: 0; }}
@@ -2822,14 +2822,17 @@ def render_html(ctx: dict) -> str:
     );
   }}
   .ts-hbar-lead .ts-hbar-track {{ background: #ffcdd2; }}
-  .ts-hbar-right {{ text-align: right; line-height: 1.15; }}
-  .ts-hbar-val {{
+  .ts-hbar-pct {{
     font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.3px; text-align: right;
   }}
-  .ts-hbar-sub {{
-    font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums;
-    margin-top: 1px;
+  .ts-hbar-cnt {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; text-align: right;
+    white-space: nowrap;
+  }}
+  .ts-hbar-cnt b {{
+    color: var(--text); font-weight: 700;
   }}
   .ts-lead-badge {{
     display: inline-block; margin-left: 4px; padding: 1px 5px;
@@ -2857,7 +2860,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch.lo {{ background: #90A4AE; }}
   .ts-amt-swatch.hi {{ background: #E53935; }}
   .ts-amt-row {{
-    display: grid; grid-template-columns: 72px 1fr 88px;
+    display: grid; grid-template-columns: 72px 1fr 52px 78px;
     align-items: center; gap: 8px; margin-bottom: 8px;
   }}
   .ts-amt-row:last-child {{ margin-bottom: 0; }}
@@ -2879,13 +2882,16 @@ def render_html(ctx: dict) -> str:
   .ts-amt-seg.lo {{ background: #90A4AE; }}
   .ts-amt-seg.hi {{ background: #E53935; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
-  .ts-amt-right {{
-    text-align: right; line-height: 1.2;
-    font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+  .ts-amt-pct {{
+    font-size: 13px; font-weight: 800; color: #c62828;
+    font-variant-numeric: tabular-nums; text-align: right;
   }}
-  .ts-amt-right b {{
-    display: block; font-size: 12px; font-weight: 800; color: var(--text);
+  .ts-amt-cnt {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; text-align: right;
+    white-space: nowrap;
   }}
+  .ts-amt-cnt b {{ color: var(--text); font-weight: 700; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
@@ -3250,15 +3256,15 @@ def render_html(ctx: dict) -> str:
     #sec-env .score-val {{ font-size: 22px; letter-spacing: -0.3px; }}
     #sec-ts .ts-chart-title {{ font-size: 14px; }}
     #sec-ts .ts-hbar-name {{ font-size: 13px; }}
-    #sec-ts .ts-hbar-val {{ font-size: 15px; }}
-    #sec-ts .ts-hbar-sub {{ font-size: 12px; }}
+    #sec-ts .ts-hbar-pct {{ font-size: 15px; }}
+    #sec-ts .ts-hbar-cnt {{ font-size: 12px; }}
     #sec-ts .ts-hbar-track {{ height: 22px; }}
     #sec-ts .ts-note {{ font-size: 13px; }}
     #sec-ts .ts-amt-name {{ font-size: 13px; }}
     #sec-ts .ts-amt-stack {{ height: 24px; }}
     #sec-ts .ts-amt-seg {{ font-size: 11px; }}
-    #sec-ts .ts-amt-right {{ font-size: 12px; }}
-    #sec-ts .ts-amt-right b {{ font-size: 13px; }}
+    #sec-ts .ts-amt-pct {{ font-size: 14px; }}
+    #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3519,15 +3525,13 @@ def render_trend_strength_html(block: dict) -> str:
             f'''<div class="{" ".join(row_cls)}">
       <div class="ts-hbar-name">{name}</div>
       <div class="ts-hbar-track"><div class="ts-hbar-fill" style="{fill_style}"></div></div>
-      <div class="ts-hbar-right">
-        <div class="ts-hbar-val" style="color:{color}">{pct:.1f}%</div>
-        <div class="ts-hbar-sub">{trend_n} / {total_n}</div>
-      </div>
+      <div class="ts-hbar-pct" style="color:{color}">{pct:.1f}%</div>
+      <div class="ts-hbar-cnt"><b>{trend_n}</b>/{total_n}</div>
     </div>'''
         )
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">趋势个股占比</span>
+      <span class="ts-chart-title">趋势占比</span>
       <span class="ts-chart-meta">全场=各板块家数加权均值 · 横轴相对最高板块</span>
     </div>
     {"".join(hbars)}
@@ -3563,16 +3567,14 @@ def render_trend_strength_html(block: dict) -> str:
                 f'''<div class="{row_cls}">
       <div class="ts-amt-name">{it.get("name", "")}</div>
       <div class="ts-amt-stack">{"".join(segs)}</div>
-      <div class="ts-amt-right">
-        <b>≥5亿 {hi:.0f}%</b>
-        <span>{lo_yi:.1f}+{hi_yi:.1f}亿 · {n_lo}+{n_hi}家</span>
-      </div>
+      <div class="ts-amt-pct">{hi:.0f}%</div>
+      <div class="ts-amt-cnt"><b>{n_hi}</b>/{n_lo + n_hi} · {hi_yi:.0f}亿</div>
     </div>'''
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅统计符合条件个股 · 按成交额加权</span>
+      <span class="ts-chart-meta">仅符合条件个股 · 成交额加权 · 右侧为≥5亿占比</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
