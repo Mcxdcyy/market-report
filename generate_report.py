@@ -2845,7 +2845,7 @@ def render_html(ctx: dict) -> str:
     width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
   }}
   .ts-amt-swatch.lo {{ background: #E2C49A; }}
-  .ts-amt-swatch.hi {{ background: #5B8FB9; }}
+  .ts-amt-swatch.hi {{ background: #9A7EAD; }}
   .ts-amt-row {{
     display: grid; grid-template-columns: 72px 1fr;
     align-items: center; gap: 10px; margin-bottom: 12px;
@@ -2867,7 +2867,7 @@ def render_html(ctx: dict) -> str:
     font-variant-numeric: tabular-nums; white-space: nowrap;
   }}
   .ts-amt-seg.lo {{ background: #E2C49A; color: #6a542e; }}
-  .ts-amt-seg.hi {{ background: #5B8FB9; }}
+  .ts-amt-seg.hi {{ background: #9A7EAD; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
   .ts-note {{
     margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
