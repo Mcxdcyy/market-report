@@ -361,14 +361,28 @@ def volume_metrics(row: pd.Series, df: pd.DataFrame) -> dict:
 
     vol_wy = vol / 10000
     inc_s = f"，较前日{inc:+.1%}" if inc is not None else ""
+    # 说明只写量能数字，不把标签理由再抄一遍
     note = f"{vol_wy:.2f}万亿，近3日均{prev3_mean / 10000:.2f}万亿（{ratio3:.0%}）{inc_s}"
-    if reasons:
-        note += "；" + "，".join(reasons)
 
-    # 展示用短标签：差/好有则展示；中性「较近3日均…」不单独打标签行
+    # 展示标签：差/好各留互不重叠的短信号（有则展示）；中性不打标签
     tags: list[str] = []
-    if regime in ("bad", "good"):
-        tags.extend(reasons)
+    if regime == "bad":
+        # 连续缩量天数优先；否则用「2日总缩量」；再否则「缩量低于前三日均」
+        if shrink_streak >= 3:
+            tags.append(f"连续缩量{shrink_streak}日")
+        elif two_day_sharp:
+            pct = abs(two_day_cum or 0)
+            tags.append(f"连续2日总缩量{pct:.0%}")
+        elif shrink_below_mean:
+            tags.append("缩量低于前三日均")
+    elif regime == "good":
+        # 放量+破前高合并为「放量突破」；否则二选一
+        if expand_streak >= 2 and above_prev3_max:
+            tags.append("放量突破")
+        elif expand_streak >= 2:
+            tags.append(f"连续放量{expand_streak}日")
+        elif above_prev3_max:
+            tags.append("突破前三日高量")
 
     return {
         "score": score,
@@ -2156,9 +2170,12 @@ def compute_six_dim(row: pd.Series, df: pd.DataFrame) -> dict:
     vol_score = vm["score"]
     vol_note = vm["note"]
     vol_tags = list(vm.get("tags") or [])
+    # 「资金在场偏弱」只出现一次：有结构标签时写进说明；无标签时作为唯一标签
     if vol_score < 40:
-        vol_note += "，资金在场偏弱"
-        if "资金在场偏弱" not in vol_tags:
+        if vol_tags:
+            if "资金在场偏弱" not in vol_note:
+                vol_note += "，资金在场偏弱"
+        else:
             vol_tags.append("资金在场偏弱")
     return {
         "vol_score": vol_score,
