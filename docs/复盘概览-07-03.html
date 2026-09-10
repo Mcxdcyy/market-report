@@ -177,7 +177,7 @@
 
   /* ── 趋势强度（个股五条件占比）── */
   .ts-chart {
-    margin-bottom: 14px; padding: 12px 12px 10px;
+    margin-bottom: 10px; padding: 12px 12px 10px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fafafa;
   }
@@ -188,8 +188,8 @@
   .ts-chart-title { font-size: 13px; font-weight: 700; color: var(--text); }
   .ts-chart-meta { font-size: 11px; color: var(--muted); }
   .ts-hbar {
-    display: grid; grid-template-columns: 56px 1fr 52px;
-    align-items: center; gap: 8px; margin-bottom: 7px;
+    display: grid; grid-template-columns: 72px 1fr 64px;
+    align-items: center; gap: 8px; margin-bottom: 8px;
   }
   .ts-hbar:last-child { margin-bottom: 0; }
   .ts-hbar-name {
@@ -199,12 +199,11 @@
   .ts-hbar-all .ts-hbar-name { color: var(--accent); }
   .ts-hbar-lead .ts-hbar-name { color: #c62828; }
   .ts-hbar-track {
-    height: 18px; background: #e8e8ed; border-radius: 4px; overflow: hidden;
+    height: 20px; background: #e8e8ed; border-radius: 4px; overflow: hidden;
     position: relative;
   }
   .ts-hbar-fill {
     height: 100%; border-radius: 4px; min-width: 2px;
-    transition: width .2s ease;
   }
   .ts-hbar-all .ts-hbar-fill {
     background: repeating-linear-gradient(
@@ -212,40 +211,21 @@
     );
   }
   .ts-hbar-lead .ts-hbar-track { background: #ffcdd2; }
+  .ts-hbar-right { text-align: right; line-height: 1.15; }
   .ts-hbar-val {
-    font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums;
-    text-align: right; letter-spacing: -0.3px;
+    font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
+    letter-spacing: -0.3px;
   }
-  .ts-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-  }
-  @media (max-width: 900px) { .ts-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 520px) { .ts-grid { grid-template-columns: 1fr; } }
-  .ts-card {
-    background: #fff; border-radius: var(--radius-sm); padding: 10px 11px;
-    border: 1px solid var(--border);
-  }
-  .ts-card-all { border-color: #0a84ff55; background: #f5f9ff; }
-  .ts-card-lead {
-    border-color: #E53935; background: #fff5f5;
-    box-shadow: 0 0 0 1px #E5393520;
+  .ts-hbar-sub {
+    font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums;
+    margin-top: 1px;
   }
   .ts-lead-badge {
-    display: inline-block; margin-left: 6px; padding: 1px 6px;
+    display: inline-block; margin-left: 4px; padding: 1px 5px;
     border-radius: 999px; font-size: 10px; font-weight: 700;
     color: #c62828; background: #ffebee; vertical-align: middle;
   }
-  .ts-card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-  .ts-name { font-size: 12px; font-weight: 700; color: var(--text); }
-  .ts-val { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-  .ts-foot {
-    display: flex; align-items: center; gap: 5px; margin-top: 6px;
-    font-size: 11px; color: var(--muted); flex-wrap: wrap; line-height: 1.45;
-  }
   .ts-note { margin-top: 10px; font-size: 11px; color: var(--muted); line-height: 1.5; }
-  #sec-ts .pill.ok { background: #ffebee; color: #c62828; }
-  #sec-ts .pill.warn { background: var(--warn-bg); color: #b25000; }
-  #sec-ts .pill.bad { background: #e8f5e9; color: #2e7d32; }
 
   /* ── 10日趋势表格（日期竖轴） ── */
   .trend-matrix-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -608,14 +588,12 @@
     .score-hint { font-size: 13px; }
     .score-name { font-size: 13px; }
     #sec-env .score-val { font-size: 22px; letter-spacing: -0.3px; }
-    #sec-ts .ts-val { font-size: 22px; letter-spacing: -0.3px; }
-    #sec-ts .ts-name { font-size: 14px; }
-    #sec-ts .ts-foot { font-size: 13px; }
-    #sec-ts .ts-note { font-size: 13px; }
     #sec-ts .ts-chart-title { font-size: 14px; }
     #sec-ts .ts-hbar-name { font-size: 13px; }
-    #sec-ts .ts-hbar-val { font-size: 14px; }
-    #sec-ts .ts-hbar-track { height: 20px; }
+    #sec-ts .ts-hbar-val { font-size: 15px; }
+    #sec-ts .ts-hbar-sub { font-size: 12px; }
+    #sec-ts .ts-hbar-track { height: 22px; }
+    #sec-ts .ts-note { font-size: 13px; }
     .score-foot { font-size: 13px; }
     .section-sub {
       margin-left: 0; white-space: normal; width: 100%;
@@ -1175,7 +1153,7 @@
     <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/10</div><div class="fwd-tsub">2026中国具身智能机器人产业展7月10-12日举行</div></div><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/11</div><div class="fwd-tsub">2026“机器人+”创新发展大会7月11-13日举行</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">15</div><div class="fwd-tlabel">7/15</div><div class="fwd-tsub">中国（西部）国际人工智能与具身智能机器人产业链大会+2</div></div><div class="fwd-tnode"><div class="fwd-tdot">16</div><div class="fwd-tlabel">7/16</div><div class="fwd-tsub">长鑫科技7月16日打新</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">AI</div><div class="fwd-tlabel">7/17–20</div><div class="fwd-tsub">7月17日至20日，世界人工智能大会（WAIC）将在上海举办</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-date">7/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026中国具身智能机器人产业展7月10-12日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/11</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026“机器人+”创新发展大会7月11-13日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（西部）国际人工智能与具身智能机器人产业链大会</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中报强制预告截止日：7月15日</span></div><p class="fwd-cal-note">财报验证节点，预增抢跑与蹭概念分化，截止日前后波动通常放大。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况</span></div><p class="fwd-cal-note">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/16</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">长鑫科技7月16日打新</span></div><p class="fwd-cal-note">长鑫科技7月16日打新。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/17–20</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">7月17日至20日，世界人工智能大会（WAIC）将在上海举办</span></div><p class="fwd-cal-note">上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；最高领导人出席开幕式。会中看 Atlas 950、具身/大模型新品与治理政策叙事。</p></div></div></div></div><div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-10 17:32</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-10 17:38</div>
 </div>
 </body>
 </html>
