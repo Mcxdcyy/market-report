@@ -2964,10 +2964,11 @@ def render_html(ctx: dict) -> str:
   .vol20-wrap {{
     margin-top: 14px; padding-top: 12px;
     border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
   }}
   .vol20-head {{
     display: flex; align-items: baseline; justify-content: space-between;
-    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+    gap: 8px; margin-bottom: 0; flex-wrap: wrap;
   }}
   .vol20-title {{
     font-size: 13px; font-weight: 700; color: var(--text);
@@ -3033,8 +3034,8 @@ def render_html(ctx: dict) -> str:
     color: var(--accent); font-weight: 700;
   }}
   .vol20-tags {{
-    display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 10px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 0;
   }}
   .vol20-tag {{
     display: inline-block; font-size: 11px; font-weight: 700;
@@ -3044,7 +3045,7 @@ def render_html(ctx: dict) -> str:
   .vol20-tag.warn {{ background: var(--warn-bg); color: #b25000; }}
   .vol20-tag.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .vol20-note {{
-    margin-top: 10px; padding: 8px 10px;
+    margin-top: 0; padding: 8px 10px;
     background: var(--accent-bg); border-left: 3px solid var(--accent);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 12px; line-height: 1.55; color: var(--text);
