@@ -2857,8 +2857,8 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch {{
     width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
   }}
-  .ts-amt-swatch.lo {{ background: #90A4AE; }}
-  .ts-amt-swatch.hi {{ background: #E53935; }}
+  .ts-amt-swatch.lo {{ background: #B7C9D6; }}
+  .ts-amt-swatch.hi {{ background: #8FAFC4; }}
   .ts-amt-row {{
     display: grid; grid-template-columns: 72px 1fr 52px 78px;
     align-items: center; gap: 8px; margin-bottom: 8px;
@@ -2871,7 +2871,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-row.all .ts-amt-name {{ color: var(--accent); }}
   .ts-amt-stack {{
     display: flex; height: 22px; border-radius: 4px; overflow: hidden;
-    background: #eceff1; min-width: 0;
+    background: #eef2f5; min-width: 0;
   }}
   .ts-amt-seg {{
     height: 100%; min-width: 0;
@@ -2879,11 +2879,11 @@ def render_html(ctx: dict) -> str:
     font-size: 10px; font-weight: 700; color: #fff;
     font-variant-numeric: tabular-nums; white-space: nowrap;
   }}
-  .ts-amt-seg.lo {{ background: #90A4AE; }}
-  .ts-amt-seg.hi {{ background: #E53935; }}
+  .ts-amt-seg.lo {{ background: #B7C9D6; }}
+  .ts-amt-seg.hi {{ background: #8FAFC4; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
   .ts-amt-pct {{
-    font-size: 13px; font-weight: 800; color: #c62828;
+    font-size: 13px; font-weight: 800; color: #5F7F96;
     font-variant-numeric: tabular-nums; text-align: right;
   }}
   .ts-amt-cnt {{
