@@ -590,7 +590,7 @@ def compute_trend_strength(
         "universe": len(universe),
         "skipped": skipped,
         "items": items,
-        "note": "样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。",
+        "note": "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。",
     }
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     if progress:
