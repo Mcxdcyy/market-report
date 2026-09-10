@@ -2787,6 +2787,46 @@ def render_html(ctx: dict) -> str:
   #sec-env .callout.bad {{ background: #e8f5e9; border-color: #34C759; }}
 
   /* ── 趋势强度（个股五条件占比）── */
+  .ts-chart {{
+    margin-bottom: 14px; padding: 12px 12px 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: #fafafa;
+  }}
+  .ts-chart-head {{
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+  }}
+  .ts-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
+  .ts-chart-meta {{ font-size: 11px; color: var(--muted); }}
+  .ts-hbar {{
+    display: grid; grid-template-columns: 56px 1fr 52px;
+    align-items: center; gap: 8px; margin-bottom: 7px;
+  }}
+  .ts-hbar:last-child {{ margin-bottom: 0; }}
+  .ts-hbar-name {{
+    font-size: 12px; font-weight: 700; color: var(--sub);
+    white-space: nowrap; text-align: right;
+  }}
+  .ts-hbar-all .ts-hbar-name {{ color: var(--accent); }}
+  .ts-hbar-lead .ts-hbar-name {{ color: #c62828; }}
+  .ts-hbar-track {{
+    height: 18px; background: #e8e8ed; border-radius: 4px; overflow: hidden;
+    position: relative;
+  }}
+  .ts-hbar-fill {{
+    height: 100%; border-radius: 4px; min-width: 2px;
+    transition: width .2s ease;
+  }}
+  .ts-hbar-all .ts-hbar-fill {{
+    background: repeating-linear-gradient(
+      -45deg, #0a84ff, #0a84ff 4px, #4da3ff 4px, #4da3ff 8px
+    );
+  }}
+  .ts-hbar-lead .ts-hbar-track {{ background: #ffcdd2; }}
+  .ts-hbar-val {{
+    font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums;
+    text-align: right; letter-spacing: -0.3px;
+  }}
   .ts-grid {{
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
   }}
@@ -3183,6 +3223,10 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-name {{ font-size: 14px; }}
     #sec-ts .ts-foot {{ font-size: 13px; }}
     #sec-ts .ts-note {{ font-size: 13px; }}
+    #sec-ts .ts-chart-title {{ font-size: 14px; }}
+    #sec-ts .ts-hbar-name {{ font-size: 13px; }}
+    #sec-ts .ts-hbar-val {{ font-size: 14px; }}
+    #sec-ts .ts-hbar-track {{ height: 20px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3408,14 +3452,55 @@ def render_trend_strength_html(block: dict) -> str:
             return "warn", "一般"
         return "bad", "偏弱"
 
-    cards = []
     board_ratios = [
         float(it.get("ratio") or 0)
         for it in items
         if it.get("key") != "all" and int(it.get("total") or 0) > 0
     ]
     max_board_ratio = max(board_ratios) if board_ratios else None
+    # 横条按板块最高占比缩放，拉开对比；全场为家数加权均值，不会单独高于最高板块
+    scale = max(max_board_ratio or 0.0, 0.01)
 
+    lead_keys = {
+        it.get("key")
+        for it in items
+        if it.get("key") != "all"
+        and max_board_ratio is not None
+        and int(it.get("total") or 0) > 0
+        and abs(float(it.get("ratio") or 0) - max_board_ratio) < 1e-9
+    }
+
+    hbars = []
+    for it in items:
+        pct = float(it.get("ratio") or 0)
+        color = ratio_color(pct)
+        width = max(1.5, min(100.0, pct / scale * 100.0))
+        row_cls = ["ts-hbar"]
+        if it.get("key") == "all":
+            row_cls.append("ts-hbar-all")
+            fill = None  # CSS 斜纹蓝
+        elif it.get("key") in lead_keys:
+            row_cls.append("ts-hbar-lead")
+            fill = "#E53935"
+        else:
+            fill = color
+        fill_style = f"width:{width:.1f}%;" + (f"background:{fill};" if fill else "")
+        hbars.append(
+            f'''<div class="{" ".join(row_cls)}">
+      <div class="ts-hbar-name">{it.get("name", "")}</div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="{fill_style}"></div></div>
+      <div class="ts-hbar-val" style="color:{color}">{pct:.1f}%</div>
+    </div>'''
+        )
+    chart = f'''<div class="ts-chart">
+    <div class="ts-chart-head">
+      <span class="ts-chart-title">占比对比</span>
+      <span class="ts-chart-meta">全场=各板块家数加权均值 · 横轴相对最高板块</span>
+    </div>
+    {"".join(hbars)}
+  </div>'''
+
+    cards = []
     for it in items:
         pct = float(it.get("ratio") or 0)
         color = ratio_color(pct)
@@ -3424,12 +3509,7 @@ def render_trend_strength_html(block: dict) -> str:
         classes = ["ts-card"]
         if it.get("key") == "all":
             classes.append("ts-card-all")
-        is_lead = (
-            it.get("key") != "all"
-            and max_board_ratio is not None
-            and int(it.get("total") or 0) > 0
-            and abs(pct - max_board_ratio) < 1e-9
-        )
+        is_lead = it.get("key") in lead_keys
         if is_lead:
             classes.append("ts-card-lead")
         name_html = it.get("name", "")
@@ -3448,9 +3528,13 @@ def render_trend_strength_html(block: dict) -> str:
       </div>
     </div>'''
         )
-    note = block.get("note") or ""
-    foot = f'<div class="ts-note">{note}</div>' if note else ""
-    return f'<div class="ts-grid">{"".join(cards)}</div>{foot}'
+    note = block.get("note") or (
+        "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。"
+    )
+    if "加权" not in note:
+        note = "全场为各板块按样本家数加权的均值。" + note
+    foot = f'<div class="ts-note">{note}</div>'
+    return f'{chart}<div class="ts-grid">{"".join(cards)}</div>{foot}'
 
 
 def coalesce_row(row: pd.Series, prev: pd.Series | None) -> pd.Series:
