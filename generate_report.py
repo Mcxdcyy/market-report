@@ -2857,8 +2857,8 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch {{
     width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
   }}
-  .ts-amt-swatch.lo {{ background: #B7C9D6; }}
-  .ts-amt-swatch.hi {{ background: #8FAFC4; }}
+  .ts-amt-swatch.lo {{ background: #E2C49A; }}
+  .ts-amt-swatch.hi {{ background: #5B8FB9; }}
   .ts-amt-row {{
     display: grid; grid-template-columns: 72px 1fr;
     align-items: center; gap: 8px; margin-bottom: 8px;
@@ -2879,8 +2879,8 @@ def render_html(ctx: dict) -> str:
     font-size: 10px; font-weight: 700; color: #fff;
     font-variant-numeric: tabular-nums; white-space: nowrap;
   }}
-  .ts-amt-seg.lo {{ background: #B7C9D6; }}
-  .ts-amt-seg.hi {{ background: #8FAFC4; }}
+  .ts-amt-seg.lo {{ background: #E2C49A; color: #6a542e; }}
+  .ts-amt-seg.hi {{ background: #5B8FB9; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
 
   /* ── 10日趋势表格（日期竖轴） ── */
