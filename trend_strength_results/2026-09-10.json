@@ -1,55 +1,110 @@
 {
   "as_of": "2026-09-10",
-  "generated": "2026-09-10 17:20:26",
+  "generated": "2026-09-10 17:43:35",
   "universe": 5759,
   "skipped": {
     "list_days": 11,
-    "bars": 205,
-    "no_kline": 12
+    "bars": 206,
+    "no_kline": 11
   },
+  "amount_split_yi": 5,
   "items": [
     {
       "key": "all",
       "name": "全场",
       "trend": 172,
       "total": 5531,
-      "ratio": 3.11
+      "ratio": 3.11,
+      "n_below": 119,
+      "n_above": 53,
+      "n_amt_na": 0,
+      "amt_below": 20413234600.0,
+      "amt_above": 78497662600.0,
+      "amt_below_pct": 20.64,
+      "amt_above_pct": 79.36,
+      "amt_below_yi": 204.13,
+      "amt_above_yi": 784.98
     },
     {
       "key": "main",
       "name": "主板",
       "trend": 106,
       "total": 3044,
-      "ratio": 3.48
+      "ratio": 3.48,
+      "n_below": 71,
+      "n_above": 35,
+      "n_amt_na": 0,
+      "amt_below": 12690256900.0,
+      "amt_above": 57919197900.0,
+      "amt_below_pct": 17.97,
+      "amt_above_pct": 82.03,
+      "amt_below_yi": 126.9,
+      "amt_above_yi": 579.19
     },
     {
       "key": "cyb",
       "name": "创业板",
       "trend": 35,
       "total": 1356,
-      "ratio": 2.58
+      "ratio": 2.58,
+      "n_below": 22,
+      "n_above": 13,
+      "n_amt_na": 0,
+      "amt_below": 4450300500.0,
+      "amt_above": 11724526300.0,
+      "amt_below_pct": 27.51,
+      "amt_above_pct": 72.49,
+      "amt_below_yi": 44.5,
+      "amt_above_yi": 117.25
     },
     {
       "key": "kcb",
       "name": "科创板",
       "trend": 13,
       "total": 598,
-      "ratio": 2.17
+      "ratio": 2.17,
+      "n_below": 9,
+      "n_above": 4,
+      "n_amt_na": 0,
+      "amt_below": 1662884000.0,
+      "amt_above": 7977390700.0,
+      "amt_below_pct": 17.25,
+      "amt_above_pct": 82.75,
+      "amt_below_yi": 16.63,
+      "amt_above_yi": 79.77
     },
     {
       "key": "bj",
       "name": "北交所",
       "trend": 6,
       "total": 332,
-      "ratio": 1.81
+      "ratio": 1.81,
+      "n_below": 6,
+      "n_above": 0,
+      "n_amt_na": 0,
+      "amt_below": 814649000.0,
+      "amt_above": 0.0,
+      "amt_below_pct": 100.0,
+      "amt_above_pct": 0.0,
+      "amt_below_yi": 8.15,
+      "amt_above_yi": 0.0
     },
     {
       "key": "st",
       "name": "ST",
       "trend": 12,
       "total": 201,
-      "ratio": 5.97
+      "ratio": 5.97,
+      "n_below": 11,
+      "n_above": 1,
+      "n_amt_na": 0,
+      "amt_below": 795144200.0,
+      "amt_above": 876547700.0,
+      "amt_below_pct": 47.57,
+      "amt_above_pct": 52.43,
+      "amt_below_yi": 7.95,
+      "amt_above_yi": 8.77
     }
   ],
-  "note": "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。"
+  "note": "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。成交额分档仅统计符合趋势条件的个股，按当日成交额加权（阈值 5 亿元）。"
 }

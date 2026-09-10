@@ -34,6 +34,8 @@ WORKERS = 48
 KLINE_LEN = 40
 MIN_BARS = 20
 LIST_DAYS_MIN = 10
+# 符合条件个股：当日成交额分档阈值（元）
+AMOUNT_SPLIT_YUAN = 5e8  # 5 亿元
 
 FS_A = "m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048"
 CLIST_HOSTS = (
@@ -162,7 +164,7 @@ def is_limit_down(code: str, name: str, pct: float | None, close: float | None, 
 
 def fetch_universe() -> list[dict]:
     """东财 clist 全 A（含京），分页取齐。"""
-    fields = "f12,f13,f14,f2,f3,f18,f26"
+    fields = "f12,f13,f14,f2,f3,f6,f18,f26"
     stocks: list[dict] = []
     total = None
     pn = 1
@@ -211,6 +213,7 @@ def fetch_universe() -> list[dict]:
                     "market": int(row.get("f13") or 0),
                     "close": _to_float(row.get("f2")),
                     "pct": _to_float(row.get("f3")),
+                    "amount": _to_float(row.get("f6")),  # 元
                     "preclose": _to_float(row.get("f18")),
                     "list_date": _parse_list_date(row.get("f26")),
                     "bucket": classify_bucket(code, name),
@@ -273,15 +276,23 @@ def fetch_klines_qq(code: str, market: int | None) -> list[dict]:
         if not isinstance(item, (list, tuple)) or len(item) < 5:
             continue
         try:
-            rows.append(
-                {
-                    "date": str(item[0])[:10],
-                    "open": float(item[1]),
-                    "close": float(item[2]),
-                    "high": float(item[3]),
-                    "low": float(item[4]),
-                }
-            )
+            amt = None
+            # QQ: [date,open,close,high,low,volume,{},turn,amount_万元,...]
+            if len(item) >= 9:
+                try:
+                    amt = float(item[8]) * 10000.0  # 万元 → 元
+                except (TypeError, ValueError):
+                    amt = None
+            row = {
+                "date": str(item[0])[:10],
+                "open": float(item[1]),
+                "close": float(item[2]),
+                "high": float(item[3]),
+                "low": float(item[4]),
+            }
+            if amt is not None and amt > 0:
+                row["amount"] = amt
+            rows.append(row)
         except (TypeError, ValueError):
             continue
     return rows
@@ -318,15 +329,22 @@ def fetch_klines_sohu(code: str, market: int | None, as_of: date | None = None) 
         if not isinstance(item, (list, tuple)) or len(item) < 7:
             continue
         try:
-            rows.append(
-                {
-                    "date": str(item[0])[:10],
-                    "open": float(item[1]),
-                    "close": float(item[2]),
-                    "low": float(item[5]),
-                    "high": float(item[6]),
-                }
-            )
+            row = {
+                "date": str(item[0])[:10],
+                "open": float(item[1]),
+                "close": float(item[2]),
+                "low": float(item[5]),
+                "high": float(item[6]),
+            }
+            # sohu 常见: ... volume, amount_万元
+            if len(item) >= 9:
+                try:
+                    amt = float(item[8]) * 10000.0
+                    if amt > 0:
+                        row["amount"] = amt
+                except (TypeError, ValueError):
+                    pass
+            rows.append(row)
         except (TypeError, ValueError):
             continue
     rows.sort(key=lambda r: r["date"])
@@ -391,15 +409,18 @@ def load_kline_cache() -> dict[str, list[dict]]:
             if len(parts) < 5:
                 continue
             try:
-                rows.append(
-                    {
-                        "date": parts[0],
-                        "open": float(parts[1]),
-                        "close": float(parts[2]),
-                        "high": float(parts[3]),
-                        "low": float(parts[4]),
-                    }
-                )
+                row = {
+                    "date": parts[0],
+                    "open": float(parts[1]),
+                    "close": float(parts[2]),
+                    "high": float(parts[3]),
+                    "low": float(parts[4]),
+                }
+                if len(parts) >= 6 and parts[5] not in ("", "None"):
+                    amt = float(parts[5])
+                    if amt > 0:
+                        row["amount"] = amt
+                rows.append(row)
             except ValueError:
                 continue
         if rows:
@@ -408,14 +429,18 @@ def load_kline_cache() -> dict[str, list[dict]]:
 
 
 def save_kline_cache(cache: dict[str, list[dict]]) -> None:
-    payload = {
-        code: [
-            f"{r['date']},{r['open']},{r['close']},{r['high']},{r['low']}"
-            for r in rows[-KLINE_LEN:]
-        ]
-        for code, rows in cache.items()
-        if rows
-    }
+    payload = {}
+    for code, rows in cache.items():
+        if not rows:
+            continue
+        lines = []
+        for r in rows[-KLINE_LEN:]:
+            base = f"{r['date']},{r['open']},{r['close']},{r['high']},{r['low']}"
+            amt = r.get("amount")
+            if amt is not None:
+                base = f"{base},{amt}"
+            lines.append(base)
+        payload[code] = lines
     CACHE_FILE.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 
@@ -464,14 +489,36 @@ def meets_trend(rows: list[dict]) -> bool:
     return True
 
 
-def _empty_counts() -> dict[str, dict[str, int]]:
-    return {k: {"trend": 0, "total": 0} for k, _ in BUCKET_ORDER}
+def _empty_counts() -> dict[str, dict[str, float]]:
+    return {
+        k: {
+            "trend": 0,
+            "total": 0,
+            "amt_below": 0.0,
+            "amt_above": 0.0,
+            "n_below": 0,
+            "n_above": 0,
+            "n_amt_na": 0,
+        }
+        for k, _ in BUCKET_ORDER
+    }
 
 
-def _pct(trend: int, total: int) -> float:
-    if total <= 0:
+def _pct(numer, denom) -> float:
+    if not denom:
         return 0.0
-    return round(100.0 * trend / total, 2)
+    return round(100.0 * float(numer) / float(denom), 2)
+
+
+def _resolve_amount(row: dict, stock: dict, as_of: date) -> float | None:
+    """优先 K 线当日成交额；若 as_of 为今日且缺失，回退东财列表 f6。"""
+    amt = row.get("amount")
+    if amt is not None and amt > 0:
+        return float(amt)
+    # 列表成交额仅当统计日=今日时可用
+    if as_of == date.today() and stock.get("amount"):
+        return float(stock["amount"])
+    return None
 
 
 def compute_trend_strength(
@@ -485,7 +532,11 @@ def compute_trend_strength(
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
     out_path = RESULT_DIR / f"{as_of_d.isoformat()}.json"
     if out_path.exists() and not force:
-        return json.loads(out_path.read_text(encoding="utf-8"))
+        cached = json.loads(out_path.read_text(encoding="utf-8"))
+        items = cached.get("items") or []
+        # 旧缓存无成交额分档时强制重算
+        if items and "amt_above_pct" in items[0]:
+            return cached
 
     if progress:
         print(f"[trend] 拉取股票列表 as_of={as_of_d} …")
@@ -498,7 +549,10 @@ def compute_trend_strength(
     for s in universe:
         rows = cache.get(s["code"])
         if rows and cache_covers(rows, as_of_d):
-            continue
+            # 缺成交额则重拉（用于分档图）
+            last = truncate_as_of(rows, as_of_d)
+            if last and last[-1].get("amount"):
+                continue
         need_fetch.append(s)
 
     fetched = 0
@@ -521,7 +575,7 @@ def compute_trend_strength(
                     print(f"[trend] K 线进度 {fetched}/{len(need_fetch)}（有效≥{MIN_BARS}:{ok_bars}）")
         save_kline_cache(cache)
         if progress:
-            print(f"[trend] 新拉 K 线 {fetched} 只，有效 {ok_bars}，已写缓存")
+            print(f"[trend] 新拉/补成交额 K 线 {fetched} 只，有效 {ok_bars}，已写缓存")
 
     counts = _empty_counts()
     skipped = {"list_days": 0, "bars": 0, "no_kline": 0}
@@ -541,12 +595,10 @@ def compute_trend_strength(
         if len(rows) < MIN_BARS:
             skipped["bars"] += 1
             continue
-        # 若无上市日，用「有效 K 线根数 > 10」近似
         if list_date is None and len(rows) <= LIST_DAYS_MIN:
             skipped["list_days"] += 1
             continue
 
-        # 当日收盘日须对齐 as_of（否则该票当日无成交/停牌，跳过）
         if rows[-1]["date"] != as_of_d.isoformat():
             skipped["bars"] += 1
             continue
@@ -555,7 +607,6 @@ def compute_trend_strength(
         counts["all"]["total"] += 1
         counts[bucket]["total"] += 1
 
-        # 条件 5：按 as_of 日 K 线估算跌停（勿用实时列表涨跌幅，避免历史日错位）
         ld = False
         if len(rows) >= 2:
             prev_c, cur_c = rows[-2]["close"], rows[-1]["close"]
@@ -566,14 +617,32 @@ def compute_trend_strength(
             ld = is_limit_down(code, s["name"], s.get("pct"), s.get("close"), s.get("preclose"))
 
         ok = (not ld) and meets_trend(rows)
-        if ok:
-            counts["all"]["trend"] += 1
-            counts[bucket]["trend"] += 1
+        if not ok:
+            continue
+
+        counts["all"]["trend"] += 1
+        counts[bucket]["trend"] += 1
+
+        amt = _resolve_amount(rows[-1], s, as_of_d)
+        for key in ("all", bucket):
+            if amt is None:
+                counts[key]["n_amt_na"] += 1
+                continue
+            if amt < AMOUNT_SPLIT_YUAN:
+                counts[key]["amt_below"] += amt
+                counts[key]["n_below"] += 1
+            else:
+                counts[key]["amt_above"] += amt
+                counts[key]["n_above"] += 1
 
     items = []
     for key, label in BUCKET_ORDER:
-        t = counts[key]["trend"]
-        n = counts[key]["total"]
+        c = counts[key]
+        t = int(c["trend"])
+        n = int(c["total"])
+        ab = float(c["amt_below"])
+        aa = float(c["amt_above"])
+        amt_sum = ab + aa
         items.append(
             {
                 "key": key,
@@ -581,6 +650,15 @@ def compute_trend_strength(
                 "trend": t,
                 "total": n,
                 "ratio": _pct(t, n),
+                "n_below": int(c["n_below"]),
+                "n_above": int(c["n_above"]),
+                "n_amt_na": int(c["n_amt_na"]),
+                "amt_below": round(ab, 2),
+                "amt_above": round(aa, 2),
+                "amt_below_pct": _pct(ab, amt_sum) if amt_sum else 0.0,
+                "amt_above_pct": _pct(aa, amt_sum) if amt_sum else 0.0,
+                "amt_below_yi": round(ab / 1e8, 2),
+                "amt_above_yi": round(aa / 1e8, 2),
             }
         )
 
@@ -589,14 +667,22 @@ def compute_trend_strength(
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "universe": len(universe),
         "skipped": skipped,
+        "amount_split_yi": 5,
         "items": items,
-        "note": "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；ST 互斥计入。",
+        "note": (
+            "全场为各板块按样本家数加权的均值；样本为上市超过10个日历日且近20日K线完整、当日有成交的股票；"
+            "ST 互斥计入。成交额分档仅统计符合趋势条件的个股，按当日成交额加权（阈值 5 亿元）。"
+        ),
     }
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     if progress:
         print(f"[trend] 完成 → {out_path}")
         for it in items:
-            print(f"  {it['name']}: {it['trend']}/{it['total']} = {it['ratio']}%")
+            print(
+                f"  {it['name']}: {it['trend']}/{it['total']} = {it['ratio']}% | "
+                f"<5亿 {it['amt_below_pct']}% / ≥5亿 {it['amt_above_pct']}% "
+                f"({it['amt_below_yi']}+{it['amt_above_yi']}亿)"
+            )
     return result
 
 
