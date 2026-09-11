@@ -34,9 +34,14 @@ NEWS_FILE = BASE / "market_news.json"
 EVENT_CATALOG_FILE = BASE / "event_catalog.json"
 
 try:
-    from trend_strength import compute_trend_strength, RESULT_DIR as TREND_RESULT_DIR
+    from trend_strength import (
+        compute_trend_strength,
+        ensure_means_200d,
+        RESULT_DIR as TREND_RESULT_DIR,
+    )
 except ImportError:  # pragma: no cover
     compute_trend_strength = None  # type: ignore
+    ensure_means_200d = None  # type: ignore
     TREND_RESULT_DIR = BASE / "trend_strength_results"
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
@@ -3521,7 +3526,28 @@ def load_trend_means_200d() -> dict:
     return data.get("means") or {}
 
 
-def load_trend_strength_block(as_of: datetime, latest_dt: datetime | None = None) -> dict:
+def _trading_days_ending(df: pd.DataFrame, as_of_d, n: int = 200) -> list:
+    """从大盘表取截至 as_of 的近 n 个交易日（date）。"""
+    dates = []
+    for v in df["date"].tolist():
+        if hasattr(v, "to_pydatetime"):
+            d = v.to_pydatetime().date()
+        elif hasattr(v, "date") and not isinstance(v, type(as_of_d)):
+            d = v.date()
+        else:
+            d = v
+        if d <= as_of_d:
+            dates.append(d)
+    dates = sorted(set(dates))
+    return dates[-n:]
+
+
+def load_trend_strength_block(
+    as_of: datetime,
+    latest_dt: datetime | None = None,
+    *,
+    df: pd.DataFrame | None = None,
+) -> dict:
     """模块「趋势强度」：全场+五维占比。优先读当日结果缓存；最新若干日可联网重算。"""
     as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
     result_path = TREND_RESULT_DIR / f"{as_of_d.isoformat()}.json"
@@ -3550,7 +3576,22 @@ def load_trend_strength_block(as_of: datetime, latest_dt: datetime | None = None
                 "note": "该日暂无趋势强度统计缓存",
             }
         block = compute_trend_strength(as_of_d, force=False, progress=True)
-    means = load_trend_means_200d()
+
+    # 近200日均值：仅在「最新交易日」报表时强制对齐 as_of 并重算；历史日只用现有缓存
+    means: dict = {}
+    latest_d = None
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+    is_latest = latest_d is None or as_of_d == latest_d
+    if is_latest and ensure_means_200d is not None and df is not None:
+        try:
+            days = _trading_days_ending(df, as_of_d, 200)
+            means = ensure_means_200d(as_of_d, days, force=False, progress=True) or {}
+        except Exception as exc:  # noqa: BLE001
+            print(f"[trend-means] 更新失败，沿用缓存: {exc}")
+            means = load_trend_means_200d()
+    else:
+        means = load_trend_means_200d()
     if means:
         block = dict(block)
         block["means_200d"] = means
@@ -3790,7 +3831,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     latest_dt = df.iloc[-1]["date"]
     if hasattr(latest_dt, "to_pydatetime"):
         latest_dt = latest_dt.to_pydatetime()
-    trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
+    trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt, df=df)
 
     return {
         "title_date": fmt_md(dt),

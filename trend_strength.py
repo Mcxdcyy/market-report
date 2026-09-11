@@ -30,8 +30,12 @@ from typing import Any
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "trend_strength_results"
 CACHE_FILE = BASE / "trend_klines_cache.json"
+LONG_CACHE_FILE = BASE / "trend_klines_cache_long.json"
+MEANS_200D_FILE = RESULT_DIR / "means_200d.json"
 WORKERS = 48
 KLINE_LEN = 40
+LONG_KLINE_LEN = 260  # 200 交易日均值 + MA20 余量
+MEANS_DAYS = 200
 MIN_BARS = 20
 LIST_DAYS_MIN = 10
 # 符合条件个股：当日成交额分档阈值（元）
@@ -684,6 +688,295 @@ def compute_trend_strength(
                 f"({it['amt_below_yi']}+{it['amt_above_yi']}亿)"
             )
     return result
+
+
+def _parse_long_cache_rows(raw_rows: list) -> list[dict]:
+    if not raw_rows:
+        return []
+    if isinstance(raw_rows[0], dict):
+        return list(raw_rows)
+    rows: list[dict] = []
+    for line in raw_rows:
+        parts = str(line).split(",")
+        if len(parts) < 5:
+            continue
+        try:
+            rows.append(
+                {
+                    "date": parts[0][:10],
+                    "open": float(parts[1]),
+                    "close": float(parts[2]),
+                    "high": float(parts[3]),
+                    "low": float(parts[4]),
+                }
+            )
+        except ValueError:
+            continue
+    return rows
+
+
+def load_long_kline_cache() -> dict[str, list[dict]]:
+    if not LONG_CACHE_FILE.exists():
+        return {}
+    try:
+        raw = json.loads(LONG_CACHE_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return {code: _parse_long_cache_rows(rows) for code, rows in (raw or {}).items() if rows}
+
+
+def save_long_kline_cache(cache: dict[str, list[dict]]) -> None:
+    out = {
+        code: [
+            f"{r['date']},{r['open']},{r['close']},{r['high']},{r['low']},{r.get('amount') or ''}"
+            for r in rows
+        ]
+        for code, rows in cache.items()
+    }
+    LONG_CACHE_FILE.write_text(
+        json.dumps(out, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
+
+
+def fetch_long_klines_qq(code: str, market: int | None) -> list[dict]:
+    sym = sina_symbol(code, market)
+    url = (
+        "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newfqkline/get"
+        f"?param={sym},day,,,{LONG_KLINE_LEN},qfq"
+    )
+    try:
+        payload = _http_json(url, timeout=20)
+    except Exception:
+        return []
+    block = (payload.get("data") or {}).get(sym) or {}
+    day = block.get("qfqday") or block.get("day") or []
+    rows: list[dict] = []
+    for item in day:
+        if not isinstance(item, (list, tuple)) or len(item) < 5:
+            continue
+        try:
+            row = {
+                "date": str(item[0])[:10],
+                "open": float(item[1]),
+                "close": float(item[2]),
+                "high": float(item[3]),
+                "low": float(item[4]),
+            }
+            if len(item) >= 9:
+                try:
+                    amt = float(item[8]) * 10000.0
+                    if amt > 0:
+                        row["amount"] = amt
+                except (TypeError, ValueError):
+                    pass
+            rows.append(row)
+        except (TypeError, ValueError):
+            continue
+    return rows
+
+
+def fetch_long_klines_for_stock(code: str, market: int | None, as_of: date) -> list[dict]:
+    rows = fetch_long_klines_qq(code, market)
+    if len(rows) < MIN_BARS:
+        # 拉长搜狐窗口
+        start = as_of - timedelta(days=420)
+        url = (
+            "https://q.stock.sohu.com/hisHq?"
+            + urllib.parse.urlencode(
+                {
+                    "code": f"cn_{code}",
+                    "start": start.strftime("%Y%m%d"),
+                    "end": as_of.strftime("%Y%m%d"),
+                    "stat": 1,
+                    "order": "A",
+                    "period": "d",
+                }
+            )
+        )
+        try:
+            payload = _http_json(url, timeout=20)
+        except Exception:
+            payload = None
+        if isinstance(payload, list) and payload:
+            hq = payload[0].get("hq") if isinstance(payload[0], dict) else None
+            if hq:
+                sohu: list[dict] = []
+                for item in hq:
+                    if not isinstance(item, (list, tuple)) or len(item) < 7:
+                        continue
+                    try:
+                        sohu.append(
+                            {
+                                "date": str(item[0])[:10],
+                                "open": float(item[1]),
+                                "close": float(item[2]),
+                                "low": float(item[5]),
+                                "high": float(item[6]),
+                            }
+                        )
+                    except (TypeError, ValueError):
+                        continue
+                sohu.sort(key=lambda r: r["date"])
+                rows = sohu[-LONG_KLINE_LEN:] or rows
+    return rows
+
+
+def _stock_meets_trend_at(closes: list[float], highs: list[float], lows: list[float], i: int) -> bool:
+    """与 meets_trend 同口径，索引 i 为当日（含）。"""
+    if i + 1 < MIN_BARS:
+        return False
+    for j in range(i - 2, i + 1):
+        ma5 = sum(closes[j - 4 : j + 1]) / 5.0
+        if closes[j] <= ma5:
+            return False
+    for j in range(i - 4, i + 1):
+        ma10 = sum(closes[j - 9 : j + 1]) / 10.0
+        if lows[j] <= ma10:
+            return False
+    if max(highs[i - 2 : i + 1]) != max(highs[i - 19 : i + 1]):
+        return False
+    if sum(closes[i - 4 : i + 1]) / 5.0 <= sum(closes[i - 5 : i]) / 5.0:
+        return False
+    return True
+
+
+def ensure_means_200d(
+    as_of: date | datetime | str,
+    trading_days: list[date] | None = None,
+    *,
+    force: bool = False,
+    progress: bool = True,
+) -> dict:
+    """确保 means_200d.json 对齐 as_of（近 MEANS_DAYS 个交易日各维度占比均值）。
+
+    返回 means 字典（key → {name, mean_ratio_pct, ...}）。
+    """
+    as_of_d = _as_date(as_of)
+    RESULT_DIR.mkdir(parents=True, exist_ok=True)
+    cached: dict | None = None
+    if MEANS_200D_FILE.exists() and not force:
+        try:
+            cached = json.loads(MEANS_200D_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            cached = None
+        if cached and cached.get("as_of") == as_of_d.isoformat() and cached.get("means"):
+            return cached["means"]
+
+    if trading_days is None:
+        raise ValueError("ensure_means_200d 需要 trading_days（近200个交易日）")
+    days = [d for d in trading_days if d <= as_of_d]
+    days = sorted(set(days))[-MEANS_DAYS:]
+    if len(days) < MEANS_DAYS:
+        if progress:
+            print(f"[trend-means] 交易日不足 {MEANS_DAYS}（仅 {len(days)}），跳过重算")
+        return (cached or {}).get("means") or {}
+
+    if progress:
+        print(f"[trend-means] 重算近{len(days)}日均值 → {days[0]}…{days[-1]}")
+
+    universe = fetch_universe()
+    cache = load_long_kline_cache()
+    need = [
+        s
+        for s in universe
+        if len(cache.get(s["code"]) or []) < 180
+        or (cache.get(s["code"]) or [{}])[0].get("date", "9999") > days[0].isoformat()
+        or (cache.get(s["code"]) or [{}])[-1].get("date", "") < as_of_d.isoformat()
+    ]
+    if need:
+        if progress:
+            print(f"[trend-means] 补拉长K线 {len(need)} 只…")
+        t0 = time.time()
+        done = 0
+        with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+            futs = {
+                ex.submit(fetch_long_klines_for_stock, s["code"], s.get("market"), as_of_d): s["code"]
+                for s in need
+            }
+            for fut in as_completed(futs):
+                code = futs[fut]
+                rows = fut.result()
+                if rows:
+                    cache[code] = rows
+                done += 1
+                if progress and done % 400 == 0:
+                    print(f"[trend-means] K线 {done}/{len(need)} 用时{time.time()-t0:.0f}s")
+        save_long_kline_cache(cache)
+        if progress:
+            print(f"[trend-means] 长K线已更新，用时 {time.time()-t0:.0f}s")
+
+    series: list[tuple] = []
+    for s in universe:
+        rows = cache.get(s["code"]) or []
+        if len(rows) < MIN_BARS:
+            continue
+        closes = [float(r["close"]) for r in rows]
+        highs = [float(r["high"]) for r in rows]
+        lows = [float(r["low"]) for r in rows]
+        idx = {r["date"]: i for i, r in enumerate(rows)}
+        series.append((s, idx, closes, highs, lows))
+
+    keys = [k for k, _ in BUCKET_ORDER]
+    sum_ratio = {k: 0.0 for k in keys}
+    sum_trend = {k: 0.0 for k in keys}
+    n_ok = {k: 0 for k in keys}
+
+    for d in days:
+        ds = d.isoformat()
+        trend = {k: 0 for k in keys}
+        total = {k: 0 for k in keys}
+        for s, idx, closes, highs, lows in series:
+            list_date = s.get("list_date")
+            if list_date is not None and (d - list_date).days <= LIST_DAYS_MIN:
+                continue
+            i = idx.get(ds)
+            if i is None:
+                continue
+            n = i + 1
+            if n < MIN_BARS:
+                continue
+            if list_date is None and n <= LIST_DAYS_MIN:
+                continue
+            bucket = s["bucket"]
+            total["all"] += 1
+            total[bucket] += 1
+            c0, c1 = closes[i - 1], closes[i]
+            if c0 and is_limit_down(s["code"], s["name"], (c1 / c0 - 1.0) * 100.0, c1, c0):
+                continue
+            if not _stock_meets_trend_at(closes, highs, lows, i):
+                continue
+            trend["all"] += 1
+            trend[bucket] += 1
+        for k in keys:
+            if total[k] > 0:
+                sum_ratio[k] += 100.0 * trend[k] / total[k]
+                sum_trend[k] += trend[k]
+                n_ok[k] += 1
+
+    means: dict[str, dict] = {}
+    for key, name in BUCKET_ORDER:
+        means[key] = {
+            "name": name,
+            "mean_ratio_pct": round(sum_ratio[key] / n_ok[key], 2) if n_ok[key] else None,
+            "mean_trend_count": round(sum_trend[key] / n_ok[key], 1) if n_ok[key] else None,
+            "n_days": n_ok[key],
+        }
+    payload = {
+        "as_of": as_of_d.isoformat(),
+        "start": days[0].isoformat(),
+        "end": days[-1].isoformat(),
+        "n_days": len(days),
+        "means": means,
+        "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    MEANS_200D_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    if progress:
+        print(
+            f"[trend-means] 完成 · 全场均值 {means['all']['mean_ratio_pct']}% "
+            f"→ {MEANS_200D_FILE.name}"
+        )
+    return means
 
 
 def load_or_compute_trend_strength(as_of: date | datetime | str, *, force: bool = False) -> dict:
