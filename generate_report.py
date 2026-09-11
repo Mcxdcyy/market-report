@@ -2875,6 +2875,20 @@ def render_html(ctx: dict) -> str:
     background: #1c1c1e; opacity: 0.28; z-index: 2; pointer-events: none;
     transform: translateX(-50%);
   }}
+  .ts-hbar-axis {{
+    margin-bottom: 6px;
+  }}
+  .ts-hbar-axis .ts-hbar-track {{
+    height: 14px; background: transparent; border-radius: 0;
+    border-bottom: 1px solid rgba(0,0,0,.12); overflow: visible;
+  }}
+  .ts-hbar-axis-lab {{
+    position: absolute; bottom: 2px; font-size: 10px; font-weight: 600;
+    color: var(--muted); font-variant-numeric: tabular-nums;
+    transform: translateX(-50%); white-space: nowrap;
+  }}
+  .ts-hbar-axis-lab.start {{ transform: translateX(0); left: 0 !important; }}
+  .ts-hbar-axis-lab.end {{ transform: translateX(-100%); }}
   .ts-hbar-lead .ts-hbar-track {{ background: #ffcdd2; }}
   .ts-hbar-pct {{
     font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
@@ -3636,12 +3650,40 @@ def render_trend_strength_html(block: dict) -> str:
       <div class="ts-hbar-cnt"><b>{trend_n}</b>/{total_n}</div>
     </div>'''
         )
+    # 顶部刻度轴：明示满格对应多少 %（默认 10%，超则当日最大）
+    axis_labs = ['<span class="ts-hbar-axis-lab start" style="left:0">0</span>']
+    if abs(scale - 10.0) < 1e-9:
+        axis_labs.append('<span class="ts-hbar-axis-lab" style="left:50%">5%</span>')
+        axis_labs.append(f'<span class="ts-hbar-axis-lab end" style="left:100%">{scale:.0f}%</span>')
+    else:
+        mid = 50.0
+        axis_labs.append(
+            f'<span class="ts-hbar-axis-lab" style="left:{mid:.0f}%">{scale/2:.1f}%</span>'
+        )
+        axis_labs.append(
+            f'<span class="ts-hbar-axis-lab end" style="left:100%">{scale:.1f}%</span>'
+        )
+    axis_row = f'''<div class="ts-hbar ts-hbar-axis" aria-hidden="true">
+      <div class="ts-hbar-name"></div>
+      <div class="ts-hbar-track">{"".join(axis_labs)}</div>
+      <div class="ts-hbar-pct"></div>
+      <div class="ts-hbar-cnt"></div>
+    </div>'''
+    scale_note = (
+        f"满格={scale:.0f}%"
+        if abs(scale - round(scale)) < 1e-9
+        else f"满格={scale:.1f}%"
+    )
+    if scale > 10.0 + 1e-9:
+        scale_note += "（当日最大）"
+    else:
+        scale_note += "（默认）"
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势占比</span>
-      <span class="ts-chart-meta">刻度默认10% · 竖线=近200日均值</span>
+      <span class="ts-chart-meta">{scale_note} · 竖线=近200日均值</span>
     </div>
-    {"".join(hbars)}
+    {axis_row}{"".join(hbars)}
   </div>'''
     amt_rows = []
     has_amt = any("amt_above_pct" in it for it in items)
