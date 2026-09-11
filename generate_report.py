@@ -2857,7 +2857,6 @@ def render_html(ctx: dict) -> str:
     white-space: nowrap; text-align: right;
   }}
   .ts-hbar-all .ts-hbar-name {{ color: var(--accent); }}
-  .ts-hbar-all .ts-hbar-cnt b {{ color: var(--accent); }}
   .ts-hbar-lead .ts-hbar-name {{ color: #c62828; }}
   .ts-hbar-track {{
     height: 22px; background: #e8e8ed; border-radius: 4px; overflow: hidden;
