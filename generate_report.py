@@ -2875,20 +2875,6 @@ def render_html(ctx: dict) -> str:
     background: #1c1c1e; opacity: 0.28; z-index: 2; pointer-events: none;
     transform: translateX(-50%);
   }}
-  .ts-hbar-axis {{
-    margin-bottom: 6px;
-  }}
-  .ts-hbar-axis .ts-hbar-track {{
-    height: 14px; background: transparent; border-radius: 0;
-    border-bottom: 1px solid rgba(0,0,0,.12); overflow: visible;
-  }}
-  .ts-hbar-axis-lab {{
-    position: absolute; bottom: 2px; font-size: 10px; font-weight: 600;
-    color: var(--muted); font-variant-numeric: tabular-nums;
-    transform: translateX(-50%); white-space: nowrap;
-  }}
-  .ts-hbar-axis-lab.start {{ transform: translateX(0); left: 0 !important; }}
-  .ts-hbar-axis-lab.end {{ transform: translateX(-100%); }}
   .ts-hbar-lead .ts-hbar-track {{ background: #ffcdd2; }}
   .ts-hbar-pct {{
     font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
@@ -2927,7 +2913,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch.lo {{ background: #E2C49A; }}
   .ts-amt-swatch.hi {{ background: #9A7EAD; }}
   .ts-amt-row {{
-    display: grid; grid-template-columns: 72px 1fr 78px;
+    display: grid; grid-template-columns: 72px 1fr 96px;
     align-items: center; gap: 10px; margin-bottom: 12px;
   }}
   .ts-amt-row:last-child {{ margin-bottom: 0; }}
@@ -3650,25 +3636,6 @@ def render_trend_strength_html(block: dict) -> str:
       <div class="ts-hbar-cnt"><b>{trend_n}</b>/{total_n}</div>
     </div>'''
         )
-    # 顶部刻度轴：明示满格对应多少 %（默认 10%，超则当日最大）
-    axis_labs = ['<span class="ts-hbar-axis-lab start" style="left:0">0</span>']
-    if abs(scale - 10.0) < 1e-9:
-        axis_labs.append('<span class="ts-hbar-axis-lab" style="left:50%">5%</span>')
-        axis_labs.append(f'<span class="ts-hbar-axis-lab end" style="left:100%">{scale:.0f}%</span>')
-    else:
-        mid = 50.0
-        axis_labs.append(
-            f'<span class="ts-hbar-axis-lab" style="left:{mid:.0f}%">{scale/2:.1f}%</span>'
-        )
-        axis_labs.append(
-            f'<span class="ts-hbar-axis-lab end" style="left:100%">{scale:.1f}%</span>'
-        )
-    axis_row = f'''<div class="ts-hbar ts-hbar-axis" aria-hidden="true">
-      <div class="ts-hbar-name"></div>
-      <div class="ts-hbar-track">{"".join(axis_labs)}</div>
-      <div class="ts-hbar-pct"></div>
-      <div class="ts-hbar-cnt"></div>
-    </div>'''
     scale_note = (
         f"满格={scale:.0f}%"
         if abs(scale - round(scale)) < 1e-9
@@ -3683,7 +3650,7 @@ def render_trend_strength_html(block: dict) -> str:
       <span class="ts-chart-title">强趋势占比</span>
       <span class="ts-chart-meta">{scale_note} · 竖线=近200日均值</span>
     </div>
-    {axis_row}{"".join(hbars)}
+    {"".join(hbars)}
   </div>'''
     amt_rows = []
     has_amt = any("amt_above_pct" in it for it in items)
@@ -3711,17 +3678,26 @@ def render_trend_strength_html(block: dict) -> str:
                 )
             if not segs:
                 segs.append('<div class="ts-amt-seg lo" style="width:100%;opacity:.35"></div>')
+            def _yi_txt(v: float) -> str:
+                if v <= 0:
+                    return "0"
+                if v >= 100:
+                    return f"{v:.0f}"
+                if v >= 10:
+                    return f"{v:.1f}"
+                return f"{v:.2f}"
+
             amt_rows.append(
                 f'''<div class="{row_cls}">
       <div class="ts-amt-name">{it.get("name", "")}</div>
       <div class="ts-amt-stack">{"".join(segs)}</div>
-      <div class="ts-amt-cnt"><span class="hi">{n_hi}</span>/<span class="lo">{n_lo}</span></div>
+      <div class="ts-amt-cnt"><span class="hi">{_yi_txt(hi_yi)}</span>/<span class="lo">{_yi_txt(lo_yi)}</span></div>
     </div>'''
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅强趋势个股 · 成交额加权 · 右侧家数≥5亿/&lt;5亿</span>
+      <span class="ts-chart-meta">仅强趋势个股 · 成交额加权 · 右侧亿元（≥5亿/&lt;5亿）</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
