@@ -2871,6 +2871,11 @@ def render_html(ctx: dict) -> str:
       -45deg, #0a84ff, #0a84ff 4px, #4da3ff 4px, #4da3ff 8px
     );
   }}
+  .ts-hbar-mean {{
+    position: absolute; top: 0; bottom: 0; width: 2px;
+    background: #1c1c1e; opacity: 0.65; z-index: 2; pointer-events: none;
+    transform: translateX(-50%);
+  }}
   .ts-hbar-lead .ts-hbar-track {{ background: #ffcdd2; }}
   .ts-hbar-pct {{
     font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
@@ -3497,33 +3502,52 @@ def render_html(ctx: dict) -> str:
 </html>"""
 
 
+def load_trend_means_200d() -> dict:
+    """近200个交易日各维度强趋势占比均值（缓存 means_200d.json）。"""
+    path = TREND_RESULT_DIR / "means_200d.json"
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return data.get("means") or {}
+
+
 def load_trend_strength_block(as_of: datetime, latest_dt: datetime | None = None) -> dict:
     """模块「趋势强度」：全场+五维占比。优先读当日结果缓存；最新若干日可联网重算。"""
     as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
     result_path = TREND_RESULT_DIR / f"{as_of_d.isoformat()}.json"
+    block: dict | None = None
     if result_path.exists():
         try:
-            return json.loads(result_path.read_text(encoding="utf-8"))
+            block = json.loads(result_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
-            pass
-    if compute_trend_strength is None:
-        return {
-            "as_of": as_of_d.isoformat(),
-            "items": [],
-            "note": "趋势强度模块未安装",
-        }
-    # 仅对接近最新交易日的报表自动全市场扫描（避免历史日重生成时无足够 K 线）
-    allow_fetch = True
-    if latest_dt is not None:
-        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
-        allow_fetch = as_of_d >= latest_d - timedelta(days=3)
-    if not allow_fetch:
-        return {
-            "as_of": as_of_d.isoformat(),
-            "items": [],
-            "note": "该日暂无趋势强度统计缓存",
-        }
-    return compute_trend_strength(as_of_d, force=False, progress=True)
+            block = None
+    if block is None:
+        if compute_trend_strength is None:
+            return {
+                "as_of": as_of_d.isoformat(),
+                "items": [],
+                "note": "趋势强度模块未安装",
+            }
+        # 仅对接近最新交易日的报表自动全市场扫描（避免历史日重生成时无足够 K 线）
+        allow_fetch = True
+        if latest_dt is not None:
+            latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+            allow_fetch = as_of_d >= latest_d - timedelta(days=3)
+        if not allow_fetch:
+            return {
+                "as_of": as_of_d.isoformat(),
+                "items": [],
+                "note": "该日暂无趋势强度统计缓存",
+            }
+        block = compute_trend_strength(as_of_d, force=False, progress=True)
+    means = load_trend_means_200d()
+    if means:
+        block = dict(block)
+        block["means_200d"] = means
+    return block
 
 
 def render_trend_strength_html(block: dict) -> str:
@@ -3532,13 +3556,17 @@ def render_trend_strength_html(block: dict) -> str:
         note = block.get("note") or "暂无趋势强度数据"
         return f'<div class="news-empty">{note}</div>'
 
-    def ratio_color(pct: float) -> str:
-        # A股：高=红、中=橙、低=绿（仅着色，不再打偏强/偏弱标签）
-        if pct >= 20:
+    means_200d = block.get("means_200d") or load_trend_means_200d()
+
+    def vs_mean_color(pct: float, mean: float | None) -> str:
+        # 相对近200日均值：低于=绿、高于=红（A股惯例）
+        if mean is None:
+            return "#8e8e93"
+        if pct > mean:
             return "#E53935"
-        if pct >= 10:
-            return "#FF9500"
-        return "#34C759"
+        if pct < mean:
+            return "#34C759"
+        return "#FF9500"
 
     board_ratios = [
         float(it.get("ratio") or 0)
@@ -3546,8 +3574,9 @@ def render_trend_strength_html(block: dict) -> str:
         if it.get("key") != "all" and int(it.get("total") or 0) > 0
     ]
     max_board_ratio = max(board_ratios) if board_ratios else None
-    # 横条按板块最高占比缩放，拉开对比；全场为家数加权均值，不会单独高于最高板块
-    scale = max(max_board_ratio or 0.0, 0.01)
+    all_ratios = [float(it.get("ratio") or 0) for it in items if int(it.get("total") or 0) > 0]
+    # 刻度默认固定 10%；若当日任一行超过 10%，则拉到当日最大值
+    scale = max(10.0, max(all_ratios) if all_ratios else 10.0)
 
     lead_keys = {
         it.get("key")
@@ -3561,27 +3590,41 @@ def render_trend_strength_html(block: dict) -> str:
     hbars = []
     for it in items:
         pct = float(it.get("ratio") or 0)
-        color = ratio_color(pct)
+        key = it.get("key") or ""
+        mean_info = (means_200d.get(key) or {}) if isinstance(means_200d, dict) else {}
+        mean = mean_info.get("mean_ratio_pct")
+        try:
+            mean_f = float(mean) if mean is not None else None
+        except (TypeError, ValueError):
+            mean_f = None
+        color = vs_mean_color(pct, mean_f)
         width = max(1.5, min(100.0, pct / scale * 100.0))
         row_cls = ["ts-hbar"]
-        if it.get("key") == "all":
+        if key == "all":
             row_cls.append("ts-hbar-all")
             fill = None  # CSS 斜纹蓝
-        elif it.get("key") in lead_keys:
+        elif key in lead_keys:
             row_cls.append("ts-hbar-lead")
-            fill = "#E53935"
+            fill = color
         else:
             fill = color
         fill_style = f"width:{width:.1f}%;" + (f"background:{fill};" if fill else "")
         name = it.get("name", "")
-        if it.get("key") in lead_keys:
+        if key in lead_keys:
             name = f'{name}<span class="ts-lead-badge">最高</span>'
         trend_n = int(it.get("trend") or 0)
         total_n = int(it.get("total") or 0)
+        mean_html = ""
+        if mean_f is not None and mean_f > 0:
+            mean_left = max(0.0, min(100.0, mean_f / scale * 100.0))
+            mean_html = (
+                f'<div class="ts-hbar-mean" style="left:{mean_left:.1f}%" '
+                f'title="近200日均值 {mean_f:.2f}%"></div>'
+            )
         hbars.append(
             f'''<div class="{" ".join(row_cls)}">
       <div class="ts-hbar-name">{name}</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="{fill_style}"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="{fill_style}"></div>{mean_html}</div>
       <div class="ts-hbar-pct" style="color:{color}">{pct:.1f}%</div>
       <div class="ts-hbar-cnt"><b>{trend_n}</b>/{total_n}</div>
     </div>'''
@@ -3589,10 +3632,10 @@ def render_trend_strength_html(block: dict) -> str:
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势占比</span>
+      <span class="ts-chart-meta">刻度默认10% · 竖线=近200日均值</span>
     </div>
     {"".join(hbars)}
   </div>'''
-
     amt_rows = []
     has_amt = any("amt_above_pct" in it for it in items)
     if has_amt:

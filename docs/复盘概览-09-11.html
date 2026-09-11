@@ -211,6 +211,11 @@
       -45deg, #0a84ff, #0a84ff 4px, #4da3ff 4px, #4da3ff 8px
     );
   }
+  .ts-hbar-mean {
+    position: absolute; top: 0; bottom: 0; width: 2px;
+    background: #1c1c1e; opacity: 0.65; z-index: 2; pointer-events: none;
+    transform: translateX(-50%);
+  }
   .ts-hbar-lead .ts-hbar-track { background: #ffcdd2; }
   .ts-hbar-pct {
     font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
@@ -1041,36 +1046,37 @@
     <div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势占比</span>
+      <span class="ts-chart-meta">刻度默认10% · 竖线=近200日均值</span>
     </div>
     <div class="ts-hbar ts-hbar-all">
       <div class="ts-hbar-name">全场</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:28.9%;"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:15.9%;"></div><div class="ts-hbar-mean" style="left:46.8%" title="近200日均值 4.68%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">1.6%</div>
       <div class="ts-hbar-cnt"><b>88</b>/5532</div>
     </div><div class="ts-hbar">
       <div class="ts-hbar-name">主板</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:31.1%;background:#34C759;"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:17.1%;background:#34C759;"></div><div class="ts-hbar-mean" style="left:45.2%" title="近200日均值 4.52%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">1.7%</div>
       <div class="ts-hbar-cnt"><b>52</b>/3045</div>
     </div><div class="ts-hbar">
       <div class="ts-hbar-name">创业板</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:24.2%;background:#34C759;"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:13.3%;background:#34C759;"></div><div class="ts-hbar-mean" style="left:50.9%" title="近200日均值 5.09%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">1.3%</div>
       <div class="ts-hbar-cnt"><b>18</b>/1356</div>
     </div><div class="ts-hbar">
       <div class="ts-hbar-name">科创板</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:12.2%;background:#34C759;"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:6.7%;background:#34C759;"></div><div class="ts-hbar-mean" style="left:62.1%" title="近200日均值 6.21%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">0.7%</div>
       <div class="ts-hbar-cnt"><b>4</b>/598</div>
     </div><div class="ts-hbar">
       <div class="ts-hbar-name">北交所</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:16.4%;background:#34C759;"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:9.0%;background:#34C759;"></div><div class="ts-hbar-mean" style="left:19.3%" title="近200日均值 1.93%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">0.9%</div>
       <div class="ts-hbar-cnt"><b>3</b>/333</div>
     </div><div class="ts-hbar ts-hbar-lead">
       <div class="ts-hbar-name">ST<span class="ts-lead-badge">最高</span></div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:100.0%;background:#E53935;"></div></div>
-      <div class="ts-hbar-pct" style="color:#34C759">5.5%</div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:55.0%;background:#E53935;"></div><div class="ts-hbar-mean" style="left:39.8%" title="近200日均值 3.98%"></div></div>
+      <div class="ts-hbar-pct" style="color:#E53935">5.5%</div>
       <div class="ts-hbar-cnt"><b>11</b>/200</div>
     </div>
   </div><div class="ts-amt-chart">
@@ -1194,7 +1200,7 @@
     <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode hot"><div class="fwd-tdot hot">AI</div><div class="fwd-tlabel">9/14</div><div class="fwd-tsub">第二届医学人工智能大会（MAIC2nd 2026）</div></div><div class="fwd-tnode"><div class="fwd-tdot">16</div><div class="fwd-tlabel">9/16</div><div class="fwd-tsub">香港首个五年规划9月16日公布</div></div><div class="fwd-tnode"><div class="fwd-tdot">18</div><div class="fwd-tlabel">9/18</div><div class="fwd-tsub">恒生科技指数扩容与改组修订意见咨询截止</div></div><div class="fwd-tnode"><div class="fwd-tdot">20</div><div class="fwd-tlabel">9/20</div><div class="fwd-tsub">国务院关于修改《住房公积金管理条例》的决定正式实施</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item hot"><div class="fwd-cal-date">9/14</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第二届医学人工智能大会（MAIC2nd 2026）</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/16</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">香港首个五年规划9月16日公布</span></div><p class="fwd-cal-note">香港首个五年规划9月16日公布。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/18</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">恒生科技指数扩容与改组修订意见咨询截止</span></div><p class="fwd-cal-note">恒生科技指数扩容与改组修订意见咨询截止。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">9/20</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国务院关于修改《住房公积金管理条例》的决定正式实施</span></div><p class="fwd-cal-note">国务院关于修改《住房公积金管理条例》的决定正式实施。关注相关板块竞价与持续性。</p></div></div></div></div><div class="fwd-themes-wrap"><div class="fwd-block-label">题材方向 <span class="fwd-block-hint">主观判断 · 非算法加权</span></div><div class="dir-grid"><div class="dir-card ok"><div class="dir-card-top"><span class="dir-name">印制电路板/覆铜板</span><span class="pill ok">优先</span></div><div class="dir-drivers"><span class="dir-driver">超声电子五个交易日三板</span><span class="dir-driver">通信板块11家涨停</span><span class="dir-driver">宏昌电子高端覆铜板定增</span><span class="dir-driver">电子布与覆铜板涨价预期</span></div><div class="dir-logic">材料涨价与板厂重新报价叙事共振，盘面由龙头连板向印制电路板群扩散；盘后定增强化高端材料扩产预期。需验证高位封板质量与涨价兑现，避免把一日反弹等同无条件追高。</div></div><div class="dir-card ok"><div class="dir-card-top"><span class="dir-name">人工智能应用/智能体</span><span class="pill ok">可做</span></div><div class="dir-drivers"><span class="dir-driver">DeepSeek V4.1 Flash发布</span><span class="dir-driver">9月14日模型路由切换</span><span class="dir-driver">中新赛克二连板</span><span class="dir-driver">应用与传媒局部涨停</span></div><div class="dir-logic">大模型迭代与路由切换提供近端情绪催化，信息安全与智能体标的局部活跃；弱市下仍属试单级别，需观察复牌窗口的资金承接与成交能否同步放大。</div></div><div class="dir-card warn"><div class="dir-card-top"><span class="dir-name">人工智能基础设施/服务器</span><span class="pill warn">观察</span></div><div class="dir-drivers"><span class="dir-driver">浪潮信息定增不超过90亿元</span><span class="dir-driver">液冷与存算融合项目</span><span class="dir-driver">算力硬件午后反弹</span></div><div class="dir-logic">定增投向新一代人工智能基础设施与液冷算力，偏中军订单与产能线索；审批与落地进度不确定，作观察，跟踪与印制电路板链条的联动。</div></div><div class="dir-card bad"><div class="dir-card-top"><span class="dir-name">绿色电力</span><span class="pill bad">回避</span></div><div class="dir-drivers"><span class="dir-driver">涨停家数回落至3家</span><span class="dir-driver">指数弱势下辨识度下降</span><span class="dir-driver">前一日主线退潮</span></div><div class="dir-logic">由前一日展示主线转为局部残留，两周内优先回避追涨；若封板质量与成交再度验证，再评估是否重回可做。</div></div></div></div><div class="fwd-lead-wrap"><div class="fwd-block-label">研判摘要 <span class="fwd-block-hint">未来2周总览</span></div><div class="fwd-lead"><div class="fwd-lead-row"><span class="fwd-lead-tag peak">节奏峰值</span><p class="fwd-lead-text peak">节奏峰值：近端看9月14日前后大模型路由切换与前期人气标的复牌窗口 · 中期看覆铜板扩产与人工智能基础设施定增对硬件链条的订单与产能验证。</p></div><div class="fwd-lead-row"><span class="fwd-lead-tag">2周主线</span><p class="fwd-lead-text">优先跟踪印制电路板与覆铜板涨价向板厂传导，以及人工智能基础设施定增与大模型路由切换带来的硬件—应用联动；绿电由前一日主线退潮后仅作观察</p></div><div class="fwd-lead-row"><span class="fwd-lead-tag muted">当日背景</span><p class="fwd-lead-text muted">9月11日成交额约1.99万亿元、指数放量探底回升，通信与人工智能应用达到展示门槛，不改变上述日历与优先级</p></div></div></div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-12 00:16</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-12 00:40</div>
 </div>
 </body>
 </html>
