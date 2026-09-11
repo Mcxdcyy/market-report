@@ -2880,7 +2880,6 @@ def render_html(ctx: dict) -> str:
     background: #1c1c1e; opacity: 0.28; z-index: 2; pointer-events: none;
     transform: translateX(-50%);
   }}
-  .ts-hbar-lead .ts-hbar-track {{ background: #ffcdd2; }}
   .ts-hbar-pct {{
     font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;
     letter-spacing: -0.3px; text-align: right;
