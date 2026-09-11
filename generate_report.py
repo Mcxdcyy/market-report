@@ -2913,7 +2913,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch.lo {{ background: #E2C49A; }}
   .ts-amt-swatch.hi {{ background: #9A7EAD; }}
   .ts-amt-row {{
-    display: grid; grid-template-columns: 72px 1fr 96px;
+    display: grid; grid-template-columns: 72px 1fr 78px;
     align-items: center; gap: 10px; margin-bottom: 12px;
   }}
   .ts-amt-row:last-child {{ margin-bottom: 0; }}
@@ -3656,12 +3656,11 @@ def render_trend_strength_html(block: dict) -> str:
     has_amt = any("amt_above_pct" in it for it in items)
     if has_amt:
         for it in items:
-            lo = float(it.get("amt_below_pct") or 0)
-            hi = float(it.get("amt_above_pct") or 0)
-            lo_yi = float(it.get("amt_below_yi") or 0)
-            hi_yi = float(it.get("amt_above_yi") or 0)
             n_lo = int(it.get("n_below") or 0)
             n_hi = int(it.get("n_above") or 0)
+            n_sum = n_lo + n_hi
+            hi = (100.0 * n_hi / n_sum) if n_sum else 0.0
+            lo = (100.0 * n_lo / n_sum) if n_sum else 0.0
             row_cls = "ts-amt-row all" if it.get("key") == "all" else "ts-amt-row"
             segs = []
             if hi > 0:
@@ -3678,26 +3677,17 @@ def render_trend_strength_html(block: dict) -> str:
                 )
             if not segs:
                 segs.append('<div class="ts-amt-seg lo" style="width:100%;opacity:.35"></div>')
-            def _yi_txt(v: float) -> str:
-                if v <= 0:
-                    return "0"
-                if v >= 100:
-                    return f"{v:.0f}"
-                if v >= 10:
-                    return f"{v:.1f}"
-                return f"{v:.2f}"
-
             amt_rows.append(
                 f'''<div class="{row_cls}">
       <div class="ts-amt-name">{it.get("name", "")}</div>
       <div class="ts-amt-stack">{"".join(segs)}</div>
-      <div class="ts-amt-cnt"><span class="hi">{_yi_txt(hi_yi)}</span>/<span class="lo">{_yi_txt(lo_yi)}</span></div>
+      <div class="ts-amt-cnt"><span class="hi">{n_hi}</span>/<span class="lo">{n_lo}</span></div>
     </div>'''
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅强趋势个股 · 成交额加权 · 右侧亿元（≥5亿/&lt;5亿）</span>
+      <span class="ts-chart-meta">仅强趋势个股 · 按家数 · 右侧≥5亿/&lt;5亿</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
