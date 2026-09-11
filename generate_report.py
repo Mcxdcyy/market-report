@@ -2580,7 +2580,7 @@ def render_html(ctx: dict) -> str:
         vol20_html = f'''<div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
-      <span class="vol20-meta">{d0}–{d1} · 单位：万亿 · 最新 {latest_lab}</span>
+      <span class="vol20-meta">{d0}–{d1} · 最新 {latest_lab} 万亿</span>
     </div>
     <div class="vol20-chart">
       <div class="vol20-bars">{vol20_cols}</div>
@@ -3728,7 +3728,6 @@ def render_trend_strength_html(block: dict) -> str:
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅强趋势个股 · 按家数 · 右侧≥5亿/&lt;5亿</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
