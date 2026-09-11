@@ -2913,7 +2913,7 @@ def render_html(ctx: dict) -> str:
   .ts-amt-swatch.lo {{ background: #E2C49A; }}
   .ts-amt-swatch.hi {{ background: #9A7EAD; }}
   .ts-amt-row {{
-    display: grid; grid-template-columns: 72px 1fr;
+    display: grid; grid-template-columns: 72px 1fr 78px;
     align-items: center; gap: 10px; margin-bottom: 12px;
   }}
   .ts-amt-row:last-child {{ margin-bottom: 0; }}
@@ -2935,6 +2935,13 @@ def render_html(ctx: dict) -> str:
   .ts-amt-seg.lo {{ background: #E2C49A; color: #6a542e; }}
   .ts-amt-seg.hi {{ background: #9A7EAD; }}
   .ts-amt-seg span {{ padding: 0 4px; }}
+  .ts-amt-cnt {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; text-align: right;
+    white-space: nowrap;
+  }}
+  .ts-amt-cnt .hi {{ color: #9A7EAD; font-weight: 700; }}
+  .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
   .ts-note {{
     margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
   }}
@@ -3337,6 +3344,7 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-amt-name {{ font-size: 13px; }}
     #sec-ts .ts-amt-stack {{ height: 24px; }}
     #sec-ts .ts-amt-seg {{ font-size: 11px; }}
+    #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3665,12 +3673,13 @@ def render_trend_strength_html(block: dict) -> str:
                 f'''<div class="{row_cls}">
       <div class="ts-amt-name">{it.get("name", "")}</div>
       <div class="ts-amt-stack">{"".join(segs)}</div>
+      <div class="ts-amt-cnt"><span class="hi">{n_hi}</span>/<span class="lo">{n_lo}</span></div>
     </div>'''
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势股成交额结构</span>
-      <span class="ts-chart-meta">仅强趋势个股 · 成交额加权</span>
+      <span class="ts-chart-meta">仅强趋势个股 · 成交额加权 · 右侧家数≥5亿/&lt;5亿</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
