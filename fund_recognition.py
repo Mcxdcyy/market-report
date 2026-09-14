@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""资金认可度：开盘啦近30日涨停板块整合池 × 近20日均线认可占比。
+"""板块-资金认可度：开盘啦近30日涨停板块整合池 × 近30日均线认可占比。
 
 口径：
 - 板块：近 30 个交易日开盘啦涨停原因中出现过的全部板块
 - 个股池：该板块 30 日内曾上榜代码去重
 - 按日：池内成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
-- 结果：每板块近 20 个交易日序列
+- 结果：每板块近 30 个交易日序列
 """
 
 from __future__ import annotations
@@ -30,9 +30,9 @@ BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "fund_recognition_results"
 DATA_FILE = BASE / "大盘数据.numbers"
 POOL_DAYS = 30
-SERIES_DAYS = 20
+SERIES_DAYS = 30
 AMOUNT_MIN = 3e8  # 3 亿元
-KLINE_NEED = 40  # MA10 + 20 日余量
+KLINE_NEED = 50  # MA10 + 30 日余量
 WORKERS = 48
 
 
@@ -132,7 +132,7 @@ def build_sector_pools(
 
 
 def fetch_klines_long(code: str, as_of: date) -> list[dict]:
-    """拉取足够覆盖近20日+MA10 的日 K（含成交额）。"""
+    """拉取足够覆盖近30日+MA10 的日 K（含成交额）。"""
     sym = ts.sina_symbol(code)
     url = (
         "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newfqkline/get"
@@ -279,7 +279,9 @@ def compute_fund_recognition(
     if out_path.exists() and not force:
         try:
             cached = json.loads(out_path.read_text(encoding="utf-8"))
-            if cached.get("items"):
+            items = cached.get("items") or []
+            n_ser = len((items[0].get("series") or [])) if items else 0
+            if items and n_ser >= SERIES_DAYS:
                 return cached
         except json.JSONDecodeError:
             pass
@@ -290,7 +292,7 @@ def compute_fund_recognition(
         return {
             "as_of": as_of_d.isoformat(),
             "items": [],
-            "note": "交易日不足，暂无资金认可度",
+            "note": "交易日不足，暂无板块-资金认可度",
         }
 
     if progress:

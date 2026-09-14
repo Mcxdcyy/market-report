@@ -3339,7 +3339,7 @@ def render_html(ctx: dict) -> str:
     margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
   }}
 
-  /* ── 资金认可度 ── */
+  /* ── 板块-资金认可度 ── */
   .fund-tip {{
     margin: 0 0 12px; padding: 0;
     background: none; border: none;
@@ -3926,7 +3926,7 @@ def render_html(ctx: dict) -> str:
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
-      <a href="#sec-fund">资金认可度</a>
+      <a href="#sec-fund">板块-资金认可度</a>
     </nav>
   </header>
 
@@ -3997,11 +3997,11 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 7 资金认可度 -->
+  <!-- 7 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
       <div class="section-num">7</div>
-      <div class="section-title">资金认可度</div>
+      <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
     <div class="fund-tip"><span class="fund-tip-a">【强势票占比很高】：也有可能突然一下崩。</span><span class="fund-tip-b">——重点看「核心票」。</span></div>
@@ -4522,7 +4522,7 @@ def load_fund_recognition_block(
     as_of: datetime,
     latest_dt: datetime | None = None,
 ) -> dict:
-    """模块「资金认可度」：优先读缓存；最新交易日可联网重算。"""
+    """模块「板块-资金认可度」：优先读缓存；最新交易日可联网重算。"""
     as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
     result_path = BASE / "fund_recognition_results" / f"{as_of_d.isoformat()}.json"
     latest_d = None
@@ -4540,11 +4540,11 @@ def load_fund_recognition_block(
         return {
             "as_of": as_of_d.isoformat(),
             "items": [],
-            "note": "该日暂无资金认可度缓存",
+            "note": "该日暂无板块-资金认可度缓存",
         }
 
     if compute_fund_recognition is None:
-        return {"as_of": as_of_d.isoformat(), "items": [], "note": "资金认可度模块未安装"}
+        return {"as_of": as_of_d.isoformat(), "items": [], "note": "板块-资金认可度模块未安装"}
     return compute_fund_recognition(as_of_d, force=False, progress=True)
 
 
@@ -4615,7 +4615,7 @@ def render_fund_recognition_html(block: dict) -> str:
     items.sort(key=_sort_key)
 
     if not items:
-        note = block.get("note") or "暂无资金认可度数据"
+        note = block.get("note") or "暂无板块-资金认可度数据"
         return f'<div class="news-empty">{note}</div>'
 
     cards = []
@@ -4688,10 +4688,10 @@ def render_fund_recognition_html(block: dict) -> str:
 
     note = (
         '<div class="fund-note">'
-        "资金认可度：近30个交易日开盘啦涨停板块整合个股池"
+        "板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池"
         "（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；"
         "自报表日起连续10个交易日占比均低于50%不展示）；"
-        "近20个交易日每日统计——"
+        "近30个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
@@ -4817,7 +4817,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
         fund_range = (
             f"{fund_recognition['series_start'][5:].replace('-', '/')}–"
-            f"{fund_recognition['series_end'][5:].replace('-', '/')} · 近20日占比"
+            f"{fund_recognition['series_end'][5:].replace('-', '/')} · 近30日占比"
         )
 
     return {
