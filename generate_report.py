@@ -752,14 +752,14 @@ def _render_vol_bars_block(
     dense: bool = False,
     after_html: str = "",
 ) -> str:
-    """成交金额柱图 HTML 块；dense=True 用于 90 日等长窗口（隐藏柱顶数字、柱更细）。"""
+    """成交金额柱图 HTML 块；dense=True 用于 90 日趋势（无最新值、无红绿、柱更细）。"""
     if not bars:
         return ""
     cols = "".join(
         f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
       <div class="vol20-val">{b["label"]}</div>
       <div class="vol20-bar-track">
-        <div class="vol20-bar {b["tag"]}" style="height:{b["height_pct"]}%"></div>
+        <div class="vol20-bar{" " + b["tag"] if not dense else ""}" style="height:{b["height_pct"]}%"></div>
       </div>
     </div>'''
         for b in bars
@@ -770,12 +770,12 @@ def _render_vol_bars_block(
         for b in bars
     )
     d0, d1 = bars[0]["date"], bars[-1]["date"]
-    latest_lab = bars[-1]["label"]
+    meta = f"{d0}–{d1}" if dense else f"{d0}–{d1} · 最新 {bars[-1]['label']} 万亿"
     wrap_cls = "vol20-wrap vol90" if dense else "vol20-wrap"
     return f'''<div class="{wrap_cls}">
     <div class="vol20-head">
       <span class="vol20-title">{title}</span>
-      <span class="vol20-meta">{d0}–{d1} · 最新 {latest_lab} 万亿</span>
+      <span class="vol20-meta">{meta}</span>
     </div>
     <div class="vol20-chart">
       <div class="vol20-bars">{cols}</div>
@@ -3424,7 +3424,9 @@ def render_html(ctx: dict) -> str:
   .vol20-wrap.vol90 .vol20-bars {{ height: 118px; gap: 1px; }}
   .vol20-wrap.vol90 .vol20-bar {{
     width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
+    background: #8e8e93;
   }}
+  .vol20-wrap.vol90 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol90 .vol20-axis {{ gap: 1px; }}
   .vol20-head {{
     display: flex; align-items: baseline; justify-content: space-between;
