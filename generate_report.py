@@ -4790,22 +4790,32 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     dim = compute_six_dim(row, work)
     trend_days, trend_headline = analyze_10d(last10, work)
     trend_range = f"{fmt_md(last10.iloc[0]['date'])}–{fmt_md(last10.iloc[-1]['date'])}"
-    vol20_bars = build_vol20_bars(work, 30)
+    # 近30日成交金额 + 量能120日趋势：同用开盘啦「实际量能（沪深京）」
+    vol20_bars: list[dict] = []
     vol120_bars: list[dict] = []
     try:
         from fetch_kpl_volume import ensure_kpl_volume_series
 
         as_of_d = dt.date() if hasattr(dt, "date") else dt
+        # 121 = 120 窗口 + 1 日前日（首柱着色）；30 日同序列截取
         kpl_rows = ensure_kpl_volume_series(as_of_d, n=121, force=False, progress=True)
-        if len(kpl_rows) > 120:
-            prior_amt = float(kpl_rows[-(120 + 1)].get("amount_yi") or 0) or None
-            use_rows = kpl_rows[-120:]
-        else:
-            prior_amt = None
-            use_rows = kpl_rows
-        vol120_bars = build_vol_bars_from_amounts(use_rows, prior_amount=prior_amt)
+
+        def _slice_vol_bars(rows: list[dict], n: int) -> list[dict]:
+            if not rows:
+                return []
+            if len(rows) > n:
+                prior = float(rows[-(n + 1)].get("amount_yi") or 0) or None
+                use = rows[-n:]
+            else:
+                prior = None
+                use = rows
+            return build_vol_bars_from_amounts(use, prior_amount=prior)
+
+        vol20_bars = _slice_vol_bars(kpl_rows, 30)
+        vol120_bars = _slice_vol_bars(kpl_rows, 120)
     except Exception as exc:  # noqa: BLE001
-        print(f"[kpl-vol] 量能120日趋势拉取失败: {exc}")
+        print(f"[kpl-vol] 开盘啦实际量能拉取失败，近30日回退表格成交额: {exc}")
+        vol20_bars = build_vol20_bars(work, 30)
         vol120_bars = []
     dims = analyze_3d(work, row)
     env_callout = build_env_callout(row, work, dim, dims)
