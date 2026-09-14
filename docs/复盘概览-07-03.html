@@ -299,11 +299,15 @@
   .fund-card-meta { font-size: 11px; color: var(--muted); }
   .fund-chart { width: 100%; }
   .fund-bars {
-    display: flex; align-items: flex-end; gap: 2px; height: 88px;
+    position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
     width: 100%;
   }
+  .fund-mark {
+    position: absolute; left: 0; right: 0; bottom: 50%; height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.12); pointer-events: none; z-index: 1;
+  }
   .fund-col {
-    flex: 1; min-width: 0; height: 100%;
+    flex: 1; min-width: 0; height: 100%; position: relative; z-index: 2;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   }
   .fund-bar-track {
@@ -1252,7 +1256,7 @@
     <div class="news-empty">该日暂无资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 11:54</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 12:06</div>
 </div>
 </body>
 </html>

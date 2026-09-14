@@ -2970,11 +2970,15 @@ def render_html(ctx: dict) -> str:
   .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
   .fund-chart {{ width: 100%; }}
   .fund-bars {{
-    display: flex; align-items: flex-end; gap: 2px; height: 88px;
+    position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
     width: 100%;
   }}
+  .fund-mark {{
+    position: absolute; left: 0; right: 0; bottom: 50%; height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.12); pointer-events: none; z-index: 1;
+  }}
   .fund-col {{
-    flex: 1; min-width: 0; height: 100%;
+    flex: 1; min-width: 0; height: 100%; position: relative; z-index: 2;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   }}
   .fund-bar-track {{
@@ -3842,7 +3846,8 @@ def load_fund_recognition_block(
 
 
 def render_fund_recognition_html(block: dict) -> str:
-    items = block.get("items") or []
+    # 展示过滤：池内个股数 < 10 不展示
+    items = [it for it in (block.get("items") or []) if int(it.get("pool_n") or 0) >= 10]
     if not items:
         note = block.get("note") or "暂无资金认可度数据"
         return f'<div class="news-empty">{note}</div>'
@@ -3893,7 +3898,7 @@ def render_fund_recognition_html(block: dict) -> str:
       <span class="fund-card-meta">{meta}</span>
     </div>
     <div class="fund-chart">
-      <div class="fund-bars">{"".join(cols)}</div>
+      <div class="fund-bars"><div class="fund-mark" aria-hidden="true"></div>{"".join(cols)}</div>
       <div class="fund-axis">{"".join(ticks)}</div>
     </div>
   </div>'''
@@ -3901,9 +3906,10 @@ def render_fund_recognition_html(block: dict) -> str:
 
     note = (
         '<div class="fund-note">'
-        "资金认可度：近30个交易日开盘啦涨停板块整合个股池；近20个交易日每日统计——"
+        "资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示）；"
+        "近20个交易日每日统计——"
         "成交额大于3亿元的个股中，收盘价同时在五日线与十日线上方的占比。"
-        "分母为当日成交额大于3亿元家数；无样本日不画柱。"
+        "分母为当日成交额大于3亿元家数；无样本日不画柱。柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
