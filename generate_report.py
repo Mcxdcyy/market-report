@@ -1338,7 +1338,7 @@ def load_market_news(
         "post_close": [],
         "curate_stats": {},
         "has_data": False,
-        "hint": f"请在 market_news.json 中补充 {key}（top_sectors + post_close_pool + direction_analysis；codes/stocks 含创业板/科创板，剔除ST）",
+        "hint": f"请在 market_news.json 中补充 {key}（top_sectors + post_close_pool；codes/stocks 含创业板/科创板，剔除ST）",
     }
     if not NEWS_FILE.exists():
         empty["hint"] = "尚未创建 market_news.json，可在项目目录新建并填写当日消息"
@@ -2687,36 +2687,8 @@ def _parse_summary_sections(summary: str, rhythm: str) -> tuple[str, str]:
 
 
 def _render_fwd_lead_html(peak: str, summary: str, rhythm: str) -> str:
-    """研判摘要：节奏峰值 + 2周主线 + 当日背景（置于模块末尾）。"""
-    outlook, today_note = _parse_summary_sections(summary, rhythm)
-    rows: list[str] = []
-    if peak:
-        peak_line = re.sub(r"[;；]", " · ", peak)
-        rows.append(
-            '<div class="fwd-lead-row">'
-            '<span class="fwd-lead-tag peak">节奏峰值</span>'
-            f'<p class="fwd-lead-text peak">{peak_line}</p></div>'
-        )
-    if outlook:
-        rows.append(
-            '<div class="fwd-lead-row">'
-            '<span class="fwd-lead-tag">2周主线</span>'
-            f'<p class="fwd-lead-text">{outlook}</p></div>'
-        )
-    if today_note:
-        rows.append(
-            '<div class="fwd-lead-row">'
-            '<span class="fwd-lead-tag muted">当日背景</span>'
-            f'<p class="fwd-lead-text muted">{today_note}</p></div>'
-        )
-    if not rows:
-        return ""
-    return (
-        '<div class="fwd-lead-wrap">'
-        '<div class="fwd-block-label">研判摘要 '
-        '<span class="fwd-block-hint">未来2周总览</span></div>'
-        f'<div class="fwd-lead">{"".join(rows)}</div></div>'
-    )
+    """研判摘要已删除，不再渲染（保留函数供旧调用兼容）。"""
+    return ""
 
 
 def _timeline_nodes_from_cal(cal_items: list[dict], peak: str) -> list[dict]:
@@ -2796,8 +2768,8 @@ def render_fwd_section_html(
     directions: list,
     as_of: datetime | None = None,
 ) -> tuple[str, str]:
-    """未来2周模块：事件详情 → 研判摘要（已删除时间轴与题材方向卡片）。"""
-    lead_html = _render_fwd_lead_html(peak, summary, rhythm)
+    """未来2周模块：仅事件列表（已删除研判摘要、时间轴、题材方向卡片）。"""
+    _ = summary  # 兼容旧入参；页面不再展示研判摘要
 
     # ── 融合日历（事件库 + 节奏补点；跳过已过期节点）──
     cal_items: list[dict] = []
@@ -2865,8 +2837,7 @@ def render_fwd_section_html(
         if cal_rows else ""
     )
 
-    body = f"{cal_html}{lead_html}"
-    return body, lead_html
+    return cal_html, ""
 
 
 def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
@@ -3747,27 +3718,6 @@ def render_html(ctx: dict) -> str:
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
-  .fwd-lead-wrap {{ margin-top: 16px; }}
-  .fwd-lead {{
-    padding: 12px 14px;
-    background: linear-gradient(180deg, #f8f9fc 0%, #fff 100%);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    display: flex; flex-direction: column; gap: 12px;
-  }}
-  .fwd-lead-row {{
-    display: grid; grid-template-columns: 68px 1fr; gap: 8px 10px; align-items: start;
-  }}
-  .fwd-lead-tag {{
-    font-size: 10px; font-weight: 700; letter-spacing: .2px;
-    color: var(--muted); padding-top: 2px; line-height: 1.4;
-  }}
-  .fwd-lead-tag.peak {{ color: #b25000; }}
-  .fwd-lead-tag.muted {{ color: #8e8e93; }}
-  .fwd-lead-text {{
-    margin: 0; font-size: 13px; line-height: 1.7; color: var(--text);
-  }}
-  .fwd-lead-text.peak {{ font-weight: 600; color: #b25000; }}
-  .fwd-lead-text.muted {{ color: var(--sub); }}
   .fwd-block-label {{
     font-size: 11px; font-weight: 700; color: var(--muted);
     letter-spacing: .3px; margin-bottom: 10px;
@@ -3934,9 +3884,6 @@ def render_html(ctx: dict) -> str:
     .event-note {{ font-size: 13px; }}
     .event-block-title {{ font-size: 16px; }}
     .event-block-body {{ font-size: 14px; }}
-    .fwd-lead-text {{ font-size: 15px; line-height: 1.75; }}
-    .fwd-lead-row {{ grid-template-columns: 1fr; gap: 4px; }}
-    .fwd-lead-tag {{ padding-top: 0; }}
     .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
     .fwd-cal-title {{ font-size: 15px; line-height: 1.5; }}
     .fwd-cal-note {{ font-size: 14px; line-height: 1.55; margin-top: 3px; }}
