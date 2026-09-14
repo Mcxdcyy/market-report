@@ -3949,7 +3949,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">2</div>
       <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 近120日追高池均值</div>
+      <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近30日</div>
     </div>
     {chase_sentiment_html}
   </div>
@@ -4605,9 +4605,10 @@ def render_chase_sentiment_html(block: dict) -> str:
     note = (
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
-        "追高数量：当日追高池家数的近2日均值（今日与昨日算术平均）。"
-        "昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。"
-        "今追-回落指数：取当日追高池，计算(今收−今高)/今高。"
+        "追高数量：近120日，当日追高池家数的近2日均值（今日与昨日算术平均）。"
+        "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日；"
+        "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
+        "回落取当日追高池，计算(今收−今高)/今高。"
         "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
         "不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
