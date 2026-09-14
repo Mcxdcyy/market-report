@@ -535,19 +535,11 @@
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }
-  /* 追高数量：自底部起柱，较前日红增绿减 */
+  /* 追高数量：自底部起柱，统一中性灰（只看趋势） */
   .chase-chart.is-count .chase-zero { display: none; }
   .chase-chart.is-count .chase-bar {
     bottom: 0; top: auto; transform: translateX(-50%);
     border-radius: 1px 1px 0 0;
-  }
-  .chase-chart.is-count .chase-bar.pos {
-    background: var(--bar-ok, #E53935);
-  }
-  .chase-chart.is-count .chase-bar.neg {
-    background: var(--bar-bad, #34C759);
-  }
-  .chase-chart.is-count .chase-bar.flat {
     background: #8e8e93;
   }
   .chase-axis {
@@ -1827,369 +1819,369 @@
     <div class="chase-grid"><div class="chase-chart is-count">
     <div class="chase-chart-head">
       <span class="chase-chart-title">主板追高数量</span>
-      <span class="chase-chart-meta">最新 136 家</span>
+      <span class="chase-chart-meta">最新 111.5 家</span>
     </div>
     <div class="chase-plot">
-      <div class="chase-bars"><div class="chase-col" title="3/24 周二 · 256家">
-      <div class="chase-val flat">256</div>
-      <div class="chase-track"><div class="chase-bar flat" style="height:48.0%"></div></div>
-    </div><div class="chase-col" title="3/25 周三 · 225家">
-      <div class="chase-val neg">225</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:40.3%"></div></div>
-    </div><div class="chase-col" title="3/26 周四 · 113家">
-      <div class="chase-val neg">113</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.3%"></div></div>
-    </div><div class="chase-col" title="3/27 周五 · 174家">
-      <div class="chase-val pos">174</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:27.5%"></div></div>
-    </div><div class="chase-col" title="3/30 周一 · 127家">
-      <div class="chase-val neg">127</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.8%"></div></div>
-    </div><div class="chase-col" title="3/31 周二 · 114家">
-      <div class="chase-val neg">114</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="4/1 周三 · 175家">
-      <div class="chase-val pos">175</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:27.8%"></div></div>
-    </div><div class="chase-col" title="4/2 周四 · 87家">
-      <div class="chase-val neg">87</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:5.8%"></div></div>
-    </div><div class="chase-col" title="4/3 周五 · 78家">
-      <div class="chase-val neg">78</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:3.6%"></div></div>
-    </div><div class="chase-col" title="4/7 周二 · 195家">
-      <div class="chase-val pos">195</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:32.8%"></div></div>
-    </div><div class="chase-col" title="4/8 周三 · 322家">
-      <div class="chase-val pos">322</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:64.5%"></div></div>
-    </div><div class="chase-col" title="4/9 周四 · 115家">
-      <div class="chase-val neg">115</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.8%"></div></div>
-    </div><div class="chase-col" title="4/10 周五 · 150家">
-      <div class="chase-val pos">150</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:21.5%"></div></div>
-    </div><div class="chase-col" title="4/13 周一 · 137家">
-      <div class="chase-val neg">137</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:18.3%"></div></div>
-    </div><div class="chase-col" title="4/14 周二 · 126家">
-      <div class="chase-val neg">126</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.6%"></div></div>
-    </div><div class="chase-col" title="4/15 周三 · 131家">
-      <div class="chase-val pos">131</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:16.8%"></div></div>
-    </div><div class="chase-col" title="4/16 周四 · 173家">
-      <div class="chase-val pos">173</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:27.3%"></div></div>
-    </div><div class="chase-col" title="4/17 周五 · 142家">
-      <div class="chase-val neg">142</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:19.6%"></div></div>
-    </div><div class="chase-col" title="4/20 周一 · 176家">
-      <div class="chase-val pos">176</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:28.0%"></div></div>
-    </div><div class="chase-col" title="4/21 周二 · 128家">
-      <div class="chase-val neg">128</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:16.1%"></div></div>
-    </div><div class="chase-col" title="4/22 周三 · 135家">
-      <div class="chase-val pos">135</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:17.8%"></div></div>
-    </div><div class="chase-col" title="4/23 周四 · 139家">
-      <div class="chase-val pos">139</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:18.8%"></div></div>
-    </div><div class="chase-col" title="4/24 周五 · 142家">
-      <div class="chase-val pos">142</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:19.6%"></div></div>
-    </div><div class="chase-col" title="4/27 周一 · 169家">
-      <div class="chase-val pos">169</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:26.3%"></div></div>
-    </div><div class="chase-col" title="4/28 周二 · 127家">
-      <div class="chase-val neg">127</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.8%"></div></div>
-    </div><div class="chase-col" title="4/29 周三 · 217家">
-      <div class="chase-val pos">217</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:38.3%"></div></div>
-    </div><div class="chase-col" title="4/30 周四 · 178家">
-      <div class="chase-val neg">178</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:28.5%"></div></div>
-    </div><div class="chase-col" title="5/6 周三 · 232家">
-      <div class="chase-val pos">232</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:42.0%"></div></div>
-    </div><div class="chase-col" title="5/7 周四 · 234家">
-      <div class="chase-val pos">234</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:42.5%"></div></div>
-    </div><div class="chase-col" title="5/8 周五 · 222家">
-      <div class="chase-val neg">222</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:39.5%"></div></div>
-    </div><div class="chase-col" title="5/11 周一 · 217家">
-      <div class="chase-val neg">217</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:38.3%"></div></div>
-    </div><div class="chase-col" title="5/12 周二 · 126家">
-      <div class="chase-val neg">126</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.6%"></div></div>
-    </div><div class="chase-col" title="5/13 周三 · 212家">
-      <div class="chase-val pos">212</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:37.0%"></div></div>
-    </div><div class="chase-col" title="5/14 周四 · 150家">
-      <div class="chase-val neg">150</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:21.5%"></div></div>
-    </div><div class="chase-col" title="5/15 周五 · 181家">
-      <div class="chase-val pos">181</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:29.3%"></div></div>
-    </div><div class="chase-col" title="5/18 周一 · 177家">
-      <div class="chase-val neg">177</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:28.3%"></div></div>
-    </div><div class="chase-col" title="5/19 周二 · 171家">
-      <div class="chase-val neg">171</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:26.8%"></div></div>
-    </div><div class="chase-col" title="5/20 周三 · 142家">
-      <div class="chase-val neg">142</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:19.6%"></div></div>
-    </div><div class="chase-col" title="5/21 周四 · 207家">
-      <div class="chase-val pos">207</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:35.8%"></div></div>
-    </div><div class="chase-col" title="5/22 周五 · 249家">
-      <div class="chase-val pos">249</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:46.3%"></div></div>
-    </div><div class="chase-col" title="5/25 周一 · 251家">
-      <div class="chase-val pos">251</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:46.8%"></div></div>
-    </div><div class="chase-col" title="5/26 周二 · 156家">
-      <div class="chase-val neg">156</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:23.0%"></div></div>
-    </div><div class="chase-col" title="5/27 周三 · 149家">
-      <div class="chase-val neg">149</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:21.3%"></div></div>
-    </div><div class="chase-col" title="5/28 周四 · 188家">
-      <div class="chase-val pos">188</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:31.0%"></div></div>
-    </div><div class="chase-col" title="5/29 周五 · 216家">
-      <div class="chase-val pos">216</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:38.0%"></div></div>
-    </div><div class="chase-col" title="6/1 周一 · 289家">
-      <div class="chase-val pos">289</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:56.3%"></div></div>
-    </div><div class="chase-col" title="6/2 周二 · 150家">
-      <div class="chase-val neg">150</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:21.5%"></div></div>
-    </div><div class="chase-col" title="6/3 周三 · 219家">
-      <div class="chase-val pos">219</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:38.8%"></div></div>
-    </div><div class="chase-col" title="6/4 周四 · 165家">
-      <div class="chase-val neg">165</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:25.3%"></div></div>
-    </div><div class="chase-col" title="6/5 周五 · 225家">
-      <div class="chase-val pos">225</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:40.3%"></div></div>
-    </div><div class="chase-col" title="6/8 周一 · 118家">
-      <div class="chase-val neg">118</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:13.6%"></div></div>
-    </div><div class="chase-col" title="6/9 周二 · 233家">
-      <div class="chase-val pos">233</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:42.3%"></div></div>
-    </div><div class="chase-col" title="6/10 周三 · 154家">
-      <div class="chase-val neg">154</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:22.5%"></div></div>
-    </div><div class="chase-col" title="6/11 周四 · 153家">
-      <div class="chase-val neg">153</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:22.3%"></div></div>
-    </div><div class="chase-col" title="6/12 周五 · 329家">
-      <div class="chase-val pos">329</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:66.3%"></div></div>
-    </div><div class="chase-col" title="6/15 周一 · 352家">
-      <div class="chase-val pos">352</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:72.0%"></div></div>
-    </div><div class="chase-col" title="6/16 周二 · 246家">
-      <div class="chase-val neg">246</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:45.5%"></div></div>
-    </div><div class="chase-col" title="6/17 周三 · 180家">
-      <div class="chase-val neg">180</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:29.0%"></div></div>
-    </div><div class="chase-col" title="6/18 周四 · 200家">
-      <div class="chase-val pos">200</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:34.0%"></div></div>
-    </div><div class="chase-col" title="6/22 周一 · 291家">
-      <div class="chase-val pos">291</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:56.8%"></div></div>
-    </div><div class="chase-col" title="6/23 周二 · 275家">
-      <div class="chase-val neg">275</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:52.8%"></div></div>
-    </div><div class="chase-col" title="6/24 周三 · 196家">
-      <div class="chase-val neg">196</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:33.0%"></div></div>
-    </div><div class="chase-col" title="6/25 周四 · 212家">
-      <div class="chase-val pos">212</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:37.0%"></div></div>
-    </div><div class="chase-col" title="6/26 周五 · 169家">
-      <div class="chase-val neg">169</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:26.3%"></div></div>
-    </div><div class="chase-col" title="6/29 周一 · 257家">
-      <div class="chase-val pos">257</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:48.3%"></div></div>
-    </div><div class="chase-col" title="6/30 周二 · 287家">
-      <div class="chase-val pos">287</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:55.8%"></div></div>
-    </div><div class="chase-col" title="7/1 周三 · 414家">
-      <div class="chase-val pos">414</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:87.5%"></div></div>
-    </div><div class="chase-col" title="7/2 周四 · 250家">
-      <div class="chase-val neg">250</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:46.5%"></div></div>
-    </div><div class="chase-col" title="7/3 周五 · 299家">
-      <div class="chase-val pos">299</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:58.8%"></div></div>
-    </div><div class="chase-col" title="7/6 周一 · 205家">
-      <div class="chase-val neg">205</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:35.3%"></div></div>
-    </div><div class="chase-col" title="7/7 周二 · 110家">
-      <div class="chase-val neg">110</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:11.6%"></div></div>
-    </div><div class="chase-col" title="7/8 周三 · 106家">
-      <div class="chase-val neg">106</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:10.6%"></div></div>
-    </div><div class="chase-col" title="7/9 周四 · 170家">
-      <div class="chase-val pos">170</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:26.5%"></div></div>
-    </div><div class="chase-col" title="7/10 周五 · 359家">
-      <div class="chase-val pos">359</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:73.8%"></div></div>
-    </div><div class="chase-col" title="7/13 周一 · 100家">
-      <div class="chase-val neg">100</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:9.1%"></div></div>
-    </div><div class="chase-col" title="7/14 周二 · 199家">
-      <div class="chase-val pos">199</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:33.8%"></div></div>
-    </div><div class="chase-col" title="7/15 周三 · 216家">
-      <div class="chase-val pos">216</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:38.0%"></div></div>
-    </div><div class="chase-col" title="7/16 周四 · 128家">
-      <div class="chase-val neg">128</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:16.1%"></div></div>
-    </div><div class="chase-col" title="7/17 周五 · 79家">
-      <div class="chase-val neg">79</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:3.8%"></div></div>
-    </div><div class="chase-col" title="7/20 周一 · 202家">
-      <div class="chase-val pos">202</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:34.5%"></div></div>
-    </div><div class="chase-col" title="7/21 周二 · 236家">
-      <div class="chase-val pos">236</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:43.0%"></div></div>
-    </div><div class="chase-col" title="7/22 周三 · 159家">
-      <div class="chase-val neg">159</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:23.8%"></div></div>
-    </div><div class="chase-col" title="7/23 周四 · 241家">
-      <div class="chase-val pos">241</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:44.3%"></div></div>
-    </div><div class="chase-col" title="7/24 周五 · 80家">
-      <div class="chase-val neg">80</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:4.1%"></div></div>
-    </div><div class="chase-col" title="7/27 周一 · 228家">
-      <div class="chase-val pos">228</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:41.0%"></div></div>
-    </div><div class="chase-col" title="7/28 周二 · 121家">
-      <div class="chase-val neg">121</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:14.3%"></div></div>
-    </div><div class="chase-col" title="7/29 周三 · 153家">
-      <div class="chase-val pos">153</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:22.3%"></div></div>
-    </div><div class="chase-col" title="7/30 周四 · 124家">
-      <div class="chase-val neg">124</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.1%"></div></div>
-    </div><div class="chase-col" title="7/31 周五 · 464家">
-      <div class="chase-val pos">464</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:100.0%"></div></div>
-    </div><div class="chase-col" title="8/3 周一 · 153家">
-      <div class="chase-val neg">153</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:22.3%"></div></div>
-    </div><div class="chase-col" title="8/4 周二 · 254家">
-      <div class="chase-val pos">254</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:47.5%"></div></div>
-    </div><div class="chase-col" title="8/5 周三 · 277家">
-      <div class="chase-val pos">277</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:53.3%"></div></div>
-    </div><div class="chase-col" title="8/6 周四 · 163家">
-      <div class="chase-val neg">163</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:24.8%"></div></div>
-    </div><div class="chase-col" title="8/7 周五 · 164家">
-      <div class="chase-val pos">164</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:25.0%"></div></div>
-    </div><div class="chase-col" title="8/10 周一 · 194家">
-      <div class="chase-val pos">194</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:32.5%"></div></div>
-    </div><div class="chase-col" title="8/11 周二 · 122家">
-      <div class="chase-val neg">122</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:14.6%"></div></div>
-    </div><div class="chase-col" title="8/12 周三 · 156家">
-      <div class="chase-val pos">156</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:23.0%"></div></div>
-    </div><div class="chase-col" title="8/13 周四 · 147家">
-      <div class="chase-val neg">147</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:20.8%"></div></div>
-    </div><div class="chase-col" title="8/14 周五 · 112家">
-      <div class="chase-val neg">112</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.1%"></div></div>
-    </div><div class="chase-col" title="8/17 周一 · 181家">
-      <div class="chase-val pos">181</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:29.3%"></div></div>
-    </div><div class="chase-col" title="8/18 周二 · 149家">
-      <div class="chase-val neg">149</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:21.3%"></div></div>
-    </div><div class="chase-col" title="8/19 周三 · 75家">
-      <div class="chase-val neg">75</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:2.8%"></div></div>
-    </div><div class="chase-col" title="8/20 周四 · 190家">
-      <div class="chase-val pos">190</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:31.5%"></div></div>
-    </div><div class="chase-col" title="8/21 周五 · 114家">
-      <div class="chase-val neg">114</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="8/24 周一 · 110家">
-      <div class="chase-val neg">110</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:11.6%"></div></div>
-    </div><div class="chase-col" title="8/25 周二 · 148家">
-      <div class="chase-val pos">148</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:21.0%"></div></div>
-    </div><div class="chase-col" title="8/26 周三 · 123家">
-      <div class="chase-val neg">123</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:14.8%"></div></div>
-    </div><div class="chase-col" title="8/27 周四 · 154家">
-      <div class="chase-val pos">154</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:22.5%"></div></div>
-    </div><div class="chase-col" title="8/28 周五 · 156家">
-      <div class="chase-val pos">156</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:23.0%"></div></div>
-    </div><div class="chase-col" title="8/31 周一 · 173家">
-      <div class="chase-val pos">173</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:27.3%"></div></div>
-    </div><div class="chase-col" title="9/1 周二 · 160家">
-      <div class="chase-val neg">160</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:24.0%"></div></div>
-    </div><div class="chase-col" title="9/2 周三 · 114家">
-      <div class="chase-val neg">114</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="9/3 周四 · 133家">
-      <div class="chase-val pos">133</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:17.3%"></div></div>
-    </div><div class="chase-col" title="9/4 周五 · 153家">
-      <div class="chase-val pos">153</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:22.3%"></div></div>
-    </div><div class="chase-col" title="9/7 周一 · 192家">
-      <div class="chase-val pos">192</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:32.0%"></div></div>
-    </div><div class="chase-col" title="9/8 周二 · 170家">
-      <div class="chase-val neg">170</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:26.5%"></div></div>
-    </div><div class="chase-col" title="9/9 周三 · 126家">
-      <div class="chase-val neg">126</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.6%"></div></div>
-    </div><div class="chase-col" title="9/10 周四 · 95家">
-      <div class="chase-val neg">95</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.8%"></div></div>
-    </div><div class="chase-col" title="9/11 周五 · 87家">
-      <div class="chase-val neg">87</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:5.8%"></div></div>
-    </div><div class="chase-col latest" title="9/14 周一 · 136家">
-      <div class="chase-val pos">136</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:18.1%"></div></div>
+      <div class="chase-bars"><div class="chase-col" title="3/24 周二 · 近2日均166.5家 · 当日256家">
+      <div class="chase-val">166.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:34.4%"></div></div>
+    </div><div class="chase-col" title="3/25 周三 · 近2日均240.5家 · 当日225家">
+      <div class="chase-val">240.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:60.8%"></div></div>
+    </div><div class="chase-col" title="3/26 周四 · 近2日均169家 · 当日113家">
+      <div class="chase-val">169</div>
+      <div class="chase-track"><div class="chase-bar" style="height:35.3%"></div></div>
+    </div><div class="chase-col" title="3/27 周五 · 近2日均143.5家 · 当日174家">
+      <div class="chase-val">143.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.2%"></div></div>
+    </div><div class="chase-col" title="3/30 周一 · 近2日均150.5家 · 当日127家">
+      <div class="chase-val">150.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.7%"></div></div>
+    </div><div class="chase-col" title="3/31 周二 · 近2日均120.5家 · 当日114家">
+      <div class="chase-val">120.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:18.0%"></div></div>
+    </div><div class="chase-col" title="4/1 周三 · 近2日均144.5家 · 当日175家">
+      <div class="chase-val">144.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.5%"></div></div>
+    </div><div class="chase-col" title="4/2 周四 · 近2日均131家 · 当日87家">
+      <div class="chase-val">131</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.7%"></div></div>
+    </div><div class="chase-col" title="4/3 周五 · 近2日均82.5家 · 当日78家">
+      <div class="chase-val">82.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:4.4%"></div></div>
+    </div><div class="chase-col" title="4/7 周二 · 近2日均136.5家 · 当日195家">
+      <div class="chase-val">136.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.7%"></div></div>
+    </div><div class="chase-col" title="4/8 周三 · 近2日均258.5家 · 当日322家">
+      <div class="chase-val">258.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:67.2%"></div></div>
+    </div><div class="chase-col" title="4/9 周四 · 近2日均218.5家 · 当日115家">
+      <div class="chase-val">218.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:52.9%"></div></div>
+    </div><div class="chase-col" title="4/10 周五 · 近2日均132.5家 · 当日150家">
+      <div class="chase-val">132.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:22.2%"></div></div>
+    </div><div class="chase-col" title="4/13 周一 · 近2日均143.5家 · 当日137家">
+      <div class="chase-val">143.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.2%"></div></div>
+    </div><div class="chase-col" title="4/14 周二 · 近2日均131.5家 · 当日126家">
+      <div class="chase-val">131.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.9%"></div></div>
+    </div><div class="chase-col" title="4/15 周三 · 近2日均128.5家 · 当日131家">
+      <div class="chase-val">128.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:20.8%"></div></div>
+    </div><div class="chase-col" title="4/16 周四 · 近2日均152家 · 当日173家">
+      <div class="chase-val">152</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.2%"></div></div>
+    </div><div class="chase-col" title="4/17 周五 · 近2日均157.5家 · 当日142家">
+      <div class="chase-val">157.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.2%"></div></div>
+    </div><div class="chase-col" title="4/20 周一 · 近2日均159家 · 当日176家">
+      <div class="chase-val">159</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.7%"></div></div>
+    </div><div class="chase-col" title="4/21 周二 · 近2日均152家 · 当日128家">
+      <div class="chase-val">152</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.2%"></div></div>
+    </div><div class="chase-col" title="4/22 周三 · 近2日均131.5家 · 当日135家">
+      <div class="chase-val">131.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.9%"></div></div>
+    </div><div class="chase-col" title="4/23 周四 · 近2日均137家 · 当日139家">
+      <div class="chase-val">137</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.9%"></div></div>
+    </div><div class="chase-col" title="4/24 周五 · 近2日均140.5家 · 当日142家">
+      <div class="chase-val">140.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:25.1%"></div></div>
+    </div><div class="chase-col" title="4/27 周一 · 近2日均155.5家 · 当日169家">
+      <div class="chase-val">155.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.5%"></div></div>
+    </div><div class="chase-col" title="4/28 周二 · 近2日均148家 · 当日127家">
+      <div class="chase-val">148</div>
+      <div class="chase-track"><div class="chase-bar" style="height:27.8%"></div></div>
+    </div><div class="chase-col" title="4/29 周三 · 近2日均172家 · 当日217家">
+      <div class="chase-val">172</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.3%"></div></div>
+    </div><div class="chase-col" title="4/30 周四 · 近2日均197.5家 · 当日178家">
+      <div class="chase-val">197.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:45.4%"></div></div>
+    </div><div class="chase-col" title="5/6 周三 · 近2日均205家 · 当日232家">
+      <div class="chase-val">205</div>
+      <div class="chase-track"><div class="chase-bar" style="height:48.1%"></div></div>
+    </div><div class="chase-col" title="5/7 周四 · 近2日均233家 · 当日234家">
+      <div class="chase-val">233</div>
+      <div class="chase-track"><div class="chase-bar" style="height:58.1%"></div></div>
+    </div><div class="chase-col" title="5/8 周五 · 近2日均228家 · 当日222家">
+      <div class="chase-val">228</div>
+      <div class="chase-track"><div class="chase-bar" style="height:56.3%"></div></div>
+    </div><div class="chase-col" title="5/11 周一 · 近2日均219.5家 · 当日217家">
+      <div class="chase-val">219.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:53.3%"></div></div>
+    </div><div class="chase-col" title="5/12 周二 · 近2日均171.5家 · 当日126家">
+      <div class="chase-val">171.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.2%"></div></div>
+    </div><div class="chase-col" title="5/13 周三 · 近2日均169家 · 当日212家">
+      <div class="chase-val">169</div>
+      <div class="chase-track"><div class="chase-bar" style="height:35.3%"></div></div>
+    </div><div class="chase-col" title="5/14 周四 · 近2日均181家 · 当日150家">
+      <div class="chase-val">181</div>
+      <div class="chase-track"><div class="chase-bar" style="height:39.5%"></div></div>
+    </div><div class="chase-col" title="5/15 周五 · 近2日均165.5家 · 当日181家">
+      <div class="chase-val">165.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:34.0%"></div></div>
+    </div><div class="chase-col" title="5/18 周一 · 近2日均179家 · 当日177家">
+      <div class="chase-val">179</div>
+      <div class="chase-track"><div class="chase-bar" style="height:38.8%"></div></div>
+    </div><div class="chase-col" title="5/19 周二 · 近2日均174家 · 当日171家">
+      <div class="chase-val">174</div>
+      <div class="chase-track"><div class="chase-bar" style="height:37.0%"></div></div>
+    </div><div class="chase-col" title="5/20 周三 · 近2日均156.5家 · 当日142家">
+      <div class="chase-val">156.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.8%"></div></div>
+    </div><div class="chase-col" title="5/21 周四 · 近2日均174.5家 · 当日207家">
+      <div class="chase-val">174.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:37.2%"></div></div>
+    </div><div class="chase-col" title="5/22 周五 · 近2日均228家 · 当日249家">
+      <div class="chase-val">228</div>
+      <div class="chase-track"><div class="chase-bar" style="height:56.3%"></div></div>
+    </div><div class="chase-col" title="5/25 周一 · 近2日均250家 · 当日251家">
+      <div class="chase-val">250</div>
+      <div class="chase-track"><div class="chase-bar" style="height:64.2%"></div></div>
+    </div><div class="chase-col" title="5/26 周二 · 近2日均203.5家 · 当日156家">
+      <div class="chase-val">203.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.6%"></div></div>
+    </div><div class="chase-col" title="5/27 周三 · 近2日均152.5家 · 当日149家">
+      <div class="chase-val">152.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.4%"></div></div>
+    </div><div class="chase-col" title="5/28 周四 · 近2日均168.5家 · 当日188家">
+      <div class="chase-val">168.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:35.1%"></div></div>
+    </div><div class="chase-col" title="5/29 周五 · 近2日均202家 · 当日216家">
+      <div class="chase-val">202</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.0%"></div></div>
+    </div><div class="chase-col" title="6/1 周一 · 近2日均252.5家 · 当日289家">
+      <div class="chase-val">252.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:65.0%"></div></div>
+    </div><div class="chase-col" title="6/2 周二 · 近2日均219.5家 · 当日150家">
+      <div class="chase-val">219.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:53.3%"></div></div>
+    </div><div class="chase-col" title="6/3 周三 · 近2日均184.5家 · 当日219家">
+      <div class="chase-val">184.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:40.8%"></div></div>
+    </div><div class="chase-col" title="6/4 周四 · 近2日均192家 · 当日165家">
+      <div class="chase-val">192</div>
+      <div class="chase-track"><div class="chase-bar" style="height:43.5%"></div></div>
+    </div><div class="chase-col" title="6/5 周五 · 近2日均195家 · 当日225家">
+      <div class="chase-val">195</div>
+      <div class="chase-track"><div class="chase-bar" style="height:44.5%"></div></div>
+    </div><div class="chase-col" title="6/8 周一 · 近2日均171.5家 · 当日118家">
+      <div class="chase-val">171.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.2%"></div></div>
+    </div><div class="chase-col" title="6/9 周二 · 近2日均175.5家 · 当日233家">
+      <div class="chase-val">175.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:37.6%"></div></div>
+    </div><div class="chase-col" title="6/10 周三 · 近2日均193.5家 · 当日154家">
+      <div class="chase-val">193.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:44.0%"></div></div>
+    </div><div class="chase-col" title="6/11 周四 · 近2日均153.5家 · 当日153家">
+      <div class="chase-val">153.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.7%"></div></div>
+    </div><div class="chase-col" title="6/12 周五 · 近2日均241家 · 当日329家">
+      <div class="chase-val">241</div>
+      <div class="chase-track"><div class="chase-bar" style="height:60.9%"></div></div>
+    </div><div class="chase-col" title="6/15 周一 · 近2日均340.5家 · 当日352家">
+      <div class="chase-val">340.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:96.4%"></div></div>
+    </div><div class="chase-col" title="6/16 周二 · 近2日均299家 · 当日246家">
+      <div class="chase-val">299</div>
+      <div class="chase-track"><div class="chase-bar" style="height:81.6%"></div></div>
+    </div><div class="chase-col" title="6/17 周三 · 近2日均213家 · 当日180家">
+      <div class="chase-val">213</div>
+      <div class="chase-track"><div class="chase-bar" style="height:51.0%"></div></div>
+    </div><div class="chase-col" title="6/18 周四 · 近2日均190家 · 当日200家">
+      <div class="chase-val">190</div>
+      <div class="chase-track"><div class="chase-bar" style="height:42.8%"></div></div>
+    </div><div class="chase-col" title="6/22 周一 · 近2日均245.5家 · 当日291家">
+      <div class="chase-val">245.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:62.6%"></div></div>
+    </div><div class="chase-col" title="6/23 周二 · 近2日均283家 · 当日275家">
+      <div class="chase-val">283</div>
+      <div class="chase-track"><div class="chase-bar" style="height:75.9%"></div></div>
+    </div><div class="chase-col" title="6/24 周三 · 近2日均235.5家 · 当日196家">
+      <div class="chase-val">235.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:59.0%"></div></div>
+    </div><div class="chase-col" title="6/25 周四 · 近2日均204家 · 当日212家">
+      <div class="chase-val">204</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.7%"></div></div>
+    </div><div class="chase-col" title="6/26 周五 · 近2日均190.5家 · 当日169家">
+      <div class="chase-val">190.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:42.9%"></div></div>
+    </div><div class="chase-col" title="6/29 周一 · 近2日均213家 · 当日257家">
+      <div class="chase-val">213</div>
+      <div class="chase-track"><div class="chase-bar" style="height:51.0%"></div></div>
+    </div><div class="chase-col" title="6/30 周二 · 近2日均272家 · 当日287家">
+      <div class="chase-val">272</div>
+      <div class="chase-track"><div class="chase-bar" style="height:72.0%"></div></div>
+    </div><div class="chase-col" title="7/1 周三 · 近2日均350.5家 · 当日414家">
+      <div class="chase-val">350.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:100.0%"></div></div>
+    </div><div class="chase-col" title="7/2 周四 · 近2日均332家 · 当日250家">
+      <div class="chase-val">332</div>
+      <div class="chase-track"><div class="chase-bar" style="height:93.4%"></div></div>
+    </div><div class="chase-col" title="7/3 周五 · 近2日均274.5家 · 当日299家">
+      <div class="chase-val">274.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:72.9%"></div></div>
+    </div><div class="chase-col" title="7/6 周一 · 近2日均252家 · 当日205家">
+      <div class="chase-val">252</div>
+      <div class="chase-track"><div class="chase-bar" style="height:64.9%"></div></div>
+    </div><div class="chase-col" title="7/7 周二 · 近2日均157.5家 · 当日110家">
+      <div class="chase-val">157.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.2%"></div></div>
+    </div><div class="chase-col" title="7/8 周三 · 近2日均108家 · 当日106家">
+      <div class="chase-val">108</div>
+      <div class="chase-track"><div class="chase-bar" style="height:13.5%"></div></div>
+    </div><div class="chase-col" title="7/9 周四 · 近2日均138家 · 当日170家">
+      <div class="chase-val">138</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.2%"></div></div>
+    </div><div class="chase-col" title="7/10 周五 · 近2日均264.5家 · 当日359家">
+      <div class="chase-val">264.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:69.3%"></div></div>
+    </div><div class="chase-col" title="7/13 周一 · 近2日均229.5家 · 当日100家">
+      <div class="chase-val">229.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:56.8%"></div></div>
+    </div><div class="chase-col" title="7/14 周二 · 近2日均149.5家 · 当日199家">
+      <div class="chase-val">149.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.3%"></div></div>
+    </div><div class="chase-col" title="7/15 周三 · 近2日均207.5家 · 当日216家">
+      <div class="chase-val">207.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:49.0%"></div></div>
+    </div><div class="chase-col" title="7/16 周四 · 近2日均172家 · 当日128家">
+      <div class="chase-val">172</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.3%"></div></div>
+    </div><div class="chase-col" title="7/17 周五 · 近2日均103.5家 · 当日79家">
+      <div class="chase-val">103.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:11.9%"></div></div>
+    </div><div class="chase-col" title="7/20 周一 · 近2日均140.5家 · 当日202家">
+      <div class="chase-val">140.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:25.1%"></div></div>
+    </div><div class="chase-col" title="7/21 周二 · 近2日均219家 · 当日236家">
+      <div class="chase-val">219</div>
+      <div class="chase-track"><div class="chase-bar" style="height:53.1%"></div></div>
+    </div><div class="chase-col" title="7/22 周三 · 近2日均197.5家 · 当日159家">
+      <div class="chase-val">197.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:45.4%"></div></div>
+    </div><div class="chase-col" title="7/23 周四 · 近2日均200家 · 当日241家">
+      <div class="chase-val">200</div>
+      <div class="chase-track"><div class="chase-bar" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="7/24 周五 · 近2日均160.5家 · 当日80家">
+      <div class="chase-val">160.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:32.2%"></div></div>
+    </div><div class="chase-col" title="7/27 周一 · 近2日均154家 · 当日228家">
+      <div class="chase-val">154</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.9%"></div></div>
+    </div><div class="chase-col" title="7/28 周二 · 近2日均174.5家 · 当日121家">
+      <div class="chase-val">174.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:37.2%"></div></div>
+    </div><div class="chase-col" title="7/29 周三 · 近2日均137家 · 当日153家">
+      <div class="chase-val">137</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.9%"></div></div>
+    </div><div class="chase-col" title="7/30 周四 · 近2日均138.5家 · 当日124家">
+      <div class="chase-val">138.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.4%"></div></div>
+    </div><div class="chase-col" title="7/31 周五 · 近2日均294家 · 当日464家">
+      <div class="chase-val">294</div>
+      <div class="chase-track"><div class="chase-bar" style="height:79.8%"></div></div>
+    </div><div class="chase-col" title="8/3 周一 · 近2日均308.5家 · 当日153家">
+      <div class="chase-val">308.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:85.0%"></div></div>
+    </div><div class="chase-col" title="8/4 周二 · 近2日均203.5家 · 当日254家">
+      <div class="chase-val">203.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.6%"></div></div>
+    </div><div class="chase-col" title="8/5 周三 · 近2日均265.5家 · 当日277家">
+      <div class="chase-val">265.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:69.7%"></div></div>
+    </div><div class="chase-col" title="8/6 周四 · 近2日均220家 · 当日163家">
+      <div class="chase-val">220</div>
+      <div class="chase-track"><div class="chase-bar" style="height:53.5%"></div></div>
+    </div><div class="chase-col" title="8/7 周五 · 近2日均163.5家 · 当日164家">
+      <div class="chase-val">163.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:33.3%"></div></div>
+    </div><div class="chase-col" title="8/10 周一 · 近2日均179家 · 当日194家">
+      <div class="chase-val">179</div>
+      <div class="chase-track"><div class="chase-bar" style="height:38.8%"></div></div>
+    </div><div class="chase-col" title="8/11 周二 · 近2日均158家 · 当日122家">
+      <div class="chase-val">158</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.3%"></div></div>
+    </div><div class="chase-col" title="8/12 周三 · 近2日均139家 · 当日156家">
+      <div class="chase-val">139</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.6%"></div></div>
+    </div><div class="chase-col" title="8/13 周四 · 近2日均151.5家 · 当日147家">
+      <div class="chase-val">151.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.0%"></div></div>
+    </div><div class="chase-col" title="8/14 周五 · 近2日均129.5家 · 当日112家">
+      <div class="chase-val">129.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.2%"></div></div>
+    </div><div class="chase-col" title="8/17 周一 · 近2日均146.5家 · 当日181家">
+      <div class="chase-val">146.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:27.2%"></div></div>
+    </div><div class="chase-col" title="8/18 周二 · 近2日均165家 · 当日149家">
+      <div class="chase-val">165</div>
+      <div class="chase-track"><div class="chase-bar" style="height:33.8%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · 近2日均112家 · 当日75家">
+      <div class="chase-val">112</div>
+      <div class="chase-track"><div class="chase-bar" style="height:14.9%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · 近2日均132.5家 · 当日190家">
+      <div class="chase-val">132.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:22.2%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · 近2日均152家 · 当日114家">
+      <div class="chase-val">152</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.2%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · 近2日均112家 · 当日110家">
+      <div class="chase-val">112</div>
+      <div class="chase-track"><div class="chase-bar" style="height:14.9%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · 近2日均129家 · 当日148家">
+      <div class="chase-val">129</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.0%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · 近2日均135.5家 · 当日123家">
+      <div class="chase-val">135.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.3%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · 近2日均138.5家 · 当日154家">
+      <div class="chase-val">138.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.4%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · 近2日均155家 · 当日156家">
+      <div class="chase-val">155</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.3%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · 近2日均164.5家 · 当日173家">
+      <div class="chase-val">164.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:33.7%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · 近2日均166.5家 · 当日160家">
+      <div class="chase-val">166.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:34.4%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · 近2日均137家 · 当日114家">
+      <div class="chase-val">137</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.9%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · 近2日均123.5家 · 当日133家">
+      <div class="chase-val">123.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:19.0%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · 近2日均143家 · 当日153家">
+      <div class="chase-val">143</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.0%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · 近2日均172.5家 · 当日192家">
+      <div class="chase-val">172.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.5%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · 近2日均181家 · 当日170家">
+      <div class="chase-val">181</div>
+      <div class="chase-track"><div class="chase-bar" style="height:39.5%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · 近2日均148家 · 当日126家">
+      <div class="chase-val">148</div>
+      <div class="chase-track"><div class="chase-bar" style="height:27.8%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · 近2日均110.5家 · 当日95家">
+      <div class="chase-val">110.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:14.4%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · 近2日均91家 · 当日87家">
+      <div class="chase-val">91</div>
+      <div class="chase-track"><div class="chase-bar" style="height:7.4%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · 近2日均111.5家 · 当日136家">
+      <div class="chase-val">111.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:14.8%"></div></div>
     </div></div>
       <div class="chase-axis"><div class="chase-tick show"><span>3/24</span></div><div class="chase-tick"><span>3/25</span></div><div class="chase-tick"><span>3/26</span></div><div class="chase-tick"><span>3/27</span></div><div class="chase-tick"><span>3/30</span></div><div class="chase-tick"><span>3/31</span></div><div class="chase-tick"><span>4/1</span></div><div class="chase-tick"><span>4/2</span></div><div class="chase-tick"><span>4/3</span></div><div class="chase-tick"><span>4/7</span></div><div class="chase-tick"><span>4/8</span></div><div class="chase-tick"><span>4/9</span></div><div class="chase-tick"><span>4/10</span></div><div class="chase-tick"><span>4/13</span></div><div class="chase-tick"><span>4/14</span></div><div class="chase-tick"><span>4/15</span></div><div class="chase-tick"><span>4/16</span></div><div class="chase-tick"><span>4/17</span></div><div class="chase-tick"><span>4/20</span></div><div class="chase-tick"><span>4/21</span></div><div class="chase-tick"><span>4/22</span></div><div class="chase-tick"><span>4/23</span></div><div class="chase-tick"><span>4/24</span></div><div class="chase-tick"><span>4/27</span></div><div class="chase-tick"><span>4/28</span></div><div class="chase-tick"><span>4/29</span></div><div class="chase-tick"><span>4/30</span></div><div class="chase-tick"><span>5/6</span></div><div class="chase-tick"><span>5/7</span></div><div class="chase-tick"><span>5/8</span></div><div class="chase-tick"><span>5/11</span></div><div class="chase-tick"><span>5/12</span></div><div class="chase-tick"><span>5/13</span></div><div class="chase-tick"><span>5/14</span></div><div class="chase-tick"><span>5/15</span></div><div class="chase-tick"><span>5/18</span></div><div class="chase-tick"><span>5/19</span></div><div class="chase-tick"><span>5/20</span></div><div class="chase-tick"><span>5/21</span></div><div class="chase-tick"><span>5/22</span></div><div class="chase-tick show"><span>5/25</span></div><div class="chase-tick"><span>5/26</span></div><div class="chase-tick"><span>5/27</span></div><div class="chase-tick"><span>5/28</span></div><div class="chase-tick"><span>5/29</span></div><div class="chase-tick"><span>6/1</span></div><div class="chase-tick"><span>6/2</span></div><div class="chase-tick"><span>6/3</span></div><div class="chase-tick"><span>6/4</span></div><div class="chase-tick"><span>6/5</span></div><div class="chase-tick"><span>6/8</span></div><div class="chase-tick"><span>6/9</span></div><div class="chase-tick"><span>6/10</span></div><div class="chase-tick"><span>6/11</span></div><div class="chase-tick"><span>6/12</span></div><div class="chase-tick"><span>6/15</span></div><div class="chase-tick"><span>6/16</span></div><div class="chase-tick"><span>6/17</span></div><div class="chase-tick"><span>6/18</span></div><div class="chase-tick"><span>6/22</span></div><div class="chase-tick show"><span>6/23</span></div><div class="chase-tick"><span>6/24</span></div><div class="chase-tick"><span>6/25</span></div><div class="chase-tick"><span>6/26</span></div><div class="chase-tick"><span>6/29</span></div><div class="chase-tick"><span>6/30</span></div><div class="chase-tick"><span>7/1</span></div><div class="chase-tick"><span>7/2</span></div><div class="chase-tick"><span>7/3</span></div><div class="chase-tick"><span>7/6</span></div><div class="chase-tick"><span>7/7</span></div><div class="chase-tick"><span>7/8</span></div><div class="chase-tick"><span>7/9</span></div><div class="chase-tick"><span>7/10</span></div><div class="chase-tick"><span>7/13</span></div><div class="chase-tick"><span>7/14</span></div><div class="chase-tick"><span>7/15</span></div><div class="chase-tick"><span>7/16</span></div><div class="chase-tick"><span>7/17</span></div><div class="chase-tick"><span>7/20</span></div><div class="chase-tick show"><span>7/21</span></div><div class="chase-tick"><span>7/22</span></div><div class="chase-tick"><span>7/23</span></div><div class="chase-tick"><span>7/24</span></div><div class="chase-tick"><span>7/27</span></div><div class="chase-tick"><span>7/28</span></div><div class="chase-tick"><span>7/29</span></div><div class="chase-tick"><span>7/30</span></div><div class="chase-tick"><span>7/31</span></div><div class="chase-tick"><span>8/3</span></div><div class="chase-tick"><span>8/4</span></div><div class="chase-tick"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
     </div>
@@ -3306,369 +3298,369 @@
     <div class="chase-grid"><div class="chase-chart is-count">
     <div class="chase-chart-head">
       <span class="chase-chart-title">创板追高数量</span>
-      <span class="chase-chart-meta">最新 133 家</span>
+      <span class="chase-chart-meta">最新 81.5 家</span>
     </div>
     <div class="chase-plot">
-      <div class="chase-bars"><div class="chase-col" title="3/24 周二 · 223家">
-      <div class="chase-val flat">223</div>
-      <div class="chase-track"><div class="chase-bar flat" style="height:25.7%"></div></div>
-    </div><div class="chase-col" title="3/25 周三 · 169家">
-      <div class="chase-val neg">169</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:18.7%"></div></div>
-    </div><div class="chase-col" title="3/26 周四 · 51家">
-      <div class="chase-val neg">51</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:3.3%"></div></div>
-    </div><div class="chase-col" title="3/27 周五 · 125家">
-      <div class="chase-val pos">125</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:13.0%"></div></div>
-    </div><div class="chase-col" title="3/30 周一 · 90家">
-      <div class="chase-val neg">90</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:8.4%"></div></div>
-    </div><div class="chase-col" title="3/31 周二 · 66家">
-      <div class="chase-val neg">66</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:5.3%"></div></div>
-    </div><div class="chase-col" title="4/1 周三 · 210家">
-      <div class="chase-val pos">210</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:24.0%"></div></div>
-    </div><div class="chase-col" title="4/2 周四 · 59家">
-      <div class="chase-val neg">59</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:4.4%"></div></div>
-    </div><div class="chase-col" title="4/3 周五 · 88家">
-      <div class="chase-val pos">88</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:8.1%"></div></div>
-    </div><div class="chase-col" title="4/7 周二 · 122家">
-      <div class="chase-val pos">122</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="4/8 周三 · 489家">
-      <div class="chase-val pos">489</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:60.4%"></div></div>
-    </div><div class="chase-col" title="4/9 周四 · 86家">
-      <div class="chase-val neg">86</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.9%"></div></div>
-    </div><div class="chase-col" title="4/10 周五 · 151家">
-      <div class="chase-val pos">151</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:16.4%"></div></div>
-    </div><div class="chase-col" title="4/13 周一 · 114家">
-      <div class="chase-val neg">114</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:11.5%"></div></div>
-    </div><div class="chase-col" title="4/14 周二 · 148家">
-      <div class="chase-val pos">148</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:16.0%"></div></div>
-    </div><div class="chase-col" title="4/15 周三 · 119家">
-      <div class="chase-val neg">119</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.2%"></div></div>
-    </div><div class="chase-col" title="4/16 周四 · 153家">
-      <div class="chase-val pos">153</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:16.6%"></div></div>
-    </div><div class="chase-col" title="4/17 周五 · 132家">
-      <div class="chase-val neg">132</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:13.9%"></div></div>
-    </div><div class="chase-col" title="4/20 周一 · 135家">
-      <div class="chase-val pos">135</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:14.3%"></div></div>
-    </div><div class="chase-col" title="4/21 周二 · 83家">
-      <div class="chase-val neg">83</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.5%"></div></div>
-    </div><div class="chase-col" title="4/22 周三 · 141家">
-      <div class="chase-val pos">141</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:15.0%"></div></div>
-    </div><div class="chase-col" title="4/23 周四 · 88家">
-      <div class="chase-val neg">88</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:8.1%"></div></div>
-    </div><div class="chase-col" title="4/24 周五 · 111家">
-      <div class="chase-val pos">111</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:11.1%"></div></div>
-    </div><div class="chase-col" title="4/27 周一 · 190家">
-      <div class="chase-val pos">190</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:21.4%"></div></div>
-    </div><div class="chase-col" title="4/28 周二 · 109家">
-      <div class="chase-val neg">109</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:10.9%"></div></div>
-    </div><div class="chase-col" title="4/29 周三 · 167家">
-      <div class="chase-val pos">167</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:18.4%"></div></div>
-    </div><div class="chase-col" title="4/30 周四 · 165家">
-      <div class="chase-val neg">165</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:18.2%"></div></div>
-    </div><div class="chase-col" title="5/6 周三 · 284家">
-      <div class="chase-val pos">284</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:33.7%"></div></div>
-    </div><div class="chase-col" title="5/7 周四 · 210家">
-      <div class="chase-val neg">210</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:24.0%"></div></div>
-    </div><div class="chase-col" title="5/8 周五 · 160家">
-      <div class="chase-val neg">160</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:17.5%"></div></div>
-    </div><div class="chase-col" title="5/11 周一 · 266家">
-      <div class="chase-val pos">266</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:31.3%"></div></div>
-    </div><div class="chase-col" title="5/12 周二 · 125家">
-      <div class="chase-val neg">125</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:13.0%"></div></div>
-    </div><div class="chase-col" title="5/13 周三 · 209家">
-      <div class="chase-val pos">209</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:23.9%"></div></div>
-    </div><div class="chase-col" title="5/14 周四 · 144家">
-      <div class="chase-val neg">144</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.4%"></div></div>
-    </div><div class="chase-col" title="5/15 周五 · 199家">
-      <div class="chase-val pos">199</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:22.6%"></div></div>
-    </div><div class="chase-col" title="5/18 周一 · 195家">
-      <div class="chase-val neg">195</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:22.1%"></div></div>
-    </div><div class="chase-col" title="5/19 周二 · 176家">
-      <div class="chase-val neg">176</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:19.6%"></div></div>
-    </div><div class="chase-col" title="5/20 周三 · 146家">
-      <div class="chase-val neg">146</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:15.7%"></div></div>
-    </div><div class="chase-col" title="5/21 周四 · 175家">
-      <div class="chase-val pos">175</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:19.5%"></div></div>
-    </div><div class="chase-col" title="5/22 周五 · 283家">
-      <div class="chase-val pos">283</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:33.6%"></div></div>
-    </div><div class="chase-col" title="5/25 周一 · 254家">
-      <div class="chase-val neg">254</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:29.8%"></div></div>
-    </div><div class="chase-col" title="5/26 周二 · 84家">
-      <div class="chase-val neg">84</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.6%"></div></div>
-    </div><div class="chase-col" title="5/27 周三 · 139家">
-      <div class="chase-val pos">139</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:14.8%"></div></div>
-    </div><div class="chase-col" title="5/28 周四 · 187家">
-      <div class="chase-val pos">187</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:21.0%"></div></div>
-    </div><div class="chase-col" title="5/29 周五 · 119家">
-      <div class="chase-val neg">119</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.2%"></div></div>
-    </div><div class="chase-col" title="6/1 周一 · 220家">
-      <div class="chase-val pos">220</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:25.3%"></div></div>
-    </div><div class="chase-col" title="6/2 周二 · 157家">
-      <div class="chase-val neg">157</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:17.1%"></div></div>
-    </div><div class="chase-col" title="6/3 周三 · 216家">
-      <div class="chase-val pos">216</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:24.8%"></div></div>
-    </div><div class="chase-col" title="6/4 周四 · 162家">
-      <div class="chase-val neg">162</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:17.8%"></div></div>
-    </div><div class="chase-col" title="6/5 周五 · 202家">
-      <div class="chase-val pos">202</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:23.0%"></div></div>
-    </div><div class="chase-col" title="6/8 周一 · 102家">
-      <div class="chase-val neg">102</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:10.0%"></div></div>
-    </div><div class="chase-col" title="6/9 周二 · 306家">
-      <div class="chase-val pos">306</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:36.5%"></div></div>
-    </div><div class="chase-col" title="6/10 周三 · 121家">
-      <div class="chase-val neg">121</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.4%"></div></div>
-    </div><div class="chase-col" title="6/11 周四 · 148家">
-      <div class="chase-val pos">148</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:16.0%"></div></div>
-    </div><div class="chase-col" title="6/12 周五 · 318家">
-      <div class="chase-val pos">318</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:38.1%"></div></div>
-    </div><div class="chase-col" title="6/15 周一 · 408家">
-      <div class="chase-val pos">408</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:49.8%"></div></div>
-    </div><div class="chase-col" title="6/16 周二 · 251家">
-      <div class="chase-val neg">251</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:29.4%"></div></div>
-    </div><div class="chase-col" title="6/17 周三 · 207家">
-      <div class="chase-val neg">207</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:23.6%"></div></div>
-    </div><div class="chase-col" title="6/18 周四 · 248家">
-      <div class="chase-val pos">248</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:29.0%"></div></div>
-    </div><div class="chase-col" title="6/22 周一 · 204家">
-      <div class="chase-val neg">204</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:23.3%"></div></div>
-    </div><div class="chase-col" title="6/23 周二 · 198家">
-      <div class="chase-val neg">198</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:22.5%"></div></div>
-    </div><div class="chase-col" title="6/24 周三 · 207家">
-      <div class="chase-val pos">207</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:23.6%"></div></div>
-    </div><div class="chase-col" title="6/25 周四 · 188家">
-      <div class="chase-val neg">188</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:21.2%"></div></div>
-    </div><div class="chase-col" title="6/26 周五 · 163家">
-      <div class="chase-val neg">163</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:17.9%"></div></div>
-    </div><div class="chase-col" title="6/29 周一 · 308家">
-      <div class="chase-val pos">308</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:36.8%"></div></div>
-    </div><div class="chase-col" title="6/30 周二 · 424家">
-      <div class="chase-val pos">424</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:51.9%"></div></div>
-    </div><div class="chase-col" title="7/1 周三 · 409家">
-      <div class="chase-val neg">409</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:50.0%"></div></div>
-    </div><div class="chase-col" title="7/2 周四 · 214家">
-      <div class="chase-val neg">214</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:24.6%"></div></div>
-    </div><div class="chase-col" title="7/3 周五 · 276家">
-      <div class="chase-val pos">276</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:32.6%"></div></div>
-    </div><div class="chase-col" title="7/6 周一 · 200家">
-      <div class="chase-val neg">200</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:22.7%"></div></div>
-    </div><div class="chase-col" title="7/7 周二 · 93家">
-      <div class="chase-val neg">93</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:8.8%"></div></div>
-    </div><div class="chase-col" title="7/8 周三 · 118家">
-      <div class="chase-val pos">118</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:12.1%"></div></div>
-    </div><div class="chase-col" title="7/9 周四 · 249家">
-      <div class="chase-val pos">249</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:29.1%"></div></div>
-    </div><div class="chase-col" title="7/10 周五 · 397家">
-      <div class="chase-val pos">397</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:48.4%"></div></div>
-    </div><div class="chase-col" title="7/13 周一 · 74家">
-      <div class="chase-val neg">74</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:6.3%"></div></div>
-    </div><div class="chase-col" title="7/14 周二 · 174家">
-      <div class="chase-val pos">174</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:19.3%"></div></div>
-    </div><div class="chase-col" title="7/15 周三 · 171家">
-      <div class="chase-val neg">171</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:19.0%"></div></div>
-    </div><div class="chase-col" title="7/16 周四 · 108家">
-      <div class="chase-val neg">108</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:10.7%"></div></div>
-    </div><div class="chase-col" title="7/17 周五 · 54家">
-      <div class="chase-val neg">54</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:3.7%"></div></div>
-    </div><div class="chase-col" title="7/20 周一 · 185家">
-      <div class="chase-val pos">185</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:20.8%"></div></div>
-    </div><div class="chase-col" title="7/21 周二 · 439家">
-      <div class="chase-val pos">439</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:53.9%"></div></div>
-    </div><div class="chase-col" title="7/22 周三 · 149家">
-      <div class="chase-val neg">149</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:16.1%"></div></div>
-    </div><div class="chase-col" title="7/23 周四 · 156家">
-      <div class="chase-val pos">156</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:17.0%"></div></div>
-    </div><div class="chase-col" title="7/24 周五 · 85家">
-      <div class="chase-val neg">85</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.8%"></div></div>
-    </div><div class="chase-col" title="7/27 周一 · 245家">
-      <div class="chase-val pos">245</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:28.6%"></div></div>
-    </div><div class="chase-col" title="7/28 周二 · 79家">
-      <div class="chase-val neg">79</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.0%"></div></div>
-    </div><div class="chase-col" title="7/29 周三 · 95家">
-      <div class="chase-val pos">95</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:9.1%"></div></div>
-    </div><div class="chase-col" title="7/30 周四 · 64家">
-      <div class="chase-val neg">64</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:5.0%"></div></div>
-    </div><div class="chase-col" title="7/31 周五 · 793家">
-      <div class="chase-val pos">793</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:100.0%"></div></div>
-    </div><div class="chase-col" title="8/3 周一 · 128家">
-      <div class="chase-val neg">128</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:13.4%"></div></div>
-    </div><div class="chase-col" title="8/4 周二 · 432家">
-      <div class="chase-val pos">432</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:53.0%"></div></div>
-    </div><div class="chase-col" title="8/5 周三 · 373家">
-      <div class="chase-val neg">373</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:45.3%"></div></div>
-    </div><div class="chase-col" title="8/6 周四 · 154家">
-      <div class="chase-val neg">154</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:16.7%"></div></div>
-    </div><div class="chase-col" title="8/7 周五 · 247家">
-      <div class="chase-val pos">247</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:28.9%"></div></div>
-    </div><div class="chase-col" title="8/10 周一 · 132家">
-      <div class="chase-val neg">132</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:13.9%"></div></div>
-    </div><div class="chase-col" title="8/11 周二 · 113家">
-      <div class="chase-val neg">113</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:11.4%"></div></div>
-    </div><div class="chase-col" title="8/12 周三 · 139家">
-      <div class="chase-val pos">139</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:14.8%"></div></div>
-    </div><div class="chase-col" title="8/13 周四 · 162家">
-      <div class="chase-val pos">162</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:17.8%"></div></div>
-    </div><div class="chase-col" title="8/14 周五 · 123家">
-      <div class="chase-val neg">123</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.7%"></div></div>
-    </div><div class="chase-col" title="8/17 周一 · 214家">
-      <div class="chase-val pos">214</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:24.6%"></div></div>
-    </div><div class="chase-col" title="8/18 周二 · 106家">
-      <div class="chase-val neg">106</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:10.5%"></div></div>
-    </div><div class="chase-col" title="8/19 周三 · 33家">
-      <div class="chase-val neg">33</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="8/20 周四 · 281家">
-      <div class="chase-val pos">281</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:33.3%"></div></div>
-    </div><div class="chase-col" title="8/21 周五 · 92家">
-      <div class="chase-val neg">92</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:8.7%"></div></div>
-    </div><div class="chase-col" title="8/24 周一 · 79家">
-      <div class="chase-val neg">79</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.0%"></div></div>
-    </div><div class="chase-col" title="8/25 周二 · 114家">
-      <div class="chase-val pos">114</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:11.5%"></div></div>
-    </div><div class="chase-col" title="8/26 周三 · 71家">
-      <div class="chase-val neg">71</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:5.9%"></div></div>
-    </div><div class="chase-col" title="8/27 周四 · 199家">
-      <div class="chase-val pos">199</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:22.6%"></div></div>
-    </div><div class="chase-col" title="8/28 周五 · 122家">
-      <div class="chase-val neg">122</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="8/31 周一 · 174家">
-      <div class="chase-val pos">174</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:19.3%"></div></div>
-    </div><div class="chase-col" title="9/1 周二 · 76家">
-      <div class="chase-val neg">76</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:6.6%"></div></div>
-    </div><div class="chase-col" title="9/2 周三 · 40家">
-      <div class="chase-val neg">40</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="9/3 周四 · 92家">
-      <div class="chase-val pos">92</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:8.7%"></div></div>
-    </div><div class="chase-col" title="9/4 周五 · 122家">
-      <div class="chase-val pos">122</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="9/7 周一 · 207家">
-      <div class="chase-val pos">207</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:23.6%"></div></div>
-    </div><div class="chase-col" title="9/8 周二 · 79家">
-      <div class="chase-val neg">79</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:7.0%"></div></div>
-    </div><div class="chase-col" title="9/9 周三 · 83家">
-      <div class="chase-val pos">83</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:7.5%"></div></div>
-    </div><div class="chase-col" title="9/10 周四 · 39家">
-      <div class="chase-val neg">39</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="9/11 周五 · 30家">
-      <div class="chase-val neg">30</div>
-      <div class="chase-track"><div class="chase-bar neg" style="height:2.0%"></div></div>
-    </div><div class="chase-col latest" title="9/14 周一 · 133家">
-      <div class="chase-val pos">133</div>
-      <div class="chase-track"><div class="chase-bar pos" style="height:14.0%"></div></div>
+      <div class="chase-bars"><div class="chase-col" title="3/24 周二 · 近2日均131.5家 · 当日223家">
+      <div class="chase-val">131.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.7%"></div></div>
+    </div><div class="chase-col" title="3/25 周三 · 近2日均196家 · 当日169家">
+      <div class="chase-val">196</div>
+      <div class="chase-track"><div class="chase-bar" style="height:38.7%"></div></div>
+    </div><div class="chase-col" title="3/26 周四 · 近2日均110家 · 当日51家">
+      <div class="chase-val">110</div>
+      <div class="chase-track"><div class="chase-bar" style="height:18.7%"></div></div>
+    </div><div class="chase-col" title="3/27 周五 · 近2日均88家 · 当日125家">
+      <div class="chase-val">88</div>
+      <div class="chase-track"><div class="chase-bar" style="height:13.6%"></div></div>
+    </div><div class="chase-col" title="3/30 周一 · 近2日均107.5家 · 当日90家">
+      <div class="chase-val">107.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:18.1%"></div></div>
+    </div><div class="chase-col" title="3/31 周二 · 近2日均78家 · 当日66家">
+      <div class="chase-val">78</div>
+      <div class="chase-track"><div class="chase-bar" style="height:11.3%"></div></div>
+    </div><div class="chase-col" title="4/1 周三 · 近2日均138家 · 当日210家">
+      <div class="chase-val">138</div>
+      <div class="chase-track"><div class="chase-bar" style="height:25.2%"></div></div>
+    </div><div class="chase-col" title="4/2 周四 · 近2日均134.5家 · 当日59家">
+      <div class="chase-val">134.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.4%"></div></div>
+    </div><div class="chase-col" title="4/3 周五 · 近2日均73.5家 · 当日88家">
+      <div class="chase-val">73.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:10.2%"></div></div>
+    </div><div class="chase-col" title="4/7 周二 · 近2日均105家 · 当日122家">
+      <div class="chase-val">105</div>
+      <div class="chase-track"><div class="chase-bar" style="height:17.6%"></div></div>
+    </div><div class="chase-col" title="4/8 周三 · 近2日均305.5家 · 当日489家">
+      <div class="chase-val">305.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:64.1%"></div></div>
+    </div><div class="chase-col" title="4/9 周四 · 近2日均287.5家 · 当日86家">
+      <div class="chase-val">287.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:59.9%"></div></div>
+    </div><div class="chase-col" title="4/10 周五 · 近2日均118.5家 · 当日151家">
+      <div class="chase-val">118.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:20.7%"></div></div>
+    </div><div class="chase-col" title="4/13 周一 · 近2日均132.5家 · 当日114家">
+      <div class="chase-val">132.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.9%"></div></div>
+    </div><div class="chase-col" title="4/14 周二 · 近2日均131家 · 当日148家">
+      <div class="chase-val">131</div>
+      <div class="chase-track"><div class="chase-bar" style="height:23.6%"></div></div>
+    </div><div class="chase-col" title="4/15 周三 · 近2日均133.5家 · 当日119家">
+      <div class="chase-val">133.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.2%"></div></div>
+    </div><div class="chase-col" title="4/16 周四 · 近2日均136家 · 当日153家">
+      <div class="chase-val">136</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.7%"></div></div>
+    </div><div class="chase-col" title="4/17 周五 · 近2日均142.5家 · 当日132家">
+      <div class="chase-val">142.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.2%"></div></div>
+    </div><div class="chase-col" title="4/20 周一 · 近2日均133.5家 · 当日135家">
+      <div class="chase-val">133.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.2%"></div></div>
+    </div><div class="chase-col" title="4/21 周二 · 近2日均109家 · 当日83家">
+      <div class="chase-val">109</div>
+      <div class="chase-track"><div class="chase-bar" style="height:18.5%"></div></div>
+    </div><div class="chase-col" title="4/22 周三 · 近2日均112家 · 当日141家">
+      <div class="chase-val">112</div>
+      <div class="chase-track"><div class="chase-bar" style="height:19.2%"></div></div>
+    </div><div class="chase-col" title="4/23 周四 · 近2日均114.5家 · 当日88家">
+      <div class="chase-val">114.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:19.8%"></div></div>
+    </div><div class="chase-col" title="4/24 周五 · 近2日均99.5家 · 当日111家">
+      <div class="chase-val">99.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:16.3%"></div></div>
+    </div><div class="chase-col" title="4/27 周一 · 近2日均150.5家 · 当日190家">
+      <div class="chase-val">150.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.1%"></div></div>
+    </div><div class="chase-col" title="4/28 周二 · 近2日均149.5家 · 当日109家">
+      <div class="chase-val">149.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:27.9%"></div></div>
+    </div><div class="chase-col" title="4/29 周三 · 近2日均138家 · 当日167家">
+      <div class="chase-val">138</div>
+      <div class="chase-track"><div class="chase-bar" style="height:25.2%"></div></div>
+    </div><div class="chase-col" title="4/30 周四 · 近2日均166家 · 当日165家">
+      <div class="chase-val">166</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.7%"></div></div>
+    </div><div class="chase-col" title="5/6 周三 · 近2日均224.5家 · 当日284家">
+      <div class="chase-val">224.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:45.3%"></div></div>
+    </div><div class="chase-col" title="5/7 周四 · 近2日均247家 · 当日210家">
+      <div class="chase-val">247</div>
+      <div class="chase-track"><div class="chase-bar" style="height:50.5%"></div></div>
+    </div><div class="chase-col" title="5/8 周五 · 近2日均185家 · 当日160家">
+      <div class="chase-val">185</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.1%"></div></div>
+    </div><div class="chase-col" title="5/11 周一 · 近2日均213家 · 当日266家">
+      <div class="chase-val">213</div>
+      <div class="chase-track"><div class="chase-bar" style="height:42.6%"></div></div>
+    </div><div class="chase-col" title="5/12 周二 · 近2日均195.5家 · 当日125家">
+      <div class="chase-val">195.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:38.5%"></div></div>
+    </div><div class="chase-col" title="5/13 周三 · 近2日均167家 · 当日209家">
+      <div class="chase-val">167</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.9%"></div></div>
+    </div><div class="chase-col" title="5/14 周四 · 近2日均176.5家 · 当日144家">
+      <div class="chase-val">176.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:34.1%"></div></div>
+    </div><div class="chase-col" title="5/15 周五 · 近2日均171.5家 · 当日199家">
+      <div class="chase-val">171.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:33.0%"></div></div>
+    </div><div class="chase-col" title="5/18 周一 · 近2日均197家 · 当日195家">
+      <div class="chase-val">197</div>
+      <div class="chase-track"><div class="chase-bar" style="height:38.9%"></div></div>
+    </div><div class="chase-col" title="5/19 周二 · 近2日均185.5家 · 当日176家">
+      <div class="chase-val">185.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.2%"></div></div>
+    </div><div class="chase-col" title="5/20 周三 · 近2日均161家 · 当日146家">
+      <div class="chase-val">161</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.5%"></div></div>
+    </div><div class="chase-col" title="5/21 周四 · 近2日均160.5家 · 当日175家">
+      <div class="chase-val">160.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.4%"></div></div>
+    </div><div class="chase-col" title="5/22 周五 · 近2日均229家 · 当日283家">
+      <div class="chase-val">229</div>
+      <div class="chase-track"><div class="chase-bar" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="5/25 周一 · 近2日均268.5家 · 当日254家">
+      <div class="chase-val">268.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:55.5%"></div></div>
+    </div><div class="chase-col" title="5/26 周二 · 近2日均169家 · 当日84家">
+      <div class="chase-val">169</div>
+      <div class="chase-track"><div class="chase-bar" style="height:32.4%"></div></div>
+    </div><div class="chase-col" title="5/27 周三 · 近2日均111.5家 · 当日139家">
+      <div class="chase-val">111.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:19.1%"></div></div>
+    </div><div class="chase-col" title="5/28 周四 · 近2日均163家 · 当日187家">
+      <div class="chase-val">163</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.0%"></div></div>
+    </div><div class="chase-col" title="5/29 周五 · 近2日均153家 · 当日119家">
+      <div class="chase-val">153</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.7%"></div></div>
+    </div><div class="chase-col" title="6/1 周一 · 近2日均169.5家 · 当日220家">
+      <div class="chase-val">169.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:32.5%"></div></div>
+    </div><div class="chase-col" title="6/2 周二 · 近2日均188.5家 · 当日157家">
+      <div class="chase-val">188.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.9%"></div></div>
+    </div><div class="chase-col" title="6/3 周三 · 近2日均186.5家 · 当日216家">
+      <div class="chase-val">186.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.5%"></div></div>
+    </div><div class="chase-col" title="6/4 周四 · 近2日均189家 · 当日162家">
+      <div class="chase-val">189</div>
+      <div class="chase-track"><div class="chase-bar" style="height:37.0%"></div></div>
+    </div><div class="chase-col" title="6/5 周五 · 近2日均182家 · 当日202家">
+      <div class="chase-val">182</div>
+      <div class="chase-track"><div class="chase-bar" style="height:35.4%"></div></div>
+    </div><div class="chase-col" title="6/8 周一 · 近2日均152家 · 当日102家">
+      <div class="chase-val">152</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.5%"></div></div>
+    </div><div class="chase-col" title="6/9 周二 · 近2日均204家 · 当日306家">
+      <div class="chase-val">204</div>
+      <div class="chase-track"><div class="chase-bar" style="height:40.5%"></div></div>
+    </div><div class="chase-col" title="6/10 周三 · 近2日均213.5家 · 当日121家">
+      <div class="chase-val">213.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:42.7%"></div></div>
+    </div><div class="chase-col" title="6/11 周四 · 近2日均134.5家 · 当日148家">
+      <div class="chase-val">134.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.4%"></div></div>
+    </div><div class="chase-col" title="6/12 周五 · 近2日均233家 · 当日318家">
+      <div class="chase-val">233</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.2%"></div></div>
+    </div><div class="chase-col" title="6/15 周一 · 近2日均363家 · 当日408家">
+      <div class="chase-val">363</div>
+      <div class="chase-track"><div class="chase-bar" style="height:77.4%"></div></div>
+    </div><div class="chase-col" title="6/16 周二 · 近2日均329.5家 · 当日251家">
+      <div class="chase-val">329.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:69.6%"></div></div>
+    </div><div class="chase-col" title="6/17 周三 · 近2日均229家 · 当日207家">
+      <div class="chase-val">229</div>
+      <div class="chase-track"><div class="chase-bar" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="6/18 周四 · 近2日均227.5家 · 当日248家">
+      <div class="chase-val">227.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:46.0%"></div></div>
+    </div><div class="chase-col" title="6/22 周一 · 近2日均226家 · 当日204家">
+      <div class="chase-val">226</div>
+      <div class="chase-track"><div class="chase-bar" style="height:45.6%"></div></div>
+    </div><div class="chase-col" title="6/23 周二 · 近2日均201家 · 当日198家">
+      <div class="chase-val">201</div>
+      <div class="chase-track"><div class="chase-bar" style="height:39.8%"></div></div>
+    </div><div class="chase-col" title="6/24 周三 · 近2日均202.5家 · 当日207家">
+      <div class="chase-val">202.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:40.2%"></div></div>
+    </div><div class="chase-col" title="6/25 周四 · 近2日均197.5家 · 当日188家">
+      <div class="chase-val">197.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:39.0%"></div></div>
+    </div><div class="chase-col" title="6/26 周五 · 近2日均175.5家 · 当日163家">
+      <div class="chase-val">175.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:33.9%"></div></div>
+    </div><div class="chase-col" title="6/29 周一 · 近2日均235.5家 · 当日308家">
+      <div class="chase-val">235.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.8%"></div></div>
+    </div><div class="chase-col" title="6/30 周二 · 近2日均366家 · 当日424家">
+      <div class="chase-val">366</div>
+      <div class="chase-track"><div class="chase-bar" style="height:78.1%"></div></div>
+    </div><div class="chase-col" title="7/1 周三 · 近2日均416.5家 · 当日409家">
+      <div class="chase-val">416.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:89.8%"></div></div>
+    </div><div class="chase-col" title="7/2 周四 · 近2日均311.5家 · 当日214家">
+      <div class="chase-val">311.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:65.4%"></div></div>
+    </div><div class="chase-col" title="7/3 周五 · 近2日均245家 · 当日276家">
+      <div class="chase-val">245</div>
+      <div class="chase-track"><div class="chase-bar" style="height:50.0%"></div></div>
+    </div><div class="chase-col" title="7/6 周一 · 近2日均238家 · 当日200家">
+      <div class="chase-val">238</div>
+      <div class="chase-track"><div class="chase-bar" style="height:48.4%"></div></div>
+    </div><div class="chase-col" title="7/7 周二 · 近2日均146.5家 · 当日93家">
+      <div class="chase-val">146.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:27.2%"></div></div>
+    </div><div class="chase-col" title="7/8 周三 · 近2日均105.5家 · 当日118家">
+      <div class="chase-val">105.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:17.7%"></div></div>
+    </div><div class="chase-col" title="7/9 周四 · 近2日均183.5家 · 当日249家">
+      <div class="chase-val">183.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:35.8%"></div></div>
+    </div><div class="chase-col" title="7/10 周五 · 近2日均323家 · 当日397家">
+      <div class="chase-val">323</div>
+      <div class="chase-track"><div class="chase-bar" style="height:68.1%"></div></div>
+    </div><div class="chase-col" title="7/13 周一 · 近2日均235.5家 · 当日74家">
+      <div class="chase-val">235.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:47.8%"></div></div>
+    </div><div class="chase-col" title="7/14 周二 · 近2日均124家 · 当日174家">
+      <div class="chase-val">124</div>
+      <div class="chase-track"><div class="chase-bar" style="height:22.0%"></div></div>
+    </div><div class="chase-col" title="7/15 周三 · 近2日均172.5家 · 当日171家">
+      <div class="chase-val">172.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:33.2%"></div></div>
+    </div><div class="chase-col" title="7/16 周四 · 近2日均139.5家 · 当日108家">
+      <div class="chase-val">139.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:25.6%"></div></div>
+    </div><div class="chase-col" title="7/17 周五 · 近2日均81家 · 当日54家">
+      <div class="chase-val">81</div>
+      <div class="chase-track"><div class="chase-bar" style="height:12.0%"></div></div>
+    </div><div class="chase-col" title="7/20 周一 · 近2日均119.5家 · 当日185家">
+      <div class="chase-val">119.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:20.9%"></div></div>
+    </div><div class="chase-col" title="7/21 周二 · 近2日均312家 · 当日439家">
+      <div class="chase-val">312</div>
+      <div class="chase-track"><div class="chase-bar" style="height:65.6%"></div></div>
+    </div><div class="chase-col" title="7/22 周三 · 近2日均294家 · 当日149家">
+      <div class="chase-val">294</div>
+      <div class="chase-track"><div class="chase-bar" style="height:61.4%"></div></div>
+    </div><div class="chase-col" title="7/23 周四 · 近2日均152.5家 · 当日156家">
+      <div class="chase-val">152.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.6%"></div></div>
+    </div><div class="chase-col" title="7/24 周五 · 近2日均120.5家 · 当日85家">
+      <div class="chase-val">120.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.1%"></div></div>
+    </div><div class="chase-col" title="7/27 周一 · 近2日均165家 · 当日245家">
+      <div class="chase-val">165</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.5%"></div></div>
+    </div><div class="chase-col" title="7/28 周二 · 近2日均162家 · 当日79家">
+      <div class="chase-val">162</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.8%"></div></div>
+    </div><div class="chase-col" title="7/29 周三 · 近2日均87家 · 当日95家">
+      <div class="chase-val">87</div>
+      <div class="chase-track"><div class="chase-bar" style="height:13.4%"></div></div>
+    </div><div class="chase-col" title="7/30 周四 · 近2日均79.5家 · 当日64家">
+      <div class="chase-val">79.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:11.6%"></div></div>
+    </div><div class="chase-col" title="7/31 周五 · 近2日均428.5家 · 当日793家">
+      <div class="chase-val">428.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:92.6%"></div></div>
+    </div><div class="chase-col" title="8/3 周一 · 近2日均460.5家 · 当日128家">
+      <div class="chase-val">460.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:100.0%"></div></div>
+    </div><div class="chase-col" title="8/4 周二 · 近2日均280家 · 当日432家">
+      <div class="chase-val">280</div>
+      <div class="chase-track"><div class="chase-bar" style="height:58.1%"></div></div>
+    </div><div class="chase-col" title="8/5 周三 · 近2日均402.5家 · 当日373家">
+      <div class="chase-val">402.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:86.5%"></div></div>
+    </div><div class="chase-col" title="8/6 周四 · 近2日均263.5家 · 当日154家">
+      <div class="chase-val">263.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:54.3%"></div></div>
+    </div><div class="chase-col" title="8/7 周五 · 近2日均200.5家 · 当日247家">
+      <div class="chase-val">200.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:39.7%"></div></div>
+    </div><div class="chase-col" title="8/10 周一 · 近2日均189.5家 · 当日132家">
+      <div class="chase-val">189.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:37.1%"></div></div>
+    </div><div class="chase-col" title="8/11 周二 · 近2日均122.5家 · 当日113家">
+      <div class="chase-val">122.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:21.6%"></div></div>
+    </div><div class="chase-col" title="8/12 周三 · 近2日均126家 · 当日139家">
+      <div class="chase-val">126</div>
+      <div class="chase-track"><div class="chase-bar" style="height:22.4%"></div></div>
+    </div><div class="chase-col" title="8/13 周四 · 近2日均150.5家 · 当日162家">
+      <div class="chase-val">150.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:28.1%"></div></div>
+    </div><div class="chase-col" title="8/14 周五 · 近2日均142.5家 · 当日123家">
+      <div class="chase-val">142.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.2%"></div></div>
+    </div><div class="chase-col" title="8/17 周一 · 近2日均168.5家 · 当日214家">
+      <div class="chase-val">168.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:32.3%"></div></div>
+    </div><div class="chase-col" title="8/18 周二 · 近2日均160家 · 当日106家">
+      <div class="chase-val">160</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.3%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · 近2日均69.5家 · 当日33家">
+      <div class="chase-val">69.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:9.3%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · 近2日均157家 · 当日281家">
+      <div class="chase-val">157</div>
+      <div class="chase-track"><div class="chase-bar" style="height:29.6%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · 近2日均186.5家 · 当日92家">
+      <div class="chase-val">186.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:36.5%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · 近2日均85.5家 · 当日79家">
+      <div class="chase-val">85.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:13.0%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · 近2日均96.5家 · 当日114家">
+      <div class="chase-val">96.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:15.6%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · 近2日均92.5家 · 当日71家">
+      <div class="chase-val">92.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:14.7%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · 近2日均135家 · 当日199家">
+      <div class="chase-val">135</div>
+      <div class="chase-track"><div class="chase-bar" style="height:24.5%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · 近2日均160.5家 · 当日122家">
+      <div class="chase-val">160.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:30.4%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · 近2日均148家 · 当日174家">
+      <div class="chase-val">148</div>
+      <div class="chase-track"><div class="chase-bar" style="height:27.5%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · 近2日均125家 · 当日76家">
+      <div class="chase-val">125</div>
+      <div class="chase-track"><div class="chase-bar" style="height:22.2%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · 近2日均58家 · 当日40家">
+      <div class="chase-val">58</div>
+      <div class="chase-track"><div class="chase-bar" style="height:6.7%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · 近2日均66家 · 当日92家">
+      <div class="chase-val">66</div>
+      <div class="chase-track"><div class="chase-bar" style="height:8.5%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · 近2日均107家 · 当日122家">
+      <div class="chase-val">107</div>
+      <div class="chase-track"><div class="chase-bar" style="height:18.0%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · 近2日均164.5家 · 当日207家">
+      <div class="chase-val">164.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:31.4%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · 近2日均143家 · 当日79家">
+      <div class="chase-val">143</div>
+      <div class="chase-track"><div class="chase-bar" style="height:26.4%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · 近2日均81家 · 当日83家">
+      <div class="chase-val">81</div>
+      <div class="chase-track"><div class="chase-bar" style="height:12.0%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · 近2日均61家 · 当日39家">
+      <div class="chase-val">61</div>
+      <div class="chase-track"><div class="chase-bar" style="height:7.3%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · 近2日均34.5家 · 当日30家">
+      <div class="chase-val">34.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:2.0%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · 近2日均81.5家 · 当日133家">
+      <div class="chase-val">81.5</div>
+      <div class="chase-track"><div class="chase-bar" style="height:12.1%"></div></div>
     </div></div>
       <div class="chase-axis"><div class="chase-tick show"><span>3/24</span></div><div class="chase-tick"><span>3/25</span></div><div class="chase-tick"><span>3/26</span></div><div class="chase-tick"><span>3/27</span></div><div class="chase-tick"><span>3/30</span></div><div class="chase-tick"><span>3/31</span></div><div class="chase-tick"><span>4/1</span></div><div class="chase-tick"><span>4/2</span></div><div class="chase-tick"><span>4/3</span></div><div class="chase-tick"><span>4/7</span></div><div class="chase-tick"><span>4/8</span></div><div class="chase-tick"><span>4/9</span></div><div class="chase-tick"><span>4/10</span></div><div class="chase-tick"><span>4/13</span></div><div class="chase-tick"><span>4/14</span></div><div class="chase-tick"><span>4/15</span></div><div class="chase-tick"><span>4/16</span></div><div class="chase-tick"><span>4/17</span></div><div class="chase-tick"><span>4/20</span></div><div class="chase-tick"><span>4/21</span></div><div class="chase-tick"><span>4/22</span></div><div class="chase-tick"><span>4/23</span></div><div class="chase-tick"><span>4/24</span></div><div class="chase-tick"><span>4/27</span></div><div class="chase-tick"><span>4/28</span></div><div class="chase-tick"><span>4/29</span></div><div class="chase-tick"><span>4/30</span></div><div class="chase-tick"><span>5/6</span></div><div class="chase-tick"><span>5/7</span></div><div class="chase-tick"><span>5/8</span></div><div class="chase-tick"><span>5/11</span></div><div class="chase-tick"><span>5/12</span></div><div class="chase-tick"><span>5/13</span></div><div class="chase-tick"><span>5/14</span></div><div class="chase-tick"><span>5/15</span></div><div class="chase-tick"><span>5/18</span></div><div class="chase-tick"><span>5/19</span></div><div class="chase-tick"><span>5/20</span></div><div class="chase-tick"><span>5/21</span></div><div class="chase-tick"><span>5/22</span></div><div class="chase-tick show"><span>5/25</span></div><div class="chase-tick"><span>5/26</span></div><div class="chase-tick"><span>5/27</span></div><div class="chase-tick"><span>5/28</span></div><div class="chase-tick"><span>5/29</span></div><div class="chase-tick"><span>6/1</span></div><div class="chase-tick"><span>6/2</span></div><div class="chase-tick"><span>6/3</span></div><div class="chase-tick"><span>6/4</span></div><div class="chase-tick"><span>6/5</span></div><div class="chase-tick"><span>6/8</span></div><div class="chase-tick"><span>6/9</span></div><div class="chase-tick"><span>6/10</span></div><div class="chase-tick"><span>6/11</span></div><div class="chase-tick"><span>6/12</span></div><div class="chase-tick"><span>6/15</span></div><div class="chase-tick"><span>6/16</span></div><div class="chase-tick"><span>6/17</span></div><div class="chase-tick"><span>6/18</span></div><div class="chase-tick"><span>6/22</span></div><div class="chase-tick show"><span>6/23</span></div><div class="chase-tick"><span>6/24</span></div><div class="chase-tick"><span>6/25</span></div><div class="chase-tick"><span>6/26</span></div><div class="chase-tick"><span>6/29</span></div><div class="chase-tick"><span>6/30</span></div><div class="chase-tick"><span>7/1</span></div><div class="chase-tick"><span>7/2</span></div><div class="chase-tick"><span>7/3</span></div><div class="chase-tick"><span>7/6</span></div><div class="chase-tick"><span>7/7</span></div><div class="chase-tick"><span>7/8</span></div><div class="chase-tick"><span>7/9</span></div><div class="chase-tick"><span>7/10</span></div><div class="chase-tick"><span>7/13</span></div><div class="chase-tick"><span>7/14</span></div><div class="chase-tick"><span>7/15</span></div><div class="chase-tick"><span>7/16</span></div><div class="chase-tick"><span>7/17</span></div><div class="chase-tick"><span>7/20</span></div><div class="chase-tick show"><span>7/21</span></div><div class="chase-tick"><span>7/22</span></div><div class="chase-tick"><span>7/23</span></div><div class="chase-tick"><span>7/24</span></div><div class="chase-tick"><span>7/27</span></div><div class="chase-tick"><span>7/28</span></div><div class="chase-tick"><span>7/29</span></div><div class="chase-tick"><span>7/30</span></div><div class="chase-tick"><span>7/31</span></div><div class="chase-tick"><span>8/3</span></div><div class="chase-tick"><span>8/4</span></div><div class="chase-tick"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
     </div>
@@ -4780,7 +4772,7 @@
       <div class="chase-axis"><div class="chase-tick show"><span>3/24</span></div><div class="chase-tick"><span>3/25</span></div><div class="chase-tick"><span>3/26</span></div><div class="chase-tick"><span>3/27</span></div><div class="chase-tick"><span>3/30</span></div><div class="chase-tick"><span>3/31</span></div><div class="chase-tick"><span>4/1</span></div><div class="chase-tick"><span>4/2</span></div><div class="chase-tick"><span>4/3</span></div><div class="chase-tick"><span>4/7</span></div><div class="chase-tick"><span>4/8</span></div><div class="chase-tick"><span>4/9</span></div><div class="chase-tick"><span>4/10</span></div><div class="chase-tick"><span>4/13</span></div><div class="chase-tick"><span>4/14</span></div><div class="chase-tick"><span>4/15</span></div><div class="chase-tick"><span>4/16</span></div><div class="chase-tick"><span>4/17</span></div><div class="chase-tick"><span>4/20</span></div><div class="chase-tick"><span>4/21</span></div><div class="chase-tick"><span>4/22</span></div><div class="chase-tick"><span>4/23</span></div><div class="chase-tick"><span>4/24</span></div><div class="chase-tick"><span>4/27</span></div><div class="chase-tick"><span>4/28</span></div><div class="chase-tick"><span>4/29</span></div><div class="chase-tick"><span>4/30</span></div><div class="chase-tick"><span>5/6</span></div><div class="chase-tick"><span>5/7</span></div><div class="chase-tick"><span>5/8</span></div><div class="chase-tick"><span>5/11</span></div><div class="chase-tick"><span>5/12</span></div><div class="chase-tick"><span>5/13</span></div><div class="chase-tick"><span>5/14</span></div><div class="chase-tick"><span>5/15</span></div><div class="chase-tick"><span>5/18</span></div><div class="chase-tick"><span>5/19</span></div><div class="chase-tick"><span>5/20</span></div><div class="chase-tick"><span>5/21</span></div><div class="chase-tick"><span>5/22</span></div><div class="chase-tick show"><span>5/25</span></div><div class="chase-tick"><span>5/26</span></div><div class="chase-tick"><span>5/27</span></div><div class="chase-tick"><span>5/28</span></div><div class="chase-tick"><span>5/29</span></div><div class="chase-tick"><span>6/1</span></div><div class="chase-tick"><span>6/2</span></div><div class="chase-tick"><span>6/3</span></div><div class="chase-tick"><span>6/4</span></div><div class="chase-tick"><span>6/5</span></div><div class="chase-tick"><span>6/8</span></div><div class="chase-tick"><span>6/9</span></div><div class="chase-tick"><span>6/10</span></div><div class="chase-tick"><span>6/11</span></div><div class="chase-tick"><span>6/12</span></div><div class="chase-tick"><span>6/15</span></div><div class="chase-tick"><span>6/16</span></div><div class="chase-tick"><span>6/17</span></div><div class="chase-tick"><span>6/18</span></div><div class="chase-tick"><span>6/22</span></div><div class="chase-tick show"><span>6/23</span></div><div class="chase-tick"><span>6/24</span></div><div class="chase-tick"><span>6/25</span></div><div class="chase-tick"><span>6/26</span></div><div class="chase-tick"><span>6/29</span></div><div class="chase-tick"><span>6/30</span></div><div class="chase-tick"><span>7/1</span></div><div class="chase-tick"><span>7/2</span></div><div class="chase-tick"><span>7/3</span></div><div class="chase-tick"><span>7/6</span></div><div class="chase-tick"><span>7/7</span></div><div class="chase-tick"><span>7/8</span></div><div class="chase-tick"><span>7/9</span></div><div class="chase-tick"><span>7/10</span></div><div class="chase-tick"><span>7/13</span></div><div class="chase-tick"><span>7/14</span></div><div class="chase-tick"><span>7/15</span></div><div class="chase-tick"><span>7/16</span></div><div class="chase-tick"><span>7/17</span></div><div class="chase-tick"><span>7/20</span></div><div class="chase-tick show"><span>7/21</span></div><div class="chase-tick"><span>7/22</span></div><div class="chase-tick"><span>7/23</span></div><div class="chase-tick"><span>7/24</span></div><div class="chase-tick"><span>7/27</span></div><div class="chase-tick"><span>7/28</span></div><div class="chase-tick"><span>7/29</span></div><div class="chase-tick"><span>7/30</span></div><div class="chase-tick"><span>7/31</span></div><div class="chase-tick"><span>8/3</span></div><div class="chase-tick"><span>8/4</span></div><div class="chase-tick"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
     </div>
   </div></div>
-  </div><div class="chase-note">追高定义：日内最高价相对昨收涨幅≥7%。追高数量：当日追高池家数。昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。今追-回落指数：取当日追高池，计算(今收−今高)/今高。每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。</div>
+  </div><div class="chase-note">追高定义：日内最高价相对昨收涨幅≥7%。追高数量：当日追高池家数的近2日均值（今日与昨日算术平均）。昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。今追-回落指数：取当日追高池，计算(今收−今高)/今高。每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。</div>
   </div>
 
   <!-- 3 趋势强度 -->
@@ -5226,7 +5218,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 23:14</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 23:21</div>
 </div>
 </body>
 </html>

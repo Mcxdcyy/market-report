@@ -535,19 +535,11 @@
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }
-  /* 追高数量：自底部起柱，较前日红增绿减 */
+  /* 追高数量：自底部起柱，统一中性灰（只看趋势） */
   .chase-chart.is-count .chase-zero { display: none; }
   .chase-chart.is-count .chase-bar {
     bottom: 0; top: auto; transform: translateX(-50%);
     border-radius: 1px 1px 0 0;
-  }
-  .chase-chart.is-count .chase-bar.pos {
-    background: var(--bar-ok, #E53935);
-  }
-  .chase-chart.is-count .chase-bar.neg {
-    background: var(--bar-bad, #34C759);
-  }
-  .chase-chart.is-count .chase-bar.flat {
     background: #8e8e93;
   }
   .chase-axis {
@@ -1762,7 +1754,7 @@
     <div class="news-empty">该日暂无板块-资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 23:14</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 23:21</div>
 </div>
 </body>
 </html>

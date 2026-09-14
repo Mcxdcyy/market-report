@@ -3528,19 +3528,11 @@ def render_html(ctx: dict) -> str:
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }}
-  /* 追高数量：自底部起柱，较前日红增绿减 */
+  /* 追高数量：自底部起柱，统一中性灰（只看趋势） */
   .chase-chart.is-count .chase-zero {{ display: none; }}
   .chase-chart.is-count .chase-bar {{
     bottom: 0; top: auto; transform: translateX(-50%);
     border-radius: 1px 1px 0 0;
-  }}
-  .chase-chart.is-count .chase-bar.pos {{
-    background: var(--bar-ok, #E53935);
-  }}
-  .chase-chart.is-count .chase-bar.neg {{
-    background: var(--bar-bad, #34C759);
-  }}
-  .chase-chart.is-count .chase-bar.flat {{
     background: #8e8e93;
   }}
   .chase-axis {{
@@ -4492,7 +4484,7 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
 
 
 def _render_chase_count_chart(title: str, series: list[dict]) -> str:
-    """追高数量柱图：自底部起柱；较前日增红减绿。"""
+    """追高数量柱图：近2日均值；自底部起柱；统一中性灰。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart is-count">
@@ -4515,7 +4507,6 @@ def _render_chase_count_chart(title: str, series: list[dict]) -> str:
     if n_bars >= 60:
         tick_idxs.add(n_bars // 2)
 
-    prev: float | None = None
     cols = []
     ticks = []
     for i, row in enumerate(series):
@@ -4543,29 +4534,30 @@ def _render_chase_count_chart(title: str, series: list[dict]) -> str:
             else:
                 pct = 50.0
             h = max(pct, 2.0 if v > 0 else 0.0)
-            if prev is None:
-                tag = "flat"
-            elif v > prev:
-                tag = "pos"
-            elif v < prev:
-                tag = "neg"
+            # 展示一位小数（近2日均）；悬停附带当日原始家数
+            if abs(v - round(v)) < 1e-9:
+                val_lab = f"{int(round(v))}"
             else:
-                tag = "flat"
-            val_lab = f"{int(round(v))}"
+                val_lab = f"{v:.1f}"
+            n_raw = row.get("n_raw")
+            tip_extra = f" · 当日{int(n_raw)}家" if n_raw is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}家">
-      <div class="chase-val {tag}">{val_lab}</div>
-      <div class="chase-track"><div class="chase-bar {tag}" style="height:{h:.1f}%"></div></div>
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}家{tip_extra}">
+      <div class="chase-val">{val_lab}</div>
+      <div class="chase-track"><div class="chase-bar" style="height:{h:.1f}%"></div></div>
     </div>'''
             )
-            prev = v
         ticks.append(
             f'<div class="chase-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
             f'<span>{lab}</span></div>'
         )
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
-    latest_lab = f"{int(round(float(last['value'])))} 家" if last else "—"
+    if last:
+        lv = float(last["value"])
+        latest_lab = f"{int(round(lv))} 家" if abs(lv - round(lv)) < 1e-9 else f"{lv:.1f} 家"
+    else:
+        latest_lab = "—"
     return f'''<div class="chase-chart is-count">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
@@ -4613,7 +4605,7 @@ def render_chase_sentiment_html(block: dict) -> str:
     note = (
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
-        "追高数量：当日追高池家数。"
+        "追高数量：当日追高池家数的近2日均值（今日与昨日算术平均）。"
         "昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。"
         "今追-回落指数：取当日追高池，计算(今收−今高)/今高。"
         "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
