@@ -3984,14 +3984,10 @@ def render_fund_recognition_html(block: dict) -> str:
         badges = []
         if today is not None:
             today_f = float(today)
-            if today_f >= 50.0:
-                badges.append(
-                    f'<span class="fund-pill ok">偏强 {today_f:.1f}%</span>'
-                )
-            else:
-                badges.append(
-                    f'<span class="fund-pill bad">偏弱 {today_f:.1f}%</span>'
-                )
+            badges.append(
+                f'<span class="fund-pill {"ok" if today_f >= 50.0 else "bad"}">'
+                f'占比 {today_f:.1f}%</span>'
+            )
             if prev is not None:
                 delta = round(today_f - prev, 1)
                 if delta > 0:
@@ -4033,7 +4029,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比≥50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱色：占比≥50%为红、&lt;50%为绿；标题旁标签为当日强弱，箭头为较前一有效样本日变化。柱图浅线为50%刻度。"
+        "柱色：占比≥50%为红、&lt;50%为绿；标题旁「占比」为当日数值，箭头为较前一有效样本日变化（百分点）。柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
