@@ -2936,11 +2936,12 @@ def render_html(ctx: dict) -> str:
 
   /* ── 资金认可度 ── */
   .fund-tip {{
-    margin: 0 0 12px; padding: 8px 12px;
-    background: var(--warn-bg); border-left: 3px solid var(--warn);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 0 0 12px; padding: 0;
+    background: none; border: none;
+    text-align: left;
     font-size: 12px; line-height: 1.55; color: var(--text); font-weight: 400;
   }}
+  .fund-tip-b {{ display: inline; }}
   .fund-list {{ display: flex; flex-direction: column; gap: 12px; }}
   .fund-card {{
     padding: 12px 14px 10px; border: 1px solid var(--border);
@@ -3381,7 +3382,8 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-amt-stack {{ height: 24px; }}
     #sec-ts .ts-amt-seg {{ font-size: 11px; }}
     #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
-    #sec-fund .fund-tip {{ font-size: 14px; }}
+    #sec-fund .fund-tip {{ font-size: 14px; text-align: left; }}
+    #sec-fund .fund-tip-b {{ display: block; }}
     #sec-fund .fund-card-title {{ font-size: 15px; }}
     #sec-fund .fund-card-meta {{ font-size: 12px; }}
     #sec-fund .fund-pill {{ font-size: 12px; }}
@@ -3550,7 +3552,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
-    <div class="fund-tip">【强势票占比很高】：也有可能突然一下崩。——重点看「核心票」</div>
+    <div class="fund-tip"><span class="fund-tip-a">【强势票占比很高】：也有可能突然一下崩。</span><span class="fund-tip-b">——重点看「核心票」。</span></div>
     {fund_recognition_html}
   </div>
 
