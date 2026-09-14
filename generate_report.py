@@ -1442,32 +1442,37 @@ def _event_short(title: str) -> str:
 
 
 def _event_brief(title: str) -> str:
-    """联网抓取缺人工 brief 时的占位；正式展示须写成「炒作/风险」口径（见规则）。"""
+    """联网抓取缺人工 brief 时的占位。
+
+    定稿口径：先写事件描述，再三选一——
+    「炒作预期：…。」 / 「风险预期：…。」 / 「无炒作预期、无风险预期」
+    （炒作预期=可能利好盘面；风险预期=可能利空盘面；二者互斥，只写主导一侧。）
+    """
     if "WAIC" in title or "世界人工智能大会" in title:
         return (
-            "炒作：人工智能、具身智能与大模型应用相关标的或借大会窗口活跃。"
-            "风险：会前透支、会中兑现即弱，易出现冲高回落。"
+            "上海世界人工智能大会窗口；产业新品与治理叙事集中发布。"
+            "炒作预期：人工智能、具身智能与大模型应用相关标的或借大会窗口活跃。"
         )
     if "预告" in title or "中报" in title:
         return (
-            "炒作：业绩预增与验证窗口，相关产业链或分化上行。"
-            "风险：证伪与减持预期并存，截止日前后波动放大。"
+            "财报/预告验证节点，预增披露与截止日前后波动通常放大。"
+            "炒作预期：业绩预增方向相关产业链或阶段性活跃。"
         )
     if _event_is_chain_ipo(title) or "宇树" in title or "长鑫" in title:
         return (
-            "炒作：产业链映射标的或借定价/申购/上市节点活跃。"
-            "风险：单次情绪脉冲后分化快，勿把节点等同趋势。"
+            "产业链级定价/申购/上市节点，映射链条情绪易脉冲。"
+            "炒作预期：相关产业链映射标的或借节点活跃。"
         )
     if any(k in title for k in ("机器人", "具身", "人工智能")):
         return (
-            "炒作：主题龙头与链条映射或阶段性活跃。"
-            "风险：会议催化偏情绪，持续性依赖订单与资金承接。"
+            "产业顶会或强主题展会窗口。"
+            "炒作预期：主题龙头与链条映射或阶段性活跃。"
         )
-    if "解禁" in title or "IPO" in title:
-        return "无炒作/风险可能"
+    if "解禁" in title or ("IPO" in title and not _event_is_chain_ipo(title)):
+        return f"{title.rstrip('。')}。无炒作预期、无风险预期"
     if any(k in title for k in ("GDP", "CPI", "PPI", "LPR")):
-        return "无炒作/风险可能"
-    return "无炒作/风险可能"
+        return f"{title.rstrip('。')}。无炒作预期、无风险预期"
+    return f"{title.rstrip('。')}。无炒作预期、无风险预期"
 
 
 def _wscn_relevant(item: dict) -> bool:
@@ -1751,7 +1756,7 @@ def build_events_window(as_of: datetime) -> tuple:
             "label": "暂无大节点",
             "title": "关注业绩披露",
             "sub": "关注业绩披露",
-            "brief": "无炒作/风险可能",
+            "brief": "未来两周暂无预设大事件。无炒作预期、无风险预期",
             "hot": False,
         }]
     return label, nodes, sync_note
@@ -2462,7 +2467,7 @@ def render_fwd_section_html(
     for n in cal_items:
         label = n.get("label", "")
         title = n.get("title", n.get("short", ""))
-        note = (n.get("brief") or "").strip() or "无炒作/风险可能"
+        note = (n.get("brief") or "").strip() or "无炒作预期、无风险预期"
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         hot = n.get("hot") or bool(tags)
