@@ -3439,9 +3439,6 @@ def render_html(ctx: dict) -> str:
     .event-note {{ font-size: 13px; }}
     .event-block-title {{ font-size: 16px; }}
     .event-block-body {{ font-size: 14px; }}
-    .dir-name {{ font-size: 15px; }}
-    .dir-badge {{ font-size: 12px; }}
-    .dir-logic {{ font-size: 14px; line-height: 1.7; }}
     .fwd-lead-text {{ font-size: 15px; line-height: 1.75; }}
     .fwd-lead-row {{ grid-template-columns: 72px 1fr; }}
     .fwd-tdot {{ width: 40px; height: 40px; font-size: 11px; }}
