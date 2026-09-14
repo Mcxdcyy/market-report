@@ -3884,7 +3884,7 @@ def render_fund_recognition_html(block: dict) -> str:
         return streak
 
     # 展示过滤：池内个股数 < 10 不展示；永久排除 ST / 并购重组 / 中报增长 / 实控人变更；
-    # 报表当日（序列末日）分母严格 < 5 不展示整张板块柱图；
+    # 报表当日（序列末日）3亿以上家数严格 < 10 不展示整张板块柱图；
     # 自报表日起连续 10 个交易日占比均 <50% 不展示
     items = []
     for it in block.get("items") or []:
@@ -3896,7 +3896,7 @@ def render_fund_recognition_html(block: dict) -> str:
         if not series:
             continue
         last = series[-1] or {}
-        if int(last.get("n_amt") or 0) < 5:
+        if int(last.get("n_amt") or 0) < 10:
             continue
         if _below_50_streak_from_end(series) >= 10:
             continue
@@ -3978,7 +3978,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "自报表日起连续10个交易日占比均低于50%不展示）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
-        "报表当日分母严格小于5家时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
+        "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比≥50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
         "柱图浅线为50%刻度。"
         "</div>"
