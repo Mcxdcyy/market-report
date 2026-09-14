@@ -1457,7 +1457,7 @@ def _parse_span_from_title(title: str, month: int, day: int) -> tuple[int, int] 
 
 
 # 红点「重要」：日历 importance 达到该档（华尔街见闻 1–4；不绑具体会议名）
-EVENT_HOT_MIN_IMPORTANCE = 3
+EVENT_HOT_MIN_IMPORTANCE = 4
 
 
 def _event_is_hot(title: str, ev: dict | None = None) -> bool:
