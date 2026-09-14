@@ -707,11 +707,13 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
         prev_vol = None
 
     n_bars = len(tail)
-    # 底部日期轴稀疏刻度：首、约 1/3、2/3、末
-    tick_idxs = {0, n_bars - 1}
+    # 底部日期轴稀疏刻度：首 / 末；≥8 加约 1/3、2/3；≥60 再加中点
+    tick_idxs = {0, n_bars - 1} if n_bars else set()
     if n_bars >= 8:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
 
     for i, (_, row) in enumerate(tail.iterrows()):
         vol = float(row.get("成交额") or 0)
@@ -741,6 +743,46 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
         })
         prev_vol = vol
     return bars
+
+
+def _render_vol_bars_block(
+    bars: list[dict],
+    *,
+    title: str,
+    dense: bool = False,
+    after_html: str = "",
+) -> str:
+    """成交金额柱图 HTML 块；dense=True 用于 90 日等长窗口（隐藏柱顶数字、柱更细）。"""
+    if not bars:
+        return ""
+    cols = "".join(
+        f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
+      <div class="vol20-val">{b["label"]}</div>
+      <div class="vol20-bar-track">
+        <div class="vol20-bar {b["tag"]}" style="height:{b["height_pct"]}%"></div>
+      </div>
+    </div>'''
+        for b in bars
+    )
+    ticks = "".join(
+        f'<div class="vol20-tick{" show" if b.get("show_tick") else ""}{" latest" if b["is_latest"] else ""}">'
+        f'{"<span>" + b["date"] + "</span>" if b.get("show_tick") else ""}</div>'
+        for b in bars
+    )
+    d0, d1 = bars[0]["date"], bars[-1]["date"]
+    latest_lab = bars[-1]["label"]
+    wrap_cls = "vol20-wrap vol90" if dense else "vol20-wrap"
+    return f'''<div class="{wrap_cls}">
+    <div class="vol20-head">
+      <span class="vol20-title">{title}</span>
+      <span class="vol20-meta">{d0}–{d1} · 最新 {latest_lab} 万亿</span>
+    </div>
+    <div class="vol20-chart">
+      <div class="vol20-bars">{cols}</div>
+      <div class="vol20-axis">{ticks}</div>
+    </div>
+    {after_html}
+  </div>'''
 
 
 def analyze_3d(df: pd.DataFrame, row: pd.Series) -> list[tuple[str, str]]:
@@ -2820,55 +2862,28 @@ def render_html(ctx: dict) -> str:
   </div>'''
 
     vol20 = ctx.get("vol20_bars") or []
+    vol90 = ctx.get("vol90_bars") or []
     vol_note = (ctx.get("vol_note") or "").strip()
     vol_tags = [t for t in (ctx.get("vol_tags") or []) if str(t).strip()]
     vol_regime = ctx.get("vol_regime") or "neutral"
     vol_tag_cls = {"bad": "bad", "good": "ok", "neutral": "warn"}.get(vol_regime, "warn")
-    if vol20:
-        vol20_cols = "".join(
-            f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
-      <div class="vol20-val">{b["label"]}</div>
-      <div class="vol20-bar-track">
-        <div class="vol20-bar {b["tag"]}" style="height:{b["height_pct"]}%"></div>
-      </div>
-    </div>'''
-            for b in vol20
+    vol_tags_html = ""
+    if vol_tags:
+        pills = "".join(
+            f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
         )
-        vol20_ticks = "".join(
-            f'<div class="vol20-tick{" show" if b.get("show_tick") else ""}{" latest" if b["is_latest"] else ""}">'
-            f'{"<span>" + b["date"] + "</span>" if b.get("show_tick") else ""}</div>'
-            for b in vol20
-        )
-        d0, d1 = vol20[0]["date"], vol20[-1]["date"]
-        latest_lab = vol20[-1]["label"]
-        vol_tags_html = ""
-        if vol_tags:
-            pills = "".join(
-                f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
-            )
-            vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
-        vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
-        vol20_html = f'''<div class="vol20-wrap">
-    <div class="vol20-head">
-      <span class="vol20-title">近30日成交金额</span>
-      <span class="vol20-meta">{d0}–{d1} · 最新 {latest_lab} 万亿</span>
-    </div>
-    <div class="vol20-chart">
-      <div class="vol20-bars">{vol20_cols}</div>
-      <div class="vol20-axis">{vol20_ticks}</div>
-    </div>
-    {vol_tags_html}
-    {vol_note_html}
-  </div>'''
-    else:
-        vol_tags_html = ""
-        if vol_tags:
-            pills = "".join(
-                f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
-            )
-            vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
-        vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
-        vol20_html = f"{vol_tags_html}{vol_note_html}"
+        vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
+    vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
+    after_30 = f"{vol_tags_html}\n    {vol_note_html}" if (vol_tags_html or vol_note_html) else ""
+    vol30_html = _render_vol_bars_block(
+        vol20, title="近30日成交金额", after_html=after_30
+    )
+    if not vol30_html and after_30:
+        vol30_html = after_30
+    vol90_html = _render_vol_bars_block(
+        vol90, title="量能90日趋势", dense=True
+    )
+    vol20_html = f"{vol30_html}{vol90_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -3405,6 +3420,12 @@ def render_html(ctx: dict) -> str:
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
+  .vol20-wrap.vol90 .vol20-val {{ display: none !important; }}
+  .vol20-wrap.vol90 .vol20-bars {{ height: 118px; gap: 1px; }}
+  .vol20-wrap.vol90 .vol20-bar {{
+    width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
+  }}
+  .vol20-wrap.vol90 .vol20-axis {{ gap: 1px; }}
   .vol20-head {{
     display: flex; align-items: baseline; justify-content: space-between;
     gap: 8px; margin-bottom: 0; flex-wrap: wrap;
@@ -4436,6 +4457,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     trend_days, trend_headline = analyze_10d(last10, work)
     trend_range = f"{fmt_md(last10.iloc[0]['date'])}–{fmt_md(last10.iloc[-1]['date'])}"
     vol20_bars = build_vol20_bars(work, 30)
+    vol90_bars = build_vol20_bars(work, 90)
     dims = analyze_3d(work, row)
     env_callout = build_env_callout(row, work, dim, dims)
     synth = env_callout["synth"]
@@ -4508,6 +4530,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "trend_range": trend_range,
         "trend_headline": trend_headline,
         "vol20_bars": vol20_bars,
+        "vol90_bars": vol90_bars,
         "vol_note": dim.get("vol_note") or "",
         "vol_tags": list(dim.get("vol_tags") or []),
         "vol_regime": (dim.get("vm") or {}).get("regime") or "neutral",
