@@ -10,6 +10,8 @@ alwaysApply: true
 **数据源**：仅 `大盘数据.numbers`（不用 `大盘复盘.numbers`）  
 **生成命令**：`python3 generate_report.py` → `复盘概览-{MM-DD}.html` + `index.html`（手机入口）
 
+**首页日期列表（固定）**：以最新报表所属月为**当月**平铺展开；非当月按「YYYY年M月」折叠（`<details>`，显示篇数，点击展开）；勿改回全量平铺。
+
 **手机访问（局域网）**：`python3 serve_mobile.py`
 
 **推送**：每次更新报表后 **必须** `git add` 相关文件并 `git push` 到外网（`bash push_github.sh` 或等价命令）；**不要等用户再催**。Token 只需 **repo** 权限。

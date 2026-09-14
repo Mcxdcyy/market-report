@@ -4358,13 +4358,15 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
 
 
 def write_index_html() -> Path:
-    """生成手机入口页 index.html，列出全部复盘报告。"""
-    reports: list[tuple[str, str, str]] = []
+    """生成手机入口页 index.html，列出全部复盘报告。
+
+    当月（以最新报表所属月为准）日期平铺；非当月按月份折叠。
+    """
+    reports: list[tuple[str, str, str, str]] = []  # mm, dd, fname, mode
     for p in sorted(BASE.glob("复盘概览-*.html"), reverse=True):
         m = re.match(r"复盘概览-(\d{2})-(\d{2})\.html", p.name)
         if not m:
             continue
-        label = f"{m.group(1)}/{m.group(2)}"
         mode = ""
         try:
             text = p.read_text(encoding="utf-8")
@@ -4373,25 +4375,79 @@ def write_index_html() -> Path:
                 mode = mm.group(1).strip()
         except OSError:
             pass
-        reports.append((label, p.name, mode))
+        reports.append((m.group(1), m.group(2), p.name, mode))
 
     latest = reports[0] if reports else None
     bust = datetime.now().strftime("%Y%m%d%H%M")
-    cards = []
-    for i, (label, fname, mode) in enumerate(reports):
-        badge = '<span class="idx-badge latest">最新</span>' if i == 0 else ""
+
+    def _card_html(mm: str, dd: str, fname: str, mode: str, *, featured: bool = False) -> str:
+        label = f"{mm}/{dd}"
+        badge = '<span class="idx-badge latest">最新</span>' if featured else ""
         mode_html = f'<div class="idx-mode">{mode}</div>' if mode else ""
         href = f"{fname}?v={bust}"
-        cards.append(
-            f'''<a class="idx-card{" featured" if i == 0 else ""}" href="{href}">
-      <div class="idx-card-top"><span class="idx-date">{label}</span>{badge}</div>
-      {mode_html}
-      <div class="idx-arrow">查看 ›</div>
-    </a>'''
+        feat = " featured" if featured else ""
+        return (
+            f'<a class="idx-card{feat}" href="{href}">'
+            f'<div class="idx-card-top"><span class="idx-date">{label}</span>{badge}</div>'
+            f"{mode_html}"
+            f'<div class="idx-arrow">查看 ›</div>'
+            f"</a>"
         )
-    cards_html = "".join(cards) if cards else '<p class="idx-empty">暂无报告，请先运行 generate_report.py</p>'
+
+    # 按 (年, 月) 分组；文件名仅有 MM-DD，逆序时月份回跳（如 01→12）则年份 -1
+    year = datetime.now().year
+    prev_mm: int | None = None
+    groups: list[tuple[tuple[int, int], list[tuple[str, str, str, str]]]] = []
+    bucket: dict[tuple[int, int], list[tuple[str, str, str, str]]] = {}
+    order: list[tuple[int, int]] = []
+    for mm, dd, fname, mode in reports:
+        mm_i = int(mm)
+        if prev_mm is not None and mm_i > prev_mm:
+            year -= 1
+        prev_mm = mm_i
+        key = (year, mm_i)
+        if key not in bucket:
+            bucket[key] = []
+            order.append(key)
+        bucket[key].append((mm, dd, fname, mode))
+    groups = [(k, bucket[k]) for k in order]
+
+    sections: list[str] = []
+    if not groups:
+        sections.append('<p class="idx-empty">暂无报告，请先运行 generate_report.py</p>')
+    else:
+        current_key = groups[0][0]
+        for i, (key, items) in enumerate(groups):
+            y, mo = key
+            is_current = key == current_key
+            cards = []
+            for j, (mm, dd, fname, mode) in enumerate(items):
+                cards.append(
+                    _card_html(mm, dd, fname, mode, featured=(i == 0 and j == 0))
+                )
+            cards_inner = "".join(cards)
+            if is_current:
+                sections.append(
+                    f'<div class="idx-month-block current">'
+                    f'<div class="idx-month-label">{y}年{mo}月</div>'
+                    f'<div class="idx-month-cards">{cards_inner}</div></div>'
+                )
+            else:
+                n = len(items)
+                sections.append(
+                    f'<details class="idx-month-block">'
+                    f'<summary class="idx-month-summary">'
+                    f'<span class="idx-month-label">{y}年{mo}月</span>'
+                    f'<span class="idx-month-count">{n}篇</span>'
+                    f'<span class="idx-month-chevron">›</span>'
+                    f"</summary>"
+                    f'<div class="idx-month-cards">{cards_inner}</div>'
+                    f"</details>"
+                )
+
+    cards_html = "".join(sections)
     latest_btn = (
-        f'<a class="idx-hero-btn" href="{latest[1]}?v={bust}">打开最新复盘 · {latest[0]}</a>'
+        f'<a class="idx-hero-btn" href="{latest[2]}?v={bust}">打开最新复盘 · {latest[0]}/{latest[1]}</a>'
         if latest else ""
     )
     html = f"""<!DOCTYPE html>
@@ -4428,10 +4484,47 @@ def write_index_html() -> Path:
     text-align: center; text-decoration: none; font-weight: 700; font-size: 15px;
     padding: 12px; border-radius: 10px;
   }}
-  .idx-list {{ display: flex; flex-direction: column; gap: 8px; }}
+  .idx-list {{ display: flex; flex-direction: column; gap: 10px; }}
+  .idx-month-block {{ display: flex; flex-direction: column; gap: 8px; }}
+  .idx-month-block.current > .idx-month-label {{
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    letter-spacing: .3px; padding: 0 2px 2px;
+  }}
+  details.idx-month-block {{
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }}
+  .idx-month-summary {{
+    list-style: none; cursor: pointer; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+    padding: 13px 16px; font-size: 15px;
+  }}
+  .idx-month-summary::-webkit-details-marker {{ display: none; }}
+  .idx-month-summary .idx-month-label {{ font-weight: 700; color: var(--text); }}
+  .idx-month-count {{
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    background: #f2f2f7; padding: 2px 8px; border-radius: 999px;
+  }}
+  .idx-month-chevron {{
+    margin-left: auto; color: var(--muted); font-weight: 700;
+    transition: transform .15s ease;
+  }}
+  details.idx-month-block[open] > .idx-month-summary .idx-month-chevron {{
+    transform: rotate(90deg);
+  }}
+  details.idx-month-block .idx-month-cards {{
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 0 10px 10px;
+  }}
+  .idx-month-block.current .idx-month-cards {{
+    display: flex; flex-direction: column; gap: 8px;
+  }}
   .idx-card {{
     display: block; background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 14px 16px; text-decoration: none; color: inherit;
+  }}
+  details.idx-month-block .idx-card {{
+    border-radius: 10px;
   }}
   .idx-card.featured {{ border-color: #0a84ff40; background: #f8fbff; }}
   .idx-card-top {{ display: flex; align-items: center; gap: 8px; }}
