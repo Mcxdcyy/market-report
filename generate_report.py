@@ -1456,26 +1456,29 @@ def _parse_span_from_title(title: str, month: int, day: int) -> tuple[int, int] 
     return None
 
 
-def _event_is_hot(title: str, ev: dict | None = None) -> bool:
-    """重要事件（红点）判定。一般事件为蓝点。
+# 红点「重要」：日历 importance 达到该档（华尔街见闻 1–4；不绑具体会议名）
+EVENT_HOT_MIN_IMPORTANCE = 3
 
-    规则（命中任一即为重要）：
-    1. seed / 上游已显式标记 hot=True
-    2. 标题含强主题关键词：WAIC、世界人工智能、人工智能大会、政治局、
-       吹风会、中报/业绩预告、产业链级 IPO（宇树/长鑫等）
+
+def _event_is_hot(title: str, ev: dict | None = None) -> bool:
+    """重要（红点）vs 一般（蓝点）。通用规则，可随未来事件自然适用。
+
+    命中任一即为重要：
+    1. seed / 上游显式 `hot=True`（人工认定的强节点）
+    2. 日历 `importance >= EVENT_HOT_MIN_IMPORTANCE`（数据源通用评级）
+    3. 产业链级 IPO/申购（结构规则，见 `_event_is_chain_ipo`）
+
+    不做：用 WAIC/吹风会/中报 等具体会议名硬编码标红（无通用性）。
     """
     if ev is not None and ev.get("hot") is True:
         return True
-    t = title or ""
-    if any(
-        k in t
-        for k in (
-            "WAIC", "世界人工智能", "人工智能大会", "政治局", "吹风会",
-            "中报", "业绩预告",
-        )
-    ):
-        return True
-    if _event_is_chain_ipo(t) or "宇树" in t or "长鑫" in t:
+    if ev is not None:
+        try:
+            if int(ev.get("importance") or 0) >= EVENT_HOT_MIN_IMPORTANCE:
+                return True
+        except (TypeError, ValueError):
+            pass
+    if _event_is_chain_ipo(title or ""):
         return True
     return False
 
@@ -1686,7 +1689,7 @@ def _wscn_to_catalog(item: dict) -> dict | None:
     month, day = dt.month, dt.day
     span = _parse_span_from_title(raw_title, month, day)
     imp = int(item.get("importance") or 0)
-    hot = _event_is_hot(raw_title) or _event_is_hot(title)
+    hot = _event_is_hot(title, {"importance": imp})
     label = f"{month}/{day}"
     if span:
         label = f"{month}/{day}–{span[1]}" if span[0] == month else f"{span[0]}/{span[1]}"

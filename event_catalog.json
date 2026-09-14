@@ -7,7 +7,7 @@
     "title": "2026中国具身智能机器人产业展7月10-12日举行",
     "short": "具身",
     "brief": "暂无补充说明。",
-    "hot": false,
+    "hot": true,
     "importance": 3,
     "source": "wscn",
     "fetched_at": "2026-09-14"
@@ -20,7 +20,7 @@
     "title": "2026“机器人+”创新发展大会7月11-13日举行",
     "short": "机器人",
     "brief": "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。",
-    "hot": false,
+    "hot": true,
     "importance": 3,
     "source": "wscn",
     "fetched_at": "2026-09-14"
@@ -33,7 +33,7 @@
     "title": "中国（西部）国际人工智能与具身智能机器人产业链大会",
     "short": "具身",
     "brief": "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。",
-    "hot": false,
+    "hot": true,
     "importance": 3,
     "source": "wscn",
     "fetched_at": "2026-09-14"
