@@ -3391,10 +3391,6 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-bar.strong {{ background: #E53935; }}
   .fund-bar.weak {{ background: #34C759; }}
-  .fund-col.latest .fund-bar.strong,
-  .fund-col.latest .fund-bar.weak {{
-    width: 82%; max-width: 20px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
-  }}
   .fund-bar.empty {{ background: transparent; min-height: 0; box-shadow: none; }}
   .fund-axis {{
     display: flex; margin-top: 4px; min-height: 16px; position: relative;
