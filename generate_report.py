@@ -1254,7 +1254,22 @@ def load_market_news(
 # 种子事件库（含人工撰写的 brief；抓取结果会与之合并）
 # 只保留仍可能落入「报表日+未来2周」的 seed；已结束节点靠日期过滤剔除，不必长期堆在 seed 里。
 SEED_EVENT_CATALOG: list[dict] = [
-    # 过期节点（如 8/29 长鑫科技半年报）勿再写入；强主题窗口在此维护
+    # 过期节点勿再写入；强主题窗口与需提前展示的产业链级 IPO 在此维护
+    {
+        "month": 9,
+        "day": 14,
+        "dot": "政",
+        "label": "9/14",
+        "title": "国务院政策例行吹风会",
+        "short": "吹风会",
+        "brief": (
+            "工业和信息化部会同中国人民银行、国务院国资委、市场监管总局、中国证监会有关负责人出席并答问。"
+            "介绍加强中小企业回款难问题治理有关工作情况。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+    },
 ]
 
 # 事件库：板块级炒作节点（会议/政策/财报/产业链级IPO）；普通单股解禁/无链条 IPO 排除
@@ -1427,6 +1442,7 @@ def _event_short(title: str) -> str:
     for kw, short in (
         ("WAIC", "WAIC"),
         ("世界人工智能大会", "WAIC"),
+        ("国务院政策例行吹风会", "吹风会"),
         ("中报", "预告"),
         ("业绩预告", "预告"),
         ("LPR", "LPR"),
@@ -1441,38 +1457,56 @@ def _event_short(title: str) -> str:
     return title[:8] + ("…" if len(title) > 8 else "")
 
 
-def _event_brief(title: str) -> str:
-    """联网抓取缺人工 brief 时的占位。
+def _normalize_event_title(title: str) -> str:
+    """标题只保留事件名，勿把出席单位/主题说明塞进标题。"""
+    t = (title or "").strip().rstrip("。")
+    if not t:
+        return t
+    if "国务院政策例行吹风会" in t:
+        return "国务院政策例行吹风会"
+    if "，" in t:
+        head, _tail = t.split("，", 1)
+        if any(k in head for k in ("大会", "展会", "博览会", "吹风会", "发布会", "峰会", "论坛")):
+            return head.strip()
+    return t
 
-    定稿口径：先写事件描述，再三选一——
-    「炒作预期：…。」 / 「风险预期：…。」 / 「无炒作预期、无风险预期」
-    （炒作预期=可能利好盘面；风险预期=可能利空盘面；二者互斥，只写主导一侧。）
-    """
-    if "WAIC" in title or "世界人工智能大会" in title:
-        return (
-            "上海世界人工智能大会窗口；产业新品与治理叙事集中发布。"
-            "炒作预期：人工智能、具身智能与大模型应用相关标的或借大会窗口活跃。"
+
+def _event_brief(title: str, raw_title: str | None = None) -> str:
+    """事件描述：写主题/内容/出席方等事实，不写炒作预期或风险预期。"""
+    raw = (raw_title or title or "").strip().rstrip("。")
+    name = _normalize_event_title(raw)
+
+    if name == "国务院政策例行吹风会" or "国务院政策例行吹风会" in raw:
+        attend = (
+            "工业和信息化部会同中国人民银行、国务院国资委、市场监管总局、中国证监会有关负责人出席并答问。"
         )
-    if "预告" in title or "中报" in title:
-        return (
-            "财报/预告验证节点，预增披露与截止日前后波动通常放大。"
-            "炒作预期：业绩预增方向相关产业链或阶段性活跃。"
-        )
-    if _event_is_chain_ipo(title) or "宇树" in title or "长鑫" in title:
-        return (
-            "产业链级定价/申购/上市节点；上市前常分流场内资金。"
-            "风险预期：节点前整体流动性易被抽离，大盘与多数方向或阶段性偏弱。"
-        )
-    if any(k in title for k in ("机器人", "具身", "人工智能")):
-        return (
-            "产业顶会或强主题展会窗口。"
-            "炒作预期：主题龙头与链条映射或阶段性活跃。"
-        )
-    if "解禁" in title or ("IPO" in title and not _event_is_chain_ipo(title)):
-        return f"{title.rstrip('。')}。无炒作预期、无风险预期"
-    if any(k in title for k in ("GDP", "CPI", "PPI", "LPR")):
-        return f"{title.rstrip('。')}。无炒作预期、无风险预期"
-    return f"{title.rstrip('。')}。无炒作预期、无风险预期"
+        theme = "介绍加强中小企业回款难问题治理有关工作情况"
+        if any(k in raw for k in ("回款", "账款", "中小企业")):
+            theme = "介绍加强中小企业回款难问题治理有关工作情况"
+        return f"{attend}{theme}。"
+
+    if "WAIC" in raw or "世界人工智能大会" in raw:
+        return "上海世界人工智能大会窗口，产业新品、大模型应用与治理相关议程集中发布。"
+    if "预告" in raw or "中报" in raw:
+        return "财报或业绩预告验证节点，预增披露与截止日前后波动通常放大。"
+    if _event_is_chain_ipo(raw) or "宇树" in raw or "长鑫" in raw:
+        return "产业链级定价、申购或上市节点，上市前常分流场内流动性。"
+    if any(k in raw for k in ("机器人", "具身", "人工智能")):
+        return "产业顶会或强主题展会窗口。"
+    if "，" in raw:
+        tail = raw.split("，", 1)[1].strip()
+        if tail and not tail.startswith(name):
+            return tail if tail.endswith("。") else f"{tail}。"
+    if name and name != raw:
+        extra = raw[len(name):].lstrip("，, ：:")
+        if extra:
+            return extra if extra.endswith("。") else f"{extra}。"
+    # 标题本身已含事实信息时，直接作描述（勿复读成「标题。标题。」）
+    if name and ("公布" in name or "截止" in name or "实施" in name or "举行" in name):
+        return f"{name}。"
+    if name:
+        return f"{name}。"
+    return "暂无补充说明。"
 
 
 def _wscn_relevant(item: dict) -> bool:
@@ -1489,13 +1523,17 @@ def _wscn_to_catalog(item: dict) -> dict | None:
     if not ts:
         return None
     dt = datetime.fromtimestamp(int(ts), TZ_CN)
-    title = (item.get("title") or "").strip().rstrip("。")
-    if not title:
+    raw_title = (item.get("title") or "").strip().rstrip("。")
+    if not raw_title:
         return None
+    title = _normalize_event_title(raw_title)
     month, day = dt.month, dt.day
-    span = _parse_span_from_title(title, month, day)
+    span = _parse_span_from_title(raw_title, month, day)
     imp = int(item.get("importance") or 0)
-    hot = any(k in title for k in ("WAIC", "中报", "业绩预告", "世界人工智能", "人工智能大会", "政治局"))
+    hot = any(
+        k in raw_title
+        for k in ("WAIC", "中报", "业绩预告", "世界人工智能", "人工智能大会", "政治局", "吹风会")
+    )
     label = f"{month}/{day}"
     if span:
         label = f"{month}/{day}–{span[1]}" if span[0] == month else f"{span[0]}/{span[1]}"
@@ -1506,7 +1544,7 @@ def _wscn_to_catalog(item: dict) -> dict | None:
         "label": label,
         "title": title,
         "short": _event_short(title),
-        "brief": _event_brief(title),
+        "brief": _event_brief(title, raw_title=raw_title),
         "hot": hot,
         "importance": imp,
         "source": "wscn",
@@ -1525,7 +1563,7 @@ def _events_match(a: dict, b: dict) -> bool:
         return True
     keys = (
         "WAIC", "人工智能大会", "中报", "预告", "LPR", "GDP", "CPI",
-        "具身", "机器人", "互联网大会", "宇树", "世界机器人大会",
+        "具身", "机器人", "互联网大会", "宇树", "世界机器人大会", "吹风会",
     )
     for kw in keys:
         if kw in ta and kw in tb:
@@ -1756,7 +1794,7 @@ def build_events_window(as_of: datetime) -> tuple:
             "label": "暂无大节点",
             "title": "关注业绩披露",
             "sub": "关注业绩披露",
-            "brief": "未来两周暂无预设大事件。无炒作预期、无风险预期",
+            "brief": "未来两周暂无预设大事件。",
             "hot": False,
         }]
     return label, nodes, sync_note
@@ -2467,7 +2505,7 @@ def render_fwd_section_html(
     for n in cal_items:
         label = n.get("label", "")
         title = n.get("title", n.get("short", ""))
-        note = (n.get("brief") or "").strip() or "无炒作预期、无风险预期"
+        note = (n.get("brief") or "").strip() or "暂无补充说明。"
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         hot = n.get("hot") or bool(tags)
