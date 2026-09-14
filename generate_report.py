@@ -1288,6 +1288,22 @@ SEED_EVENT_CATALOG: list[dict] = [
         "source": "seed",
         "span_end": (9, 16),
     },
+    {
+        "month": 9,
+        "day": 16,
+        "dot": "港",
+        "label": "9/16",
+        "title": "香港第一个五年规划公布",
+        "short": "港五年规划",
+        "brief": (
+            "行政长官李家超于立法会公布《香港特别行政区经济和社会发展第一个五年规划（2026—2030）》，"
+            "并随之发表《行政长官2026年施政报告》，"
+            "勾勒未来五年经济、产业与民生发展蓝图，对接国家「十五五」规划。"
+        ),
+        "hot": True,
+        "importance": 3,
+        "source": "seed",
+    },
 ]
 
 # 事件库：板块级炒作节点（会议/政策/财报/产业链级IPO）；普通单股解禁/无链条 IPO 排除
@@ -1475,19 +1491,58 @@ def _event_short(title: str) -> str:
     return title[:8] + ("…" if len(title) > 8 else "")
 
 
-def _normalize_event_title(title: str) -> str:
-    """标题只保留事件名，勿把出席单位/主题说明塞进标题。"""
-    t = (title or "").strip().rstrip("。")
+def _strip_embedded_dates(text: str) -> str:
+    """去掉标题/描述里已由左侧日期列表达的日期串，避免看三遍。"""
+    t = (text or "").strip()
     if not t:
         return t
+    t = re.sub(r"\d{1,2}\s*月\s*\d{1,2}\s*日\s*[至到]\s*\d{1,2}\s*月\s*\d{1,2}\s*日", "", t)
+    t = re.sub(r"\d{1,2}\s*月\s*\d{1,2}\s*日\s*[至到]\s*\d{1,2}\s*日", "", t)
+    t = re.sub(r"\d{1,2}\s*月\s*\d{1,2}\s*日", "", t)
+    t = re.sub(r"\d{1,2}/\d{1,2}(?:\s*[–\-]\s*\d{1,2}(?:/\d{1,2})?)?", "", t)
+    t = re.sub(r"(?:将于|定于|于)\s*(?=公布|发布|举行|举办|实施|施行|截止)", "", t)
+    t = re.sub(r"[，,]\s*[，,]+", "，", t)
+    t = re.sub(r"\s{2,}", " ", t)
+    return t.strip("，, ：:。 \t")
+
+
+def _brief_echoes_title(brief: str, title: str) -> bool:
+    """描述是否只是标题复读（含仅差句号/日期）。"""
+    b = _strip_embedded_dates((brief or "").strip().rstrip("。"))
+    t = _strip_embedded_dates((title or "").strip().rstrip("。"))
+    if not b or not t:
+        return False
+    if b == t or b in t:
+        return True
+    # 仅多了句末标点等极少量字符，仍算复读
+    if t in b and len(b) <= len(t) + 2:
+        return True
+    return False
+
+
+def _normalize_event_title(title: str) -> str:
+    """标题只保留事件名：去日期、勿塞出席单位/主题长句。"""
+    t = _strip_embedded_dates((title or "").strip().rstrip("。"))
+    if not t:
+        return (title or "").strip().rstrip("。")
     if "国务院政策例行吹风会" in t:
         return "国务院政策例行吹风会"
     if "医学人工智能大会" in t or "MAIC" in t.upper():
-        return "第二届医学人工智能大会（MAIC2nd 2026）" if "第二届" in t or "2nd" in t.lower() or "MAIC2nd" in t.replace(" ", "") else t.split("，")[0].strip()
+        return (
+            "第二届医学人工智能大会（MAIC2nd 2026）"
+            if "第二届" in t or "2nd" in t.lower() or "MAIC2nd" in t.replace(" ", "")
+            else t.split("，")[0].strip()
+        )
+    if "五年规划" in t and "香港" in t:
+        return "香港第一个五年规划公布"
+    if "世界人工智能大会" in t or "WAIC" in t:
+        return "世界人工智能大会（WAIC）"
     if "，" in t:
         head, _tail = t.split("，", 1)
         if any(k in head for k in ("大会", "展会", "博览会", "吹风会", "发布会", "峰会", "论坛")):
             return head.strip()
+    # 「xxx将在上海举办」类尾巴去掉
+    t = re.sub(r"将在.+?(举办|举行)$", "", t).strip("，, ")
     return t
 
 
@@ -1500,8 +1555,8 @@ def _is_meeting_event(title: str) -> bool:
 
 
 def _event_brief(title: str, raw_title: str | None = None) -> str:
-    """事件描述：写主题/内容/出席方等事实，不写炒作预期或风险预期。
-    会议类必须写清本场具体议题（讲什么），禁止空泛「顶会窗口」套话。"""
+    """事件描述：写主题/内容/出席方等事实；禁止复读标题或再写一遍日期。
+    会议类必须写清本场具体议题（讲什么）。"""
     raw = (raw_title or title or "").strip().rstrip("。")
     name = _normalize_event_title(raw)
 
@@ -1522,25 +1577,40 @@ def _event_brief(title: str, raw_title: str | None = None) -> str:
             "并开展国家级医学人工智能优秀案例展示。"
         )
 
+    if "五年规划" in raw and "香港" in raw:
+        return (
+            "行政长官李家超于立法会公布《香港特别行政区经济和社会发展第一个五年规划（2026—2030）》，"
+            "并随之发表《行政长官2026年施政报告》，"
+            "勾勒未来五年经济、产业与民生发展蓝图，对接国家「十五五」规划。"
+        )
+
     if "WAIC" in raw or "世界人工智能大会" in raw:
         return "上海世界人工智能大会窗口，产业新品、大模型应用与治理相关议程集中发布。"
     if "预告" in raw or "中报" in raw:
         return "财报或业绩预告验证节点，预增披露与截止日前后波动通常放大。"
     if _event_is_chain_ipo(raw) or "宇树" in raw or "长鑫" in raw:
         return "产业链级定价、申购或上市节点，上市前常分流场内流动性。"
+    if "恒生科技" in raw:
+        return "恒生科技指数扩容与指数编制规则征求意见结束，后续关注正式方案与成分股调整。"
+    if "住房公积金" in raw:
+        return "《住房公积金管理条例》修订决定施行，关注缴存、提取与使用规则变化。"
 
-    # 标题逗号后常为议题/说明，会议类优先取作主题描述
+    # 标题逗号后常为议题/说明；若只是日期或复读标题则不用
     if "，" in raw:
-        tail = raw.split("，", 1)[1].strip()
-        if tail and not tail.startswith(name):
+        tail = _strip_embedded_dates(raw.split("，", 1)[1].strip())
+        if tail and not _brief_echoes_title(tail, name):
             return tail if tail.endswith("。") else f"{tail}。"
-    if name and name != raw:
-        extra = raw[len(name):].lstrip("，, ：:")
-        if extra:
+    if name and name != _strip_embedded_dates(raw):
+        extra = _strip_embedded_dates(raw)
+        # raw 去日期后若仍长于 name，取差额作说明
+        if extra.startswith(name):
+            extra = extra[len(name):].lstrip("，, ：:")
+        elif name in extra:
+            extra = extra.replace(name, "", 1).strip("，, ：:")
+        if extra and not _brief_echoes_title(extra, name):
             return extra if extra.endswith("。") else f"{extra}。"
 
     if _is_meeting_event(raw) or _is_meeting_event(name):
-        # 从会议名本身提炼议题，避免「产业顶会窗口」空话
         if "机器人" in raw or "具身" in raw:
             return "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。"
         if "人工智能" in raw or "大模型" in raw:
@@ -1551,11 +1621,13 @@ def _event_brief(title: str, raw_title: str | None = None) -> str:
             return f"围绕{name}相关议题展开交流，具体议程以主办方公布为准。"
         return "会议相关议题以主办方公布为准。"
 
-    # 标题本身已含事实信息时，直接作描述（勿复读成「标题。标题。」）
-    if name and ("公布" in name or "截止" in name or "实施" in name or "举行" in name):
-        return f"{name}。"
-    if name:
-        return f"{name}。"
+    # 政策/节点类：补充动作含义，禁止「标题。」复读
+    if "咨询截止" in name or "征求意见" in name or "截止" in name:
+        return "意见征集结束，后续以正式规则或调整方案发布为准。"
+    if "正式实施" in name or "施行" in name or "实施" in name:
+        return "相关规定自该日起施行，关注执行细则与行业影响。"
+    if "公布" in name or "发布" in name:
+        return "正式对外发布相关规划或文件，关注要点与产业映射。"
     return "暂无补充说明。"
 
 
@@ -1704,7 +1776,7 @@ def _seed_covers_event(seed: dict, ev: dict) -> bool:
     keys = (
         "WAIC", "人工智能大会", "中报", "预告", "CPIC", "医药创新",
         "低空", "政治局", "具身", "机器人", "宇树", "世界机器人大会",
-        "医学人工智能", "MAIC", "吹风会",
+        "医学人工智能", "MAIC", "吹风会", "五年规划",
     )
     return any(k in st and k in et for k in keys) or st in et or et in st
 
