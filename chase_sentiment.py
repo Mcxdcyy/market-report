@@ -8,7 +8,7 @@
 2. 昨追-今日承接：取**前一交易日**追高池，算当日 (今收−昨高)/昨高 均值
 3. 今追-回落指数：取**当日**追高池，算当日 (今收−今高)/今高 均值
 
-排除 ST、北交所。
+排除 ST、北交所；上市日历天数 ≤10 的个股不计入追高池。
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ DATA_FILE = BASE / "大盘数据.numbers"
 SERIES_DAYS = 30
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 2  # 昨追池 / 今追池分口径
+SCHEMA = 3  # +上市≤10日排除
 
 GROUP_ORDER = (
     ("main", "主板追高"),
@@ -98,10 +98,16 @@ def _day_metric_means(
         g = _group_of(s["bucket"])
         if g is None:
             continue
+        list_date = s.get("list_date")
+        if list_date is not None and (d - list_date).days <= ts.LIST_DAYS_MIN:
+            continue
         i = idx.get(ds)
         if i is None or i < 1:
             continue
-        if i + 1 < MIN_BARS:
+        n_bars = i + 1
+        if n_bars < MIN_BARS:
+            continue
+        if list_date is None and n_bars <= ts.LIST_DAYS_MIN:
             continue
 
         prev_c = closes[i - 1]
@@ -238,7 +244,7 @@ def compute_chase_sentiment(
             "追高：日内最高相对昨收≥7%。"
             "昨追-赚钱效应/昨追-今日承接：取前一交易日追高池，分别算(今高−昨高)/昨收、(今收−昨高)/昨高。"
             "今追-回落指数：取当日追高池，算(今收−今高)/今高。"
-            "创板=创业板+科创板；不含ST、北交所。"
+            "创板=创业板+科创板；不含ST、北交所；不含上市日历天数≤10的个股。"
         ),
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }

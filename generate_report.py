@@ -3509,12 +3509,16 @@ def render_html(ctx: dict) -> str:
     margin: 4px 0 10px; padding-left: 2px;
   }}
   .chase-grid {{
-    display: grid; grid-template-columns: 1fr; gap: 12px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }}
-  @media (min-width: 900px) {{
-    .chase-grid {{ grid-template-columns: repeat(3, 1fr); }}
+  @media (min-width: 960px) {{
+    .chase-grid {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
   }}
   .chase-chart {{
+    min-width: 0;
+    overflow: hidden;
     padding: 12px 12px 10px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fafafa;
@@ -3525,22 +3529,18 @@ def render_html(ctx: dict) -> str:
   }}
   .chase-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
   .chase-chart-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  .chase-plot {{ width: 100%; overflow: visible; }}
+  .chase-plot {{ width: 100%; overflow: hidden; }}
   .chase-bars {{
-    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
   }}
   .chase-col {{
     flex: 1 1 0; min-width: 0;
     display: flex; flex-direction: column; align-items: center; height: 100%;
   }}
+  /* 近30柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
   .chase-val {{
-    font-size: 9px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; line-height: 1.15;
-    margin-bottom: 2px; white-space: nowrap;
+    display: none !important;
   }}
-  .chase-val.pos {{ color: #E53935; }}
-  .chase-val.neg {{ color: #34C759; }}
-  .chase-col.latest .chase-val {{ font-weight: 700; }}
   .chase-track {{
     flex: 1; width: 100%; min-height: 0; position: relative;
   }}
@@ -3550,7 +3550,7 @@ def render_html(ctx: dict) -> str:
   }}
   .chase-bar {{
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 70%; max-width: 14px; min-height: 1px;
+    width: 70%; max-width: 12px; min-height: 1px;
     border-radius: 2px 2px 0 0; z-index: 2;
   }}
   .chase-bar.pos {{
@@ -3562,7 +3562,7 @@ def render_html(ctx: dict) -> str:
     background: var(--bar-bad, #34C759);
   }}
   .chase-axis {{
-    display: flex; gap: 2px; margin-top: 6px; min-height: 16px; width: 100%;
+    display: flex; gap: 1px; margin-top: 6px; min-height: 16px; width: 100%;
   }}
   .chase-tick {{
     flex: 1 1 0; min-width: 0; height: 16px; position: relative;
@@ -3904,7 +3904,6 @@ def render_html(ctx: dict) -> str:
     .vol20-note {{ font-size: 14px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
-    .chase-val {{ display: none !important; }}
     .chase-bar {{ width: 85%; max-width: none; }}
     .chase-chart-title {{ font-size: 14px; }}
     .chase-chart-meta {{ font-size: 12px; }}
@@ -4565,7 +4564,8 @@ def render_chase_sentiment_html(block: dict) -> str:
         "追高定义：日内最高价相对昨收涨幅≥7%。"
         "昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。"
         "今追-回落指数：取当日追高池，计算(今收−今高)/今高。"
-        "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所。"
+        "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
+        "不含上市日历天数≤10的个股。"
         "</div>"
     )
     return "".join(parts) + note

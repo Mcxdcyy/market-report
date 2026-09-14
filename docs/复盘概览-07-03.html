@@ -487,12 +487,16 @@
     margin: 4px 0 10px; padding-left: 2px;
   }
   .chase-grid {
-    display: grid; grid-template-columns: 1fr; gap: 12px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
-  @media (min-width: 900px) {
-    .chase-grid { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width: 960px) {
+    .chase-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   .chase-chart {
+    min-width: 0;
+    overflow: hidden;
     padding: 12px 12px 10px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fafafa;
@@ -503,22 +507,18 @@
   }
   .chase-chart-title { font-size: 13px; font-weight: 700; color: var(--text); }
   .chase-chart-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .chase-plot { width: 100%; overflow: visible; }
+  .chase-plot { width: 100%; overflow: hidden; }
   .chase-bars {
-    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
   }
   .chase-col {
     flex: 1 1 0; min-width: 0;
     display: flex; flex-direction: column; align-items: center; height: 100%;
   }
+  /* 近30柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
   .chase-val {
-    font-size: 9px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; line-height: 1.15;
-    margin-bottom: 2px; white-space: nowrap;
+    display: none !important;
   }
-  .chase-val.pos { color: #E53935; }
-  .chase-val.neg { color: #34C759; }
-  .chase-col.latest .chase-val { font-weight: 700; }
   .chase-track {
     flex: 1; width: 100%; min-height: 0; position: relative;
   }
@@ -528,7 +528,7 @@
   }
   .chase-bar {
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 70%; max-width: 14px; min-height: 1px;
+    width: 70%; max-width: 12px; min-height: 1px;
     border-radius: 2px 2px 0 0; z-index: 2;
   }
   .chase-bar.pos {
@@ -540,7 +540,7 @@
     background: var(--bar-bad, #34C759);
   }
   .chase-axis {
-    display: flex; gap: 2px; margin-top: 6px; min-height: 16px; width: 100%;
+    display: flex; gap: 1px; margin-top: 6px; min-height: 16px; width: 100%;
   }
   .chase-tick {
     flex: 1 1 0; min-width: 0; height: 16px; position: relative;
@@ -882,7 +882,6 @@
     .vol20-note { font-size: 14px; }
     .vol20-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
     .chase-bars { height: 110px; gap: 1px; }
-    .chase-val { display: none !important; }
     .chase-bar { width: 85%; max-width: none; }
     .chase-chart-title { font-size: 14px; }
     .chase-chart-meta { font-size: 12px; }
@@ -1776,7 +1775,7 @@
     <div class="news-empty">该日暂无资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 22:42</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 22:49</div>
 </div>
 </body>
 </html>
