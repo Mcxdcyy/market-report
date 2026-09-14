@@ -492,7 +492,7 @@
     gap: 12px;
   }
   @media (min-width: 960px) {
-    .chase-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .chase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   .chase-chart {
     min-width: 0;
@@ -538,6 +538,21 @@
   .chase-bar.neg {
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
+  }
+  /* 追高数量：自底部起柱，较前日红增绿减 */
+  .chase-chart.is-count .chase-zero { display: none; }
+  .chase-chart.is-count .chase-bar {
+    bottom: 0; top: auto; transform: translateX(-50%);
+    border-radius: 1px 1px 0 0;
+  }
+  .chase-chart.is-count .chase-bar.pos {
+    background: var(--bar-ok, #E53935);
+  }
+  .chase-chart.is-count .chase-bar.neg {
+    background: var(--bar-bad, #34C759);
+  }
+  .chase-chart.is-count .chase-bar.flat {
+    background: #8e8e93;
   }
   .chase-axis {
     display: flex; gap: 1px; margin-top: 6px; min-height: 16px; width: 100%;
@@ -1751,7 +1766,7 @@
     <div class="news-empty">该日暂无板块-资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 23:05</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 23:11</div>
 </div>
 </body>
 </html>

@@ -3485,7 +3485,7 @@ def render_html(ctx: dict) -> str:
     gap: 12px;
   }}
   @media (min-width: 960px) {{
-    .chase-grid {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+    .chase-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   }}
   .chase-chart {{
     min-width: 0;
@@ -3531,6 +3531,21 @@ def render_html(ctx: dict) -> str:
   .chase-bar.neg {{
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
+  }}
+  /* 追高数量：自底部起柱，较前日红增绿减 */
+  .chase-chart.is-count .chase-zero {{ display: none; }}
+  .chase-chart.is-count .chase-bar {{
+    bottom: 0; top: auto; transform: translateX(-50%);
+    border-radius: 1px 1px 0 0;
+  }}
+  .chase-chart.is-count .chase-bar.pos {{
+    background: var(--bar-ok, #E53935);
+  }}
+  .chase-chart.is-count .chase-bar.neg {{
+    background: var(--bar-bad, #34C759);
+  }}
+  .chase-chart.is-count .chase-bar.flat {{
+    background: #8e8e93;
   }}
   .chase-axis {{
     display: flex; gap: 1px; margin-top: 6px; min-height: 16px; width: 100%;
@@ -4421,6 +4436,8 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
     if n_bars >= 8:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
 
     cols = []
     ticks = []
@@ -4478,6 +4495,93 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
   </div>'''
 
 
+def _render_chase_count_chart(title: str, series: list[dict]) -> str:
+    """追高数量柱图：自底部起柱；较前日增红减绿。"""
+    vals = [float(x["value"]) for x in series if x.get("value") is not None]
+    if not vals:
+        return f'''<div class="chase-chart is-count">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">{title}</span>
+      <span class="chase-chart-meta">无样本</span>
+    </div>
+    <div class="news-empty">该窗口暂无追高样本</div>
+  </div>'''
+
+    vmax = max(vals)
+    vmin = min(vals)
+    y_min = vmin * 0.85
+    span = vmax - y_min
+    n_bars = len(series)
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
+
+    prev: float | None = None
+    cols = []
+    ticks = []
+    for i, row in enumerate(series):
+        raw = row.get("value")
+        ds = str(row.get("date") or "")
+        try:
+            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
+            lab = f"{dt.month}/{dt.day}"
+            wd = WEEKDAY[dt.weekday()]
+        except ValueError:
+            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
+            wd = ""
+        is_latest = i == n_bars - 1
+        if raw is None:
+            cols.append(
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 无样本">
+      <div class="chase-val">—</div>
+      <div class="chase-track"></div>
+    </div>'''
+            )
+        else:
+            v = float(raw)
+            if span > 0:
+                pct = (v - y_min) / span * 100.0
+            else:
+                pct = 50.0
+            h = max(pct, 2.0 if v > 0 else 0.0)
+            if prev is None:
+                tag = "flat"
+            elif v > prev:
+                tag = "pos"
+            elif v < prev:
+                tag = "neg"
+            else:
+                tag = "flat"
+            val_lab = f"{int(round(v))}"
+            cols.append(
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}家">
+      <div class="chase-val {tag}">{val_lab}</div>
+      <div class="chase-track"><div class="chase-bar {tag}" style="height:{h:.1f}%"></div></div>
+    </div>'''
+            )
+            prev = v
+        ticks.append(
+            f'<div class="chase-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'<span>{lab}</span></div>'
+        )
+
+    last = next((x for x in reversed(series) if x.get("value") is not None), None)
+    latest_lab = f"{int(round(float(last['value'])))} 家" if last else "—"
+    return f'''<div class="chase-chart is-count">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">{title}</span>
+      <span class="chase-chart-meta">最新 {latest_lab}</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars">{"".join(cols)}</div>
+      <div class="chase-axis">{"".join(ticks)}</div>
+    </div>
+  </div>'''
+
+
 def render_chase_sentiment_html(block: dict) -> str:
     groups = block.get("groups") or {}
     if not groups:
@@ -4491,6 +4595,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         metrics = g.get("metrics") or {}
         charts = []
         for mk, default_title in (
+            ("count", "主板追高数量" if gkey == "main" else "创板追高数量"),
             ("money", "昨追-赚钱效应"),
             ("loss", "昨追-今日承接"),
             ("pullback", "今追-回落指数"),
@@ -4498,7 +4603,10 @@ def render_chase_sentiment_html(block: dict) -> str:
             m = metrics.get(mk) or {}
             title = m.get("name") or default_title
             ser = m.get("series") or []
-            charts.append(_render_chase_metric_chart(title, ser))
+            if mk == "count":
+                charts.append(_render_chase_count_chart(title, ser))
+            else:
+                charts.append(_render_chase_metric_chart(title, ser))
         parts.append(
             f'''<div class="chase-group">
     <div class="chase-group-title">{gname}</div>
@@ -4509,10 +4617,11 @@ def render_chase_sentiment_html(block: dict) -> str:
     note = (
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
+        "追高数量：当日追高池家数。"
         "昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。"
         "今追-回落指数：取当日追高池，计算(今收−今高)/今高。"
         "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
-        "不含上市日历天数≤10的个股。"
+        "不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
     )
     return "".join(parts) + note
