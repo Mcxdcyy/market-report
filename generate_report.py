@@ -3920,13 +3920,6 @@ def render_fund_recognition_html(block: dict) -> str:
             continue
         items.append(it)
 
-    def _prev_day_pct(series: list) -> float | None:
-        """前一交易日占比；无样本按 0；序列不足 2 日则无对比。"""
-        if len(series) < 2:
-            return None
-        prev = series[-2].get("pct")
-        return 0.0 if prev is None else float(prev)
-
     # 排序：当日占比>50%优先（按当日占比降序）；其余按近5日占比均值降序
     def _sort_key(it: dict):
         tp = _today_pct(it)
@@ -3981,7 +3974,6 @@ def render_fund_recognition_html(block: dict) -> str:
             )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
-        prev = _prev_day_pct(series)
         badges = []
         if today is not None:
             today_f = float(today)
@@ -3989,18 +3981,6 @@ def render_fund_recognition_html(block: dict) -> str:
                 f'<span class="fund-pill {"ok" if today_f > 50.0 else "bad"}">'
                 f'占比 {today_f:.1f}%</span>'
             )
-            if prev is not None:
-                delta = round(today_f - prev, 1)
-                if delta > 0:
-                    badges.append(
-                        f'<span class="fund-pill ok">↑+{delta:.1f}%</span>'
-                    )
-                elif delta < 0:
-                    badges.append(
-                        f'<span class="fund-pill bad">↓{delta:.1f}%</span>'
-                    )
-                else:
-                    badges.append('<span class="fund-pill flat">→持平</span>')
         meta = (
             f'共 {it.get("pool_n", 0)} 只 · '
             f'3亿以上 {int(last_pt.get("n_amt") or 0)} 只'
@@ -4030,8 +4010,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值，"
-        "箭头为较前一交易日变化（百分点；前一日无样本按0%）。柱图浅线为50%刻度。"
+        "柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值。柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
