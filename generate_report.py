@@ -21,7 +21,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -2300,6 +2300,38 @@ def _parse_cal_end_key(label: str) -> tuple[int, int]:
     return _parse_cal_sort_key(label)
 
 
+def _rel_week_label(label: str, as_of: datetime | None) -> str:
+    """相对报表日：日期下展示「本周二」「下周三」等（周一为一周起点；取标签起始日）。"""
+    if as_of is None:
+        return ""
+    sm, sd = _parse_cal_sort_key(label)
+    if not (1 <= sm <= 12 and 1 <= sd <= 31):
+        return ""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    year = as_of.year if hasattr(as_of, "year") else as_of_d.year
+    try:
+        ev = date(year, sm, sd)
+    except ValueError:
+        return ""
+    # 跨年：起始月日明显早于报表日 → 落在下一年
+    if ev < as_of_d - timedelta(days=30):
+        try:
+            ev = date(year + 1, sm, sd)
+        except ValueError:
+            return ""
+    as_of_monday = as_of_d - timedelta(days=as_of_d.weekday())
+    ev_monday = ev - timedelta(days=ev.weekday())
+    week_delta = (ev_monday - as_of_monday).days // 7
+    wd = WEEKDAY[ev.weekday()]
+    if week_delta <= 0:
+        prefix = "本周"
+    elif week_delta == 1:
+        prefix = "下周"
+    else:
+        prefix = "下下周"
+    return f"{prefix}{wd}"
+
+
 def _peak_tags_for_label(label: str, peak: str) -> list[str]:
     """从 peak 文案为日历节点匹配标注（催化峰值 / 情绪高点）。"""
     if not peak or not label:
@@ -2509,9 +2541,12 @@ def render_fwd_section_html(
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         hot = n.get("hot") or bool(tags)
+        wd = _rel_week_label(label, as_of)
+        wd_html = f'<div class="fwd-cal-wd">{wd}</div>' if wd else ""
         cal_rows.append(
             f'<div class="fwd-cal-item{" hot" if hot else ""}">'
-            f'<div class="fwd-cal-date">{label}</div>'
+            f'<div class="fwd-cal-date">'
+            f'<div class="fwd-cal-md">{label}</div>{wd_html}</div>'
             f'<div class="fwd-cal-body">'
             f'<div class="fwd-cal-top">'
             f'<span class="fwd-cal-title">{title}</span>'
@@ -3351,14 +3386,20 @@ def render_html(ctx: dict) -> str:
     background: #fff; overflow: hidden;
   }}
   .fwd-cal-item {{
-    display: grid; grid-template-columns: 76px 1fr; gap: 10px 12px;
+    display: grid; grid-template-columns: 84px 1fr; gap: 10px 12px;
     padding: 12px 14px; border-bottom: 1px solid #f0f0f5;
     position: relative;
   }}
   .fwd-cal-item:last-child {{ border-bottom: none; }}
   .fwd-cal-date {{
+    line-height: 1.35; padding-top: 2px;
+  }}
+  .fwd-cal-md {{
     font-size: 12px; font-weight: 800; color: var(--accent);
-    line-height: 1.4; padding-top: 2px;
+  }}
+  .fwd-cal-wd {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    margin-top: 2px;
   }}
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
