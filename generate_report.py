@@ -1460,8 +1460,8 @@ def _event_brief(title: str) -> str:
         )
     if _event_is_chain_ipo(title) or "宇树" in title or "长鑫" in title:
         return (
-            "产业链级定价/申购/上市节点，映射链条情绪易脉冲。"
-            "炒作预期：相关产业链映射标的或借节点活跃。"
+            "产业链级定价/申购/上市节点；上市前常分流场内资金。"
+            "风险预期：节点前整体流动性易被抽离，大盘与多数方向或阶段性偏弱。"
         )
     if any(k in title for k in ("机器人", "具身", "人工智能")):
         return (
