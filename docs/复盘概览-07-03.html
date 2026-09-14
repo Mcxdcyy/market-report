@@ -185,6 +185,58 @@
   #sec-env .callout.bad { background: #e8f5e9; border-color: #34C759; }
 
   /* ── 趋势强度（个股五条件占比）── */
+  .ts-cnt-wrap {
+    margin-bottom: 12px; padding: 14px 14px 12px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: #fafafa;
+  }
+  .ts-cnt-chart {
+    width: 100%; overflow: visible;
+  }
+  .ts-cnt-bars {
+    display: flex; align-items: flex-end; gap: 2px; height: 120px;
+  }
+  .ts-cnt-col {
+    flex: 1 1 0; min-width: 0; max-width: none;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    height: 100%;
+  }
+  .ts-cnt-val {
+    font-size: 9px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
+    white-space: nowrap;
+  }
+  .ts-cnt-col.latest .ts-cnt-val { color: var(--accent); font-weight: 700; }
+  .ts-cnt-track {
+    width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center;
+    min-height: 0;
+  }
+  .ts-cnt-bar {
+    width: 70%; max-width: 14px; border-radius: 2px 2px 1px 1px; min-height: 2px;
+  }
+  .ts-cnt-bar.up { background: var(--bar-ok); }
+  .ts-cnt-bar.down { background: var(--bar-bad); }
+  .ts-cnt-bar.flat { background: #8e8e93; }
+  .ts-cnt-col.latest .ts-cnt-bar { box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }
+  .ts-cnt-axis {
+    display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
+  }
+  .ts-cnt-tick {
+    flex: 1 1 0; min-width: 0; height: 18px; position: relative;
+  }
+  .ts-cnt-tick span {
+    display: none; position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: var(--muted); white-space: nowrap;
+  }
+  .ts-cnt-tick.show span { display: block; }
+  .ts-cnt-tick.show:first-child span {
+    left: 0; transform: none;
+  }
+  .ts-cnt-tick.latest span {
+    display: block; left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }
+
   .ts-chart {
     margin-bottom: 12px; padding: 14px 14px 12px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -738,6 +790,12 @@
     .vol20-meta { font-size: 12px; }
     .vol20-note { font-size: 14px; }
     .vol20-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
+    .ts-cnt-bars { height: 110px; gap: 1px; }
+    .ts-cnt-val { display: none !important; }
+    .ts-cnt-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
+    .ts-cnt-axis { gap: 1px; margin-top: 8px; min-height: 20px; }
+    .ts-cnt-tick { height: 20px; }
+    .ts-cnt-tick span { font-size: 10px; }
     .trend-group-row th.trend-group { font-size: 12px; }
     .sector-rank { font-size: 13px; }
     .sector-name { font-size: 17px; }
@@ -1224,7 +1282,7 @@
     <div class="news-empty">该日暂无资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 18:58</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 19:23</div>
 </div>
 </body>
 </html>
