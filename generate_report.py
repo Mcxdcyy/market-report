@@ -2593,14 +2593,10 @@ def _timeline_nodes_from_cal(cal_items: list[dict], peak: str) -> list[dict]:
             sub = f"{shorts[0]}·{shorts[1]}"
         else:
             sub = f"{shorts[0]}+{len(shorts) - 1}"
-        # 展示日期：同日起始有跨度则用区间 label，否则 m/d
-        span_labels = [
-            lb for it in items
-            for lb in [it.get("label", "")]
-            if lb and ("–" in lb or "—" in lb)
-        ]
-        label = span_labels[0] if span_labels else f"{key[0]}/{key[1]}"
-        dot = primary.get("dot") or str(key[1])
+        # 时间轴日期只标起始日；跨度留给事件详情
+        label = f"{key[0]}/{key[1]}"
+        dots = [it.get("dot") for it in items if it.get("dot")]
+        dot = primary.get("dot") or (dots[0] if dots else str(key[1]))
         hot = any(it.get("hot") for it in items) or bool(_peak_tags_for_label(label, peak))
         nodes.append({
             "label": label,
