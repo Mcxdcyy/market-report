@@ -223,7 +223,7 @@ alwaysApply: true
    - **国家政策**：报表当日公开发布的重要文件（国务院/部委规章、出口管制、产业规划等）；`type`: `政策`，`timing` 用 `7/X发布`、`7/X印发`、`7/X盘后` 等标注当日
    - **禁止**写入：前一交易日盘后、无 `timing` 的旧闻复述、盘面点评
    - 代码层 `_is_same_day_post_close` 会自动过滤不符合项（政策允许当日发布，不要求收盘后）
-5. **未来2周 · 事件与方向**：按 §5 固定**三层**排版更新 `direction_analysis`（仅 `summary`/`peak`/`rhythm`，**不写** themes/stance）+ 事件库；`summary` 必写 `2周主线：…` + `当日背景：…`
+5. **未来2周 · 事件与方向**：按 §5 固定**两层**排版更新 `direction_analysis`（仅 `summary`/`peak`/`rhythm`，**不写** themes/stance）+ 事件库；`summary` 必写 `2周主线：…` + `当日背景：…`
    - **事件库必须联网抓取**（见下「事件库同步」）；抓取失败须带网络权限重试，**禁止**沿用 `event_catalog.json` 完成本次报表
 6. **推送外网**：`git add`（含 `docs/`、`market_news.json`、`generate_report.py` 等）→ `commit` → `git push`；完成后给出 https://mcxdcyy.github.io/market-report/ 链接。**禁止只更新本地不 push。**
 
@@ -242,10 +242,6 @@ alwaysApply: true
 
 ## 未来2周 · 事件与方向（固定标准 · 每次更新必做）
 
-第 5 模块 **永远** 按下列**三层**顺序排版（由 `render_fwd_section_html` 生成，**禁止**改回旧版横向圆点+节奏步骤条+峰值双卡片、**禁止**恢复「题材方向」优先/可做卡片）：
-
-| 层级 | 页面区块 | 作用 |
-|------|----------|------|
 第 5 模块 **永远** 按下列**两层**顺序排版（由 `render_fwd_section_html` 生成，**禁止**恢复横向时间轴、**禁止**恢复「题材方向」优先/可做卡片）：
 
 | 层级 | 页面区块 | 作用 |
