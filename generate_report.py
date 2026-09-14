@@ -3980,12 +3980,23 @@ def load_trend_strength_block(
 
 
 def _render_ts_count_bars_html(series: list[dict]) -> str:
-    """近30日强趋势家数柱图（放在强趋势占比图上方）。"""
+    """近30日全场强趋势占比柱图（放在分板块占比图上方）。"""
     if not series:
         return ""
-    counts = [int(d.get("trend") or 0) for d in series]
-    vmax = max(counts) if counts else 0
-    vmin = min(counts) if counts else 0
+
+    def _ratio(row: dict) -> float:
+        if row.get("ratio") is not None:
+            try:
+                return float(row["ratio"])
+            except (TypeError, ValueError):
+                pass
+        trend_n = int(row.get("trend") or 0)
+        total_n = int(row.get("total") or 0)
+        return (100.0 * trend_n / total_n) if total_n else 0.0
+
+    ratios = [_ratio(d) for d in series]
+    vmax = max(ratios) if ratios else 0.0
+    vmin = min(ratios) if ratios else 0.0
     y_min = vmin * 0.85
     span = vmax - y_min
     n_bars = len(series)
@@ -3994,14 +4005,13 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
 
-    # 首日着色：与窗口再前一日对比（有则用；无则 flat）
-    prev: int | None = None
+    prev: float | None = None
     cols = []
     ticks = []
     for i, row in enumerate(series):
+        r = ratios[i]
         n = int(row.get("trend") or 0)
         ds = str(row.get("date") or "")
-        # 展示 M/D
         try:
             dt = datetime.strptime(ds[:10], "%Y-%m-%d")
             lab = f"{dt.month}/{dt.day}"
@@ -4011,21 +4021,22 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
             wd = ""
         if prev is None:
             tag = "flat"
-        elif n > prev:
+        elif r > prev:
             tag = "up"
-        elif n < prev:
+        elif r < prev:
             tag = "down"
         else:
             tag = "flat"
         if span > 0:
-            pct = (n - y_min) / span * 100.0
+            h_pct = (r - y_min) / span * 100.0
         else:
-            pct = 50.0
-        height = round(max(pct, 2.0 if n > 0 else 0.0), 1)
+            h_pct = 50.0
+        height = round(max(h_pct, 2.0 if r > 0 else 0.0), 1)
         is_latest = i == n_bars - 1
+        val_lab = f"{r:.1f}%"
         cols.append(
-            f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {n}家">
-      <div class="ts-cnt-val">{n}</div>
+            f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}（{n}家）">
+      <div class="ts-cnt-val">{val_lab}</div>
       <div class="ts-cnt-track">
         <div class="ts-cnt-bar {tag}" style="height:{height}%"></div>
       </div>
@@ -4035,11 +4046,11 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
             f'<div class="ts-cnt-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
             f'<span>{lab}</span></div>'
         )
-        prev = n
+        prev = r
 
     d0 = ""
     d1 = ""
-    latest_n = counts[-1] if counts else 0
+    latest_r = ratios[-1] if ratios else 0.0
     try:
         d0 = fmt_md(datetime.strptime(str(series[0]["date"])[:10], "%Y-%m-%d"))
         d1 = fmt_md(datetime.strptime(str(series[-1]["date"])[:10], "%Y-%m-%d"))
@@ -4049,8 +4060,8 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
 
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">近30日强趋势家数</span>
-      <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_n} 家</span>
+      <span class="ts-chart-title">近30日强趋势占比</span>
+      <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_r:.1f}%</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-cnt-bars">{"".join(cols)}</div>
