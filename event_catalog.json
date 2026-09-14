@@ -59,7 +59,7 @@
     "title": "长鑫科技打新",
     "short": "长鑫科技打新",
     "brief": "产业链级定价、申购或上市节点，上市前常分流场内流动性。",
-    "hot": false,
+    "hot": true,
     "importance": 4,
     "source": "wscn",
     "fetched_at": "2026-09-14"

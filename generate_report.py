@@ -1456,6 +1456,30 @@ def _parse_span_from_title(title: str, month: int, day: int) -> tuple[int, int] 
     return None
 
 
+def _event_is_hot(title: str, ev: dict | None = None) -> bool:
+    """重要事件（红点）判定。一般事件为蓝点。
+
+    规则（命中任一即为重要）：
+    1. seed / 上游已显式标记 hot=True
+    2. 标题含强主题关键词：WAIC、世界人工智能、人工智能大会、政治局、
+       吹风会、中报/业绩预告、产业链级 IPO（宇树/长鑫等）
+    """
+    if ev is not None and ev.get("hot") is True:
+        return True
+    t = title or ""
+    if any(
+        k in t
+        for k in (
+            "WAIC", "世界人工智能", "人工智能大会", "政治局", "吹风会",
+            "中报", "业绩预告",
+        )
+    ):
+        return True
+    if _event_is_chain_ipo(t) or "宇树" in t or "长鑫" in t:
+        return True
+    return False
+
+
 def _event_dot(title: str, day: int) -> str:
     if "WAIC" in title or "人工智能" in title:
         return "AI"
@@ -1662,10 +1686,7 @@ def _wscn_to_catalog(item: dict) -> dict | None:
     month, day = dt.month, dt.day
     span = _parse_span_from_title(raw_title, month, day)
     imp = int(item.get("importance") or 0)
-    hot = any(
-        k in raw_title
-        for k in ("WAIC", "中报", "业绩预告", "世界人工智能", "人工智能大会", "政治局", "吹风会")
-    )
+    hot = _event_is_hot(raw_title) or _event_is_hot(title)
     label = f"{month}/{day}"
     if span:
         label = f"{month}/{day}–{span[1]}" if span[0] == month else f"{span[0]}/{span[1]}"
@@ -2702,12 +2723,18 @@ def render_fwd_section_html(
         note = (n.get("brief") or "").strip() or "暂无补充说明。"
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
-        hot = n.get("hot") or bool(tags)
+        hot = bool(
+            n.get("hot")
+            or _event_is_hot(title, n)
+            or tags
+        )
         wd = _rel_week_label(label, as_of)
         wd_html = f'<span class="fwd-cal-wd">{wd}</span>' if wd else ""
+        mark_cls = " hot" if hot else ""
         cal_rows.append(
             f'<div class="fwd-cal-item{" hot" if hot else ""}">'
             f'<div class="fwd-cal-head">'
+            f'<span class="fwd-cal-mark{mark_cls}" aria-hidden="true"></span>'
             f'<span class="fwd-cal-md">{label}</span>{wd_html}</div>'
             f'<div class="fwd-cal-body">'
             f'<div class="fwd-cal-top">'
@@ -3527,11 +3554,21 @@ def render_html(ctx: dict) -> str:
   }}
   .fwd-cal-item:last-child {{ border-bottom: none; }}
   .fwd-cal-head {{
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+  }}
+  .fwd-cal-mark {{
+    width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px rgba(10, 132, 255, .16);
+  }}
+  .fwd-cal-mark.hot {{
+    background: #ff6b63;
+    box-shadow: 0 0 0 2px rgba(255, 107, 99, .2);
   }}
   .fwd-cal-md {{
     font-size: 14px; font-weight: 800; color: var(--accent); line-height: 1.3;
   }}
+  .fwd-cal-item.hot .fwd-cal-md {{ color: #e53935; }}
   .fwd-cal-wd {{
     font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.3;
   }}
@@ -3660,6 +3697,7 @@ def render_html(ctx: dict) -> str:
     .fwd-cal-note {{ font-size: 14px; line-height: 1.55; margin-top: 3px; }}
     .fwd-cal-md {{ font-size: 16px; }}
     .fwd-cal-wd {{ font-size: 13px; }}
+    .fwd-cal-mark {{ width: 10px; height: 10px; }}
     .footer {{ font-size: 13px; }}
   }}
 
