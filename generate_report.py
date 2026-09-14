@@ -4554,8 +4554,12 @@ def _render_chase_count_chart(title: str, series: list[dict]) -> str:
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
     if last:
-        lv = float(last["value"])
-        latest_lab = f"{int(round(lv))} 家" if abs(lv - round(lv)) < 1e-9 else f"{lv:.1f} 家"
+        # meta 写当日原始家数；柱高仍用近2日均值
+        if last.get("n_raw") is not None:
+            latest_lab = f"{int(last['n_raw'])} 家"
+        else:
+            lv = float(last["value"])
+            latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
     return f'''<div class="chase-chart is-count">
