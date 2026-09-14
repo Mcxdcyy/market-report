@@ -34,6 +34,7 @@ API_LIVE_URLS = (
 )
 API_HIS = "https://apphis.longhuvip.com/w1/api/index.php"
 HISTORY_FILE = ROOT / "kpl_sector_history.json"
+STOCKS_HISTORY_FILE = ROOT / "kpl_sector_stocks_history.json"
 UA = "lhb/5.21.0.2 (iPhone; iOS 17.0; Scale/3.00)"
 KPL_VERSION = "5.21.0.2"
 KPL_APIV = "w42"
@@ -320,13 +321,19 @@ def fetch_limit_up_sectors(day: str) -> dict:
 
 
 def fetch_theme_counts(day: str) -> dict[str, int]:
-    """按开盘啦涨停原因统计家数（历史日可用）。
+    """按开盘啦涨停原因统计家数（历史日可用）。"""
+    stocks_map = fetch_theme_stocks(day)
+    return {name: len(codes) for name, codes in stocks_map.items()}
+
+
+def fetch_theme_stocks(day: str) -> dict[str, list[str]]:
+    """按开盘啦涨停原因返回板块→代码列表（历史日可用）。
 
     合并 HisHomeDingPan / DailyLimitPerformance 的 PidType=1..4
     （约对应 1 板 / 2 板 / 3 板 / 4 板+），与当日股票列表口径一致。
     """
     seen: set[str] = set()
-    ctr: Counter[str] = Counter()
+    buckets: dict[str, list[str]] = {}
     for pid in (1, 2, 3, 4):
         params = {
             "a": "DailyLimitPerformance",
@@ -357,8 +364,8 @@ def fetch_theme_counts(day: str) -> dict[str, int]:
             seen.add(code)
             theme = str(s[5]).strip() if len(s) > 5 and s[5] else ""
             if theme and theme not in EXCLUDE_REASONS:
-                ctr[theme] += 1
-    return dict(ctr)
+                buckets.setdefault(theme, []).append(code)
+    return buckets
 
 
 def load_history() -> dict:
@@ -376,46 +383,85 @@ def save_history(hist: dict) -> None:
     )
 
 
+def load_stocks_history() -> dict:
+    if STOCKS_HISTORY_FILE.exists():
+        try:
+            return json.loads(STOCKS_HISTORY_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return {}
+    return {}
+
+
+def save_stocks_history(hist: dict) -> None:
+    STOCKS_HISTORY_FILE.write_text(
+        json.dumps(hist, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
 def ensure_history_day(day: str, hist: dict | None = None, *, force: bool = False) -> dict[str, int]:
     hist = hist if hist is not None else load_history()
-    if not force and isinstance(hist.get(day), dict) and hist[day]:
+    stocks_hist = load_stocks_history()
+    need_counts = force or not (isinstance(hist.get(day), dict) and hist[day])
+    need_stocks = force or not (isinstance(stocks_hist.get(day), dict) and stocks_hist[day])
+    if not need_counts and not need_stocks:
         return {k: int(v) for k, v in hist[day].items()}
-    counts = fetch_theme_counts(day)
-    # 当日历史接口未就绪时：用与出图相同的实时列表家数写入缓存
-    if not counts and day == datetime.now().strftime("%Y-%m-%d"):
+
+    stocks_map = fetch_theme_stocks(day)
+    # 当日历史接口未就绪时：用与出图相同的实时列表写入缓存
+    if not stocks_map and day == datetime.now().strftime("%Y-%m-%d"):
         try:
             live = fetch_limit_up_sectors(day)
-            counts = {s["name"]: int(s["count"]) for s in live.get("sectors") or []}
+            stocks_map = {
+                s["name"]: [str(c).zfill(6) for c in (s.get("codes") or [])]
+                for s in live.get("sectors") or []
+                if s.get("name")
+            }
         except Exception:
-            counts = {}
-    if counts:
+            stocks_map = {}
+    if stocks_map:
+        counts = {name: len(codes) for name, codes in stocks_map.items()}
         hist[day] = counts
+        stocks_hist[day] = stocks_map
         save_history(hist)
-    return counts
+        save_stocks_history(stocks_hist)
+        return {k: int(v) for k, v in counts.items()}
+    if isinstance(hist.get(day), dict) and hist[day]:
+        return {k: int(v) for k, v in hist[day].items()}
+    return {}
 
 
 def backfill_history(end_day: str, lookback_calendar_days: int = 14) -> dict:
-    """回溯自然日，跳过明显无数据的周末空窗；写入 kpl_sector_history.json。"""
+    """回溯自然日，跳过明显无数据的周末空窗；写入 kpl_sector_history.json + stocks。"""
     hist = load_history()
+    stocks_hist = load_stocks_history()
     end = datetime.strptime(end_day, "%Y-%m-%d")
     for i in range(lookback_calendar_days):
         d = (end - timedelta(days=i)).strftime("%Y-%m-%d")
-        if d in hist and hist[d]:
+        has_counts = bool(hist.get(d))
+        has_stocks = bool(stocks_hist.get(d))
+        if has_counts and has_stocks:
             continue
         try:
-            counts = fetch_theme_counts(d)
-            if not counts and d == datetime.now().strftime("%Y-%m-%d"):
+            stocks_map = fetch_theme_stocks(d)
+            if not stocks_map and d == datetime.now().strftime("%Y-%m-%d"):
                 live = fetch_limit_up_sectors(d)
-                counts = {s["name"]: int(s["count"]) for s in live.get("sectors") or []}
+                stocks_map = {
+                    s["name"]: [str(c).zfill(6) for c in (s.get("codes") or [])]
+                    for s in live.get("sectors") or []
+                    if s.get("name")
+                }
         except Exception as e:
             print(f"skip {d}: {e}")
             continue
-        if not counts:
+        if not stocks_map:
             continue
+        counts = {name: len(codes) for name, codes in stocks_map.items()}
         hist[d] = counts
+        stocks_hist[d] = stocks_map
         top = sorted(counts.items(), key=lambda x: -x[1])[:5]
         print(d, "ZT~", sum(counts.values()), "|", ", ".join(f"{n}:{c}" for n, c in top))
     save_history(hist)
+    save_stocks_history(stocks_hist)
     return hist
 
 
@@ -462,8 +508,15 @@ def main() -> None:
     data = fetch_limit_up_sectors(day)
     # 同步当日缓存（以列表/兜底接口为准）
     hist = load_history()
+    stocks_hist = load_stocks_history()
     hist[data["date"]] = {s["name"]: int(s["count"]) for s in data["sectors"]}
+    stocks_hist[data["date"]] = {
+        s["name"]: [str(c).zfill(6) for c in (s.get("codes") or [])]
+        for s in data["sectors"]
+        if s.get("name")
+    }
     save_history(hist)
+    save_stocks_history(stocks_hist)
 
     nums = data["nums"]
     src = data.get("source") or ""

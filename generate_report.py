@@ -43,6 +43,11 @@ except ImportError:  # pragma: no cover
     compute_trend_strength = None  # type: ignore
     ensure_means_200d = None  # type: ignore
     TREND_RESULT_DIR = BASE / "trend_strength_results"
+
+try:
+    from fund_recognition import compute_fund_recognition
+except ImportError:  # pragma: no cover
+    compute_fund_recognition = None  # type: ignore
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
 WSCN_CAL_URL = "https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas"
@@ -2660,6 +2665,7 @@ def render_html(ctx: dict) -> str:
     )
 
     trend_strength_html = render_trend_strength_html(ctx.get("trend_strength") or {})
+    fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
 
     m = ctx["modes"]
 
@@ -2947,6 +2953,50 @@ def render_html(ctx: dict) -> str:
   .ts-amt-cnt .hi {{ color: #9A7EAD; font-weight: 700; }}
   .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
   .ts-note {{
+    margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
+  }}
+
+  /* ── 资金认可度 ── */
+  .fund-list {{ display: flex; flex-direction: column; gap: 12px; }}
+  .fund-card {{
+    padding: 12px 14px 10px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: #fafafa;
+  }}
+  .fund-card-head {{
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+  }}
+  .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
+  .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
+  .fund-chart {{ width: 100%; }}
+  .fund-bars {{
+    display: flex; align-items: flex-end; gap: 2px; height: 88px;
+    width: 100%;
+  }}
+  .fund-col {{
+    flex: 1; min-width: 0; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  }}
+  .fund-bar-track {{
+    width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center;
+  }}
+  .fund-bar {{
+    width: 72%; max-width: 18px; min-height: 0; border-radius: 2px 2px 1px 1px;
+    background: var(--accent);
+  }}
+  .fund-bar.empty {{ background: transparent; min-height: 0; }}
+  .fund-axis {{
+    display: flex; margin-top: 4px; min-height: 16px; position: relative;
+  }}
+  .fund-tick {{
+    flex: 1; min-width: 0; position: relative; font-size: 10px; color: var(--muted);
+  }}
+  .fund-tick span {{
+    position: absolute; left: 50%; transform: translateX(-50%);
+    white-space: nowrap;
+  }}
+  .fund-tick.latest span {{ left: auto; right: 0; transform: none; }}
+  .fund-note {{
     margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
   }}
 
@@ -3349,6 +3399,10 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-amt-stack {{ height: 24px; }}
     #sec-ts .ts-amt-seg {{ font-size: 11px; }}
     #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
+    #sec-fund .fund-card-title {{ font-size: 15px; }}
+    #sec-fund .fund-card-meta {{ font-size: 12px; }}
+    #sec-fund .fund-note {{ font-size: 13px; }}
+    #sec-fund .fund-bars {{ height: 96px; }}
     .score-foot {{ font-size: 13px; }}
     .section-sub {{
       margin-left: 0; white-space: normal; width: 100%;
@@ -3447,6 +3501,7 @@ def render_html(ctx: dict) -> str:
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
+      <a href="#sec-fund">资金认可度</a>
     </nav>
   </header>
 
@@ -3505,6 +3560,16 @@ def render_html(ctx: dict) -> str:
       </div>
     </div>
     {fwd_section_html}
+  </div>
+
+  <!-- 6 资金认可度 -->
+  <div class="section" id="sec-fund">
+    <div class="section-head">
+      <div class="section-num">6</div>
+      <div class="section-title">资金认可度</div>
+      <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
+    </div>
+    {fund_recognition_html}
   </div>
 
   <div class="footer">大盘数据.numbers · 生成于 {ctx['generated']}</div>
@@ -3746,6 +3811,104 @@ def render_trend_strength_html(block: dict) -> str:
     return f"{chart}{amt_chart}{note_html}"
 
 
+def load_fund_recognition_block(
+    as_of: datetime,
+    latest_dt: datetime | None = None,
+) -> dict:
+    """模块「资金认可度」：优先读缓存；最新交易日可联网重算。"""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    result_path = BASE / "fund_recognition_results" / f"{as_of_d.isoformat()}.json"
+    latest_d = None
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+    is_latest = latest_d is None or as_of_d == latest_d
+
+    if result_path.exists() and not is_latest:
+        try:
+            return json.loads(result_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+
+    if not is_latest:
+        return {
+            "as_of": as_of_d.isoformat(),
+            "items": [],
+            "note": "该日暂无资金认可度缓存",
+        }
+
+    if compute_fund_recognition is None:
+        return {"as_of": as_of_d.isoformat(), "items": [], "note": "资金认可度模块未安装"}
+    return compute_fund_recognition(as_of_d, force=False, progress=True)
+
+
+def render_fund_recognition_html(block: dict) -> str:
+    items = block.get("items") or []
+    if not items:
+        note = block.get("note") or "暂无资金认可度数据"
+        return f'<div class="news-empty">{note}</div>'
+
+    cards = []
+    for it in items:
+        series = it.get("series") or []
+        if not series:
+            continue
+        n = len(series)
+        tick_idx = {0, n - 1}
+        if n >= 4:
+            tick_idx.add(n // 3)
+            tick_idx.add((2 * n) // 3)
+        cols = []
+        ticks = []
+        for i, pt in enumerate(series):
+            pct = pt.get("pct")
+            is_latest = i == n - 1
+            if pct is None:
+                bar = '<div class="fund-bar empty" style="height:0"></div>'
+                title = f'{pt.get("date", "")} · 无样本'
+            else:
+                h = max(0.0, min(100.0, float(pct)))
+                bar = f'<div class="fund-bar" style="height:{h:.1f}%"></div>'
+                title = (
+                    f'{pt.get("date", "")} · {pct}%'
+                    f'（{pt.get("n_ok", 0)}/{pt.get("n_amt", 0)}）'
+                )
+            cols.append(
+                f'<div class="fund-col{" latest" if is_latest else ""}" title="{title}">'
+                f'<div class="fund-bar-track">{bar}</div></div>'
+            )
+            show = i in tick_idx
+            lab = ""
+            if show:
+                ds = str(pt.get("date") or "")
+                lab = ds[5:] if len(ds) >= 10 else ds  # MM-DD
+            ticks.append(
+                f'<div class="fund-tick{" show" if show else ""}{" latest" if is_latest else ""}">'
+                f'{f"<span>{lab}</span>" if show else ""}</div>'
+            )
+        meta = f'池 {it.get("pool_n", 0)} 只 · 近30日累计 {it.get("hit_count", 0)} 家次'
+        cards.append(
+            f'''<div class="fund-card">
+    <div class="fund-card-head">
+      <span class="fund-card-title">{it.get("name", "")}</span>
+      <span class="fund-card-meta">{meta}</span>
+    </div>
+    <div class="fund-chart">
+      <div class="fund-bars">{"".join(cols)}</div>
+      <div class="fund-axis">{"".join(ticks)}</div>
+    </div>
+  </div>'''
+        )
+
+    note = (
+        '<div class="fund-note">'
+        "资金认可度：近30个交易日开盘啦涨停板块整合个股池；近20个交易日每日统计——"
+        "成交额大于3亿元的个股中，收盘价同时在五日线与十日线上方的占比。"
+        "分母为当日成交额大于3亿元家数；无样本日不画柱。"
+        "</div>"
+    )
+    return f'<div class="fund-list">{"".join(cards)}</div>{note}'
+
+
 def coalesce_row(row: pd.Series, prev: pd.Series | None) -> pd.Series:
     """历史日生成：缺失字段用前一交易日同列值补全。"""
     if prev is None:
@@ -3830,6 +3993,13 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     if hasattr(latest_dt, "to_pydatetime"):
         latest_dt = latest_dt.to_pydatetime()
     trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt, df=df)
+    fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
+    fund_range = ""
+    if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
+        fund_range = (
+            f"{fund_recognition['series_start'][5:].replace('-', '/')}–"
+            f"{fund_recognition['series_end'][5:].replace('-', '/')} · 近20日占比"
+        )
 
     return {
         "title_date": fmt_md(dt),
@@ -3861,6 +4031,8 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "advice": advice,
         "emo": emo,
         "trend_strength": trend_strength,
+        "fund_recognition": fund_recognition,
+        "fund_range": fund_range,
     }
 
 

@@ -23,7 +23,10 @@ else
     git remote add origin https://github.com/Mcxdcyy/market-report.git
 fi
 
-git add .gitignore generate_report.py fetch_kpl_sectors.py kpl_sector_history.json market_news.json event_catalog.json serve_mobile.py docs .cursor/rules/ push_github.sh
+git add .gitignore generate_report.py fetch_kpl_sectors.py fund_recognition.py \
+  kpl_sector_history.json kpl_sector_stocks_history.json \
+  fund_recognition_results/ market_news.json event_catalog.json \
+  serve_mobile.py docs .cursor/rules/ push_github.sh
 git status --short
 
 if git diff --cached --quiet; then
