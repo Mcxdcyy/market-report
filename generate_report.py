@@ -3920,16 +3920,17 @@ def render_fund_recognition_html(block: dict) -> str:
             continue
         items.append(it)
 
-    def _prev_valid_pct(series: list) -> float | None:
-        for pt in reversed(series[:-1]):
-            if pt.get("pct") is not None:
-                return float(pt["pct"])
-        return None
+    def _prev_day_pct(series: list) -> float | None:
+        """前一交易日占比；无样本按 0；序列不足 2 日则无对比。"""
+        if len(series) < 2:
+            return None
+        prev = series[-2].get("pct")
+        return 0.0 if prev is None else float(prev)
 
-    # 排序：当日占比≥50%优先（按当日占比降序）；其余按近5日占比均值降序
+    # 排序：当日占比>50%优先（按当日占比降序）；其余按近5日占比均值降序
     def _sort_key(it: dict):
         tp = _today_pct(it)
-        if tp is not None and tp >= 50.0:
+        if tp is not None and tp > 50.0:
             return (0, -tp, str(it.get("name") or ""))
         return (1, -_mean_pct_last5(it), str(it.get("name") or ""))
 
@@ -3959,7 +3960,7 @@ def render_fund_recognition_html(block: dict) -> str:
                 title = f'{pt.get("date", "")} · 无样本'
             else:
                 h = max(0.0, min(100.0, float(pct)))
-                level = "strong" if float(pct) >= 50.0 else "weak"
+                level = "strong" if float(pct) > 50.0 else "weak"
                 bar = f'<div class="fund-bar {level}" style="height:{h:.1f}%"></div>'
                 title = (
                     f'{pt.get("date", "")} · {pct}%'
@@ -3980,23 +3981,23 @@ def render_fund_recognition_html(block: dict) -> str:
             )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
-        prev = _prev_valid_pct(series)
+        prev = _prev_day_pct(series)
         badges = []
         if today is not None:
             today_f = float(today)
             badges.append(
-                f'<span class="fund-pill {"ok" if today_f >= 50.0 else "bad"}">'
+                f'<span class="fund-pill {"ok" if today_f > 50.0 else "bad"}">'
                 f'占比 {today_f:.1f}%</span>'
             )
             if prev is not None:
                 delta = round(today_f - prev, 1)
                 if delta > 0:
                     badges.append(
-                        f'<span class="fund-pill ok">↑+{delta:.1f}</span>'
+                        f'<span class="fund-pill ok">↑+{delta:.1f}%</span>'
                     )
                 elif delta < 0:
                     badges.append(
-                        f'<span class="fund-pill bad">↓{delta:.1f}</span>'
+                        f'<span class="fund-pill bad">↓{delta:.1f}%</span>'
                     )
                 else:
                     badges.append('<span class="fund-pill flat">→持平</span>')
@@ -4028,8 +4029,9 @@ def render_fund_recognition_html(block: dict) -> str:
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
-        "排序：当日占比≥50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱色：占比≥50%为红、&lt;50%为绿；标题旁「占比」为当日数值，箭头为较前一有效样本日变化（百分点）。柱图浅线为50%刻度。"
+        "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
+        "柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值，"
+        "箭头为较前一交易日变化（百分点；前一日无样本按0%）。柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
