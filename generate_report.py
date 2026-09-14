@@ -4452,7 +4452,7 @@ def load_chase_sentiment_block(
     return compute_chase_sentiment(as_of_d, force=False, progress=True)
 
 
-def _render_chase_metric_chart(title: str, series: list[dict], *, latest_n: int) -> str:
+def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
     """零轴对称柱图：正红负绿；value 已为百分比。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
@@ -4520,11 +4520,10 @@ def _render_chase_metric_chart(title: str, series: list[dict], *, latest_n: int)
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
     latest_lab = f"{float(last['value']):+.1f}%" if last else "—"
-    pool_n = int((last or {}).get("n") or latest_n or 0)
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
-      <span class="chase-chart-meta">最新 {latest_lab} · 池 {pool_n} 家</span>
+      <span class="chase-chart-meta">最新 {latest_lab}</span>
     </div>
     <div class="chase-plot">
       <div class="chase-bars">{"".join(cols)}</div>
@@ -4553,10 +4552,7 @@ def render_chase_sentiment_html(block: dict) -> str:
             m = metrics.get(mk) or {}
             title = m.get("name") or default_title
             ser = m.get("series") or []
-            latest_n = int(ser[-1].get("n") or 0) if ser else 0
-            charts.append(
-                _render_chase_metric_chart(title, ser, latest_n=latest_n)
-            )
+            charts.append(_render_chase_metric_chart(title, ser))
         parts.append(
             f'''<div class="chase-group">
     <div class="chase-group-title">{gname}</div>
