@@ -32,10 +32,12 @@ RESULT_DIR = BASE / "trend_strength_results"
 CACHE_FILE = BASE / "trend_klines_cache.json"
 LONG_CACHE_FILE = BASE / "trend_klines_cache_long.json"
 MEANS_200D_FILE = RESULT_DIR / "means_200d.json"
+COUNT_SERIES_30D_FILE = RESULT_DIR / "count_series_30d.json"
 WORKERS = 48
 KLINE_LEN = 40
 LONG_KLINE_LEN = 260  # 200 交易日均值 + MA20 余量
 MEANS_DAYS = 200
+COUNT_SERIES_DAYS = 30
 MIN_BARS = 20
 LIST_DAYS_MIN = 10
 # 符合条件个股：当日成交额分档阈值（元）
@@ -841,6 +843,177 @@ def _stock_meets_trend_at(closes: list[float], highs: list[float], lows: list[fl
     return True
 
 
+def _prepare_long_series(
+    as_of_d: date,
+    days: list[date],
+    *,
+    progress: bool = True,
+    log_tag: str = "trend-means",
+) -> list[tuple]:
+    """拉取/复用长K线，返回 (stock, idx, closes, highs, lows) 列表。"""
+    universe = fetch_universe()
+    cache = load_long_kline_cache()
+    day0 = days[0].isoformat()
+    need = [
+        s
+        for s in universe
+        if len(cache.get(s["code"]) or []) < 180
+        or (cache.get(s["code"]) or [{}])[0].get("date", "9999") > day0
+        or (cache.get(s["code"]) or [{}])[-1].get("date", "") < as_of_d.isoformat()
+    ]
+    if need:
+        if progress:
+            print(f"[{log_tag}] 补拉长K线 {len(need)} 只…")
+        t0 = time.time()
+        done = 0
+        with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+            futs = {
+                ex.submit(fetch_long_klines_for_stock, s["code"], s.get("market"), as_of_d): s["code"]
+                for s in need
+            }
+            for fut in as_completed(futs):
+                code = futs[fut]
+                rows = fut.result()
+                if rows:
+                    cache[code] = rows
+                done += 1
+                if progress and done % 400 == 0:
+                    print(f"[{log_tag}] K线 {done}/{len(need)} 用时{time.time()-t0:.0f}s")
+        save_long_kline_cache(cache)
+        if progress:
+            print(f"[{log_tag}] 长K线已更新，用时 {time.time()-t0:.0f}s")
+
+    series: list[tuple] = []
+    for s in universe:
+        rows = cache.get(s["code"]) or []
+        if len(rows) < MIN_BARS:
+            continue
+        closes = [float(r["close"]) for r in rows]
+        highs = [float(r["high"]) for r in rows]
+        lows = [float(r["low"]) for r in rows]
+        idx = {r["date"]: i for i, r in enumerate(rows)}
+        series.append((s, idx, closes, highs, lows))
+    return series
+
+
+def _count_all_on_day(series: list[tuple], d: date) -> tuple[int, int]:
+    """某日全场强趋势家数 / 有效样本。"""
+    ds = d.isoformat()
+    trend_n = 0
+    total_n = 0
+    for s, idx, closes, highs, lows in series:
+        list_date = s.get("list_date")
+        if list_date is not None and (d - list_date).days <= LIST_DAYS_MIN:
+            continue
+        i = idx.get(ds)
+        if i is None:
+            continue
+        n = i + 1
+        if n < MIN_BARS:
+            continue
+        if list_date is None and n <= LIST_DAYS_MIN:
+            continue
+        total_n += 1
+        c0, c1 = closes[i - 1], closes[i]
+        if c0 and is_limit_down(s["code"], s["name"], (c1 / c0 - 1.0) * 100.0, c1, c0):
+            continue
+        if not _stock_meets_trend_at(closes, highs, lows, i):
+            continue
+        trend_n += 1
+    return trend_n, total_n
+
+
+def _overlay_daily_result(daily: list[dict], as_of_d: date) -> None:
+    """末日家数与当日占比缓存对齐（与下方占比图同一数字）。"""
+    path = RESULT_DIR / f"{as_of_d.isoformat()}.json"
+    if not path.exists() or not daily:
+        return
+    try:
+        block = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    for it in block.get("items") or []:
+        if it.get("key") != "all":
+            continue
+        last = daily[-1]
+        if last.get("date") != as_of_d.isoformat():
+            return
+        last["trend"] = int(it.get("trend") or 0)
+        last["total"] = int(it.get("total") or 0)
+        last["ratio"] = float(it.get("ratio") or 0)
+        return
+
+
+def ensure_count_series_30d(
+    as_of: date | datetime | str,
+    trading_days: list[date] | None = None,
+    *,
+    force: bool = False,
+    progress: bool = True,
+) -> list[dict]:
+    """近 COUNT_SERIES_DAYS 个交易日全场强趋势家数序列（缓存 count_series_30d.json）。"""
+    as_of_d = _as_date(as_of)
+    RESULT_DIR.mkdir(parents=True, exist_ok=True)
+    if COUNT_SERIES_30D_FILE.exists() and not force:
+        try:
+            cached = json.loads(COUNT_SERIES_30D_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            cached = None
+        if (
+            cached
+            and cached.get("as_of") == as_of_d.isoformat()
+            and isinstance(cached.get("daily"), list)
+            and len(cached["daily"]) >= min(10, COUNT_SERIES_DAYS)
+        ):
+            daily = list(cached["daily"])
+            _overlay_daily_result(daily, as_of_d)
+            return daily
+
+    if trading_days is None:
+        raise ValueError("ensure_count_series_30d 需要 trading_days")
+    days = [d for d in trading_days if d <= as_of_d]
+    days = sorted(set(days))[-COUNT_SERIES_DAYS:]
+    if not days:
+        return []
+
+    if progress:
+        print(f"[trend-count] 近{len(days)}日强趋势家数 → {days[0]}…{days[-1]}")
+
+    series = _prepare_long_series(as_of_d, days, progress=progress, log_tag="trend-count")
+    daily: list[dict] = []
+    t0 = time.time()
+    for d in days:
+        trend_n, total_n = _count_all_on_day(series, d)
+        ratio = round(100.0 * trend_n / total_n, 2) if total_n else 0.0
+        daily.append(
+            {
+                "date": d.isoformat(),
+                "trend": trend_n,
+                "total": total_n,
+                "ratio": ratio,
+            }
+        )
+    _overlay_daily_result(daily, as_of_d)
+    payload = {
+        "as_of": as_of_d.isoformat(),
+        "start": days[0].isoformat(),
+        "end": days[-1].isoformat(),
+        "n_days": len(days),
+        "daily": daily,
+        "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    COUNT_SERIES_30D_FILE.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    if progress:
+        last = daily[-1]
+        print(
+            f"[trend-count] 完成 · 末日 {last['trend']} 家 "
+            f"用时{time.time()-t0:.0f}s → {COUNT_SERIES_30D_FILE.name}"
+        )
+    return daily
+
+
 def ensure_means_200d(
     as_of: date | datetime | str,
     trading_days: list[date] | None = None,
@@ -875,52 +1048,13 @@ def ensure_means_200d(
     if progress:
         print(f"[trend-means] 重算近{len(days)}日均值 → {days[0]}…{days[-1]}")
 
-    universe = fetch_universe()
-    cache = load_long_kline_cache()
-    need = [
-        s
-        for s in universe
-        if len(cache.get(s["code"]) or []) < 180
-        or (cache.get(s["code"]) or [{}])[0].get("date", "9999") > days[0].isoformat()
-        or (cache.get(s["code"]) or [{}])[-1].get("date", "") < as_of_d.isoformat()
-    ]
-    if need:
-        if progress:
-            print(f"[trend-means] 补拉长K线 {len(need)} 只…")
-        t0 = time.time()
-        done = 0
-        with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-            futs = {
-                ex.submit(fetch_long_klines_for_stock, s["code"], s.get("market"), as_of_d): s["code"]
-                for s in need
-            }
-            for fut in as_completed(futs):
-                code = futs[fut]
-                rows = fut.result()
-                if rows:
-                    cache[code] = rows
-                done += 1
-                if progress and done % 400 == 0:
-                    print(f"[trend-means] K线 {done}/{len(need)} 用时{time.time()-t0:.0f}s")
-        save_long_kline_cache(cache)
-        if progress:
-            print(f"[trend-means] 长K线已更新，用时 {time.time()-t0:.0f}s")
-
-    series: list[tuple] = []
-    for s in universe:
-        rows = cache.get(s["code"]) or []
-        if len(rows) < MIN_BARS:
-            continue
-        closes = [float(r["close"]) for r in rows]
-        highs = [float(r["high"]) for r in rows]
-        lows = [float(r["low"]) for r in rows]
-        idx = {r["date"]: i for i, r in enumerate(rows)}
-        series.append((s, idx, closes, highs, lows))
+    series = _prepare_long_series(as_of_d, days, progress=progress, log_tag="trend-means")
 
     keys = [k for k, _ in BUCKET_ORDER]
     sum_ratio = {k: 0.0 for k in keys}
     sum_trend = {k: 0.0 for k in keys}
     n_ok = {k: 0 for k in keys}
+    daily_all: list[dict] = []
 
     for d in days:
         ds = d.isoformat()
@@ -953,6 +1087,14 @@ def ensure_means_200d(
                 sum_ratio[k] += 100.0 * trend[k] / total[k]
                 sum_trend[k] += trend[k]
                 n_ok[k] += 1
+        daily_all.append(
+            {
+                "date": ds,
+                "trend": trend["all"],
+                "total": total["all"],
+                "ratio": round(100.0 * trend["all"] / total["all"], 2) if total["all"] else 0.0,
+            }
+        )
 
     means: dict[str, dict] = {}
     for key, name in BUCKET_ORDER:
@@ -971,6 +1113,27 @@ def ensure_means_200d(
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
     MEANS_200D_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # 顺带写出近30日家数序列，供柱图复用（避免再扫一遍）
+    tail30 = daily_all[-COUNT_SERIES_DAYS:]
+    if tail30:
+        _overlay_daily_result(tail30, as_of_d)
+        COUNT_SERIES_30D_FILE.write_text(
+            json.dumps(
+                {
+                    "as_of": as_of_d.isoformat(),
+                    "start": tail30[0]["date"],
+                    "end": tail30[-1]["date"],
+                    "n_days": len(tail30),
+                    "daily": tail30,
+                    "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
     if progress:
         print(
             f"[trend-means] 完成 · 全场均值 {means['all']['mean_ratio_pct']}% "

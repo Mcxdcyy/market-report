@@ -1,19 +1,19 @@
 {
-  "as_of": "2026-09-11",
-  "start": "2025-11-19",
-  "end": "2026-09-11",
+  "as_of": "2026-09-14",
+  "start": "2025-11-20",
+  "end": "2026-09-14",
   "n_days": 200,
   "means": {
     "all": {
       "name": "全场",
       "mean_ratio_pct": 4.68,
-      "mean_trend_count": 255.9,
+      "mean_trend_count": 255.8,
       "n_days": 200
     },
     "main": {
       "name": "主板",
       "mean_ratio_pct": 4.52,
-      "mean_trend_count": 137.1,
+      "mean_trend_count": 137.0,
       "n_days": 200
     },
     "cyb": {
@@ -36,9 +36,10 @@
     },
     "st": {
       "name": "ST",
-      "mean_ratio_pct": 3.98,
+      "mean_ratio_pct": 3.97,
       "mean_trend_count": 8.1,
       "n_days": 200
     }
-  }
+  },
+  "generated": "2026-09-14 17:06:11"
 }
