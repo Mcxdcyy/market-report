@@ -476,6 +476,89 @@
   }
   .vol20-wrap.vol90 .vol20-col.latest .vol20-bar { box-shadow: none; }
   .vol20-wrap.vol90 .vol20-axis { gap: 1px; }
+
+  /* ── 资金追高情绪 ── */
+  .chase-group {
+    margin-bottom: 16px;
+  }
+  .chase-group:last-of-type { margin-bottom: 8px; }
+  .chase-group-title {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    margin: 4px 0 10px; padding-left: 2px;
+  }
+  .chase-grid {
+    display: grid; grid-template-columns: 1fr; gap: 12px;
+  }
+  @media (min-width: 900px) {
+    .chase-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .chase-chart {
+    padding: 12px 12px 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: #fafafa;
+  }
+  .chase-chart-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .chase-chart-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .chase-chart-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chase-plot { width: 100%; overflow: visible; }
+  .chase-bars {
+    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+  }
+  .chase-col {
+    flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; align-items: center; height: 100%;
+  }
+  .chase-val {
+    font-size: 9px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; line-height: 1.15;
+    margin-bottom: 2px; white-space: nowrap;
+  }
+  .chase-val.pos { color: #E53935; }
+  .chase-val.neg { color: #34C759; }
+  .chase-col.latest .chase-val { font-weight: 700; }
+  .chase-track {
+    flex: 1; width: 100%; min-height: 0; position: relative;
+  }
+  .chase-zero {
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(60,60,67,.22); z-index: 1; pointer-events: none;
+  }
+  .chase-bar {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 70%; max-width: 14px; min-height: 1px;
+    border-radius: 2px 2px 0 0; z-index: 2;
+  }
+  .chase-bar.pos {
+    bottom: 50%; border-radius: 2px 2px 0 0;
+    background: var(--bar-ok, #E53935);
+  }
+  .chase-bar.neg {
+    top: 50%; border-radius: 0 0 2px 2px;
+    background: var(--bar-bad, #34C759);
+  }
+  .chase-axis {
+    display: flex; gap: 2px; margin-top: 6px; min-height: 16px; width: 100%;
+  }
+  .chase-tick {
+    flex: 1 1 0; min-width: 0; height: 16px; position: relative;
+  }
+  .chase-tick span {
+    display: none; position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 9px; color: var(--muted); white-space: nowrap;
+  }
+  .chase-tick.show span { display: block; }
+  .chase-tick.show:first-child span { left: 0; transform: none; }
+  .chase-tick.latest span {
+    display: block; left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }
+  .chase-note {
+    margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.55;
+  }
+
   .vol20-head {
     display: flex; align-items: baseline; justify-content: space-between;
     gap: 8px; margin-bottom: 0; flex-wrap: wrap;
@@ -798,6 +881,13 @@
     .vol20-meta { font-size: 12px; }
     .vol20-note { font-size: 14px; }
     .vol20-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
+    .chase-bars { height: 110px; gap: 1px; }
+    .chase-val { display: none !important; }
+    .chase-bar { width: 85%; max-width: none; }
+    .chase-chart-title { font-size: 14px; }
+    .chase-chart-meta { font-size: 12px; }
+    .chase-group-title { font-size: 15px; }
+    .chase-note { font-size: 13px; }
     .ts-cnt-bars { height: 110px; gap: 1px; }
     .ts-cnt-val { display: none !important; }
     .ts-cnt-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
@@ -863,6 +953,7 @@
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
+      <a href="#sec-chase">资金追高情绪</a>
       <a href="#sec-ts">趋势强度</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
@@ -1588,10 +1679,440 @@
   </div>
   </div>
 
-  <!-- 2 趋势强度 -->
-  <div class="section" id="sec-ts">
+  <!-- 2 资金追高情绪 -->
+  <div class="section" id="sec-chase">
     <div class="section-head">
       <div class="section-num">2</div>
+      <div class="section-title">资金追高情绪</div>
+      <div class="section-sub">2026-09-14 · 近20日追高池均值</div>
+    </div>
+    <div class="chase-group">
+    <div class="chase-group-title">主板追高</div>
+    <div class="chase-grid"><div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">赚钱效应</span>
+      <span class="chase-chart-meta">最新 +6.3% · 池 140 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars"><div class="chase-col" title="8/18 周二 · +8.3% · 156家">
+      <div class="chase-val pos">+8.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · +7.6% · 77家">
+      <div class="chase-val pos">+7.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:42.6%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · +4.1% · 193家">
+      <div class="chase-val pos">+4.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:23.0%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · +6.5% · 116家">
+      <div class="chase-val pos">+6.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:36.5%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · +7.6% · 116家">
+      <div class="chase-val pos">+7.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:42.6%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · +5.9% · 151家">
+      <div class="chase-val pos">+5.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:32.9%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · +7.1% · 127家">
+      <div class="chase-val pos">+7.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:39.6%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · +6.7% · 161家">
+      <div class="chase-val pos">+6.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:37.3%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · +8.1% · 164家">
+      <div class="chase-val pos">+8.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:45.2%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · +7.2% · 180家">
+      <div class="chase-val pos">+7.2%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:40.0%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · +6.7% · 167家">
+      <div class="chase-val pos">+6.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:37.6%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · +7.0% · 120家">
+      <div class="chase-val pos">+7.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:39.0%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · +6.5% · 135家">
+      <div class="chase-val pos">+6.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:36.3%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · +5.8% · 155家">
+      <div class="chase-val pos">+5.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:32.2%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · +4.5% · 196家">
+      <div class="chase-val pos">+4.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:25.0%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · +7.9% · 177家">
+      <div class="chase-val pos">+7.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:44.4%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · +7.6% · 131家">
+      <div class="chase-val pos">+7.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:42.5%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · +7.4% · 96家">
+      <div class="chase-val pos">+7.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:41.3%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · +6.6% · 90家">
+      <div class="chase-val pos">+6.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:37.0%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · +6.3% · 140家">
+      <div class="chase-val pos">+6.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:35.1%"></div></div>
+    </div></div>
+      <div class="chase-axis"><div class="chase-tick show"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick show"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick show"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
+    </div>
+  </div><div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">亏钱效应</span>
+      <span class="chase-chart-meta">最新 +3.5% · 池 140 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars"><div class="chase-col" title="8/18 周二 · +5.9% · 156家">
+      <div class="chase-val pos">+5.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · +3.5% · 77家">
+      <div class="chase-val pos">+3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:28.0%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · +1.6% · 193家">
+      <div class="chase-val pos">+1.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:12.6%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · +4.4% · 116家">
+      <div class="chase-val pos">+4.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:34.7%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · +4.9% · 116家">
+      <div class="chase-val pos">+4.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:38.6%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · +3.7% · 151家">
+      <div class="chase-val pos">+3.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:29.3%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · +4.6% · 127家">
+      <div class="chase-val pos">+4.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:36.1%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · +5.0% · 161家">
+      <div class="chase-val pos">+5.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:39.8%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · +5.7% · 164家">
+      <div class="chase-val pos">+5.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:45.1%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · +4.6% · 180家">
+      <div class="chase-val pos">+4.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:36.4%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · +4.5% · 167家">
+      <div class="chase-val pos">+4.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:35.6%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · +3.8% · 120家">
+      <div class="chase-val pos">+3.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:30.0%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · +3.1% · 135家">
+      <div class="chase-val pos">+3.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:24.8%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · +2.0% · 155家">
+      <div class="chase-val pos">+2.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:15.8%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · +2.9% · 196家">
+      <div class="chase-val pos">+2.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:23.2%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · +5.9% · 177家">
+      <div class="chase-val pos">+5.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:46.2%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · +4.8% · 131家">
+      <div class="chase-val pos">+4.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:37.9%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · +3.5% · 96家">
+      <div class="chase-val pos">+3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:27.9%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · +3.2% · 90家">
+      <div class="chase-val pos">+3.2%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:25.3%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · +3.5% · 140家">
+      <div class="chase-val pos">+3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:27.2%"></div></div>
+    </div></div>
+      <div class="chase-axis"><div class="chase-tick show"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick show"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick show"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
+    </div>
+  </div><div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">回落指数</span>
+      <span class="chase-chart-meta">最新 -2.6% · 池 140 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars"><div class="chase-col" title="8/18 周二 · -2.2% · 156家">
+      <div class="chase-val neg">-2.2%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:27.1%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · -3.7% · 77家">
+      <div class="chase-val neg">-3.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · -2.3% · 193家">
+      <div class="chase-val neg">-2.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:29.0%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · -1.9% · 116家">
+      <div class="chase-val neg">-1.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:23.4%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · -2.5% · 116家">
+      <div class="chase-val neg">-2.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:30.8%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · -1.9% · 151家">
+      <div class="chase-val neg">-1.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:24.0%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · -2.3% · 127家">
+      <div class="chase-val neg">-2.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:28.4%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · -1.4% · 161家">
+      <div class="chase-val neg">-1.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:17.6%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · -2.1% · 164家">
+      <div class="chase-val neg">-2.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:26.4%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · -2.3% · 180家">
+      <div class="chase-val neg">-2.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:28.4%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · -2.0% · 167家">
+      <div class="chase-val neg">-2.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:24.8%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · -2.9% · 120家">
+      <div class="chase-val neg">-2.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:35.9%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · -3.1% · 135家">
+      <div class="chase-val neg">-3.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:38.0%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · -3.5% · 155家">
+      <div class="chase-val neg">-3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:43.1%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · -1.4% · 196家">
+      <div class="chase-val neg">-1.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:17.2%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · -1.9% · 177家">
+      <div class="chase-val neg">-1.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:23.3%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · -2.5% · 131家">
+      <div class="chase-val neg">-2.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:31.5%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · -3.5% · 96家">
+      <div class="chase-val neg">-3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:43.6%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · -3.1% · 90家">
+      <div class="chase-val neg">-3.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:38.9%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · -2.6% · 140家">
+      <div class="chase-val neg">-2.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:32.0%"></div></div>
+    </div></div>
+      <div class="chase-axis"><div class="chase-tick show"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick show"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick show"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
+    </div>
+  </div></div>
+  </div><div class="chase-group">
+    <div class="chase-group-title">创板追高</div>
+    <div class="chase-grid"><div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">赚钱效应</span>
+      <span class="chase-chart-meta">最新 +7.3% · 池 134 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars"><div class="chase-col" title="8/18 周二 · +10.2% · 106家">
+      <div class="chase-val pos">+10.2%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · +10.0% · 33家">
+      <div class="chase-val pos">+10.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:45.5%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · +4.6% · 288家">
+      <div class="chase-val pos">+4.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:20.8%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · +8.6% · 94家">
+      <div class="chase-val pos">+8.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:39.1%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · +8.0% · 79家">
+      <div class="chase-val pos">+8.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:36.2%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · +6.6% · 114家">
+      <div class="chase-val pos">+6.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:30.2%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · +8.9% · 72家">
+      <div class="chase-val pos">+8.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:40.4%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · +7.0% · 199家">
+      <div class="chase-val pos">+7.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:31.9%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · +9.0% · 122家">
+      <div class="chase-val pos">+9.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:40.9%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · +6.4% · 174家">
+      <div class="chase-val pos">+6.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:28.9%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · +8.2% · 76家">
+      <div class="chase-val pos">+8.2%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:37.1%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · +8.0% · 40家">
+      <div class="chase-val pos">+8.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:36.4%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · +7.7% · 92家">
+      <div class="chase-val pos">+7.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:34.9%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · +6.0% · 122家">
+      <div class="chase-val pos">+6.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:27.3%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · +3.9% · 207家">
+      <div class="chase-val pos">+3.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:17.8%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · +8.8% · 79家">
+      <div class="chase-val pos">+8.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:40.2%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · +6.3% · 83家">
+      <div class="chase-val pos">+6.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:28.8%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · +6.0% · 39家">
+      <div class="chase-val pos">+6.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:27.4%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · +7.6% · 30家">
+      <div class="chase-val pos">+7.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:34.7%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · +7.3% · 134家">
+      <div class="chase-val pos">+7.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:33.3%"></div></div>
+    </div></div>
+      <div class="chase-axis"><div class="chase-tick show"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick show"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick show"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
+    </div>
+  </div><div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">亏钱效应</span>
+      <span class="chase-chart-meta">最新 +4.7% · 池 134 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars"><div class="chase-col" title="8/18 周二 · +6.7% · 106家">
+      <div class="chase-val pos">+6.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · +3.4% · 33家">
+      <div class="chase-val pos">+3.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:23.4%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · +1.0% · 288家">
+      <div class="chase-val pos">+1.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:6.8%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · +4.6% · 94家">
+      <div class="chase-val pos">+4.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:31.6%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · +3.5% · 79家">
+      <div class="chase-val pos">+3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:24.0%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · +3.8% · 114家">
+      <div class="chase-val pos">+3.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:26.3%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · +4.4% · 72家">
+      <div class="chase-val pos">+4.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:30.4%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · +5.1% · 199家">
+      <div class="chase-val pos">+5.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:35.4%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · +3.4% · 122家">
+      <div class="chase-val pos">+3.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:23.7%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · +4.3% · 174家">
+      <div class="chase-val pos">+4.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:29.8%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · +4.0% · 76家">
+      <div class="chase-val pos">+4.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:27.6%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · +3.8% · 40家">
+      <div class="chase-val pos">+3.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:26.0%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · +3.9% · 92家">
+      <div class="chase-val pos">+3.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:27.0%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · +0.3% · 122家">
+      <div class="chase-val pos">+0.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:1.9%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · +2.0% · 207家">
+      <div class="chase-val pos">+2.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:13.5%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · +4.8% · 79家">
+      <div class="chase-val pos">+4.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:32.9%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · +1.8% · 83家">
+      <div class="chase-val pos">+1.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:12.3%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · +1.7% · 39家">
+      <div class="chase-val pos">+1.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:11.5%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · +3.8% · 30家">
+      <div class="chase-val pos">+3.8%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:25.9%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · +4.7% · 134家">
+      <div class="chase-val pos">+4.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar pos" style="height:32.0%"></div></div>
+    </div></div>
+      <div class="chase-axis"><div class="chase-tick show"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick show"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick show"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
+    </div>
+  </div><div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">回落指数</span>
+      <span class="chase-chart-meta">最新 -2.3% · 池 134 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars"><div class="chase-col" title="8/18 周二 · -3.1% · 106家">
+      <div class="chase-val neg">-3.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:24.2%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · -5.9% · 33家">
+      <div class="chase-val neg">-5.9%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · -3.2% · 288家">
+      <div class="chase-val neg">-3.2%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:25.5%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · -3.5% · 94家">
+      <div class="chase-val neg">-3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:27.6%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · -4.1% · 79家">
+      <div class="chase-val neg">-4.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:31.9%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · -2.4% · 114家">
+      <div class="chase-val neg">-2.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:19.1%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · -4.0% · 72家">
+      <div class="chase-val neg">-4.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:31.1%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · -1.6% · 199家">
+      <div class="chase-val neg">-1.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:12.6%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · -5.0% · 122家">
+      <div class="chase-val neg">-5.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:39.4%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · -1.7% · 174家">
+      <div class="chase-val neg">-1.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:13.5%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · -3.7% · 76家">
+      <div class="chase-val neg">-3.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:29.2%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · -3.7% · 40家">
+      <div class="chase-val neg">-3.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:29.4%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · -3.4% · 92家">
+      <div class="chase-val neg">-3.4%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:26.4%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · -5.3% · 122家">
+      <div class="chase-val neg">-5.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:41.4%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · -1.7% · 207家">
+      <div class="chase-val neg">-1.7%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:13.2%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · -3.6% · 79家">
+      <div class="chase-val neg">-3.6%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:28.3%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · -4.1% · 83家">
+      <div class="chase-val neg">-4.1%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:32.3%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · -4.0% · 39家">
+      <div class="chase-val neg">-4.0%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:31.2%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · -3.5% · 30家">
+      <div class="chase-val neg">-3.5%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:27.1%"></div></div>
+    </div><div class="chase-col latest" title="9/14 周一 · -2.3% · 134家">
+      <div class="chase-val neg">-2.3%</div>
+      <div class="chase-track"><div class="chase-zero"></div><div class="chase-bar neg" style="height:18.1%"></div></div>
+    </div></div>
+      <div class="chase-axis"><div class="chase-tick show"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick show"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick show"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick show latest"><span>9/14</span></div></div>
+    </div>
+  </div></div>
+  </div><div class="chase-note">追高定义：日内最高价相对昨收涨幅≥7%。赚钱效应=(今高−昨高)/昨收；亏钱效应=(今收−昨高)/昨高；回落指数=(今收−今高)/今高。每日对追高池取算术均值；创板含创业板与科创板；不含ST、北交所。</div>
+  </div>
+
+  <!-- 3 趋势强度 -->
+  <div class="section" id="sec-ts">
+    <div class="section-head">
+      <div class="section-num">3</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">2026-09-14 · 强趋势个股占比</div>
     </div>
@@ -1826,10 +2347,10 @@
   </div><div class="ts-note">强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，3日内创20日新高，五日线向上，非跌停。</div>
   </div>
 
-  <!-- 3 涨停板块 -->
+  <!-- 4 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">4</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">2026-09-14</div>
     </div>
@@ -1880,10 +2401,10 @@
     
   </div>
 
-  <!-- 4 公告与政策 -->
+  <!-- 5 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">5</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -1899,10 +2420,10 @@
     <div class="module-summary">候选池 2 条 → 精选 2 条（环境偏弱）</div>
   </div>
 
-  <!-- 5 事件 -->
+  <!-- 6 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">6</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">9/14–9/28</span>
@@ -1912,10 +2433,10 @@
     <div class="fwd-cal-wrap"><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-mark" aria-hidden="true"></span><span class="fwd-cal-md">9/14</span><span class="fwd-cal-wd">本周一</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国务院政策例行吹风会</span></div><p class="fwd-cal-note">工业和信息化部会同中国人民银行、国务院国资委、市场监管总局、中国证监会有关负责人出席并答问。介绍加强中小企业回款难问题治理有关工作情况。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">9/14–16</span><span class="fwd-cal-wd">本周一 至 周三</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第二届医学人工智能大会（MAIC2nd 2026）</span></div><p class="fwd-cal-note">《中国卫生信息管理杂志》社主办，于重庆举行。围绕卫生健康领域人工智能应用落地、规范治理与产业协同，设置主论坛及临床诊疗、医院管理、伦理治理等平行专题，并开展国家级医学人工智能优秀案例展示。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">9/16</span><span class="fwd-cal-wd">本周三</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">香港第一个五年规划公布</span></div><p class="fwd-cal-note">行政长官李家超于立法会公布《香港特别行政区经济和社会发展第一个五年规划（2026—2030）》，并随之发表《行政长官2026年施政报告》，勾勒未来五年经济、产业与民生发展蓝图，对接国家「十五五」规划。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">9/18</span><span class="fwd-cal-wd">本周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">恒生科技指数扩容与改组修订意见咨询截止</span></div><p class="fwd-cal-note">恒生科技指数扩容与指数编制规则征求意见结束，后续关注正式方案与成分股调整。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-mark" aria-hidden="true"></span><span class="fwd-cal-md">9/20</span><span class="fwd-cal-wd">本周日</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国务院关于修改《住房公积金管理条例》的决定正式实施</span></div><p class="fwd-cal-note">《住房公积金管理条例》修订决定施行，关注缴存、提取与使用规则变化。</p></div></div></div></div><div class="fwd-lead-wrap"><div class="fwd-block-label">研判摘要 <span class="fwd-block-hint">未来2周总览</span></div><div class="fwd-lead"><div class="fwd-lead-row"><span class="fwd-lead-tag peak">节奏峰值</span><p class="fwd-lead-text peak">节奏峰值：近端看9月16日香港第一个五年规划与施政报告公布窗口 · 产业链侧同步验证印制电路板材料涨价兑现与人工智能安全主题的持续性。</p></div><div class="fwd-lead-row"><span class="fwd-lead-tag">2周主线</span><p class="fwd-lead-text">优先跟踪印制电路板与覆铜板涨价向板厂与通信硬件的传导，以及人工智能安全讨论对网络安全分支的订单与情绪验证；同步关注香港第一个五年规划与施政报告公布对跨境科技与金融映射的信息窗口</p></div><div class="fwd-lead-row"><span class="fwd-lead-tag muted">当日背景</span><p class="fwd-lead-text muted">9月14日成交额约1.64万亿元、指数缩量调整，人工智能应用与通信达到展示门槛，不改变上述日历与优先级</p></div></div></div>
   </div>
 
-  <!-- 6 资金认可度 -->
+  <!-- 7 资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">7</div>
       <div class="section-title">资金认可度</div>
       <div class="section-sub">08/18–09/14 · 近20日占比</div>
     </div>
@@ -2031,7 +2552,7 @@
   </div></div><div class="fund-note">资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近20个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 21:47</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 21:57</div>
 </div>
 </body>
 </html>

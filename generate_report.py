@@ -50,6 +50,11 @@ try:
     from fund_recognition import compute_fund_recognition
 except ImportError:  # pragma: no cover
     compute_fund_recognition = None  # type: ignore
+
+try:
+    from chase_sentiment import compute_chase_sentiment
+except ImportError:  # pragma: no cover
+    compute_chase_sentiment = None  # type: ignore
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
 WSCN_CAL_URL = "https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas"
@@ -2946,6 +2951,7 @@ def render_html(ctx: dict) -> str:
     )
 
     trend_strength_html = render_trend_strength_html(ctx.get("trend_strength") or {})
+    chase_sentiment_html = render_chase_sentiment_html(ctx.get("chase_sentiment") or {})
     fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
 
     m = ctx["modes"]
@@ -3428,6 +3434,89 @@ def render_html(ctx: dict) -> str:
   }}
   .vol20-wrap.vol90 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol90 .vol20-axis {{ gap: 1px; }}
+
+  /* ── 资金追高情绪 ── */
+  .chase-group {{
+    margin-bottom: 16px;
+  }}
+  .chase-group:last-of-type {{ margin-bottom: 8px; }}
+  .chase-group-title {{
+    font-size: 14px; font-weight: 700; color: var(--text);
+    margin: 4px 0 10px; padding-left: 2px;
+  }}
+  .chase-grid {{
+    display: grid; grid-template-columns: 1fr; gap: 12px;
+  }}
+  @media (min-width: 900px) {{
+    .chase-grid {{ grid-template-columns: repeat(3, 1fr); }}
+  }}
+  .chase-chart {{
+    padding: 12px 12px 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: #fafafa;
+  }}
+  .chase-chart-head {{
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+  }}
+  .chase-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
+  .chase-chart-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
+  .chase-plot {{ width: 100%; overflow: visible; }}
+  .chase-bars {{
+    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+  }}
+  .chase-col {{
+    flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; align-items: center; height: 100%;
+  }}
+  .chase-val {{
+    font-size: 9px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; line-height: 1.15;
+    margin-bottom: 2px; white-space: nowrap;
+  }}
+  .chase-val.pos {{ color: #E53935; }}
+  .chase-val.neg {{ color: #34C759; }}
+  .chase-col.latest .chase-val {{ font-weight: 700; }}
+  .chase-track {{
+    flex: 1; width: 100%; min-height: 0; position: relative;
+  }}
+  .chase-zero {{
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(60,60,67,.22); z-index: 1; pointer-events: none;
+  }}
+  .chase-bar {{
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 70%; max-width: 14px; min-height: 1px;
+    border-radius: 2px 2px 0 0; z-index: 2;
+  }}
+  .chase-bar.pos {{
+    bottom: 50%; border-radius: 2px 2px 0 0;
+    background: var(--bar-ok, #E53935);
+  }}
+  .chase-bar.neg {{
+    top: 50%; border-radius: 0 0 2px 2px;
+    background: var(--bar-bad, #34C759);
+  }}
+  .chase-axis {{
+    display: flex; gap: 2px; margin-top: 6px; min-height: 16px; width: 100%;
+  }}
+  .chase-tick {{
+    flex: 1 1 0; min-width: 0; height: 16px; position: relative;
+  }}
+  .chase-tick span {{
+    display: none; position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 9px; color: var(--muted); white-space: nowrap;
+  }}
+  .chase-tick.show span {{ display: block; }}
+  .chase-tick.show:first-child span {{ left: 0; transform: none; }}
+  .chase-tick.latest span {{
+    display: block; left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }}
+  .chase-note {{
+    margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.55;
+  }}
+
   .vol20-head {{
     display: flex; align-items: baseline; justify-content: space-between;
     gap: 8px; margin-bottom: 0; flex-wrap: wrap;
@@ -3750,6 +3839,13 @@ def render_html(ctx: dict) -> str:
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
+    .chase-bars {{ height: 110px; gap: 1px; }}
+    .chase-val {{ display: none !important; }}
+    .chase-bar {{ width: 85%; max-width: none; }}
+    .chase-chart-title {{ font-size: 14px; }}
+    .chase-chart-meta {{ font-size: 12px; }}
+    .chase-group-title {{ font-size: 15px; }}
+    .chase-note {{ font-size: 13px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
@@ -3815,6 +3911,7 @@ def render_html(ctx: dict) -> str:
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
+      <a href="#sec-chase">资金追高情绪</a>
       <a href="#sec-ts">趋势强度</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
@@ -3834,20 +3931,30 @@ def render_html(ctx: dict) -> str:
     {vol20_html}
   </div>
 
-  <!-- 2 趋势强度 -->
-  <div class="section" id="sec-ts">
+  <!-- 2 资金追高情绪 -->
+  <div class="section" id="sec-chase">
     <div class="section-head">
       <div class="section-num">2</div>
+      <div class="section-title">资金追高情绪</div>
+      <div class="section-sub">{ctx['data_date']} · 近20日追高池均值</div>
+    </div>
+    {chase_sentiment_html}
+  </div>
+
+  <!-- 3 趋势强度 -->
+  <div class="section" id="sec-ts">
+    <div class="section-head">
+      <div class="section-num">3</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
   </div>
 
-  <!-- 3 涨停板块 -->
+  <!-- 4 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">4</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -3856,10 +3963,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 4 公告与政策 -->
+  <!-- 5 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">5</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -3867,10 +3974,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 5 事件 -->
+  <!-- 6 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">6</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -3880,10 +3987,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 6 资金认可度 -->
+  <!-- 7 资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">7</div>
       <div class="section-title">资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -4243,6 +4350,170 @@ def render_trend_strength_html(block: dict) -> str:
     return f"{count_chart}{chart}{amt_chart}{note_html}"
 
 
+def load_chase_sentiment_block(
+    as_of: datetime,
+    latest_dt: datetime | None = None,
+) -> dict:
+    """模块「资金追高情绪」：优先读缓存；最新交易日可重算。"""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    result_path = BASE / "chase_sentiment_results" / f"{as_of_d.isoformat()}.json"
+    latest_d = None
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+    is_latest = latest_d is None or as_of_d == latest_d
+
+    if result_path.exists() and not is_latest:
+        try:
+            return json.loads(result_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+
+    if result_path.exists() and is_latest:
+        try:
+            cached = json.loads(result_path.read_text(encoding="utf-8"))
+            if cached.get("as_of") == as_of_d.isoformat() and cached.get("groups"):
+                return cached
+        except json.JSONDecodeError:
+            pass
+
+    if not is_latest:
+        return {
+            "as_of": as_of_d.isoformat(),
+            "groups": {},
+            "note": "该日暂无资金追高情绪缓存",
+        }
+
+    if compute_chase_sentiment is None:
+        return {"as_of": as_of_d.isoformat(), "groups": {}, "note": "资金追高情绪模块未安装"}
+    return compute_chase_sentiment(as_of_d, force=False, progress=True)
+
+
+def _render_chase_metric_chart(title: str, series: list[dict], *, latest_n: int) -> str:
+    """零轴对称柱图：正红负绿；value 已为百分比。"""
+    vals = [float(x["value"]) for x in series if x.get("value") is not None]
+    if not vals:
+        return f'''<div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">{title}</span>
+      <span class="chase-chart-meta">无样本</span>
+    </div>
+    <div class="news-empty">该窗口暂无追高样本</div>
+  </div>'''
+
+    scale = max(abs(v) for v in vals)
+    if scale < 1e-9:
+        scale = 1.0
+    # 略留顶，避免贴边
+    scale *= 1.08
+
+    n_bars = len(series)
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+
+    cols = []
+    ticks = []
+    for i, row in enumerate(series):
+        raw = row.get("value")
+        ds = str(row.get("date") or "")
+        try:
+            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
+            lab = f"{dt.month}/{dt.day}"
+            wd = WEEKDAY[dt.weekday()]
+        except ValueError:
+            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
+            wd = ""
+        is_latest = i == n_bars - 1
+        if raw is None:
+            cols.append(
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 无样本">
+      <div class="chase-val">—</div>
+      <div class="chase-track"><div class="chase-zero"></div></div>
+    </div>'''
+            )
+        else:
+            v = float(raw)
+            h = min(50.0, abs(v) / scale * 50.0)
+            if v >= 0:
+                bar = f'<div class="chase-bar pos" style="height:{h:.1f}%"></div>'
+                tag = "pos"
+            else:
+                bar = f'<div class="chase-bar neg" style="height:{h:.1f}%"></div>'
+                tag = "neg"
+            val_lab = f"{v:+.1f}%"
+            n = int(row.get("n") or 0)
+            cols.append(
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家">
+      <div class="chase-val {tag}">{val_lab}</div>
+      <div class="chase-track"><div class="chase-zero"></div>{bar}</div>
+    </div>'''
+            )
+        ticks.append(
+            f'<div class="chase-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'<span>{lab}</span></div>'
+        )
+
+    last = next((x for x in reversed(series) if x.get("value") is not None), None)
+    latest_lab = f"{float(last['value']):+.1f}%" if last else "—"
+    return f'''<div class="chase-chart">
+    <div class="chase-chart-head">
+      <span class="chase-chart-title">{title}</span>
+      <span class="chase-chart-meta">最新 {latest_lab} · 池 {latest_n} 家</span>
+    </div>
+    <div class="chase-plot">
+      <div class="chase-bars">{"".join(cols)}</div>
+      <div class="chase-axis">{"".join(ticks)}</div>
+    </div>
+  </div>'''
+
+
+def render_chase_sentiment_html(block: dict) -> str:
+    groups = block.get("groups") or {}
+    if not groups:
+        note = block.get("note") or "暂无资金追高情绪数据"
+        return f'<div class="news-empty">{note}</div>'
+
+    parts = []
+    for gkey in ("main", "cyb"):
+        g = groups.get(gkey) or {}
+        gname = g.get("name") or gkey
+        metrics = g.get("metrics") or {}
+        # 末日池家数：取任一指标序列末日 n
+        latest_n = 0
+        for m in metrics.values():
+            ser = m.get("series") or []
+            if ser:
+                latest_n = int(ser[-1].get("n") or 0)
+                break
+        charts = []
+        for mk, default_title in (
+            ("money", "赚钱效应"),
+            ("loss", "亏钱效应"),
+            ("pullback", "回落指数"),
+        ):
+            m = metrics.get(mk) or {}
+            title = m.get("name") or default_title
+            charts.append(
+                _render_chase_metric_chart(title, m.get("series") or [], latest_n=latest_n)
+            )
+        parts.append(
+            f'''<div class="chase-group">
+    <div class="chase-group-title">{gname}</div>
+    <div class="chase-grid">{"".join(charts)}</div>
+  </div>'''
+        )
+
+    note = (
+        '<div class="chase-note">'
+        "追高定义：日内最高价相对昨收涨幅≥7%。"
+        "赚钱效应=(今高−昨高)/昨收；亏钱效应=(今收−昨高)/昨高；回落指数=(今收−今高)/今高。"
+        "每日对追高池取算术均值；创板含创业板与科创板；不含ST、北交所。"
+        "</div>"
+    )
+    return "".join(parts) + note
+
+
 def load_fund_recognition_block(
     as_of: datetime,
     latest_dt: datetime | None = None,
@@ -4511,6 +4782,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     if hasattr(latest_dt, "to_pydatetime"):
         latest_dt = latest_dt.to_pydatetime()
     trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt, df=df)
+    chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
     fund_range = ""
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
@@ -4550,6 +4822,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "advice": advice,
         "emo": emo,
         "trend_strength": trend_strength,
+        "chase_sentiment": chase_sentiment,
         "fund_recognition": fund_recognition,
         "fund_range": fund_range,
     }
