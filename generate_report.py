@@ -3846,10 +3846,34 @@ def load_fund_recognition_block(
 
 
 def render_fund_recognition_html(block: dict) -> str:
-    # 展示过滤：池内个股数 < 10 不展示；
+    def _is_st_sector(name: str) -> bool:
+        n = (name or "").strip().upper()
+        return "ST" in n
+
+    def _today_pct(it: dict) -> float | None:
+        series = it.get("series") or []
+        if not series:
+            return None
+        pct = (series[-1] or {}).get("pct")
+        return None if pct is None else float(pct)
+
+    def _mean_pct_last5(it: dict) -> float:
+        series = it.get("series") or []
+        vals = [
+            float(p["pct"])
+            for p in series[-5:]
+            if p.get("pct") is not None
+        ]
+        if not vals:
+            return -1.0
+        return sum(vals) / len(vals)
+
+    # 展示过滤：池内个股数 < 10 不展示；排除 ST 板块；
     # 报表当日（序列末日）分母严格 < 5 不展示整张板块柱图
     items = []
     for it in block.get("items") or []:
+        if _is_st_sector(str(it.get("name") or "")):
+            continue
         if int(it.get("pool_n") or 0) < 10:
             continue
         series = it.get("series") or []
@@ -3859,6 +3883,16 @@ def render_fund_recognition_html(block: dict) -> str:
         if int(last.get("n_amt") or 0) < 5:
             continue
         items.append(it)
+
+    # 排序：当日占比≥50%优先（按当日占比降序）；其余按近5日占比均值降序
+    def _sort_key(it: dict):
+        tp = _today_pct(it)
+        if tp is not None and tp >= 50.0:
+            return (0, -tp, str(it.get("name") or ""))
+        return (1, -_mean_pct_last5(it), str(it.get("name") or ""))
+
+    items.sort(key=_sort_key)
+
     if not items:
         note = block.get("note") or "暂无资金认可度数据"
         return f'<div class="news-empty">{note}</div>'
@@ -3917,10 +3951,12 @@ def render_fund_recognition_html(block: dict) -> str:
 
     note = (
         '<div class="fund-note">'
-        "资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示）；"
+        "资金认可度：近30个交易日开盘啦涨停板块整合个股池"
+        "（池内个股数≥10才展示；排除ST板块）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日分母严格小于5家时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
+        "排序：当日占比≥50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
         "柱图浅线为50%刻度。"
         "</div>"
     )
