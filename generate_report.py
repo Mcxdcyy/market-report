@@ -2399,7 +2399,7 @@ def render_fwd_section_html(
     directions: list,
     as_of: datetime | None = None,
 ) -> tuple[str, str]:
-    """未来2周模块：时间轴 → 事件详情 → 题材卡片 → 研判摘要。"""
+    """未来2周模块：时间轴 → 事件详情 → 研判摘要（已删除题材方向卡片）。"""
     lead_html = _render_fwd_lead_html(peak, summary, rhythm)
 
     # ── 融合日历（事件库 + 节奏补点；跳过已过期节点）──
@@ -2427,9 +2427,12 @@ def render_fwd_section_html(
                 if datetime(as_of.year if as_of else 2026, em, ed).date() < cutoff:
                     continue
         key = f"{ex.get('label', '')}|{ex.get('title', '')}"
-        if key not in seen:
-            seen.add(key)
-            cal_items.append(ex)
+        if key in seen:
+            continue
+        seen.add(key)
+        cal_items.append(ex)
+    # directions 参数保留兼容（旧 JSON themes）；页面不再渲染题材方向卡片
+    _ = directions
     cal_items.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
 
     timeline_html = _render_fwd_timeline_html(
@@ -2463,32 +2466,7 @@ def render_fwd_section_html(
         if cal_rows else ""
     )
 
-    # ── 题材方向 ──
-    dir_card_parts: list[str] = []
-    for t in directions:
-        drivers = t.get("drivers") or []
-        drivers_html = (
-            '<div class="dir-drivers">'
-            + "".join(f'<span class="dir-driver">{d}</span>' for d in drivers)
-            + "</div>"
-            if drivers else ""
-        )
-        dir_card_parts.append(
-            f'<div class="dir-card {t["tag"]}">'
-            f'<div class="dir-card-top"><span class="dir-name">{t["name"]}</span>'
-            f'<span class="pill {t["tag"]}">{t["stance"]}</span></div>'
-            f"{drivers_html}"
-            f'<div class="dir-logic">{t.get("logic", "")}</div></div>'
-        )
-    themes_html = (
-        f'<div class="fwd-themes-wrap">'
-        f'<div class="fwd-block-label">题材方向 <span class="fwd-block-hint">主观判断 · 非算法加权</span></div>'
-        f'<div class="dir-grid">{"".join(dir_card_parts)}</div></div>'
-        if dir_card_parts else
-        '<div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>'
-    )
-
-    body = f"{timeline_html}{cal_html}{themes_html}{lead_html}"
+    body = f"{timeline_html}{cal_html}{lead_html}"
     return body, lead_html
 
 
@@ -3148,7 +3126,7 @@ def render_html(ctx: dict) -> str:
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-top: 0;
   }}
-  /* 与题材方向「优先/可做」同一套 .pill 尺寸；配色用 A 股红强绿弱 */
+  /* 量能标签 .pill：A 股红强绿弱 */
   .vol20-tags .pill.ok {{ background: #ffebee; color: #c62828; }}
   .vol20-tags .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
   .vol20-tags .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
@@ -3332,29 +3310,6 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-note {{
     font-size: 12px; line-height: 1.6; color: var(--sub); margin: 4px 0 0;
   }}
-  .fwd-themes-wrap {{ margin-top: 16px; }}
-
-  .dir-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 0; }}
-  @media (max-width: 560px) {{ .dir-grid {{ grid-template-columns: 1fr; }} }}
-  .dir-card {{
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 11px 13px; background: #fff;
-  }}
-  /* 题材方向：A股配色 红=好 绿=不好 */
-  .dir-card.ok {{ border-left: 3px solid #E53935; }}
-  .dir-card.warn {{ border-left: 3px solid var(--warn); }}
-  .dir-card.bad {{ border-left: 3px solid #34C759; }}
-  .dir-grid .pill.ok {{ background: #ffebee; color: #c62828; }}
-  .dir-grid .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
-  .dir-grid .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
-  .dir-card-top {{ display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }}
-  .dir-name {{ font-size: 13px; font-weight: 700; }}
-  .dir-drivers {{ display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 8px; }}
-  .dir-driver {{
-    font-size: 10px; padding: 3px 8px; border-radius: 6px;
-    background: #f0f4ff; color: #3a5a9a; border: 1px solid #d8e2f4;
-  }}
-  .dir-logic {{ font-size: 12px; color: var(--sub); line-height: 1.65; }}
 
   .pill {{
     display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;

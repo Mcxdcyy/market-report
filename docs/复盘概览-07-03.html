@@ -477,7 +477,7 @@
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-top: 0;
   }
-  /* 与题材方向「优先/可做」同一套 .pill 尺寸；配色用 A 股红强绿弱 */
+  /* 量能标签 .pill：A 股红强绿弱 */
   .vol20-tags .pill.ok { background: #ffebee; color: #c62828; }
   .vol20-tags .pill.warn { background: var(--warn-bg); color: #b25000; }
   .vol20-tags .pill.bad { background: #e8f5e9; color: #2e7d32; }
@@ -661,29 +661,6 @@
   .fwd-cal-note {
     font-size: 12px; line-height: 1.6; color: var(--sub); margin: 4px 0 0;
   }
-  .fwd-themes-wrap { margin-top: 16px; }
-
-  .dir-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 0; }
-  @media (max-width: 560px) { .dir-grid { grid-template-columns: 1fr; } }
-  .dir-card {
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 11px 13px; background: #fff;
-  }
-  /* 题材方向：A股配色 红=好 绿=不好 */
-  .dir-card.ok { border-left: 3px solid #E53935; }
-  .dir-card.warn { border-left: 3px solid var(--warn); }
-  .dir-card.bad { border-left: 3px solid #34C759; }
-  .dir-grid .pill.ok { background: #ffebee; color: #c62828; }
-  .dir-grid .pill.warn { background: var(--warn-bg); color: #b25000; }
-  .dir-grid .pill.bad { background: #e8f5e9; color: #2e7d32; }
-  .dir-card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .dir-name { font-size: 13px; font-weight: 700; }
-  .dir-drivers { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 8px; }
-  .dir-driver {
-    font-size: 10px; padding: 3px 8px; border-radius: 6px;
-    background: #f0f4ff; color: #3a5a9a; border: 1px solid #d8e2f4;
-  }
-  .dir-logic { font-size: 12px; color: var(--sub); line-height: 1.65; }
 
   .pill {
     display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;
@@ -1268,7 +1245,7 @@
         <span class="event-sync-note">已同步 7 条日历线索</span>
       </div>
     </div>
-    <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/10</div><div class="fwd-tsub">2026中国具身智能机器人产业展7月10-12日举行</div></div><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/11</div><div class="fwd-tsub">2026“机器人+”创新发展大会7月11-13日举行</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">15</div><div class="fwd-tlabel">7/15</div><div class="fwd-tsub">中国（西部）国际人工智能与具身智能机器人产业链大会+2</div></div><div class="fwd-tnode"><div class="fwd-tdot">16</div><div class="fwd-tlabel">7/16</div><div class="fwd-tsub">长鑫科技7月16日打新</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">AI</div><div class="fwd-tlabel">7/17–20</div><div class="fwd-tsub">7月17日至20日，世界人工智能大会（WAIC）将在上海举办</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-date">7/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026中国具身智能机器人产业展7月10-12日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/11</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026“机器人+”创新发展大会7月11-13日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（西部）国际人工智能与具身智能机器人产业链大会</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中报强制预告截止日：7月15日</span></div><p class="fwd-cal-note">财报验证节点，预增抢跑与蹭概念分化，截止日前后波动通常放大。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况</span></div><p class="fwd-cal-note">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/16</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">长鑫科技7月16日打新</span></div><p class="fwd-cal-note">长鑫科技7月16日打新。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/17–20</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">7月17日至20日，世界人工智能大会（WAIC）将在上海举办</span></div><p class="fwd-cal-note">上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；最高领导人出席开幕式。会中看 Atlas 950、具身/大模型新品与治理政策叙事。</p></div></div></div></div><div class="news-empty">暂无题材研判。请在 market_news.json 写入 direction_analysis。</div>
+    <div class="fwd-track-wrap"><div class="fwd-track-scroll"><div class="fwd-track"><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/10</div><div class="fwd-tsub">2026中国具身智能机器人产业展7月10-12日举行</div></div><div class="fwd-tnode"><div class="fwd-tdot">机</div><div class="fwd-tlabel">7/11</div><div class="fwd-tsub">2026“机器人+”创新发展大会7月11-13日举行</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">15</div><div class="fwd-tlabel">7/15</div><div class="fwd-tsub">中国（西部）国际人工智能与具身智能机器人产业链大会+2</div></div><div class="fwd-tnode"><div class="fwd-tdot">16</div><div class="fwd-tlabel">7/16</div><div class="fwd-tsub">长鑫科技7月16日打新</div></div><div class="fwd-tnode hot"><div class="fwd-tdot hot">AI</div><div class="fwd-tlabel">7/17–20</div><div class="fwd-tsub">7月17日至20日，世界人工智能大会（WAIC）将在上海举办</div></div></div></div></div><div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-date">7/10</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026中国具身智能机器人产业展7月10-12日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/11</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026“机器人+”创新发展大会7月11-13日举行</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（西部）国际人工智能与具身智能机器人产业链大会</span></div><p class="fwd-cal-note">产业顶会/强主题展会，关注主题龙头竞价强度与分化。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中报强制预告截止日：7月15日</span></div><p class="fwd-cal-note">财报验证节点，预增抢跑与蹭概念分化，截止日前后波动通常放大。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/15</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况</span></div><p class="fwd-cal-note">国新办举行新闻发布会，介绍2026年上半年货币政策执行和金融统计数据情况。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-date">7/16</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">长鑫科技7月16日打新</span></div><p class="fwd-cal-note">长鑫科技7月16日打新。关注相关板块竞价与持续性。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-date">7/17–20</div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">7月17日至20日，世界人工智能大会（WAIC）将在上海举办</span></div><p class="fwd-cal-note">上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；最高领导人出席开幕式。会中看 Atlas 950、具身/大模型新品与治理政策叙事。</p></div></div></div></div>
   </div>
 
   <!-- 6 资金认可度 -->
@@ -1282,7 +1259,7 @@
     <div class="news-empty">该日暂无资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 16:31</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 16:49</div>
 </div>
 </body>
 </html>
