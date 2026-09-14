@@ -1257,7 +1257,7 @@ SEED_EVENT_CATALOG: list[dict] = [
     # 过期节点（如 8/29 长鑫科技半年报）勿再写入；强主题窗口在此维护
 ]
 
-# 事件库：只保留未来2周可能形成板块级炒作的节点（会议/政策/财报窗口），不要单股解禁/IPO
+# 事件库：板块级炒作节点（会议/政策/财报/产业链级IPO）；普通单股解禁/无链条 IPO 排除
 EVENT_STRONG_THEME_KW = (
     "WAIC", "世界人工智能", "人工智能大会",
     "具身", "人形机器人", "机器人+", "智能机器人", "机器人产业",
@@ -1320,16 +1320,25 @@ def _event_is_weak_expo(title: str) -> bool:
 
 
 def _event_is_supply_only(title: str) -> bool:
-    """单股供给冲击（解禁/IPO），难形成板块规模炒作。"""
+    """单股供给冲击（解禁/普通IPO），难形成板块规模炒作。"""
     return any(k in title for k in EVENT_SUPPLY_KW)
 
 
+def _event_is_chain_ipo(title: str) -> bool:
+    """影响整条产业链的强主题 IPO/申购（如长鑫、宇树），须提前纳入时间轴。"""
+    if not any(k in title for k in ("IPO", "申购", "上市", "发行")):
+        return False
+    return _event_has_strong_theme(title)
+
+
 def _event_is_catalyst(title: str, ev: dict | None = None) -> bool:
-    """是否属于可炒作节点（强主题会议/政策/财报窗口），排除 routine 宏观、单股解禁、弱展会。"""
+    """是否属于可炒作节点（强主题会议/政策/财报窗口/产业链级IPO），排除 routine 宏观、普通单股解禁、弱展会。"""
     if ev and ev.get("source") == "seed":
         return True
     if not title:
         return False
+    if _event_is_chain_ipo(title):
+        return True
     if _event_is_supply_only(title):
         return False
     if any(k in title for k in EVENT_EXCLUDE_KW):
@@ -1433,22 +1442,32 @@ def _event_short(title: str) -> str:
 
 
 def _event_brief(title: str) -> str:
+    """联网抓取缺人工 brief 时的占位；正式展示须写成「炒作/风险」口径（见规则）。"""
     if "WAIC" in title or "世界人工智能大会" in title:
         return (
-            "上海 WAIC 2026（7/17–20）升格为人工智能全球治理高级别会议；"
-            "最高领导人出席开幕式。会中看 Atlas 950、具身/大模型新品与治理政策叙事。"
+            "炒作：人工智能、具身智能与大模型应用相关标的或借大会窗口活跃。"
+            "风险：会前透支、会中兑现即弱，易出现冲高回落。"
         )
     if "预告" in title or "中报" in title:
-        return "财报验证节点，预增抢跑与蹭概念分化，截止日前后波动通常放大。"
-    if "LPR" in title:
-        return "利率政策信号，影响金融、地产链及高股息资产定价。"
-    if any(k in title for k in ("GDP", "CPI", "PPI")):
-        return "宏观数据公布，影响总量预期与顺周期/消费板块情绪。"
+        return (
+            "炒作：业绩预增与验证窗口，相关产业链或分化上行。"
+            "风险：证伪与减持预期并存，截止日前后波动放大。"
+        )
+    if _event_is_chain_ipo(title) or "宇树" in title or "长鑫" in title:
+        return (
+            "炒作：产业链映射标的或借定价/申购/上市节点活跃。"
+            "风险：单次情绪脉冲后分化快，勿把节点等同趋势。"
+        )
     if any(k in title for k in ("机器人", "具身", "人工智能")):
-        return "产业顶会/强主题展会，关注主题龙头竞价强度与分化。"
+        return (
+            "炒作：主题龙头与链条映射或阶段性活跃。"
+            "风险：会议催化偏情绪，持续性依赖订单与资金承接。"
+        )
     if "解禁" in title or "IPO" in title:
-        return "供给端事件，关注解禁规模、筹码结构与短线承接。"
-    return f"{title.rstrip('。')}。关注相关板块竞价与持续性。"
+        return "无炒作/风险可能"
+    if any(k in title for k in ("GDP", "CPI", "PPI", "LPR")):
+        return "无炒作/风险可能"
+    return "无炒作/风险可能"
 
 
 def _wscn_relevant(item: dict) -> bool:
@@ -1732,7 +1751,7 @@ def build_events_window(as_of: datetime) -> tuple:
             "label": "暂无大节点",
             "title": "关注业绩披露",
             "sub": "关注业绩披露",
-            "brief": "未来两周暂无预设大事件，重点跟踪中报预告与行业政策动态。",
+            "brief": "无炒作/风险可能",
             "hot": False,
         }]
     return label, nodes, sync_note
@@ -2443,9 +2462,7 @@ def render_fwd_section_html(
     for n in cal_items:
         label = n.get("label", "")
         title = n.get("title", n.get("short", ""))
-        note = n.get("brief", "")
-        if len(note) > 88:
-            note = note[:85].rstrip() + "…"
+        note = (n.get("brief") or "").strip() or "无炒作/风险可能"
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         hot = n.get("hot") or bool(tags)
