@@ -23,8 +23,8 @@ else
     git remote add origin https://github.com/Mcxdcyy/market-report.git
 fi
 
-git add .gitignore generate_report.py fetch_kpl_sectors.py fund_recognition.py trend_strength.py chase_sentiment.py \
-  kpl_sector_history.json kpl_sector_stocks_history.json \
+git add .gitignore generate_report.py fetch_kpl_sectors.py fetch_kpl_volume.py fund_recognition.py trend_strength.py chase_sentiment.py \
+  kpl_sector_history.json kpl_sector_stocks_history.json kpl_market_volume.json \
   fund_recognition_results/ trend_strength_results/ chase_sentiment_results/ market_news.json event_catalog.json \
   serve_mobile.py docs .cursor/rules/ push_github.sh
 git status --short

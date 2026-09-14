@@ -750,6 +750,70 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     return bars
 
 
+def build_vol_bars_from_amounts(
+    rows: list[dict],
+    *,
+    prior_amount: float | None = None,
+) -> list[dict]:
+    """由成交额序列（亿元）生成柱图数据；口径同 build_vol20_bars。
+
+    rows: [{date: YYYY-MM-DD|datetime, amount_yi: float}, ...] 升序。
+    """
+    if not rows:
+        return []
+    vols = [float(r.get("amount_yi") or 0) for r in rows]
+    vmax = max(vols) if vols else 0.0
+    vmin = min(vols) if vols else 0.0
+    y_min = vmin * 0.85
+    span = vmax - y_min
+    n_bars = len(rows)
+    tick_idxs = {0, n_bars - 1} if n_bars else set()
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
+
+    prev_vol: float | None = prior_amount if prior_amount and prior_amount > 0 else None
+    bars: list[dict] = []
+    for i, row in enumerate(rows):
+        vol = float(row.get("amount_yi") or 0)
+        raw_d = row.get("date")
+        if hasattr(raw_d, "to_pydatetime"):
+            dt = raw_d.to_pydatetime()
+        elif isinstance(raw_d, datetime):
+            dt = raw_d
+        elif isinstance(raw_d, date) and not isinstance(raw_d, datetime):
+            dt = datetime(raw_d.year, raw_d.month, raw_d.day)
+        else:
+            dt = datetime.strptime(str(raw_d)[:10], "%Y-%m-%d")
+        if prev_vol is None or prev_vol <= 0:
+            tag = "flat"
+        elif vol > prev_vol:
+            tag = "up"
+        elif vol < prev_vol:
+            tag = "down"
+        else:
+            tag = "flat"
+        if span > 0:
+            pct = (vol - y_min) / span * 100.0
+        else:
+            pct = 50.0
+        bars.append({
+            "date": fmt_md(dt),
+            "weekday": WEEKDAY[dt.weekday()],
+            "vol": vol,
+            "vol_wy": vol / 10000.0,
+            "label": f"{vol / 10000.0:.2f}",
+            "height_pct": round(max(pct, 2.0 if vol > 0 else 0.0), 1),
+            "tag": tag,
+            "is_latest": i == n_bars - 1,
+            "show_tick": i in tick_idxs,
+        })
+        prev_vol = vol
+    return bars
+
+
 def _render_vol_bars_block(
     bars: list[dict],
     *,
@@ -757,7 +821,7 @@ def _render_vol_bars_block(
     dense: bool = False,
     after_html: str = "",
 ) -> str:
-    """成交金额柱图 HTML 块；dense=True 用于 90 日趋势（无最新值、无红绿、柱更细）。"""
+    """成交金额柱图 HTML 块；dense=True 用于长周期趋势（无最新值、无红绿、柱更细）。"""
     if not bars:
         return ""
     cols = "".join(
@@ -776,7 +840,7 @@ def _render_vol_bars_block(
     )
     d0, d1 = bars[0]["date"], bars[-1]["date"]
     meta = f"{d0}–{d1}" if dense else f"{d0}–{d1} · 最新 {bars[-1]['label']} 万亿"
-    wrap_cls = "vol20-wrap vol90" if dense else "vol20-wrap"
+    wrap_cls = "vol20-wrap vol120" if dense else "vol20-wrap"
     return f'''<div class="{wrap_cls}">
     <div class="vol20-head">
       <span class="vol20-title">{title}</span>
@@ -2867,7 +2931,7 @@ def render_html(ctx: dict) -> str:
   </div>'''
 
     vol20 = ctx.get("vol20_bars") or []
-    vol90 = ctx.get("vol90_bars") or []
+    vol120 = ctx.get("vol120_bars") or []
     vol_note = (ctx.get("vol_note") or "").strip()
     vol_tags = [t for t in (ctx.get("vol_tags") or []) if str(t).strip()]
     vol_regime = ctx.get("vol_regime") or "neutral"
@@ -2885,10 +2949,10 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and after_30:
         vol30_html = after_30
-    vol90_html = _render_vol_bars_block(
-        vol90, title="量能90日趋势", dense=True
+    vol120_html = _render_vol_bars_block(
+        vol120, title="量能120日趋势", dense=True
     )
-    vol20_html = f"{vol30_html}{vol90_html}"
+    vol20_html = f"{vol30_html}{vol120_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -3426,14 +3490,14 @@ def render_html(ctx: dict) -> str:
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
-  .vol20-wrap.vol90 .vol20-val {{ display: none !important; }}
-  .vol20-wrap.vol90 .vol20-bars {{ height: 118px; gap: 1px; }}
-  .vol20-wrap.vol90 .vol20-bar {{
+  .vol20-wrap.vol120 .vol20-val {{ display: none !important; }}
+  .vol20-wrap.vol120 .vol20-bars {{ height: 118px; gap: 1px; }}
+  .vol20-wrap.vol120 .vol20-bar {{
     width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
     background: #8e8e93;
   }}
-  .vol20-wrap.vol90 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
-  .vol20-wrap.vol90 .vol20-axis {{ gap: 1px; }}
+  .vol20-wrap.vol120 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
+  .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
 
   /* ── 资金追高情绪 ── */
   .chase-group {{
@@ -4730,7 +4794,22 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
     trend_days, trend_headline = analyze_10d(last10, work)
     trend_range = f"{fmt_md(last10.iloc[0]['date'])}–{fmt_md(last10.iloc[-1]['date'])}"
     vol20_bars = build_vol20_bars(work, 30)
-    vol90_bars = build_vol20_bars(work, 90)
+    vol120_bars: list[dict] = []
+    try:
+        from fetch_kpl_volume import ensure_kpl_volume_series
+
+        as_of_d = dt.date() if hasattr(dt, "date") else dt
+        kpl_rows = ensure_kpl_volume_series(as_of_d, n=121, force=False, progress=True)
+        if len(kpl_rows) > 120:
+            prior_amt = float(kpl_rows[-(120 + 1)].get("amount_yi") or 0) or None
+            use_rows = kpl_rows[-120:]
+        else:
+            prior_amt = None
+            use_rows = kpl_rows
+        vol120_bars = build_vol_bars_from_amounts(use_rows, prior_amount=prior_amt)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[kpl-vol] 量能120日趋势拉取失败: {exc}")
+        vol120_bars = []
     dims = analyze_3d(work, row)
     env_callout = build_env_callout(row, work, dim, dims)
     synth = env_callout["synth"]
@@ -4804,7 +4883,7 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "trend_range": trend_range,
         "trend_headline": trend_headline,
         "vol20_bars": vol20_bars,
-        "vol90_bars": vol90_bars,
+        "vol120_bars": vol120_bars,
         "vol_note": dim.get("vol_note") or "",
         "vol_tags": list(dim.get("vol_tags") or []),
         "vol_regime": (dim.get("vm") or {}).get("regime") or "neutral",
