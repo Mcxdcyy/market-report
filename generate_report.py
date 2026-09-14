@@ -2963,11 +2963,22 @@ def render_html(ctx: dict) -> str:
     border-radius: var(--radius-sm); background: #fafafa;
   }}
   .fund-card-head {{
-    display: flex; align-items: baseline; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+  }}
+  .fund-card-left {{
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
+  .fund-pill {{
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: 11px; font-weight: 600; line-height: 1.2;
+    padding: 2px 7px; border-radius: 999px; white-space: nowrap;
+  }}
+  .fund-pill.ok {{ background: #ffebee; color: #c62828; }}
+  .fund-pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
+  .fund-pill.flat {{ background: #eef2f6; color: #5a6472; }}
   .fund-chart {{ width: 100%; }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
@@ -2988,7 +2999,13 @@ def render_html(ctx: dict) -> str:
     width: 72%; max-width: 18px; min-height: 0; border-radius: 2px 2px 1px 1px;
     background: var(--accent);
   }}
-  .fund-bar.empty {{ background: transparent; min-height: 0; }}
+  .fund-bar.strong {{ background: #E53935; }}
+  .fund-bar.weak {{ background: #34C759; }}
+  .fund-col.latest .fund-bar.strong,
+  .fund-col.latest .fund-bar.weak {{
+    width: 82%; max-width: 20px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+  }}
+  .fund-bar.empty {{ background: transparent; min-height: 0; box-shadow: none; }}
   .fund-axis {{
     display: flex; margin-top: 4px; min-height: 16px; position: relative;
   }}
@@ -3405,6 +3422,7 @@ def render_html(ctx: dict) -> str:
     #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
     #sec-fund .fund-card-title {{ font-size: 15px; }}
     #sec-fund .fund-card-meta {{ font-size: 12px; }}
+    #sec-fund .fund-pill {{ font-size: 12px; }}
     #sec-fund .fund-note {{ font-size: 13px; }}
     #sec-fund .fund-bars {{ height: 96px; }}
     .score-foot {{ font-size: 13px; }}
@@ -3902,6 +3920,12 @@ def render_fund_recognition_html(block: dict) -> str:
             continue
         items.append(it)
 
+    def _prev_valid_pct(series: list) -> float | None:
+        for pt in reversed(series[:-1]):
+            if pt.get("pct") is not None:
+                return float(pt["pct"])
+        return None
+
     # 排序：当日占比≥50%优先（按当日占比降序）；其余按近5日占比均值降序
     def _sort_key(it: dict):
         tp = _today_pct(it)
@@ -3935,7 +3959,8 @@ def render_fund_recognition_html(block: dict) -> str:
                 title = f'{pt.get("date", "")} · 无样本'
             else:
                 h = max(0.0, min(100.0, float(pct)))
-                bar = f'<div class="fund-bar" style="height:{h:.1f}%"></div>'
+                level = "strong" if float(pct) >= 50.0 else "weak"
+                bar = f'<div class="fund-bar {level}" style="height:{h:.1f}%"></div>'
                 title = (
                     f'{pt.get("date", "")} · {pct}%'
                     f'（{pt.get("n_ok", 0)}/{pt.get("n_amt", 0)}）'
@@ -3954,6 +3979,31 @@ def render_fund_recognition_html(block: dict) -> str:
                 f'{f"<span>{lab}</span>" if show else ""}</div>'
             )
         last_pt = series[-1] or {}
+        today = last_pt.get("pct")
+        prev = _prev_valid_pct(series)
+        badges = []
+        if today is not None:
+            today_f = float(today)
+            if today_f >= 50.0:
+                badges.append(
+                    f'<span class="fund-pill ok">偏强 {today_f:.1f}%</span>'
+                )
+            else:
+                badges.append(
+                    f'<span class="fund-pill bad">偏弱 {today_f:.1f}%</span>'
+                )
+            if prev is not None:
+                delta = round(today_f - prev, 1)
+                if delta > 0:
+                    badges.append(
+                        f'<span class="fund-pill ok">↑+{delta:.1f}</span>'
+                    )
+                elif delta < 0:
+                    badges.append(
+                        f'<span class="fund-pill bad">↓{delta:.1f}</span>'
+                    )
+                else:
+                    badges.append('<span class="fund-pill flat">→持平</span>')
         meta = (
             f'共 {it.get("pool_n", 0)} 只 · '
             f'3亿以上 {int(last_pt.get("n_amt") or 0)} 只'
@@ -3961,7 +4011,10 @@ def render_fund_recognition_html(block: dict) -> str:
         cards.append(
             f'''<div class="fund-card">
     <div class="fund-card-head">
-      <span class="fund-card-title">{it.get("name", "")}</span>
+      <div class="fund-card-left">
+        <span class="fund-card-title">{it.get("name", "")}</span>
+        {"".join(badges)}
+      </div>
       <span class="fund-card-meta">{meta}</span>
     </div>
     <div class="fund-chart">
@@ -3980,7 +4033,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比≥50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱图浅线为50%刻度。"
+        "柱色：占比≥50%为红、&lt;50%为绿；标题旁标签为当日强弱，箭头为较前一有效样本日变化。柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'

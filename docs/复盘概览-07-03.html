@@ -292,11 +292,22 @@
     border-radius: var(--radius-sm); background: #fafafa;
   }
   .fund-card-head {
-    display: flex; align-items: baseline; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .fund-card-left {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;
   }
   .fund-card-title { font-size: 14px; font-weight: 700; color: var(--text); }
   .fund-card-meta { font-size: 11px; color: var(--muted); }
+  .fund-pill {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: 11px; font-weight: 600; line-height: 1.2;
+    padding: 2px 7px; border-radius: 999px; white-space: nowrap;
+  }
+  .fund-pill.ok { background: #ffebee; color: #c62828; }
+  .fund-pill.bad { background: #e8f5e9; color: #2e7d32; }
+  .fund-pill.flat { background: #eef2f6; color: #5a6472; }
   .fund-chart { width: 100%; }
   .fund-bars {
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
@@ -317,7 +328,13 @@
     width: 72%; max-width: 18px; min-height: 0; border-radius: 2px 2px 1px 1px;
     background: var(--accent);
   }
-  .fund-bar.empty { background: transparent; min-height: 0; }
+  .fund-bar.strong { background: #E53935; }
+  .fund-bar.weak { background: #34C759; }
+  .fund-col.latest .fund-bar.strong,
+  .fund-col.latest .fund-bar.weak {
+    width: 82%; max-width: 20px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+  }
+  .fund-bar.empty { background: transparent; min-height: 0; box-shadow: none; }
   .fund-axis {
     display: flex; margin-top: 4px; min-height: 16px; position: relative;
   }
@@ -734,6 +751,7 @@
     #sec-ts .ts-amt-cnt { font-size: 12px; }
     #sec-fund .fund-card-title { font-size: 15px; }
     #sec-fund .fund-card-meta { font-size: 12px; }
+    #sec-fund .fund-pill { font-size: 12px; }
     #sec-fund .fund-note { font-size: 13px; }
     #sec-fund .fund-bars { height: 96px; }
     .score-foot { font-size: 13px; }
@@ -1256,7 +1274,7 @@
     <div class="news-empty">该日暂无资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 16:08</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 16:14</div>
 </div>
 </body>
 </html>
