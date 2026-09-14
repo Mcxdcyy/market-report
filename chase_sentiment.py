@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""资金追高情绪：主板 / 创板（创业板+科创板）近30日三指标均值。
+"""资金追高情绪：主板 / 创板（创业板+科创板）近120日三指标均值。
 
 追高定义：（当日最高 − 昨收）/ 昨收 ≥ 7%。
 
@@ -26,10 +26,10 @@ import trend_strength as ts
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "chase_sentiment_results"
 DATA_FILE = BASE / "大盘数据.numbers"
-SERIES_DAYS = 30
+SERIES_DAYS = 120
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 3  # +上市≤10日排除
+SCHEMA = 4  # 窗口 120 日
 
 GROUP_ORDER = (
     ("main", "主板追高"),

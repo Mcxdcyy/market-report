@@ -3508,7 +3508,7 @@ def render_html(ctx: dict) -> str:
     flex: 1 1 0; min-width: 0;
     display: flex; flex-direction: column; align-items: center; height: 100%;
   }}
-  /* 近30柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
+  /* 近120柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
   .chase-val {{
     display: none !important;
   }}
@@ -3521,8 +3521,8 @@ def render_html(ctx: dict) -> str:
   }}
   .chase-bar {{
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 70%; max-width: 12px; min-height: 1px;
-    border-radius: 2px 2px 0 0; z-index: 2;
+    width: 90%; max-width: 6px; min-height: 1px;
+    border-radius: 1px 1px 0 0; z-index: 2;
   }}
   .chase-bar.pos {{
     bottom: 50%; border-radius: 2px 2px 0 0;
@@ -3946,7 +3946,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">2</div>
       <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 近30日追高池均值</div>
+      <div class="section-sub">{ctx['data_date']} · 近120日追高池均值</div>
     </div>
     {chase_sentiment_html}
   </div>
