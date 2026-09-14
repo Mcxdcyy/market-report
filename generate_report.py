@@ -1270,6 +1270,24 @@ SEED_EVENT_CATALOG: list[dict] = [
         "importance": 3,
         "source": "seed",
     },
+    {
+        "month": 9,
+        "day": 14,
+        "dot": "医",
+        "label": "9/14–16",
+        "title": "第二届医学人工智能大会（MAIC2nd 2026）",
+        "short": "医学AI大会",
+        "brief": (
+            "《中国卫生信息管理杂志》社主办，于重庆举行。"
+            "围绕卫生健康领域人工智能应用落地、规范治理与产业协同，"
+            "设置主论坛及临床诊疗、医院管理、伦理治理等平行专题，"
+            "并开展国家级医学人工智能优秀案例展示。"
+        ),
+        "hot": True,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (9, 16),
+    },
 ]
 
 # 事件库：板块级炒作节点（会议/政策/财报/产业链级IPO）；普通单股解禁/无链条 IPO 排除
@@ -1464,6 +1482,8 @@ def _normalize_event_title(title: str) -> str:
         return t
     if "国务院政策例行吹风会" in t:
         return "国务院政策例行吹风会"
+    if "医学人工智能大会" in t or "MAIC" in t.upper():
+        return "第二届医学人工智能大会（MAIC2nd 2026）" if "第二届" in t or "2nd" in t.lower() or "MAIC2nd" in t.replace(" ", "") else t.split("，")[0].strip()
     if "，" in t:
         head, _tail = t.split("，", 1)
         if any(k in head for k in ("大会", "展会", "博览会", "吹风会", "发布会", "峰会", "论坛")):
@@ -1471,8 +1491,17 @@ def _normalize_event_title(title: str) -> str:
     return t
 
 
+def _is_meeting_event(title: str) -> bool:
+    """大会/吹风会/论坛等会议类节点。"""
+    return any(
+        k in (title or "")
+        for k in ("大会", "吹风会", "论坛", "峰会", "发布会", "座谈会", "工作会议", "常务会议", "例行新闻发布会")
+    )
+
+
 def _event_brief(title: str, raw_title: str | None = None) -> str:
-    """事件描述：写主题/内容/出席方等事实，不写炒作预期或风险预期。"""
+    """事件描述：写主题/内容/出席方等事实，不写炒作预期或风险预期。
+    会议类必须写清本场具体议题（讲什么），禁止空泛「顶会窗口」套话。"""
     raw = (raw_title or title or "").strip().rstrip("。")
     name = _normalize_event_title(raw)
 
@@ -1485,14 +1514,22 @@ def _event_brief(title: str, raw_title: str | None = None) -> str:
             theme = "介绍加强中小企业回款难问题治理有关工作情况"
         return f"{attend}{theme}。"
 
+    if "医学人工智能大会" in raw or "MAIC" in raw.upper():
+        return (
+            "《中国卫生信息管理杂志》社主办，于重庆举行。"
+            "围绕卫生健康领域人工智能应用落地、规范治理与产业协同，"
+            "设置主论坛及临床诊疗、医院管理、伦理治理等平行专题，"
+            "并开展国家级医学人工智能优秀案例展示。"
+        )
+
     if "WAIC" in raw or "世界人工智能大会" in raw:
         return "上海世界人工智能大会窗口，产业新品、大模型应用与治理相关议程集中发布。"
     if "预告" in raw or "中报" in raw:
         return "财报或业绩预告验证节点，预增披露与截止日前后波动通常放大。"
     if _event_is_chain_ipo(raw) or "宇树" in raw or "长鑫" in raw:
         return "产业链级定价、申购或上市节点，上市前常分流场内流动性。"
-    if any(k in raw for k in ("机器人", "具身", "人工智能")):
-        return "产业顶会或强主题展会窗口。"
+
+    # 标题逗号后常为议题/说明，会议类优先取作主题描述
     if "，" in raw:
         tail = raw.split("，", 1)[1].strip()
         if tail and not tail.startswith(name):
@@ -1501,6 +1538,19 @@ def _event_brief(title: str, raw_title: str | None = None) -> str:
         extra = raw[len(name):].lstrip("，, ：:")
         if extra:
             return extra if extra.endswith("。") else f"{extra}。"
+
+    if _is_meeting_event(raw) or _is_meeting_event(name):
+        # 从会议名本身提炼议题，避免「产业顶会窗口」空话
+        if "机器人" in raw or "具身" in raw:
+            return "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。"
+        if "人工智能" in raw or "大模型" in raw:
+            return "聚焦人工智能产业应用、技术进展与治理规范等议题。"
+        if "创新药" in raw or "医药" in raw or "细胞" in raw or "基因" in raw:
+            return "聚焦创新药研发、临床进展与产业政策等议题。"
+        if name:
+            return f"围绕{name}相关议题展开交流，具体议程以主办方公布为准。"
+        return "会议相关议题以主办方公布为准。"
+
     # 标题本身已含事实信息时，直接作描述（勿复读成「标题。标题。」）
     if name and ("公布" in name or "截止" in name or "实施" in name or "举行" in name):
         return f"{name}。"
@@ -1654,6 +1704,7 @@ def _seed_covers_event(seed: dict, ev: dict) -> bool:
     keys = (
         "WAIC", "人工智能大会", "中报", "预告", "CPIC", "医药创新",
         "低空", "政治局", "具身", "机器人", "宇树", "世界机器人大会",
+        "医学人工智能", "MAIC", "吹风会",
     )
     return any(k in st and k in et for k in keys) or st in et or et in st
 
