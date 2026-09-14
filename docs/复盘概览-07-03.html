@@ -115,10 +115,19 @@
   .section-title { font-size: 15px; font-weight: 700; }
   .section-sub { font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
   .section-sub.event-meta {
-    display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
-    white-space: normal; text-align: right; line-height: 1.45; max-width: 52%;
+    display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline;
+    justify-content: flex-end; gap: 6px 8px;
+    white-space: normal; text-align: right; line-height: 1.4; max-width: 58%;
   }
-  .section-sub.event-meta .event-sync-note { font-size: 11px; color: var(--sub); }
+  .section-sub.event-meta .event-window {
+    font-size: 12px; font-weight: 600; color: var(--muted);
+  }
+  .section-sub.event-meta .event-sync-note {
+    font-size: 11px; font-weight: 500; color: var(--muted); opacity: .85;
+  }
+  .section-sub.event-meta .event-sync-note::before {
+    content: "·"; margin-right: 8px; opacity: .55;
+  }
 
   .sub-block { margin-top: 4px; }
   .sub-block + .sub-block { margin-top: 20px; padding-top: 18px; border-top: 1px dashed var(--border); }
@@ -616,10 +625,10 @@
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
   }
   .fwd-cal-md {
-    font-size: 12px; font-weight: 800; color: var(--accent); line-height: 1.3;
+    font-size: 14px; font-weight: 800; color: var(--accent); line-height: 1.3;
   }
   .fwd-cal-wd {
-    font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.3;
+    font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.3;
   }
   .fwd-cal-body { min-width: 0; width: 100%; }
   .fwd-cal-top {
@@ -690,37 +699,9 @@
     .section-title { font-size: 18px; }
     .section-sub { font-size: 14px; }
     .section-sub.event-meta .event-sync-note { font-size: 13px; }
-    .sub-heading { font-size: 14px; }
-    .sub-note { font-size: 13px; }
-    .callout { font-size: 15px; }
-    .score-label { font-size: 13px; }
-    .score-hint { font-size: 13px; }
-    .score-name { font-size: 13px; }
-    #sec-env .score-val { font-size: 22px; letter-spacing: -0.3px; }
-    #sec-ts .ts-chart-title { font-size: 14px; }
-    #sec-ts .ts-hbar-name { font-size: 13px; }
-    #sec-ts .ts-hbar-pct { font-size: 15px; }
-    #sec-ts .ts-hbar-cnt { font-size: 12px; }
-    #sec-ts .ts-hbar-track { height: 22px; }
-    #sec-ts .ts-note { font-size: 13px; }
-    #sec-ts .ts-amt-name { font-size: 13px; }
-    #sec-ts .ts-amt-stack { height: 24px; }
-    #sec-ts .ts-amt-seg { font-size: 11px; }
-    #sec-ts .ts-amt-cnt { font-size: 12px; }
-    #sec-fund .fund-tip { font-size: 14px; text-align: left; }
-    #sec-fund .fund-tip-b { display: block; }
-    #sec-fund .fund-card-title { font-size: 15px; }
-    #sec-fund .fund-card-meta { font-size: 12px; }
-    #sec-fund .fund-pill { font-size: 12px; }
-    #sec-fund .fund-note { font-size: 13px; }
-    #sec-fund .fund-bars { height: 96px; }
-    .score-foot { font-size: 13px; }
-    .section-sub {
-      margin-left: 0; white-space: normal; width: 100%;
-      text-align: left; order: 3;
-    }
+    .section-sub.event-meta .event-window { font-size: 14px; }
     .section-sub.event-meta {
-      align-items: flex-start; text-align: left; max-width: 100%;
+      justify-content: flex-start; align-items: baseline; text-align: left; max-width: 100%;
     }
     .trend-matrix { width: 100%; min-width: 640px; font-size: 13px; }
     .trend-matrix th, .trend-matrix td { padding: 7px 9px; }
@@ -772,8 +753,8 @@
     .fwd-cal-item { padding: 12px 12px; gap: 5px; }
     .fwd-cal-title { font-size: 15px; line-height: 1.5; }
     .fwd-cal-note { font-size: 14px; line-height: 1.55; margin-top: 3px; }
-    .fwd-cal-md { font-size: 13px; }
-    .fwd-cal-wd { font-size: 12px; }
+    .fwd-cal-md { font-size: 16px; }
+    .fwd-cal-wd { font-size: 13px; }
     .footer { font-size: 13px; }
   }
 
@@ -1214,11 +1195,11 @@
       <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
-        <span>7/3–7/17</span>
-        <span class="event-sync-note">已同步 7 条日历线索</span>
+        <span class="event-window">7/3–7/17</span>
+        <span class="event-sync-note">已同步7条</span>
       </div>
     </div>
-    <div class="fwd-cal-wrap"><div class="fwd-block-label">事件详情</div><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/10</span><span class="fwd-cal-wd">下周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026中国具身智能机器人产业展7月10-12日举行</span></div><p class="fwd-cal-note">暂无补充说明。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/11</span><span class="fwd-cal-wd">下周六</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026“机器人+”创新发展大会7月11-13日举行</span></div><p class="fwd-cal-note">聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/15</span><span class="fwd-cal-wd">下下周三</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（西部）国际人工智能与具身智能机器人产业链大会</span></div><p class="fwd-cal-note">聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-md">7/15</span><span class="fwd-cal-wd">下下周三</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中报强制预告截止日</span></div><p class="fwd-cal-note">财报或业绩预告验证节点，预增披露与截止日前后波动通常放大。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/16</span><span class="fwd-cal-wd">下下周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">长鑫科技打新</span></div><p class="fwd-cal-note">产业链级定价、申购或上市节点，上市前常分流场内流动性。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-md">7/17–20</span><span class="fwd-cal-wd">下下周五 至 周一</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">世界人工智能大会（WAIC）</span></div><p class="fwd-cal-note">上海世界人工智能大会窗口，产业新品、大模型应用与治理相关议程集中发布。</p></div></div></div></div>
+    <div class="fwd-cal-wrap"><div class="fwd-cal"><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/10</span><span class="fwd-cal-wd">下周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026中国具身智能机器人产业展7月10-12日举行</span></div><p class="fwd-cal-note">暂无补充说明。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/11</span><span class="fwd-cal-wd">下周六</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026“机器人+”创新发展大会7月11-13日举行</span></div><p class="fwd-cal-note">聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/15</span><span class="fwd-cal-wd">下下周三</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（西部）国际人工智能与具身智能机器人产业链大会</span></div><p class="fwd-cal-note">聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-md">7/15</span><span class="fwd-cal-wd">下下周三</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中报强制预告截止日</span></div><p class="fwd-cal-note">财报或业绩预告验证节点，预增披露与截止日前后波动通常放大。</p></div></div><div class="fwd-cal-item"><div class="fwd-cal-head"><span class="fwd-cal-md">7/16</span><span class="fwd-cal-wd">下下周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">长鑫科技打新</span></div><p class="fwd-cal-note">产业链级定价、申购或上市节点，上市前常分流场内流动性。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-md">7/17–20</span><span class="fwd-cal-wd">下下周五 至 周一</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">世界人工智能大会（WAIC）</span></div><p class="fwd-cal-note">上海世界人工智能大会窗口，产业新品、大模型应用与治理相关议程集中发布。</p></div></div></div></div>
   </div>
 
   <!-- 6 资金认可度 -->
@@ -1232,7 +1213,7 @@
     <div class="news-empty">该日暂无资金认可度缓存</div>
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 17:51</div>
+  <div class="footer">大盘数据.numbers · 生成于 2026-09-14 17:55</div>
 </div>
 </body>
 </html>

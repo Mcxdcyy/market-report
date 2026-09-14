@@ -1825,7 +1825,7 @@ def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
     pruned.sort(key=lambda e: (e["month"], e["day"], e.get("title", "")))
     pruned = [ev for ev in pruned if _event_is_catalyst(ev.get("title", ""), ev)]
     save_event_catalog(pruned)
-    note = f"已同步 {len(fetched)} 条日历线索"
+    note = f"已同步{len(fetched)}条"
     return pruned, note
 
 
@@ -2718,7 +2718,6 @@ def render_fwd_section_html(
         )
     cal_html = (
         f'<div class="fwd-cal-wrap">'
-        f'<div class="fwd-block-label">事件详情</div>'
         f'<div class="fwd-cal">{"".join(cal_rows)}</div></div>'
         if cal_rows else ""
     )
@@ -3021,10 +3020,19 @@ def render_html(ctx: dict) -> str:
   .section-title {{ font-size: 15px; font-weight: 700; }}
   .section-sub {{ font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }}
   .section-sub.event-meta {{
-    display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
-    white-space: normal; text-align: right; line-height: 1.45; max-width: 52%;
+    display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline;
+    justify-content: flex-end; gap: 6px 8px;
+    white-space: normal; text-align: right; line-height: 1.4; max-width: 58%;
   }}
-  .section-sub.event-meta .event-sync-note {{ font-size: 11px; color: var(--sub); }}
+  .section-sub.event-meta .event-window {{
+    font-size: 12px; font-weight: 600; color: var(--muted);
+  }}
+  .section-sub.event-meta .event-sync-note {{
+    font-size: 11px; font-weight: 500; color: var(--muted); opacity: .85;
+  }}
+  .section-sub.event-meta .event-sync-note::before {{
+    content: "·"; margin-right: 8px; opacity: .55;
+  }}
 
   .sub-block {{ margin-top: 4px; }}
   .sub-block + .sub-block {{ margin-top: 20px; padding-top: 18px; border-top: 1px dashed var(--border); }}
@@ -3522,10 +3530,10 @@ def render_html(ctx: dict) -> str:
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
   }}
   .fwd-cal-md {{
-    font-size: 12px; font-weight: 800; color: var(--accent); line-height: 1.3;
+    font-size: 14px; font-weight: 800; color: var(--accent); line-height: 1.3;
   }}
   .fwd-cal-wd {{
-    font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.3;
+    font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.3;
   }}
   .fwd-cal-body {{ min-width: 0; width: 100%; }}
   .fwd-cal-top {{
@@ -3596,37 +3604,9 @@ def render_html(ctx: dict) -> str:
     .section-title {{ font-size: 18px; }}
     .section-sub {{ font-size: 14px; }}
     .section-sub.event-meta .event-sync-note {{ font-size: 13px; }}
-    .sub-heading {{ font-size: 14px; }}
-    .sub-note {{ font-size: 13px; }}
-    .callout {{ font-size: 15px; }}
-    .score-label {{ font-size: 13px; }}
-    .score-hint {{ font-size: 13px; }}
-    .score-name {{ font-size: 13px; }}
-    #sec-env .score-val {{ font-size: 22px; letter-spacing: -0.3px; }}
-    #sec-ts .ts-chart-title {{ font-size: 14px; }}
-    #sec-ts .ts-hbar-name {{ font-size: 13px; }}
-    #sec-ts .ts-hbar-pct {{ font-size: 15px; }}
-    #sec-ts .ts-hbar-cnt {{ font-size: 12px; }}
-    #sec-ts .ts-hbar-track {{ height: 22px; }}
-    #sec-ts .ts-note {{ font-size: 13px; }}
-    #sec-ts .ts-amt-name {{ font-size: 13px; }}
-    #sec-ts .ts-amt-stack {{ height: 24px; }}
-    #sec-ts .ts-amt-seg {{ font-size: 11px; }}
-    #sec-ts .ts-amt-cnt {{ font-size: 12px; }}
-    #sec-fund .fund-tip {{ font-size: 14px; text-align: left; }}
-    #sec-fund .fund-tip-b {{ display: block; }}
-    #sec-fund .fund-card-title {{ font-size: 15px; }}
-    #sec-fund .fund-card-meta {{ font-size: 12px; }}
-    #sec-fund .fund-pill {{ font-size: 12px; }}
-    #sec-fund .fund-note {{ font-size: 13px; }}
-    #sec-fund .fund-bars {{ height: 96px; }}
-    .score-foot {{ font-size: 13px; }}
-    .section-sub {{
-      margin-left: 0; white-space: normal; width: 100%;
-      text-align: left; order: 3;
-    }}
+    .section-sub.event-meta .event-window {{ font-size: 14px; }}
     .section-sub.event-meta {{
-      align-items: flex-start; text-align: left; max-width: 100%;
+      justify-content: flex-start; align-items: baseline; text-align: left; max-width: 100%;
     }}
     .trend-matrix {{ width: 100%; min-width: 640px; font-size: 13px; }}
     .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
@@ -3678,8 +3658,8 @@ def render_html(ctx: dict) -> str:
     .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
     .fwd-cal-title {{ font-size: 15px; line-height: 1.5; }}
     .fwd-cal-note {{ font-size: 14px; line-height: 1.55; margin-top: 3px; }}
-    .fwd-cal-md {{ font-size: 13px; }}
-    .fwd-cal-wd {{ font-size: 12px; }}
+    .fwd-cal-md {{ font-size: 16px; }}
+    .fwd-cal-wd {{ font-size: 13px; }}
     .footer {{ font-size: 13px; }}
   }}
 
@@ -3769,7 +3749,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
-        <span>{ctx['event_window']}</span>
+        <span class="event-window">{ctx['event_window']}</span>
         <span class="event-sync-note">{ctx['event_sync']}</span>
       </div>
     </div>
