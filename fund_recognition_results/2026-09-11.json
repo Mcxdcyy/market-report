@@ -5,7 +5,7 @@
   "series_start": "2026-08-17",
   "series_end": "2026-09-11",
   "amount_min_yi": 3,
-  "generated": "2026-09-14 11:53:57",
+  "generated": "2026-09-14 15:18:27",
   "items": [
     {
       "name": "通信",
@@ -1538,14 +1538,14 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -1556,50 +1556,50 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-27",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -1610,8 +1610,8 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -1949,7 +1949,7 @@
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
@@ -1961,14 +1961,14 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -1979,38 +1979,38 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -2106,8 +2106,8 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -2263,8 +2263,8 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -2427,14 +2427,14 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -2445,8 +2445,8 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -2529,20 +2529,20 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-11",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         }
       ]
@@ -2554,50 +2554,50 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-20",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -2620,32 +2620,32 @@
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -2662,14 +2662,14 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         }
       ]
@@ -2681,13 +2681,13 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -2723,74 +2723,74 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -2826,20 +2826,20 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -2868,8 +2868,8 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -2947,74 +2947,74 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-28",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-31",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3025,13 +3025,13 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
@@ -3062,80 +3062,80 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -3316,44 +3316,44 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3394,8 +3394,8 @@
         },
         {
           "date": "2026-09-03",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3497,8 +3497,8 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3521,8 +3521,8 @@
         },
         {
           "date": "2026-09-03",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3533,7 +3533,7 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
@@ -3570,50 +3570,50 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3630,56 +3630,56 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-03",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-10",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3697,80 +3697,80 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-19",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -3781,37 +3781,37 @@
         },
         {
           "date": "2026-09-04",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-07",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -3824,32 +3824,32 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -3926,19 +3926,19 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -3951,121 +3951,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -4078,122 +4078,122 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         }
       ]
@@ -4205,37 +4205,37 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -4247,26 +4247,26 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
@@ -4332,122 +4332,122 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         }
       ]
@@ -4459,25 +4459,25 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -4489,92 +4489,92 @@
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-08",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         }
       ]
@@ -4713,13 +4713,13 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
@@ -4731,7 +4731,7 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
@@ -4767,14 +4767,14 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-31",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -4821,13 +4821,13 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         }
@@ -4912,43 +4912,43 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -4967,74 +4967,74 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-21",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -5045,26 +5045,26 @@
         },
         {
           "date": "2026-09-03",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -5075,13 +5075,13 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         }
@@ -5124,91 +5124,91 @@
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-04",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-07",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-08",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         }
@@ -5233,110 +5233,110 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-20",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-21",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-03",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-08",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         }
       ]
@@ -5348,8 +5348,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -5360,19 +5360,19 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
@@ -5384,14 +5384,14 @@
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -5402,8 +5402,8 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -5450,19 +5450,19 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         }
@@ -5475,25 +5475,25 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
@@ -5505,56 +5505,56 @@
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
@@ -5565,31 +5565,31 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -5602,68 +5602,68 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-28",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -5729,26 +5729,26 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -5765,20 +5765,20 @@
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -5789,20 +5789,20 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -5813,8 +5813,8 @@
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -5831,20 +5831,20 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         }
       ]
@@ -5856,68 +5856,68 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-26",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -5928,49 +5928,49 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         }
@@ -5983,14 +5983,14 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -6019,85 +6019,85 @@
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -6110,122 +6110,122 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-26",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-10",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         }
       ]
@@ -6237,121 +6237,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -6364,26 +6364,26 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
@@ -6418,7 +6418,7 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -6430,26 +6430,26 @@
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
@@ -6460,8 +6460,8 @@
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -6491,121 +6491,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -6618,121 +6618,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -6745,44 +6745,44 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
@@ -6793,74 +6793,74 @@
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         }
       ]
@@ -6872,98 +6872,98 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-18",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
@@ -6999,14 +6999,14 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -7017,20 +7017,20 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -7071,20 +7071,20 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -7126,13 +7126,13 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -7168,8 +7168,8 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -7216,32 +7216,32 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         }
       ]
@@ -7253,121 +7253,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -7446,55 +7446,55 @@
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -7507,37 +7507,37 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -7549,80 +7549,80 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-10",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         }
       ]
@@ -7761,20 +7761,20 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -7785,13 +7785,13 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -7833,14 +7833,14 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -7851,20 +7851,20 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
@@ -7888,8 +7888,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -8015,61 +8015,61 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -8087,19 +8087,19 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -8142,122 +8142,122 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-24",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-25",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-26",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 4,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-01",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-02",
-          "pct": 50.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-07",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-09",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-10",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         },
         {
           "date": "2026-09-11",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 4
         }
       ]
@@ -8269,20 +8269,20 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -8311,79 +8311,79 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -8396,121 +8396,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -8535,7 +8535,7 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -8583,14 +8583,14 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -8619,8 +8619,8 @@
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -8656,8 +8656,8 @@
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -8674,7 +8674,7 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -8716,55 +8716,55 @@
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -8777,121 +8777,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-19",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-20",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-01",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -8910,20 +8910,20 @@
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -9073,38 +9073,38 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -9115,25 +9115,25 @@
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -9158,13 +9158,13 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -9176,103 +9176,103 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-03",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-08",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 3
         }
@@ -9285,122 +9285,122 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-28",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-31",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 33.3,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-11",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         }
       ]
@@ -9412,121 +9412,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-03",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-04",
-          "pct": 66.7,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 3
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         }
@@ -9539,121 +9539,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -9666,8 +9666,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -9768,8 +9768,8 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -9793,61 +9793,61 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -9883,20 +9883,20 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -9968,14 +9968,14 @@
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -9986,8 +9986,8 @@
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10004,8 +10004,8 @@
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10016,20 +10016,20 @@
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10071,97 +10071,97 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -10174,122 +10174,122 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         }
       ]
@@ -10301,19 +10301,19 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -10434,8 +10434,8 @@
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10482,20 +10482,20 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10530,8 +10530,8 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10663,14 +10663,14 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-11",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         }
       ]
@@ -10682,19 +10682,19 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-08-18",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -10712,13 +10712,13 @@
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -10736,20 +10736,20 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10766,7 +10766,7 @@
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -10778,13 +10778,13 @@
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -10917,14 +10917,14 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         }
       ]
@@ -10948,14 +10948,14 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -10984,43 +10984,43 @@
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 2,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 2
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -11081,14 +11081,14 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11099,50 +11099,50 @@
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11323,13 +11323,13 @@
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -11341,13 +11341,13 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -11365,14 +11365,14 @@
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11534,8 +11534,8 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11589,8 +11589,8 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11685,8 +11685,8 @@
         },
         {
           "date": "2026-09-11",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         }
       ]
@@ -11794,14 +11794,14 @@
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11849,20 +11849,20 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11879,26 +11879,26 @@
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -11952,37 +11952,37 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -12012,8 +12012,8 @@
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12163,25 +12163,25 @@
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -12278,8 +12278,8 @@
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12302,8 +12302,8 @@
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12314,8 +12314,8 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12435,8 +12435,8 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12447,8 +12447,8 @@
         },
         {
           "date": "2026-09-11",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         }
       ]
@@ -12562,8 +12562,8 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12587,8 +12587,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12599,8 +12599,8 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12635,37 +12635,37 @@
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -12677,19 +12677,19 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -12701,7 +12701,7 @@
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -12714,8 +12714,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12762,32 +12762,32 @@
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -12804,7 +12804,7 @@
         },
         {
           "date": "2026-09-07",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -12841,121 +12841,121 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-18",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-19",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-25",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-26",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-08",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -13367,8 +13367,8 @@
         },
         {
           "date": "2026-08-20",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -13451,19 +13451,19 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -13578,19 +13578,19 @@
         },
         {
           "date": "2026-09-09",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-10",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -13730,8 +13730,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -13742,7 +13742,7 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -13754,13 +13754,13 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -13772,56 +13772,56 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -13838,13 +13838,13 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
@@ -13857,8 +13857,8 @@
       "series": [
         {
           "date": "2026-08-17",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -13869,7 +13869,7 @@
         },
         {
           "date": "2026-08-19",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -13881,13 +13881,13 @@
         },
         {
           "date": "2026-08-21",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-24",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
@@ -13899,56 +13899,56 @@
         },
         {
           "date": "2026-08-26",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-27",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-28",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-08-31",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-01",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-02",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-03",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-04",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-07",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": null,
+          "n_ok": 0,
           "n_amt": 1
         },
         {
@@ -13965,13 +13965,13 @@
         },
         {
           "date": "2026-09-10",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         },
         {
           "date": "2026-09-11",
-          "pct": 0.0,
+          "pct": null,
           "n_ok": 0,
           "n_amt": 1
         }
