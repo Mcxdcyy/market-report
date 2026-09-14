@@ -3846,9 +3846,14 @@ def load_fund_recognition_block(
 
 
 def render_fund_recognition_html(block: dict) -> str:
-    def _is_st_sector(name: str) -> bool:
-        n = (name or "").strip().upper()
-        return "ST" in n
+    # 永久排除（勿改）：名称含 ST 的板块、并购重组
+    FUND_EXCLUDE_NAMES = frozenset({"并购重组"})
+
+    def _is_excluded_sector(name: str) -> bool:
+        n = (name or "").strip()
+        if n in FUND_EXCLUDE_NAMES:
+            return True
+        return "ST" in n.upper()
 
     def _today_pct(it: dict) -> float | None:
         series = it.get("series") or []
@@ -3868,11 +3873,11 @@ def render_fund_recognition_html(block: dict) -> str:
             return -1.0
         return sum(vals) / len(vals)
 
-    # 展示过滤：池内个股数 < 10 不展示；排除 ST 板块；
+    # 展示过滤：池内个股数 < 10 不展示；永久排除 ST 板块、并购重组；
     # 报表当日（序列末日）分母严格 < 5 不展示整张板块柱图
     items = []
     for it in block.get("items") or []:
-        if _is_st_sector(str(it.get("name") or "")):
+        if _is_excluded_sector(str(it.get("name") or "")):
             continue
         if int(it.get("pool_n") or 0) < 10:
             continue
@@ -3952,7 +3957,7 @@ def render_fund_recognition_html(block: dict) -> str:
     note = (
         '<div class="fund-note">'
         "资金认可度：近30个交易日开盘啦涨停板块整合个股池"
-        "（池内个股数≥10才展示；排除ST板块）；"
+        "（池内个股数≥10才展示；永久排除ST板块、并购重组）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日分母严格小于5家时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
