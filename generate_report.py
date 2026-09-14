@@ -2434,25 +2434,24 @@ def _parse_cal_end_key(label: str) -> tuple[int, int]:
     return _parse_cal_sort_key(label)
 
 
-def _rel_week_label(label: str, as_of: datetime | None) -> str:
-    """相对报表日：日期下展示「本周二」「下周三」等（周一为一周起点；取标签起始日）。"""
-    if as_of is None:
-        return ""
-    sm, sd = _parse_cal_sort_key(label)
-    if not (1 <= sm <= 12 and 1 <= sd <= 31):
-        return ""
-    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
-    year = as_of.year if hasattr(as_of, "year") else as_of_d.year
+def _resolve_event_date(month: int, day: int, as_of_d: date, year: int) -> date | None:
+    """把月/日落到报表年（跨年则 +1）。"""
+    if not (1 <= month <= 12 and 1 <= day <= 31):
+        return None
     try:
-        ev = date(year, sm, sd)
+        ev = date(year, month, day)
     except ValueError:
-        return ""
-    # 跨年：起始月日明显早于报表日 → 落在下一年
+        return None
     if ev < as_of_d - timedelta(days=30):
         try:
-            ev = date(year + 1, sm, sd)
+            ev = date(year + 1, month, day)
         except ValueError:
-            return ""
+            return None
+    return ev
+
+
+def _week_prefix_and_wd(ev: date, as_of_d: date) -> tuple[str, str]:
+    """相对报表日：('本周','一') / ('下周','三') / ('下下周','五')。"""
     as_of_monday = as_of_d - timedelta(days=as_of_d.weekday())
     ev_monday = ev - timedelta(days=ev.weekday())
     week_delta = (ev_monday - as_of_monday).days // 7
@@ -2463,7 +2462,30 @@ def _rel_week_label(label: str, as_of: datetime | None) -> str:
         prefix = "下周"
     else:
         prefix = "下下周"
-    return f"{prefix}{wd}"
+    return prefix, wd
+
+
+def _rel_week_label(label: str, as_of: datetime | None) -> str:
+    """相对报表日周几。单日「本周二」；区间「本周一 至 周三」（跨周则「本周五 至 下周一」）。"""
+    if as_of is None:
+        return ""
+    sm, sd = _parse_cal_sort_key(label)
+    em, ed = _parse_cal_end_key(label)
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    year = as_of.year if hasattr(as_of, "year") else as_of_d.year
+    start = _resolve_event_date(sm, sd, as_of_d, year)
+    if start is None:
+        return ""
+    sp, sw = _week_prefix_and_wd(start, as_of_d)
+    if (em, ed) == (sm, sd):
+        return f"{sp}{sw}"
+    end = _resolve_event_date(em, ed, as_of_d, year)
+    if end is None or end < start:
+        return f"{sp}{sw}"
+    ep, ew = _week_prefix_and_wd(end, as_of_d)
+    if sp == ep:
+        return f"{sp}{sw} 至 周{ew}"
+    return f"{sp}{sw} 至 {ep}{ew}"
 
 
 def _peak_tags_for_label(label: str, peak: str) -> list[str]:
@@ -2637,7 +2659,7 @@ def render_fwd_section_html(
     directions: list,
     as_of: datetime | None = None,
 ) -> tuple[str, str]:
-    """未来2周模块：时间轴 → 事件详情 → 研判摘要（已删除题材方向卡片）。"""
+    """未来2周模块：事件详情 → 研判摘要（已删除时间轴与题材方向卡片）。"""
     lead_html = _render_fwd_lead_html(peak, summary, rhythm)
 
     # ── 融合日历（事件库 + 节奏补点；跳过已过期节点）──
@@ -2673,10 +2695,6 @@ def render_fwd_section_html(
     _ = directions
     cal_items.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
 
-    timeline_html = _render_fwd_timeline_html(
-        _timeline_nodes_from_cal(cal_items, peak)
-    )
-
     cal_rows: list[str] = []
     for n in cal_items:
         label = n.get("label", "")
@@ -2705,7 +2723,7 @@ def render_fwd_section_html(
         if cal_rows else ""
     )
 
-    body = f"{timeline_html}{cal_html}{lead_html}"
+    body = f"{cal_html}{lead_html}"
     return body, lead_html
 
 
@@ -3460,43 +3478,7 @@ def render_html(ctx: dict) -> str:
     background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }}
 
-  /* ── 未来2周 · 事件与方向（融合版）── */
-  .fwd-track-wrap {{
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
-    padding: 12px 12px 14px; margin-bottom: 14px;
-  }}
-  .fwd-track-wrap > .fwd-block-label {{ margin-bottom: 12px; }}
-  .fwd-track-scroll {{
-    overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px;
-  }}
-  .fwd-track {{
-    display: flex; align-items: flex-start; position: relative; gap: 0;
-    min-width: max-content; padding: 0 2px;
-  }}
-  .fwd-track::before {{
-    content: ''; position: absolute; top: 16px; left: 24px; right: 24px;
-    height: 2px; background: linear-gradient(90deg, #d1d1d6, #0a84ff44, #d1d1d6);
-    z-index: 0; border-radius: 1px;
-  }}
-  .fwd-tnode {{
-    flex: 0 0 auto; width: 92px; text-align: center; position: relative; z-index: 1;
-    padding: 0 4px;
-  }}
-  .fwd-tdot {{
-    width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 800; box-shadow: 0 1px 4px rgba(10,132,255,.2);
-    margin: 0 auto;
-  }}
-  .fwd-tdot.hot {{ background: #ff6b63; box-shadow: 0 1px 4px rgba(255,69,58,.25); }}
-  .fwd-tlabel {{
-    margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3;
-  }}
-  .fwd-tsub {{
-    margin-top: 2px; font-size: 10px; color: var(--muted); line-height: 1.35;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  }}
-
+  /* ── 未来2周 · 事件与方向 ── */
   .fwd-lead-wrap {{ margin-top: 16px; }}
   .fwd-lead {{
     padding: 12px 14px;
@@ -3525,12 +3507,12 @@ def render_html(ctx: dict) -> str:
   .fwd-block-hint {{
     font-size: 10px; font-weight: 500; color: var(--muted); margin-left: 6px;
   }}
-  .fwd-cal-wrap {{ margin-top: 14px; }}
+  .fwd-cal-wrap {{ margin-top: 0; }}
   .fwd-cal {{
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fff; overflow: hidden;
   }}
-  /* 上下排布：日期行 + 全文通栏，避免描述左侧大块留白 */
+  /* 上下排布：日期行 + 全文通栏 */
   .fwd-cal-item {{
     display: flex; flex-direction: column; gap: 6px;
     padding: 13px 14px; border-bottom: 1px solid #f0f0f5;
@@ -3549,13 +3531,16 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
   }}
-  .fwd-cal-title {{ font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.45; }}
+  /* 与公告/板块正文对齐：标题 13/1.5，描述 12/1.55 */
+  .fwd-cal-title {{
+    font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
+  }}
   .fwd-cal-badge {{
     font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-note {{
-    font-size: 12px; line-height: 1.65; color: var(--sub); margin: 4px 0 0;
+    font-size: 12px; line-height: 1.55; color: var(--sub); margin: 4px 0 0;
   }}
 
   .pill {{
@@ -3690,15 +3675,9 @@ def render_html(ctx: dict) -> str:
     .fwd-lead-text {{ font-size: 15px; line-height: 1.75; }}
     .fwd-lead-row {{ grid-template-columns: 1fr; gap: 4px; }}
     .fwd-lead-tag {{ padding-top: 0; }}
-    .fwd-track-wrap {{ padding: 12px 10px 14px; }}
-    .fwd-tnode {{ width: 84px; }}
-    .fwd-tdot {{ width: 34px; height: 34px; font-size: 10px; }}
-    .fwd-track::before {{ top: 17px; left: 20px; right: 20px; }}
-    .fwd-tlabel {{ font-size: 13px; }}
-    .fwd-tsub {{ font-size: 11px; }}
     .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
-    .fwd-cal-title {{ font-size: 14px; }}
-    .fwd-cal-note {{ font-size: 14px; line-height: 1.7; margin-top: 3px; }}
+    .fwd-cal-title {{ font-size: 15px; line-height: 1.5; }}
+    .fwd-cal-note {{ font-size: 14px; line-height: 1.55; margin-top: 3px; }}
     .fwd-cal-md {{ font-size: 13px; }}
     .fwd-cal-wd {{ font-size: 12px; }}
     .footer {{ font-size: 13px; }}
