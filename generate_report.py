@@ -3846,8 +3846,19 @@ def load_fund_recognition_block(
 
 
 def render_fund_recognition_html(block: dict) -> str:
-    # 展示过滤：池内个股数 < 10 不展示
-    items = [it for it in (block.get("items") or []) if int(it.get("pool_n") or 0) >= 10]
+    # 展示过滤：池内个股数 < 10 不展示；
+    # 报表当日（序列末日）分母严格 < 5 不展示整张板块柱图
+    items = []
+    for it in block.get("items") or []:
+        if int(it.get("pool_n") or 0) < 10:
+            continue
+        series = it.get("series") or []
+        if not series:
+            continue
+        last = series[-1] or {}
+        if int(last.get("n_amt") or 0) < 5:
+            continue
+        items.append(it)
     if not items:
         note = block.get("note") or "暂无资金认可度数据"
         return f'<div class="news-empty">{note}</div>'
@@ -3909,7 +3920,8 @@ def render_fund_recognition_html(block: dict) -> str:
         "资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
-        "分母为0或严格小于5家时该日不画柱。柱图浅线为50%刻度。"
+        "报表当日分母严格小于5家时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
+        "柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'

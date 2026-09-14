@@ -253,9 +253,8 @@ def compute_sector_series(
                 n_amt += 1
                 if ok:
                     n_ok += 1
-        if n_amt < 5:
-            # 分母严格小于 5：当日样本不足，不画柱
-            out.append({"date": d.isoformat(), "pct": None, "n_ok": 0, "n_amt": n_amt})
+        if n_amt <= 0:
+            out.append({"date": d.isoformat(), "pct": None, "n_ok": 0, "n_amt": 0})
         else:
             out.append(
                 {
