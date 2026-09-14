@@ -3873,8 +3873,19 @@ def render_fund_recognition_html(block: dict) -> str:
             return -1.0
         return sum(vals) / len(vals)
 
+    def _below_50_streak_from_end(series: list) -> int:
+        """自报表日起往前，连续「占比<50%」天数（无样本日视为未达50%）。"""
+        streak = 0
+        for pt in reversed(series):
+            pct = pt.get("pct")
+            if pct is not None and float(pct) >= 50.0:
+                break
+            streak += 1
+        return streak
+
     # 展示过滤：池内个股数 < 10 不展示；永久排除 ST 板块、并购重组；
-    # 报表当日（序列末日）分母严格 < 5 不展示整张板块柱图
+    # 报表当日（序列末日）分母严格 < 5 不展示整张板块柱图；
+    # 自报表日起连续 10 个交易日占比均 <50% 不展示
     items = []
     for it in block.get("items") or []:
         if _is_excluded_sector(str(it.get("name") or "")):
@@ -3886,6 +3897,8 @@ def render_fund_recognition_html(block: dict) -> str:
             continue
         last = series[-1] or {}
         if int(last.get("n_amt") or 0) < 5:
+            continue
+        if _below_50_streak_from_end(series) >= 10:
             continue
         items.append(it)
 
@@ -3940,7 +3953,11 @@ def render_fund_recognition_html(block: dict) -> str:
                 f'<div class="fund-tick{" show" if show else ""}{" latest" if is_latest else ""}">'
                 f'{f"<span>{lab}</span>" if show else ""}</div>'
             )
-        meta = f'池 {it.get("pool_n", 0)} 只 · 近30日累计 {it.get("hit_count", 0)} 家次'
+        last_pt = series[-1] or {}
+        meta = (
+            f'共 {it.get("pool_n", 0)} 只 · '
+            f'3亿以上 {int(last_pt.get("n_amt") or 0)} 只'
+        )
         cards.append(
             f'''<div class="fund-card">
     <div class="fund-card-head">
@@ -3957,7 +3974,8 @@ def render_fund_recognition_html(block: dict) -> str:
     note = (
         '<div class="fund-note">'
         "资金认可度：近30个交易日开盘啦涨停板块整合个股池"
-        "（池内个股数≥10才展示；永久排除ST板块、并购重组）；"
+        "（池内个股数≥10才展示；永久排除ST板块、并购重组；"
+        "自报表日起连续10个交易日占比均低于50%不展示）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日分母严格小于5家时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
