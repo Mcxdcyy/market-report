@@ -4000,7 +4000,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">2</div>
       <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 近20日追高池均值</div>
+      <div class="section-sub">{ctx['data_date']} · 近30日追高池均值</div>
     </div>
     {chase_sentiment_html}
   </div>
@@ -4520,10 +4520,11 @@ def _render_chase_metric_chart(title: str, series: list[dict], *, latest_n: int)
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
     latest_lab = f"{float(last['value']):+.1f}%" if last else "—"
+    pool_n = int((last or {}).get("n") or latest_n or 0)
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
-      <span class="chase-chart-meta">最新 {latest_lab} · 池 {latest_n} 家</span>
+      <span class="chase-chart-meta">最新 {latest_lab} · 池 {pool_n} 家</span>
     </div>
     <div class="chase-plot">
       <div class="chase-bars">{"".join(cols)}</div>
@@ -4543,23 +4544,18 @@ def render_chase_sentiment_html(block: dict) -> str:
         g = groups.get(gkey) or {}
         gname = g.get("name") or gkey
         metrics = g.get("metrics") or {}
-        # 末日池家数：取任一指标序列末日 n
-        latest_n = 0
-        for m in metrics.values():
-            ser = m.get("series") or []
-            if ser:
-                latest_n = int(ser[-1].get("n") or 0)
-                break
         charts = []
         for mk, default_title in (
-            ("money", "赚钱效应"),
-            ("loss", "亏钱效应"),
-            ("pullback", "回落指数"),
+            ("money", "昨追-赚钱效应"),
+            ("loss", "昨追-今日承接"),
+            ("pullback", "今追-回落指数"),
         ):
             m = metrics.get(mk) or {}
             title = m.get("name") or default_title
+            ser = m.get("series") or []
+            latest_n = int(ser[-1].get("n") or 0) if ser else 0
             charts.append(
-                _render_chase_metric_chart(title, m.get("series") or [], latest_n=latest_n)
+                _render_chase_metric_chart(title, ser, latest_n=latest_n)
             )
         parts.append(
             f'''<div class="chase-group">
@@ -4571,8 +4567,9 @@ def render_chase_sentiment_html(block: dict) -> str:
     note = (
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
-        "赚钱效应=(今高−昨高)/昨收；亏钱效应=(今收−昨高)/昨高；回落指数=(今收−今高)/今高。"
-        "每日对追高池取算术均值；创板含创业板与科创板；不含ST、北交所。"
+        "昨追-赚钱效应 / 昨追-今日承接：取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高。"
+        "今追-回落指数：取当日追高池，计算(今收−今高)/今高。"
+        "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所。"
         "</div>"
     )
     return "".join(parts) + note
