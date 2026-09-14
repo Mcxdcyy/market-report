@@ -1472,27 +1472,8 @@ def _event_dot(title: str, day: int) -> str:
     return str(day)
 
 
-def _event_short(title: str) -> str:
-    for kw, short in (
-        ("WAIC", "WAIC"),
-        ("世界人工智能大会", "WAIC"),
-        ("国务院政策例行吹风会", "吹风会"),
-        ("中报", "预告"),
-        ("业绩预告", "预告"),
-        ("LPR", "LPR"),
-        ("GDP", "GDP"),
-        ("CPI", "CPI"),
-        ("具身智能", "具身"),
-        ("机器人", "机器人"),
-        ("医药", "医药"),
-    ):
-        if kw in title:
-            return short
-    return title[:8] + ("…" if len(title) > 8 else "")
-
-
 def _strip_embedded_dates(text: str) -> str:
-    """去掉标题/描述里已由左侧日期列表达的日期串，避免看三遍。"""
+    """去掉标题/描述里已由日期列表达的日期串，避免重复。"""
     t = (text or "").strip()
     if not t:
         return t
@@ -1504,6 +1485,35 @@ def _strip_embedded_dates(text: str) -> str:
     t = re.sub(r"[，,]\s*[，,]+", "，", t)
     t = re.sub(r"\s{2,}", " ", t)
     return t.strip("，, ：:。 \t")
+
+
+def _event_short(title: str) -> str:
+    """时间轴短文案：去日期、优先固定简称，避免与详情标题整段重复。"""
+    t = _strip_embedded_dates(title or "")
+    if "五年规划" in t and "香港" in (title or ""):
+        return "港五年规划"
+    for kw, short in (
+        ("WAIC", "WAIC"),
+        ("世界人工智能大会", "WAIC"),
+        ("国务院政策例行吹风会", "吹风会"),
+        ("医学人工智能大会", "医学AI大会"),
+        ("MAIC", "医学AI大会"),
+        ("恒生科技", "恒生科技"),
+        ("住房公积金", "公积金条例"),
+        ("中报", "预告"),
+        ("业绩预告", "预告"),
+        ("LPR", "LPR"),
+        ("GDP", "GDP"),
+        ("CPI", "CPI"),
+        ("具身智能", "具身"),
+        ("机器人", "机器人"),
+        ("医药", "医药"),
+    ):
+        if kw in t:
+            return short
+    if len(t) <= 8:
+        return t
+    return t[:8] + "…"
 
 
 def _brief_echoes_title(brief: str, title: str) -> bool:
@@ -1904,6 +1914,7 @@ def build_events_window(as_of: datetime) -> tuple:
             "dot": ev["dot"],
             "label": ev["label"],
             "title": ev["title"],
+            "short": ev.get("short") or _event_short(ev.get("title", "")),
             "sub": ev.get("short", ev["title"]),
             "brief": ev["brief"],
             "hot": ev.get("hot", False),
@@ -2550,33 +2561,46 @@ def _render_fwd_lead_html(peak: str, summary: str, rhythm: str) -> str:
 
 
 def _timeline_nodes_from_cal(cal_items: list[dict], peak: str) -> list[dict]:
-    """按日期合并节点，供横向时间轴展示（每日期一个点）。"""
-    by_label: dict[str, list[dict]] = {}
+    """按起始日合并节点；文案只用短名且去日期（日期只在 tlabel）。"""
+    by_start: dict[tuple[int, int], list[dict]] = {}
     for n in cal_items:
-        label = n.get("label", "")
-        by_label.setdefault(label, []).append(n)
+        key = _parse_cal_sort_key(n.get("label", ""))
+        by_start.setdefault(key, []).append(n)
     nodes: list[dict] = []
-    for label in sorted(by_label.keys(), key=_parse_cal_sort_key):
-        items = by_label[label]
+    for key in sorted(by_start.keys()):
+        items = by_start[key]
         primary = sorted(
             items,
             key=lambda x: (
                 not x.get("hot"),
-                len(x.get("short") or x.get("title") or ""),
+                len(x.get("short") or x.get("sub") or x.get("title") or ""),
             ),
         )[0]
-        shorts = []
+        shorts: list[str] = []
         for it in items:
-            s = it.get("short") or it.get("title", "")
+            s = (
+                it.get("short")
+                or _event_short(it.get("title") or it.get("sub") or "")
+            )
+            s = _strip_embedded_dates(s)
             if s and s not in shorts:
                 shorts.append(s)
-        if len(shorts) == 1:
+        if not shorts:
+            sub = ""
+        elif len(shorts) == 1:
             sub = shorts[0]
         elif len(shorts) == 2:
             sub = f"{shorts[0]}·{shorts[1]}"
         else:
             sub = f"{shorts[0]}+{len(shorts) - 1}"
-        dot = primary.get("dot") or re.sub(r"[^\dA-Za-z\u4e00-\u9fff]", "", label)[:2] or "·"
+        # 展示日期：同日起始有跨度则用区间 label，否则 m/d
+        span_labels = [
+            lb for it in items
+            for lb in [it.get("label", "")]
+            if lb and ("–" in lb or "—" in lb)
+        ]
+        label = span_labels[0] if span_labels else f"{key[0]}/{key[1]}"
+        dot = primary.get("dot") or str(key[1])
         hot = any(it.get("hot") for it in items) or bool(_peak_tags_for_label(label, peak))
         nodes.append({
             "label": label,
@@ -2602,6 +2626,7 @@ def _render_fwd_timeline_html(nodes: list[dict]) -> str:
         )
     return (
         '<div class="fwd-track-wrap">'
+        '<div class="fwd-block-label">时间轴</div>'
         '<div class="fwd-track-scroll"><div class="fwd-track">'
         + "".join(cells)
         + "</div></div></div>"
@@ -2665,11 +2690,11 @@ def render_fwd_section_html(
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         hot = n.get("hot") or bool(tags)
         wd = _rel_week_label(label, as_of)
-        wd_html = f'<div class="fwd-cal-wd">{wd}</div>' if wd else ""
+        wd_html = f'<span class="fwd-cal-wd">{wd}</span>' if wd else ""
         cal_rows.append(
             f'<div class="fwd-cal-item{" hot" if hot else ""}">'
-            f'<div class="fwd-cal-date">'
-            f'<div class="fwd-cal-md">{label}</div>{wd_html}</div>'
+            f'<div class="fwd-cal-head">'
+            f'<span class="fwd-cal-md">{label}</span>{wd_html}</div>'
             f'<div class="fwd-cal-body">'
             f'<div class="fwd-cal-top">'
             f'<span class="fwd-cal-title">{title}</span>'
@@ -3442,36 +3467,37 @@ def render_html(ctx: dict) -> str:
   /* ── 未来2周 · 事件与方向（融合版）── */
   .fwd-track-wrap {{
     background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
-    padding: 14px 12px 16px; margin-bottom: 12px;
+    padding: 12px 12px 14px; margin-bottom: 14px;
   }}
+  .fwd-track-wrap > .fwd-block-label {{ margin-bottom: 12px; }}
   .fwd-track-scroll {{
     overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px;
   }}
   .fwd-track {{
     display: flex; align-items: flex-start; position: relative; gap: 0;
-    min-width: max-content; padding: 0 4px;
+    min-width: max-content; padding: 0 2px;
   }}
   .fwd-track::before {{
-    content: ''; position: absolute; top: 18px; left: 28px; right: 28px;
+    content: ''; position: absolute; top: 16px; left: 24px; right: 24px;
     height: 2px; background: linear-gradient(90deg, #d1d1d6, #0a84ff44, #d1d1d6);
     z-index: 0; border-radius: 1px;
   }}
   .fwd-tnode {{
-    flex: 0 0 auto; width: 100px; text-align: center; position: relative; z-index: 1;
+    flex: 0 0 auto; width: 92px; text-align: center; position: relative; z-index: 1;
     padding: 0 4px;
   }}
   .fwd-tdot {{
-    width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff;
+    width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff;
     display: inline-flex; align-items: center; justify-content: center;
     font-size: 10px; font-weight: 800; box-shadow: 0 1px 4px rgba(10,132,255,.2);
     margin: 0 auto;
   }}
   .fwd-tdot.hot {{ background: #ff6b63; box-shadow: 0 1px 4px rgba(255,69,58,.25); }}
   .fwd-tlabel {{
-    margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.35;
+    margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3;
   }}
   .fwd-tsub {{
-    margin-top: 3px; font-size: 10px; color: var(--muted); line-height: 1.4;
+    margin-top: 2px; font-size: 10px; color: var(--muted); line-height: 1.35;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }}
 
@@ -3508,22 +3534,22 @@ def render_html(ctx: dict) -> str:
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fff; overflow: hidden;
   }}
+  /* 上下排布：日期行 + 全文通栏，避免描述左侧大块留白 */
   .fwd-cal-item {{
-    display: grid; grid-template-columns: 84px 1fr; gap: 10px 12px;
-    padding: 12px 14px; border-bottom: 1px solid #f0f0f5;
-    position: relative;
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 13px 14px; border-bottom: 1px solid #f0f0f5;
   }}
   .fwd-cal-item:last-child {{ border-bottom: none; }}
-  .fwd-cal-date {{
-    line-height: 1.35; padding-top: 2px;
+  .fwd-cal-head {{
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
   }}
   .fwd-cal-md {{
-    font-size: 12px; font-weight: 800; color: var(--accent);
+    font-size: 12px; font-weight: 800; color: var(--accent); line-height: 1.3;
   }}
   .fwd-cal-wd {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    margin-top: 2px;
+    font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.3;
   }}
+  .fwd-cal-body {{ min-width: 0; width: 100%; }}
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
   }}
@@ -3533,7 +3559,7 @@ def render_html(ctx: dict) -> str:
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-note {{
-    font-size: 12px; line-height: 1.6; color: var(--sub); margin: 4px 0 0;
+    font-size: 12px; line-height: 1.65; color: var(--sub); margin: 4px 0 0;
   }}
 
   .pill {{
@@ -3666,13 +3692,19 @@ def render_html(ctx: dict) -> str:
     .event-block-title {{ font-size: 16px; }}
     .event-block-body {{ font-size: 14px; }}
     .fwd-lead-text {{ font-size: 15px; line-height: 1.75; }}
-    .fwd-lead-row {{ grid-template-columns: 72px 1fr; }}
-    .fwd-tdot {{ width: 40px; height: 40px; font-size: 11px; }}
+    .fwd-lead-row {{ grid-template-columns: 1fr; gap: 4px; }}
+    .fwd-lead-tag {{ padding-top: 0; }}
+    .fwd-track-wrap {{ padding: 12px 10px 14px; }}
+    .fwd-tnode {{ width: 84px; }}
+    .fwd-tdot {{ width: 34px; height: 34px; font-size: 10px; }}
+    .fwd-track::before {{ top: 17px; left: 20px; right: 20px; }}
     .fwd-tlabel {{ font-size: 13px; }}
     .fwd-tsub {{ font-size: 11px; }}
+    .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
     .fwd-cal-title {{ font-size: 14px; }}
-    .fwd-cal-note {{ font-size: 14px; line-height: 1.7; }}
-    .fwd-cal-date {{ font-size: 13px; }}
+    .fwd-cal-note {{ font-size: 14px; line-height: 1.7; margin-top: 3px; }}
+    .fwd-cal-md {{ font-size: 13px; }}
+    .fwd-cal-wd {{ font-size: 12px; }}
     .footer {{ font-size: 13px; }}
   }}
 
