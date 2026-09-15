@@ -925,8 +925,12 @@ def _render_vol_bars_block(
     dense: bool = False,
     after_html: str = "",
     unit: str = "万亿",
+    show_latest: bool = False,
 ) -> str:
-    """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（无最新值、无红绿、柱更细）。"""
+    """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（无红绿、柱更细）。
+
+    默认 dense 只写日期区间；show_latest=True 时附加「最新 N 单位」（如近120日新高）。
+    """
     if not bars:
         return ""
     cols = "".join(
@@ -944,7 +948,10 @@ def _render_vol_bars_block(
         for b in bars
     )
     d0, d1 = bars[0]["date"], bars[-1]["date"]
-    meta = f"{d0}–{d1}" if dense else f"{d0}–{d1} · 最新 {bars[-1]['label']} {unit}"
+    if dense and not show_latest:
+        meta = f"{d0}–{d1}"
+    else:
+        meta = f"{d0}–{d1} · 最新 {bars[-1]['label']} {unit}"
     wrap_cls = "vol20-wrap vol120" if dense else "vol20-wrap"
     return f'''<div class="{wrap_cls}">
     <div class="vol20-head">
@@ -2985,7 +2992,7 @@ def render_html(ctx: dict) -> str:
         vol120_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
-        xh120, title="近120日新高数量", dense=True, unit="家"
+        xh120, title="近120日新高数量", dense=True, unit="家", show_latest=True
     )
     vol20_html = f"{vol30_html}{vol120_html}{xh120_html}"
 
