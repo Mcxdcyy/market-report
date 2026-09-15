@@ -2978,15 +2978,17 @@ def render_html(ctx: dict) -> str:
         )
         vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
     vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
-    after_30 = f"{vol_tags_html}\n    {vol_note_html}" if (vol_tags_html or vol_note_html) else ""
+    after_30 = vol_tags_html
     vol30_html = _render_vol_bars_block(
         vol20, title="近30日成交金额", after_html=after_30
     )
     if not vol30_html and after_30:
         vol30_html = after_30
     vol120_html = _render_vol_bars_block(
-        vol120, title="量能120日趋势", dense=True
+        vol120, title="量能120日趋势", dense=True, after_html=vol_note_html
     )
+    if not vol120_html and vol_note_html:
+        vol120_html = vol_note_html
     xh30 = ctx.get("xh30_bars") or []
     xh120 = ctx.get("xh120_bars") or []
     xh30_html = _render_vol_bars_block(
