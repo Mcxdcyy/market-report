@@ -814,18 +814,82 @@ def build_vol_bars_from_amounts(
     return bars
 
 
+def build_count_bars(
+    rows: list[dict],
+    *,
+    prior_count: int | None = None,
+) -> list[dict]:
+    """由家数序列生成柱图数据；纵轴口径同成交额柱（min×0.85～max）。
+
+    rows: [{date: YYYY-MM-DD, count: int}, ...] 升序。
+    """
+    if not rows:
+        return []
+    vals = [int(r.get("count") or 0) for r in rows]
+    vmax = max(vals) if vals else 0
+    vmin = min(vals) if vals else 0
+    y_min = vmin * 0.85
+    span = vmax - y_min
+    n_bars = len(rows)
+    tick_idxs = {0, n_bars - 1} if n_bars else set()
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
+
+    prev: float | None = float(prior_count) if prior_count is not None else None
+    bars: list[dict] = []
+    for i, row in enumerate(rows):
+        n = int(row.get("count") or 0)
+        raw_d = row.get("date")
+        if hasattr(raw_d, "to_pydatetime"):
+            dt = raw_d.to_pydatetime()
+        elif isinstance(raw_d, datetime):
+            dt = raw_d
+        elif isinstance(raw_d, date) and not isinstance(raw_d, datetime):
+            dt = datetime(raw_d.year, raw_d.month, raw_d.day)
+        else:
+            dt = datetime.strptime(str(raw_d)[:10], "%Y-%m-%d")
+        if prev is None:
+            tag = "flat"
+        elif n > prev:
+            tag = "up"
+        elif n < prev:
+            tag = "down"
+        else:
+            tag = "flat"
+        if span > 0:
+            pct = (n - y_min) / span * 100.0
+        else:
+            pct = 50.0
+        bars.append({
+            "date": fmt_md(dt),
+            "weekday": WEEKDAY[dt.weekday()],
+            "vol": float(n),
+            "label": str(n),
+            "height_pct": round(max(pct, 2.0 if n > 0 else 0.0), 1),
+            "tag": tag,
+            "is_latest": i == n_bars - 1,
+            "show_tick": i in tick_idxs,
+        })
+        prev = float(n)
+    return bars
+
+
 def _render_vol_bars_block(
     bars: list[dict],
     *,
     title: str,
     dense: bool = False,
     after_html: str = "",
+    unit: str = "万亿",
 ) -> str:
-    """成交金额柱图 HTML 块；dense=True 用于长周期趋势（无最新值、无红绿、柱更细）。"""
+    """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（无最新值、无红绿、柱更细）。"""
     if not bars:
         return ""
     cols = "".join(
-        f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}万亿">
+        f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}{unit}">
       <div class="vol20-val">{b["label"]}</div>
       <div class="vol20-bar-track">
         <div class="vol20-bar{" " + b["tag"] if not dense else ""}" style="height:{b["height_pct"]}%"></div>
@@ -839,7 +903,7 @@ def _render_vol_bars_block(
         for b in bars
     )
     d0, d1 = bars[0]["date"], bars[-1]["date"]
-    meta = f"{d0}–{d1}" if dense else f"{d0}–{d1} · 最新 {bars[-1]['label']} 万亿"
+    meta = f"{d0}–{d1}" if dense else f"{d0}–{d1} · 最新 {bars[-1]['label']} {unit}"
     wrap_cls = "vol20-wrap vol120" if dense else "vol20-wrap"
     return f'''<div class="{wrap_cls}">
     <div class="vol20-head">
@@ -2923,7 +2987,15 @@ def render_html(ctx: dict) -> str:
     vol120_html = _render_vol_bars_block(
         vol120, title="量能120日趋势", dense=True
     )
-    vol20_html = f"{vol30_html}{vol120_html}"
+    xh30 = ctx.get("xh30_bars") or []
+    xh120 = ctx.get("xh120_bars") or []
+    xh30_html = _render_vol_bars_block(
+        xh30, title="近30日新高数量", unit="家"
+    )
+    xh120_html = _render_vol_bars_block(
+        xh120, title="近120日新高数量", dense=True, unit="家"
+    )
+    vol20_html = f"{vol30_html}{vol120_html}{xh30_html}{xh120_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4862,6 +4934,31 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         print(f"[kpl-vol] 开盘啦实际量能拉取失败，近30日回退表格成交额: {exc}")
         vol20_bars = build_vol20_bars(work, 30)
         vol120_bars = []
+    # 近30 / 近120 日新高数量（排除北交所、ST；上市交易日>10）
+    xh30_bars: list[dict] = []
+    xh120_bars: list[dict] = []
+    try:
+        from new_high_count import compute_new_high_count
+
+        as_of_d = dt.date() if hasattr(dt, "date") else dt
+        xh_payload = compute_new_high_count(as_of_d, force=False, progress=True)
+        xh_daily = list(xh_payload.get("daily") or [])
+
+        def _slice_count_bars(rows: list[dict], n: int) -> list[dict]:
+            if not rows:
+                return []
+            if len(rows) > n:
+                prior = int(rows[-(n + 1)].get("count") or 0)
+                use = rows[-n:]
+            else:
+                prior = None
+                use = rows
+            return build_count_bars(use, prior_count=prior)
+
+        xh30_bars = _slice_count_bars(xh_daily, 30)
+        xh120_bars = _slice_count_bars(xh_daily, 120)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[newhigh] 新高数量统计失败: {exc}")
     dims = analyze_3d(work, row)
     env_callout = build_env_callout(row, work, dim, dims)
     synth = env_callout["synth"]
@@ -4936,6 +5033,8 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "trend_headline": trend_headline,
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
+        "xh30_bars": xh30_bars,
+        "xh120_bars": xh120_bars,
         "vol_note": dim.get("vol_note") or "",
         "vol_tags": list(dim.get("vol_tags") or []),
         "vol_regime": (dim.get("vm") or {}).get("regime") or "neutral",
