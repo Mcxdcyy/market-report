@@ -5,8 +5,10 @@
 
 指标（池不同）：
 0. 追高数量：当日追高池家数的**近2日均值**（今日与昨日算术平均）；横轴近 **120** 日
-1. 昨追-赚钱效应：取**前一交易日**追高池，算当日 (今高−昨高)/昨收 均值；横轴近 **30** 日
-2. 昨追-今日承接：取**前一交易日**追高池，算当日 (今收−昨高)/昨高 均值；横轴近 **30** 日
+1. 昨追-赚钱效应：取**前一交易日**追高池，算当日 (今高−昨高)/昨收 均值；横轴近 **30** 日；
+   柱色相对近 **200** 个交易日均值（均值上红 / 均值下绿）
+2. 昨追-今日承接：取**前一交易日**追高池，算当日 (今收−昨高)/昨高 均值；横轴近 **30** 日；
+   柱色相对近 **200** 个交易日均值（均值上红 / 均值下绿）
 3. 今追-回落指数：取**当日**追高池，算当日 (今收−今高)/今高 均值；横轴近 **30** 日；
    柱色相对近 **200** 个交易日均值（均值上红 / 均值下绿）
 
@@ -32,7 +34,7 @@ MEAN_DAYS = 200  # 今追-回落指数着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, MEAN_DAYS)  # 计算覆盖（数量展示仍截 120）
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 9  # 回落均值须满200交易日（与趋势强度 means_200d 对齐）
+SCHEMA = 10  # 效应三图均以近200日均值为零轴着色
 
 GROUP_ORDER = (
     ("main", "主板追高"),
@@ -196,6 +198,18 @@ def compute_chase_sentiment(
                 .get("pullback", {})
                 .get("mean_200d")
                 is not None
+                and (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("money", {})
+                .get("mean_200d")
+                is not None
+                and (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("loss", {})
+                .get("mean_200d")
+                is not None
             ):
                 return cached
         except json.JSONDecodeError:
@@ -282,40 +296,43 @@ def compute_chase_sentiment(
                             "n": n,
                         }
                     )
-        # 回落近200日均值（与趋势强度 means_200d 同口径：须满200个交易日）
-        pb_window = metrics["pullback"][-MEAN_DAYS:]
-        pb_vals = [float(x["value"]) for x in pb_window if x.get("value") is not None]
-        pb_mean: float | None = None
-        mean_n = 0
-        if len(pb_vals) >= MEAN_DAYS:
-            pb_mean = round(sum(pb_vals) / len(pb_vals), 4)
-            mean_n = len(pb_vals)
-        elif out_path.exists():
-            try:
-                prev = json.loads(out_path.read_text(encoding="utf-8"))
-                old = (
-                    (prev.get("groups") or {})
-                    .get(gkey, {})
-                    .get("metrics", {})
-                    .get("pullback", {})
+        # 效应三图近200日均值（与趋势强度 means_200d 同口径：须满200个交易日）
+        def _mean_200d(mk: str, label: str) -> tuple[float | None, int]:
+            window = metrics[mk][-MEAN_DAYS:]
+            vals = [float(x["value"]) for x in window if x.get("value") is not None]
+            if len(vals) >= MEAN_DAYS:
+                return round(sum(vals) / len(vals), 4), len(vals)
+            if out_path.exists():
+                try:
+                    prev = json.loads(out_path.read_text(encoding="utf-8"))
+                    old = (
+                        (prev.get("groups") or {})
+                        .get(gkey, {})
+                        .get("metrics", {})
+                        .get(mk, {})
+                    )
+                    if (
+                        old.get("mean_200d") is not None
+                        and int(old.get("mean_days") or 0) >= MEAN_DAYS
+                    ):
+                        m = float(old["mean_200d"])
+                        if progress:
+                            print(
+                                f"[chase] {gname} {label}均值交易日不足 {MEAN_DAYS}"
+                                f"（有效{len(vals)}），沿用缓存均值 {m:+.4f}"
+                            )
+                        return m, MEAN_DAYS
+                except (json.JSONDecodeError, TypeError, ValueError):
+                    pass
+            if progress and len(vals) < MEAN_DAYS:
+                print(
+                    f"[chase] {gname} {label}均值跳过：交易日不足 {MEAN_DAYS}（有效{len(vals)}）"
                 )
-                if (
-                    old.get("mean_200d") is not None
-                    and int(old.get("mean_days") or 0) >= MEAN_DAYS
-                ):
-                    pb_mean = float(old["mean_200d"])
-                    mean_n = MEAN_DAYS
-                    if progress:
-                        print(
-                            f"[chase] {gname} 回落均值交易日不足 {MEAN_DAYS}"
-                            f"（有效{len(pb_vals)}），沿用缓存均值 {pb_mean:+.4f}"
-                        )
-            except (json.JSONDecodeError, TypeError, ValueError):
-                pass
-        if pb_mean is None and progress and len(pb_vals) < MEAN_DAYS:
-            print(
-                f"[chase] {gname} 回落均值跳过：交易日不足 {MEAN_DAYS}（有效{len(pb_vals)}）"
-            )
+            return None, 0
+
+        money_mean, money_n = _mean_200d("money", "赚钱")
+        loss_mean, loss_n = _mean_200d("loss", "承接")
+        pb_mean, mean_n = _mean_200d("pullback", "回落")
 
         metrics["count"] = metrics["count"][-COUNT_DAYS:]
         for mk in ("money", "loss", "pullback"):
@@ -331,6 +348,10 @@ def compute_chase_sentiment(
             mk: {"name": metric_names[mk], "series": metrics[mk]}
             for mk, _ in METRIC_KEYS
         }
+        metrics_out["money"]["mean_200d"] = money_mean
+        metrics_out["money"]["mean_days"] = money_n
+        metrics_out["loss"]["mean_200d"] = loss_mean
+        metrics_out["loss"]["mean_days"] = loss_n
         metrics_out["pullback"]["mean_200d"] = pb_mean
         metrics_out["pullback"]["mean_days"] = mean_n
         groups[gkey] = {
@@ -361,7 +382,7 @@ def compute_chase_sentiment(
             "昨追-赚钱效应/昨追-今日承接/今追-回落指数：近30日；"
             "昨追取前一交易日追高池分别算(今高−昨高)/昨收、(今收−昨高)/昨高；"
             "回落取当日追高池算(今收−今高)/今高；"
-            "回落柱色相对近200日均值（均值上红/均值下绿）。"
+            "效应三图柱色均相对近200日均值（均值上红/均值下绿）。"
             "创板=创业板+科创板；不含ST、北交所；不含上市日历天数≤10；"
             "不含一字涨停（当日最低价=当日涨停价）。"
         ),

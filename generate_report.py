@@ -4416,11 +4416,25 @@ def load_chase_sentiment_block(
                 .get("metrics", {})
                 .get("pullback", {})
             )
+            money = (
+                (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("money", {})
+            )
+            loss = (
+                (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("loss", {})
+            )
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("groups")
-                and cached.get("schema") == 9
+                and cached.get("schema") == 10
                 and pb.get("mean_200d") is not None
+                and money.get("mean_200d") is not None
+                and loss.get("mean_200d") is not None
             ):
                 return cached
         except json.JSONDecodeError:
@@ -4444,7 +4458,7 @@ def _render_chase_metric_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """效应柱图：默认零轴对称（正红负绿）；若给 baseline（回落近200日均值），则以均值为零轴。"""
+    """效应柱图：以 baseline（近200日均值）为零轴，均值上红 / 均值下绿；无 baseline 时退回绝对零轴。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart">
@@ -4651,7 +4665,7 @@ def render_chase_sentiment_html(block: dict) -> str:
             ser = m.get("series") or []
             if mk == "count":
                 charts.append(_render_chase_count_chart(title, ser))
-            elif mk == "pullback":
+            else:
                 mean_200d = m.get("mean_200d")
                 try:
                     baseline = float(mean_200d) if mean_200d is not None else None
@@ -4660,8 +4674,6 @@ def render_chase_sentiment_html(block: dict) -> str:
                 charts.append(
                     _render_chase_metric_chart(title, ser, baseline=baseline)
                 )
-            else:
-                charts.append(_render_chase_metric_chart(title, ser))
         parts.append(
             f'''<div class="chase-group">
     <div class="chase-group-title">{gname}</div>
@@ -4676,7 +4688,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
-        "回落柱色以近200日均值为零轴（均值上红 / 均值下绿）。"
+        "效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
         "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
         "不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
@@ -5021,7 +5033,14 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         )
 
     modes = empty_trading_modes()
-    latest_dt = dt
+    # 真·最新交易日：历史日重生成时不得把 as_of 当成 latest，以免覆盖 means_200d / 追高等缓存
+    try:
+        from trading_calendar import resolve_report_as_of
+
+        _latest = resolve_report_as_of(refresh=False, progress=False)
+        latest_dt = datetime(_latest.year, _latest.month, _latest.day)
+    except Exception:  # noqa: BLE001
+        latest_dt = dt
     trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
     chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
