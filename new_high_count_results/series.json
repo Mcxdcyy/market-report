@@ -1,0 +1,748 @@
+{
+  "schema": 3,
+  "note": "新高家数本地序列：历史段已固化（source=numbers_seed）；此后仅按日写入问财结果，不读大盘数据.numbers。删除桌面大盘表不影响本序列。",
+  "query_today": "今日最高价创历史新高，非st，非退市，非北京证券交易所，上市天数大于10天",
+  "days": {
+    "2026-04-21": {
+      "count": 47,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-22": {
+      "count": 76,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-23": {
+      "count": 74,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-24": {
+      "count": 44,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-27": {
+      "count": 47,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-28": {
+      "count": 53,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-29": {
+      "count": 48,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-04-30": {
+      "count": 60,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-06": {
+      "count": 109,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-07": {
+      "count": 106,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-08": {
+      "count": 100,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-11": {
+      "count": 166,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-12": {
+      "count": 123,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-13": {
+      "count": 134,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-14": {
+      "count": 130,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-15": {
+      "count": 80,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-18": {
+      "count": 78,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-19": {
+      "count": 86,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-20": {
+      "count": 110,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-21": {
+      "count": 103,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-22": {
+      "count": 57,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-25": {
+      "count": 111,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-26": {
+      "count": 86,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-27": {
+      "count": 78,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-28": {
+      "count": 69,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-05-29": {
+      "count": 76,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-01": {
+      "count": 24,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-02": {
+      "count": 39,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-03": {
+      "count": 58,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-04": {
+      "count": 54,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-05": {
+      "count": 61,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-08": {
+      "count": 25,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-09": {
+      "count": 41,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-10": {
+      "count": 49,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-11": {
+      "count": 48,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-12": {
+      "count": 63,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-15": {
+      "count": 60,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-16": {
+      "count": 103,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-17": {
+      "count": 125,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-18": {
+      "count": 126,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-22": {
+      "count": 143,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-23": {
+      "count": 93,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-24": {
+      "count": 97,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-25": {
+      "count": 128,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-26": {
+      "count": 121,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-29": {
+      "count": 96,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-06-30": {
+      "count": 107,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-01": {
+      "count": 119,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-02": {
+      "count": 40,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-03": {
+      "count": 28,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-06": {
+      "count": 25,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-07": {
+      "count": 13,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-08": {
+      "count": 17,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-09": {
+      "count": 16,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-10": {
+      "count": 37,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-13": {
+      "count": 10,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-14": {
+      "count": 6,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-15": {
+      "count": 4,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-16": {
+      "count": 2,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-17": {
+      "count": 3,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-20": {
+      "count": 1,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-21": {
+      "count": 2,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-22": {
+      "count": 8,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-23": {
+      "count": 3,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-24": {
+      "count": 1,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-27": {
+      "count": 3,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-28": {
+      "count": 6,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-29": {
+      "count": 3,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-30": {
+      "count": 4,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-07-31": {
+      "count": 0,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-03": {
+      "count": 0,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-04": {
+      "count": 0,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-05": {
+      "count": 1,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-06": {
+      "count": 2,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-07": {
+      "count": 7,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-10": {
+      "count": 11,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-11": {
+      "count": 4,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-12": {
+      "count": 3,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-13": {
+      "count": 11,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-14": {
+      "count": 5,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-17": {
+      "count": 11,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-18": {
+      "count": 18,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-19": {
+      "count": 6,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-20": {
+      "count": 8,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-21": {
+      "count": 4,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-24": {
+      "count": 5,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-25": {
+      "count": 3,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-26": {
+      "count": 4,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-27": {
+      "count": 1,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-28": {
+      "count": 5,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-08-31": {
+      "count": 10,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-01": {
+      "count": 13,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-02": {
+      "count": 10,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-03": {
+      "count": 12,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-04": {
+      "count": 8,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-07": {
+      "count": 5,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-08": {
+      "count": 4,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-09": {
+      "count": 13,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-10": {
+      "count": 12,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-11": {
+      "count": 7,
+      "source": "numbers_seed",
+      "query": null,
+      "names": [],
+      "codes": []
+    },
+    "2026-09-14": {
+      "count": 10,
+      "source": "wencai_browser",
+      "query": "2026年9月14日最高价创历史新高，非st，非退市，非北京证券交易所，上市天数大于10天",
+      "names": [
+        "奥士康",
+        "博硕科技",
+        "满坤科技",
+        "威尔高",
+        "江苏银行",
+        "杭州银行",
+        "国芳集团",
+        "成都银行",
+        "中国银行",
+        "高凯技术"
+      ],
+      "codes": [],
+      "fetched": "2026-09-15 17:08:40"
+    },
+    "2026-09-15": {
+      "count": 10,
+      "source": "wencai_browser",
+      "query": "今日最高价创历史新高，非st，非退市，非北京证券交易所，上市天数大于10天",
+      "names": [
+        "奥士康",
+        "博硕科技",
+        "满坤科技",
+        "威尔高",
+        "金禄电子",
+        "一博科技",
+        "中信银行",
+        "景旺电子",
+        "安德利",
+        "高凯技术"
+      ],
+      "codes": [],
+      "fetched": "2026-09-15 17:08:40"
+    }
+  },
+  "updated": "2026-09-15 17:49:07",
+  "frozen": true,
+  "no_numbers_dependency": true
+}

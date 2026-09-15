@@ -23,13 +23,12 @@ import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
-from numbers_parser import Document
 
 BASE = Path(__file__).resolve().parent
 DOCS_DIR = BASE / "docs"
-DATA_FILE = BASE / "大盘数据.numbers"
 NEWS_FILE = BASE / "market_news.json"
 EVENT_CATALOG_FILE = BASE / "event_catalog.json"
 
@@ -73,49 +72,11 @@ def parse_date(v):
 
 
 def load_market_data() -> pd.DataFrame:
-    doc = Document(str(DATA_FILE))
-    t = doc.sheets[0].tables[0]
-    h0 = [t.cell(0, c).value for c in range(t.num_cols)]
-    h1 = [t.cell(1, c).value for c in range(t.num_cols)]
-    cols, g = [], ""
-    for a, b in zip(h0, h1):
-        if a:
-            g = a
-        cols.append(f"{g}_{b}" if b else (a or f"x{len(cols)}"))
-    rows = [[t.cell(r, c).value for c in range(t.num_cols)] for r in range(2, t.num_rows)]
-    df = pd.DataFrame(rows, columns=cols)
-    df["_src_row"] = range(len(df))
-    rename = {
-        "大盘成交额_成交金额": "成交额",
-        "大盘成交额_增量变化": "增量",
-        "涨停数量": "涨停",
-        "跌停数": "跌停",
-        "历史新高": "新高",
-        "追高资金：赚钱效应_追高数量": "主追高数",
-        "追高资金：赚钱效应_追高爆赚占比": "主爆赚率",
-        "追高资金：赚钱效应_追高爆亏占比": "主爆亏率",
-        "创业板追高：赚钱效应_创业板活跃度": "创活跃",
-        "创业板追高：赚钱效应_追高爆赚占比": "创爆赚率",
-        "创业板追高：赚钱效应_追高爆亏占比": "创爆亏率",
-        "涨停 / 炸板：日内封板率_封板率": "封板率",
-        "涨停 / 炸板：日内封板率_炸板率": "炸板率",
-        "追高资金：赚钱效应_追高封板率": "主追封板率",
-        "追高资金：赚钱效应_主-冲高回落": "主冲高回落",
-        "追高资金：赚钱效应_冲高未回落占比": "主冲高未回落占比",
-        "创业板追高：赚钱效应_创-冲高回落": "创冲高回落",
-        "创业板追高：赚钱效应_冲高未回落占比": "创冲高未回落占比",
-    }
-    df = df.rename(columns=rename)
-    df["date"] = df["日期"].apply(parse_date)
-    df = df[df["date"].notna()].sort_values(["date", "_src_row"])
-    df = df.drop_duplicates(subset=["date"], keep="last").drop(columns=["_src_row"]).reset_index(drop=True)
-    num_cols = set(rename.values()) | {"主赚差", "创赚差", "主冲高未回落占比", "创冲高未回落占比"}
-    for c in num_cols:
-        if c in df.columns:
-            df[c] = pd.to_numeric(df[c], errors="coerce")
-    df["主赚差"] = df["主爆赚率"] - df["主爆亏率"]
-    df["创赚差"] = df["创爆赚率"] - df["创爆亏率"]
-    return df
+    """已废弃：报表不再读大盘表。保留空实现以免旧脚本 import 报错。"""
+    raise RuntimeError(
+        "load_market_data 已废弃：报表不依赖大盘数据.numbers。"
+        "新高序列见 new_high_count_results/series.json；交易日见 trading_calendar.py。"
+    )
 
 
 def hist_pct(series: pd.Series, val: float) -> float:
@@ -445,11 +406,91 @@ def emotion_index(row: pd.Series) -> int:
     return int(sum(parts) / len(parts))
 
 
+def empty_trading_modes() -> dict:
+    """表头模式结论占位：逻辑待定，先空着。"""
+    return {
+        "summary": "",
+        "primary_label": "待定",
+        "active": False,
+        "status": "—",
+        "pill": "warn",
+        "pos": "",
+        "entry": "",
+        "add": "",
+        "stop": "",
+        "carry_score": 0,
+        "mode_score": 0,
+        "carry_reasons": [],
+        "trend_reasons": [],
+    }
+
+
+def kpl_to_volume_df(kpl_rows: list[dict]) -> pd.DataFrame:
+    """开盘啦量能 → 仅含 date/成交额 的 DataFrame，供量能标签/说明。"""
+    rows: list[dict] = []
+    for r in kpl_rows or []:
+        ds = str(r.get("date") or "")[:10]
+        if len(ds) < 10:
+            continue
+        try:
+            amt = float(r.get("amount_yi") or 0)
+        except (TypeError, ValueError):
+            continue
+        rows.append({"date": pd.Timestamp(ds), "成交额": amt})
+    if not rows:
+        return pd.DataFrame(columns=["date", "成交额"])
+    return pd.DataFrame(rows).drop_duplicates(subset=["date"], keep="last").reset_index(drop=True)
+
+
 def next_trading_day(d: datetime) -> datetime:
-    nd = d + timedelta(days=1)
-    while nd.weekday() >= 5:
-        nd += timedelta(days=1)
-    return nd
+    """下一交易日（交易日日历；不依赖大盘表，不再仅跳周末）。"""
+    try:
+        from trading_calendar import next_trading_day_after
+
+        base = d.date() if hasattr(d, "date") else d
+        nd = next_trading_day_after(base, refresh=False)
+        return datetime(nd.year, nd.month, nd.day)
+    except Exception:
+        nd = d + timedelta(days=1)
+        while nd.weekday() >= 5:
+            nd += timedelta(days=1)
+        return nd
+
+
+def apply_kpl_volume_to_df(df: pd.DataFrame, kpl_rows: list[dict]) -> pd.DataFrame:
+    """用开盘啦实际量能（亿元）覆盖/补全「成交额」，供量能标签/说明与八维大盘量能。"""
+    if df is None or df.empty or not kpl_rows:
+        return df
+    by_d = {
+        str(r.get("date") or "")[:10]: float(r.get("amount_yi") or 0)
+        for r in kpl_rows
+        if r.get("date") and r.get("amount_yi") is not None
+    }
+    if not by_d:
+        return df
+    out = df.copy()
+    if "成交额" not in out.columns:
+        out["成交额"] = pd.NA
+
+    def _key(v: Any) -> str | None:
+        if hasattr(v, "date") and not isinstance(v, date):
+            try:
+                v = v.date()
+            except Exception:
+                return None
+        if isinstance(v, datetime):
+            v = v.date()
+        if isinstance(v, date):
+            return v.isoformat()
+        if pd.isna(v):
+            return None
+        return str(v)[:10]
+
+    for i, row in out.iterrows():
+        k = _key(row.get("date"))
+        if k and k in by_d:
+            out.at[i, "成交额"] = by_d[k]
+    return out
 
 
 def fmt_md(d: datetime) -> str:
@@ -1323,7 +1364,15 @@ def sector_hot_streak(
         end = datetime.combine(end, datetime.min.time())
 
     trade_days: list[datetime] = []
-    if df is not None and len(df) > 0 and "date" in df.columns:
+    # 优先独立交易日日历（不依赖大盘表）
+    try:
+        from trading_calendar import trading_days_ending
+
+        for d in reversed(trading_days_ending(end.date(), 40, refresh=False)):
+            trade_days.append(datetime(d.year, d.month, d.day))
+    except Exception:
+        trade_days = []
+    if not trade_days and df is not None and len(df) > 0 and "date" in df.columns:
         for ts in df["date"]:
             d = parse_date(ts)
             if pd.isna(d):
@@ -1335,7 +1384,7 @@ def sector_hot_streak(
             if d.date() <= end.date():
                 trade_days.append(d)
         trade_days.sort(reverse=True)
-    else:
+    elif not trade_days:
         trade_days = [d for d, _ in _news_days_chronological(raw or {}) if d.date() <= end.date()]
         trade_days.sort(reverse=True)
 
@@ -2910,61 +2959,6 @@ def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
 
 
 def render_html(ctx: dict) -> str:
-    def trend_score_cell(key: str, d: dict, *, split: bool = False) -> str:
-        val = d[key]
-        tag = d[f"{key}_tag"]
-        cls = f"trend-cell {tag}"
-        if split:
-            cls += " trend-split"
-        return f'<td class="{cls}">{val}</td>'
-
-    # 前4维：环境活跃；后4维：追高效应（中间用 trend-split 分隔）
-    trend_cols_g1 = (
-        ("vol", "大盘量能"),
-        ("depth", "新高指标"),
-        ("main_act", "主板活跃"),
-        ("chuang_act", "创板活跃"),
-    )
-    trend_cols_g2 = (
-        ("main_yday", "主板昨追"),
-        ("chuang_yday", "创板昨追"),
-        ("main_today", "主板今追"),
-        ("chuang_today", "创板今追"),
-    )
-    trend_days = ctx["trend_days"]
-    trend_head_g1 = "".join(f'<th class="trend-g1">{label}</th>' for _, label in trend_cols_g1)
-    trend_head_g2 = "".join(
-        f'<th class="trend-g2{" trend-split" if i == 0 else ""}">{label}</th>'
-        for i, (_, label) in enumerate(trend_cols_g2)
-    )
-    trend_rows = "".join(
-        f'''<tr class="{"trend-row-latest" if d["is_latest"] else ""}">
-      <th class="trend-date-cell">
-        <span class="trend-date-md">{d["date"]}</span>
-        <span class="trend-date-wd">周{d["weekday"]}</span>
-      </th>
-      {"".join(trend_score_cell(k, d) for k, _ in trend_cols_g1)}
-      {"".join(trend_score_cell(k, d, split=(i == 0)) for i, (k, _) in enumerate(trend_cols_g2))}
-    </tr>'''
-        for d in trend_days
-    )
-    trend_html = f'''<div class="trend-matrix-wrap">
-    <table class="trend-matrix">
-      <thead>
-        <tr class="trend-group-row">
-          <th class="trend-corner" rowspan="2">日期</th>
-          <th class="trend-group trend-g1" colspan="4">环境 · 活跃</th>
-          <th class="trend-group trend-g2 trend-split" colspan="4">追高效应</th>
-        </tr>
-        <tr>
-          {trend_head_g1}
-          {trend_head_g2}
-        </tr>
-      </thead>
-      <tbody>{trend_rows}</tbody>
-    </table>
-  </div>'''
-
     vol20 = ctx.get("vol20_bars") or []
     vol120 = ctx.get("vol120_bars") or []
     vol_note = (ctx.get("vol_note") or "").strip()
@@ -3064,6 +3058,9 @@ def render_html(ctx: dict) -> str:
     fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
 
     m = ctx["modes"]
+    hero_summary_html = (
+        f'<div class="hero-summary">{m["summary"]}</div>' if (m.get("summary") or "").strip() else ""
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -3489,49 +3486,6 @@ def render_html(ctx: dict) -> str:
     margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
   }}
 
-  /* ── 10日趋势表格（日期竖轴） ── */
-  .trend-matrix-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
-  .trend-matrix {{
-    width: 100%; border-collapse: collapse; font-size: 12px; min-width: 640px;
-  }}
-  .trend-matrix th, .trend-matrix td {{
-    border: 1px solid var(--border); padding: 8px 10px; text-align: center;
-  }}
-  .trend-matrix thead th {{
-    font-size: 12px; font-weight: 700; color: var(--text);
-    background: #ececf1; border-bottom: 1px solid #d0d0d8;
-    padding: 8px 10px; letter-spacing: 0.02em; white-space: nowrap;
-  }}
-  .trend-group-row th.trend-group {{
-    font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
-    padding: 8px 10px; border-bottom: 1px solid #d0d0d8;
-  }}
-  .trend-matrix thead th.trend-g1 {{ background: #eef2f8; }}
-  .trend-matrix thead th.trend-group.trend-g1 {{ background: #e3ebf6; color: #3d5a80; }}
-  .trend-matrix thead th.trend-g2 {{ background: #f4f0f6; }}
-  .trend-matrix thead th.trend-group.trend-g2 {{ background: #ebe4f0; color: #5a4570; }}
-  .trend-matrix thead th.trend-split,
-  tbody td.trend-split {{
-    border-left: 2px solid #b8a9c4 !important;
-  }}
-  .trend-corner {{
-    text-align: left; color: var(--text); vertical-align: middle;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
-  }}
-  .trend-date-cell {{
-    text-align: left; white-space: nowrap; background: #f7f7fa;
-    font-weight: 600; color: var(--sub);
-  }}
-  .trend-date-md {{ display: block; font-weight: 700; color: var(--text); line-height: 1.2; }}
-  .trend-date-wd {{ display: block; font-size: 10px; color: var(--muted); margin-top: 1px; }}
-  .trend-row-latest {{ background: #fafbff; }}
-  .trend-row-latest .trend-date-md {{ color: var(--accent); }}
-  .trend-cell {{
-    font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
-  }}
-  .trend-cell.ok {{ color: #c62828; }}
-  .trend-cell.warn {{ color: #e65100; }}
-  .trend-cell.bad {{ color: #2e7d32; }}
 
   /* ── 近30日成交金额柱状图 ── */
   .vol20-wrap {{
@@ -3913,10 +3867,7 @@ def render_html(ctx: dict) -> str:
     .section-sub.event-meta {{
       justify-content: flex-start; align-items: baseline; text-align: left; max-width: 100%;
     }}
-    .trend-matrix {{ width: 100%; min-width: 640px; font-size: 13px; }}
-    .trend-matrix th, .trend-matrix td {{ padding: 7px 9px; }}
     .trend-date-wd {{ font-size: 12px; }}
-    #sec-trend .trend-cell {{ font-size: 13px; }}
     .vol20-chart {{
       width: 100%; overflow: visible;
     }}
@@ -3950,7 +3901,6 @@ def render_html(ctx: dict) -> str:
     .ts-cnt-axis {{ gap: 1px; margin-top: 8px; min-height: 20px; }}
     .ts-cnt-tick {{ height: 20px; }}
     .ts-cnt-tick span {{ font-size: 10px; }}
-    .trend-group-row th.trend-group {{ font-size: 12px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
@@ -4002,10 +3952,9 @@ def render_html(ctx: dict) -> str:
         <div class="hero-mode">{m['primary_label']}</div>
       </div>
     </div>
-    <div class="hero-summary">{m['summary']}</div>
+    {hero_summary_html}
     <nav class="page-nav">
       <a href="index.html">首页</a>
-      <a href="#sec-trend">10日趋势</a>
       <a href="#sec-mkt">大盘环境</a>
       <a href="#sec-ts">趋势强度</a>
       <a href="#sec-chase">资金追高情绪</a>
@@ -4016,50 +3965,40 @@ def render_html(ctx: dict) -> str:
     </nav>
   </header>
 
-  <!-- 1 10日 · 八维 -->
-  <div class="section" id="sec-trend">
-    <div class="section-head">
-      <div class="section-num">1</div>
-      <div class="section-title">10日趋势</div>
-      <div class="section-sub">{ctx['trend_range']} · 八维</div>
-    </div>
-    {trend_html}
-  </div>
-
-  <!-- 2 大盘环境：量能 + 新高数量 -->
+  <!-- 1 大盘环境 -->
   <div class="section" id="sec-mkt">
     <div class="section-head">
-      <div class="section-num">2</div>
+      <div class="section-num">1</div>
       <div class="section-title">大盘环境</div>
       <div class="section-sub">{ctx['data_date']} · 量能与新高数量</div>
     </div>
     {vol20_html}
   </div>
 
-  <!-- 3 趋势强度 -->
+  <!-- 2 趋势强度 -->
   <div class="section" id="sec-ts">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
   </div>
 
-  <!-- 4 资金追高情绪 -->
+  <!-- 3 资金追高情绪 -->
   <div class="section" id="sec-chase">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">3</div>
       <div class="section-title">资金追高情绪</div>
       <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近30日</div>
     </div>
     {chase_sentiment_html}
   </div>
 
-  <!-- 5 涨停板块 -->
+  <!-- 4 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -4068,10 +4007,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 6 公告与政策 -->
+  <!-- 5 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">5</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -4079,10 +4018,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 7 事件 -->
+  <!-- 6 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">7</div>
+      <div class="section-num">6</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -4092,10 +4031,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 8 板块-资金认可度 -->
+  <!-- 7 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">8</div>
+      <div class="section-num">7</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -4103,7 +4042,7 @@ def render_html(ctx: dict) -> str:
     {fund_recognition_html}
   </div>
 
-  <div class="footer">大盘数据.numbers · 生成于 {ctx['generated']}</div>
+  <div class="footer">不依赖大盘数据.numbers · 生成于 {ctx['generated']}</div>
 </div>
 </body>
 </html>"""
@@ -4121,27 +4060,19 @@ def load_trend_means_200d() -> dict:
     return data.get("means") or {}
 
 
-def _trading_days_ending(df: pd.DataFrame, as_of_d, n: int = 200) -> list:
-    """从大盘表取截至 as_of 的近 n 个交易日（date）。"""
-    dates = []
-    for v in df["date"].tolist():
-        if hasattr(v, "to_pydatetime"):
-            d = v.to_pydatetime().date()
-        elif hasattr(v, "date") and not isinstance(v, type(as_of_d)):
-            d = v.date()
-        else:
-            d = v
-        if d <= as_of_d:
-            dates.append(d)
-    dates = sorted(set(dates))
-    return dates[-n:]
+def _trading_days_ending(as_of_d, n: int = 200) -> list:
+    """截至 as_of 的近 n 个交易日（开盘啦量能日历，不读大盘表）。"""
+    from trading_calendar import trading_days_ending
+
+    days = trading_days_ending(as_of_d, n, refresh=False)
+    if not days:
+        raise RuntimeError(f"交易日日历不足：as_of={as_of_d} 需要近 {n} 日")
+    return days
 
 
 def load_trend_strength_block(
     as_of: datetime,
     latest_dt: datetime | None = None,
-    *,
-    df: pd.DataFrame | None = None,
 ) -> dict:
     """模块「趋势强度」：全场+五维占比。优先读当日结果缓存；最新若干日可联网重算。"""
     as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
@@ -4178,9 +4109,9 @@ def load_trend_strength_block(
     if latest_dt is not None:
         latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
     is_latest = latest_d is None or as_of_d == latest_d
-    if is_latest and ensure_means_200d is not None and df is not None:
+    if is_latest and ensure_means_200d is not None:
         try:
-            days = _trading_days_ending(df, as_of_d, 200)
+            days = _trading_days_ending(as_of_d, 200)
             means = ensure_means_200d(as_of_d, days, force=False, progress=True) or {}
         except Exception as exc:  # noqa: BLE001
             print(f"[trend-means] 更新失败，沿用缓存: {exc}")
@@ -4192,9 +4123,9 @@ def load_trend_strength_block(
         block["means_200d"] = means
 
     # 近30日全场强趋势家数：仅最新交易日报表计算/刷新缓存
-    if is_latest and ensure_count_series_30d is not None and df is not None:
+    if is_latest and ensure_count_series_30d is not None:
         try:
-            days30 = _trading_days_ending(df, as_of_d, 30)
+            days30 = _trading_days_ending(as_of_d, 30)
             count_series = ensure_count_series_30d(as_of_d, days30, force=False, progress=True) or []
             block = dict(block)
             block["count_series"] = count_series
@@ -4910,58 +4841,85 @@ def coalesce_row(row: pd.Series, prev: pd.Series | None) -> pd.Series:
     return out
 
 
-def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None) -> dict:
+def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
+    """组装报表上下文。不再读取大盘数据.numbers。"""
     if as_of is not None:
         if hasattr(as_of, "to_pydatetime"):
             as_of = as_of.to_pydatetime()
-        work = df[df["date"] <= as_of].copy()
-        if work.empty:
-            raise ValueError(f"无 {as_of.date()} 及之前的交易日数据")
+        report_dt = as_of
+        if isinstance(report_dt, date) and not isinstance(report_dt, datetime):
+            report_dt = datetime(report_dt.year, report_dt.month, report_dt.day)
     else:
-        work = df
-    prev_row = work.iloc[-2] if len(work) >= 2 else None
-    row = coalesce_row(work.iloc[-1], prev_row)
-    dt = row["date"].to_pydatetime() if hasattr(row["date"], "to_pydatetime") else row["date"]
+        from trading_calendar import resolve_report_as_of
+
+        rd = resolve_report_as_of(refresh=True, progress=True)
+        report_dt = datetime(rd.year, rd.month, rd.day)
+
+    report_d = report_dt.date() if hasattr(report_dt, "date") else report_dt
+    dt = report_dt
     nxt = next_trading_day(dt)
-    last10 = work.tail(10)
-    dim = compute_six_dim(row, work)
-    trend_days, trend_headline = analyze_10d(last10, work)
-    trend_range = f"{fmt_md(last10.iloc[0]['date'])}–{fmt_md(last10.iloc[-1]['date'])}"
-    # 近30日成交金额 + 量能120日趋势：同用开盘啦「实际量能（沪深京）」
-    vol20_bars: list[dict] = []
-    vol120_bars: list[dict] = []
+
+    # 开盘啦量能 → 柱图 + 标签/说明
+    kpl_rows: list[dict] = []
     try:
         from fetch_kpl_volume import ensure_kpl_volume_series
 
-        as_of_d = dt.date() if hasattr(dt, "date") else dt
-        # 121 = 120 窗口 + 1 日前日（首柱着色）；30 日同序列截取
-        kpl_rows = ensure_kpl_volume_series(as_of_d, n=121, force=False, progress=True)
-
-        def _slice_vol_bars(rows: list[dict], n: int) -> list[dict]:
-            if not rows:
-                return []
-            if len(rows) > n:
-                prior = float(rows[-(n + 1)].get("amount_yi") or 0) or None
-                use = rows[-n:]
-            else:
-                prior = None
-                use = rows
-            return build_vol_bars_from_amounts(use, prior_amount=prior)
-
-        vol20_bars = _slice_vol_bars(kpl_rows, 30)
-        vol120_bars = _slice_vol_bars(kpl_rows, 120)
+        kpl_rows = ensure_kpl_volume_series(report_d, n=320, force=False, progress=True)
+        kpl_rows = [r for r in kpl_rows if str(r.get("date") or "") <= report_d.isoformat()]
     except Exception as exc:  # noqa: BLE001
-        print(f"[kpl-vol] 开盘啦实际量能拉取失败，近30日回退表格成交额: {exc}")
-        vol20_bars = build_vol20_bars(work, 30)
-        vol120_bars = []
-    # 近30 / 近120 日新高数量（排除北交所、ST；上市交易日>10）
+        print(f"[kpl-vol] 开盘啦实际量能拉取失败: {exc}")
+
+    vol_df = kpl_to_volume_df(kpl_rows)
+    if vol_df.empty:
+        vm = {
+            "score": 50,
+            "regime": "neutral",
+            "tags": [],
+            "note": "",
+            "shrink_streak": 0,
+            "ratio5": 1.0,
+            "inc": None,
+        }
+        vol_note, vol_tags = "", []
+        vol_regime = "neutral"
+        vol_row = pd.Series({"成交额": 0, "涨停": 0, "主赚差": 0})
+    else:
+        vol_row = vol_df.iloc[-1].copy()
+        vol_row["涨停"] = 0
+        vol_row["主赚差"] = 0
+        vm = volume_metrics(vol_row, vol_df)
+        vol_note = vm.get("note") or ""
+        vol_tags = list(vm.get("tags") or [])
+        if int(vm.get("score") or 50) < 40:
+            if vol_tags:
+                if "资金在场偏弱" not in vol_note:
+                    vol_note += "，资金在场偏弱"
+            else:
+                vol_tags.append("资金在场偏弱")
+        vol_regime = vm.get("regime") or "neutral"
+
+    env_weak = vol_regime == "bad"
+
+    def _slice_vol_bars(rows: list[dict], n: int) -> list[dict]:
+        if not rows:
+            return []
+        if len(rows) > n:
+            prior = float(rows[-(n + 1)].get("amount_yi") or 0) or None
+            use = rows[-n:]
+        else:
+            prior = None
+            use = rows
+        return build_vol_bars_from_amounts(use, prior_amount=prior)
+
+    vol20_bars = _slice_vol_bars(kpl_rows, 30)
+    vol120_bars = _slice_vol_bars(kpl_rows, 120)
+
     xh30_bars: list[dict] = []
     xh120_bars: list[dict] = []
     try:
         from new_high_count import compute_new_high_count
 
-        as_of_d = dt.date() if hasattr(dt, "date") else dt
-        xh_payload = compute_new_high_count(as_of_d, force=False, progress=True)
+        xh_payload = compute_new_high_count(report_d, force=False, progress=True)
         xh_daily = list(xh_payload.get("daily") or [])
 
         def _slice_count_bars(rows: list[dict], n: int) -> list[dict]:
@@ -4979,13 +4937,8 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         xh120_bars = _slice_count_bars(xh_daily, 120)
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
-    dims = analyze_3d(work, row)
-    env_callout = build_env_callout(row, work, dim, dims)
-    synth = env_callout["synth"]
-    scores = merge_env_scores(dim)
-    main_money = dim["main_money"]
 
-    market_news = load_market_news(dt, env_weak=env_is_weak(main_money, synth, dims))
+    market_news = load_market_news(dt, env_weak=env_weak)
     news_raw = {}
     if NEWS_FILE.exists():
         try:
@@ -4997,39 +4950,40 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         n_post = len(market_news["post_close"])
         st = market_news.get("curate_stats") or {}
         pool_n = st.get("pool", n_post)
-        zt = int(row.get("涨停") or 0)
-        mode = "偏弱" if env_is_weak(main_money, synth, dims) else "尚可"
-        market_news["sector_summary"] = f"当日涨停 {zt} 家 · 展示板块 {n_sec} 项"
+        zt = sum(int(s.get("count") or 0) for s in market_news["top_sectors"])
+        mode = "偏弱" if env_weak else "尚可"
+        market_news["sector_summary"] = f"展示板块涨停合计 {zt} 家 · 展示 {n_sec} 项"
         market_news["post_summary"] = (
             f"候选池 {pool_n} 条 → 精选 {n_post} 条（环境{mode}）"
         )
     else:
         market_news["sector_summary"] = ""
         market_news["post_summary"] = ""
+
     event_window, event_nodes, event_sync = build_events_window(dt)
     directions, dir_summary, rhythm, event_peak = load_direction_analysis(
         market_news.get("direction_analysis"),
     )
     if market_news["has_data"] and market_news["top_sectors"]:
         market_news["top_sectors"] = enrich_sector_streaks(
-            market_news["top_sectors"], dt, news_raw, df=work
+            market_news["top_sectors"], dt, news_raw, df=None
         )
+        # 涨停合计写入 row，供持续性打分
+        vol_row = vol_row.copy() if hasattr(vol_row, "copy") else pd.Series(vol_row)
+        vol_row["涨停"] = sum(int(s.get("count") or 0) for s in market_news["top_sectors"])
         market_news["top_sectors"] = forecast_sector_persistence(
             market_news["top_sectors"],
             as_of=dt,
-            row=row,
-            df=df,
+            row=vol_row,
+            df=vol_df if not vol_df.empty else pd.DataFrame([{"成交额": 0}]),
             directions=directions,
-            env_weak=env_is_weak(main_money, synth, dims),
+            env_weak=env_weak,
             post_close=market_news["post_close"],
         )
-    emo = emotion_index(row)
-    modes = analyze_trading_modes(row, work, emo, dim)
-    advice = opening_advice(row, emo, work, nxt, modes)
-    latest_dt = df.iloc[-1]["date"]
-    if hasattr(latest_dt, "to_pydatetime"):
-        latest_dt = latest_dt.to_pydatetime()
-    trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt, df=df)
+
+    modes = empty_trading_modes()
+    latest_dt = dt
+    trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
     chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
     fund_range = ""
@@ -5046,19 +5000,19 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "next_date": nxt.strftime("%Y-%m-%d"),
         "next_weekday": WEEKDAY[nxt.weekday()],
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "scores": scores,
-        "env_callout": env_callout,
-        "trend_days": trend_days,
-        "trend_range": trend_range,
-        "trend_headline": trend_headline,
+        "scores": {},
+        "env_callout": {},
+        "trend_days": [],
+        "trend_range": "",
+        "trend_headline": "",
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
         "xh30_bars": xh30_bars,
         "xh120_bars": xh120_bars,
-        "vol_note": dim.get("vol_note") or "",
-        "vol_tags": list(dim.get("vol_tags") or []),
-        "vol_regime": (dim.get("vm") or {}).get("regime") or "neutral",
-        "synth": synth,
+        "vol_note": vol_note,
+        "vol_tags": vol_tags,
+        "vol_regime": vol_regime,
+        "synth": "",
         "market_news": market_news,
         "event_window": event_window,
         "event_nodes": event_nodes,
@@ -5069,8 +5023,8 @@ def build_context(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None
         "event_sync": event_sync,
         "as_of": dt,
         "modes": modes,
-        "advice": advice,
-        "emo": emo,
+        "advice": {"modes": [], "alerts": "", "nxt_label": ""},
+        "emo": 0,
         "trend_strength": trend_strength,
         "chase_sentiment": chase_sentiment,
         "fund_recognition": fund_recognition,
@@ -5306,8 +5260,8 @@ def sync_pages_site() -> Path:
     return DOCS_DIR
 
 
-def write_report(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None) -> Path:
-    ctx = build_context(df, as_of)
+def write_report(as_of: datetime | pd.Timestamp | date | None = None) -> Path:
+    ctx = build_context(as_of)
     out = BASE / f"复盘概览-{ctx['title_date'].replace('/', '-')}.html"
     out.write_text(render_html(ctx), encoding="utf-8")
     print(f"已生成: {out}")
@@ -5316,18 +5270,18 @@ def write_report(df: pd.DataFrame, as_of: datetime | pd.Timestamp | None = None)
 
 
 def main() -> None:
-    if not DATA_FILE.exists():
-        print(f"找不到: {DATA_FILE}", file=sys.stderr)
-        sys.exit(1)
-    df = load_market_data()
-    write_report(df)
-    # 最新日不是 07-03 时，同步更新 07-03 报告（便于对照历史样式）
-    anchor = pd.Timestamp("2026-07-03")
-    latest = df.iloc[-1]["date"]
-    latest_dt = latest.to_pydatetime() if hasattr(latest, "to_pydatetime") else latest
-    anchor_dt = anchor.to_pydatetime()
-    if (df["date"] == anchor).any() and latest_dt.date() != anchor_dt.date():
-        write_report(df, anchor)
+    from trading_calendar import resolve_report_as_of
+
+    as_of_d = resolve_report_as_of(refresh=True, progress=True)
+    as_of = datetime(as_of_d.year, as_of_d.month, as_of_d.day)
+    write_report(as_of)
+    # 对照历史样式：有则重生成 07-03
+    anchor = datetime(2026, 7, 3)
+    if as_of_d != anchor.date():
+        try:
+            write_report(anchor)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[report] 跳过 07-03 重生成: {exc}")
     idx = write_index_html()
     print(f"已生成入口: {idx}")
     sync_pages_site()

@@ -17,18 +17,16 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
-from numbers_parser import Document
-
 import trend_strength as ts
 from fetch_kpl_sectors import (
     fetch_theme_stocks,
     load_stocks_history,
     save_stocks_history,
 )
+from trading_calendar import trading_days_ending as _cal_trading_days_ending
 
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "fund_recognition_results"
-DATA_FILE = BASE / "大盘数据.numbers"
 POOL_DAYS = 30
 SERIES_DAYS = 30
 AMOUNT_MIN = 3e8  # 3 亿元
@@ -45,19 +43,8 @@ def _as_date(v: date | datetime | str) -> date:
 
 
 def trading_days_ending(end: date, n: int) -> list[date]:
-    doc = Document(str(DATA_FILE))
-    t = doc.sheets[0].tables[0]
-    dates: list[date] = []
-    for r in range(2, t.num_rows):
-        v = t.cell(r, 0).value
-        if hasattr(v, "year"):
-            d = v.date() if isinstance(v, datetime) else v
-            if d <= end:
-                dates.append(d)
-    dates = sorted(set(dates))
-    if len(dates) < n:
-        return dates
-    return dates[-n:]
+    """交易日轴：开盘啦量能日历（不读大盘数据.numbers）。"""
+    return _cal_trading_days_ending(end, n, refresh=False)
 
 
 def ensure_stocks_for_days(days: list[date], *, progress: bool = True) -> dict[str, dict[str, list[str]]]:

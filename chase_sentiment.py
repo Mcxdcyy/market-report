@@ -20,13 +20,11 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
-from numbers_parser import Document
-
 import trend_strength as ts
+from trading_calendar import trading_days_ending as _cal_trading_days_ending
 
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "chase_sentiment_results"
-DATA_FILE = BASE / "大盘数据.numbers"
 COUNT_DAYS = 120
 EFFECT_DAYS = 30
 SERIES_DAYS = COUNT_DAYS  # 计算覆盖上限（数量窗口）
@@ -57,17 +55,8 @@ def _as_date(v: date | datetime | str) -> date:
 
 
 def trading_days_ending(end: date, n: int) -> list[date]:
-    doc = Document(str(DATA_FILE))
-    t = doc.sheets[0].tables[0]
-    dates: list[date] = []
-    for r in range(2, t.num_rows):
-        v = t.cell(r, 0).value
-        if hasattr(v, "year"):
-            d = v.date() if isinstance(v, datetime) else v
-            if d <= end:
-                dates.append(d)
-    dates = sorted(set(dates))
-    return dates[-n:] if len(dates) >= n else dates
+    """交易日轴：开盘啦量能日历（不读大盘数据.numbers）。"""
+    return _cal_trading_days_ending(end, n, refresh=False)
 
 
 def _group_of(bucket: str) -> str | None:
