@@ -3996,8 +3996,9 @@ def render_html(ctx: dict) -> str:
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-trend">10日趋势</a>
-      <a href="#sec-chase">资金追高情绪</a>
+      <a href="#sec-mkt">大盘环境</a>
       <a href="#sec-ts">趋势强度</a>
+      <a href="#sec-chase">资金追高情绪</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
@@ -4013,17 +4014,16 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['trend_range']} · 八维</div>
     </div>
     {trend_html}
-    {vol20_html}
   </div>
 
-  <!-- 2 资金追高情绪 -->
-  <div class="section" id="sec-chase">
+  <!-- 2 大盘环境：量能 + 新高数量 -->
+  <div class="section" id="sec-mkt">
     <div class="section-head">
       <div class="section-num">2</div>
-      <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近30日</div>
+      <div class="section-title">大盘环境</div>
+      <div class="section-sub">{ctx['data_date']} · 量能与新高数量</div>
     </div>
-    {chase_sentiment_html}
+    {vol20_html}
   </div>
 
   <!-- 3 趋势强度 -->
@@ -4036,10 +4036,20 @@ def render_html(ctx: dict) -> str:
     {trend_strength_html}
   </div>
 
-  <!-- 4 涨停板块 -->
-  <div class="section" id="sec-sectors">
+  <!-- 4 资金追高情绪 -->
+  <div class="section" id="sec-chase">
     <div class="section-head">
       <div class="section-num">4</div>
+      <div class="section-title">资金追高情绪</div>
+      <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近30日</div>
+    </div>
+    {chase_sentiment_html}
+  </div>
+
+  <!-- 5 涨停板块 -->
+  <div class="section" id="sec-sectors">
+    <div class="section-head">
+      <div class="section-num">5</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -4048,10 +4058,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 5 公告与政策 -->
+  <!-- 6 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">6</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -4059,10 +4069,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 6 事件 -->
+  <!-- 7 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">7</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -4072,10 +4082,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 7 板块-资金认可度 -->
+  <!-- 8 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">7</div>
+      <div class="section-num">8</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
