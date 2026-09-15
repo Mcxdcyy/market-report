@@ -2983,15 +2983,11 @@ def render_html(ctx: dict) -> str:
     )
     if not vol120_html and vol_note_html:
         vol120_html = vol_note_html
-    xh30 = ctx.get("xh30_bars") or []
     xh120 = ctx.get("xh120_bars") or []
-    xh30_html = _render_vol_bars_block(
-        xh30, title="近30日新高数量", unit="家"
-    )
     xh120_html = _render_vol_bars_block(
         xh120, title="近120日新高数量", dense=True, unit="家"
     )
-    vol20_html = f"{vol30_html}{vol120_html}{xh30_html}{xh120_html}"
+    vol20_html = f"{vol30_html}{vol120_html}{xh120_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4914,7 +4910,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
 
-    xh30_bars: list[dict] = []
     xh120_bars: list[dict] = []
     try:
         from new_high_count import compute_new_high_count
@@ -4933,7 +4928,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
                 use = rows
             return build_count_bars(use, prior_count=prior)
 
-        xh30_bars = _slice_count_bars(xh_daily, 30)
         xh120_bars = _slice_count_bars(xh_daily, 120)
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
@@ -5007,7 +5001,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_headline": "",
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
-        "xh30_bars": xh30_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
