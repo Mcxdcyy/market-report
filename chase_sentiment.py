@@ -7,7 +7,8 @@
 0. 追高数量：当日追高池家数的**近2日均值**（今日与昨日算术平均）；横轴近 **120** 日
 1. 昨追-赚钱效应：取**前一交易日**追高池，算当日 (今高−昨高)/昨收 均值；横轴近 **30** 日
 2. 昨追-今日承接：取**前一交易日**追高池，算当日 (今收−昨高)/昨高 均值；横轴近 **30** 日
-3. 今追-回落指数：取**当日**追高池，算当日 (今收−今高)/今高 均值；横轴近 **30** 日
+3. 今追-回落指数：取**当日**追高池，算当日 (今收−今高)/今高 均值；横轴近 **30** 日；
+   柱色相对近 **200** 个交易日均值（均值上红 / 均值下绿）
 
 排除 ST、北交所；上市日历天数 ≤10；一字涨停（当日最低价=当日涨停价）。
 """
@@ -27,10 +28,11 @@ BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "chase_sentiment_results"
 COUNT_DAYS = 120
 EFFECT_DAYS = 30
-SERIES_DAYS = COUNT_DAYS  # 计算覆盖上限（数量窗口）
+MEAN_DAYS = 200  # 今追-回落指数着色基准：近200日均值
+SERIES_DAYS = max(COUNT_DAYS, MEAN_DAYS)  # 计算覆盖（数量展示仍截 120）
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 7  # 数量120日 / 效应30日
+SCHEMA = 8  # 回落指数以近200日均值为零轴着色
 
 GROUP_ORDER = (
     ("main", "主板追高"),
@@ -188,6 +190,12 @@ def compute_chase_sentiment(
                 and cached.get("schema") == SCHEMA
                 and int(cached.get("count_days") or 0) >= COUNT_DAYS
                 and int(cached.get("effect_days") or 0) >= EFFECT_DAYS
+                and (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("pullback", {})
+                .get("mean_200d")
+                is not None
             ):
                 return cached
         except json.JSONDecodeError:
@@ -221,7 +229,7 @@ def compute_chase_sentiment(
     k_days = days[-(SERIES_DAYS + 1) :] if len(days) >= SERIES_DAYS + 1 else days
     if progress:
         print(
-            f"[chase] 数量{COUNT_DAYS}日 / 效应{EFFECT_DAYS}日 → "
+            f"[chase] 数量{COUNT_DAYS}日 / 效应{EFFECT_DAYS}日 / 回落均值{MEAN_DAYS}日 → "
             f"{series_days[0]}…{series_days[-1]}"
         )
 
@@ -235,7 +243,8 @@ def compute_chase_sentiment(
     for d in k_days:
         means = _day_metric_means(long_series, d)
         daily_all.append({"date": d.isoformat(), **means})
-    daily_rows = daily_all[-COUNT_DAYS:]
+    # 用于数量/效应切片的主序列（含计算窗口）
+    daily_rows = daily_all[-SERIES_DAYS:]
     offset = len(daily_all) - len(daily_rows)
 
     groups: dict[str, dict] = {}
@@ -273,7 +282,14 @@ def compute_chase_sentiment(
                             "n": n,
                         }
                     )
-        # 效应三图只保留近 EFFECT_DAYS
+        # 回落近200日均值（着色零轴）；数量/效应再截展示窗
+        pb_for_mean = [
+            float(x["value"])
+            for x in metrics["pullback"][-MEAN_DAYS:]
+            if x.get("value") is not None
+        ]
+        pb_mean = round(sum(pb_for_mean) / len(pb_for_mean), 4) if pb_for_mean else None
+        metrics["count"] = metrics["count"][-COUNT_DAYS:]
         for mk in ("money", "loss", "pullback"):
             metrics[mk] = metrics[mk][-EFFECT_DAYS:]
         count_title = "主板追高数量" if gkey == "main" else "创板追高数量"
@@ -283,15 +299,22 @@ def compute_chase_sentiment(
             "loss": "昨追-今日承接",
             "pullback": "今追-回落指数",
         }
+        metrics_out: dict[str, Any] = {
+            mk: {"name": metric_names[mk], "series": metrics[mk]}
+            for mk, _ in METRIC_KEYS
+        }
+        metrics_out["pullback"]["mean_200d"] = pb_mean
+        metrics_out["pullback"]["mean_days"] = len(pb_for_mean)
         groups[gkey] = {
             "name": gname,
-            "metrics": {
-                mk: {"name": metric_names[mk], "series": metrics[mk]}
-                for mk, _ in METRIC_KEYS
-            },
+            "metrics": metrics_out,
         }
 
-    effect_start = daily_rows[-EFFECT_DAYS]["date"] if len(daily_rows) >= EFFECT_DAYS else daily_rows[0]["date"]
+    effect_start = (
+        daily_rows[-EFFECT_DAYS]["date"]
+        if len(daily_rows) >= EFFECT_DAYS
+        else daily_rows[0]["date"]
+    )
     payload = {
         "as_of": as_of_d.isoformat(),
         "schema": SCHEMA,
@@ -299,6 +322,7 @@ def compute_chase_sentiment(
         "end": series_days[-1].isoformat(),
         "count_days": COUNT_DAYS,
         "effect_days": EFFECT_DAYS,
+        "mean_days": MEAN_DAYS,
         "effect_start": effect_start,
         "n_days": len(series_days),
         "chase_pct": CHASE_PCT * 100,
@@ -308,7 +332,8 @@ def compute_chase_sentiment(
             "追高数量：近120日；当日追高池家数的近2日均值（今日与昨日算术平均）。"
             "昨追-赚钱效应/昨追-今日承接/今追-回落指数：近30日；"
             "昨追取前一交易日追高池分别算(今高−昨高)/昨收、(今收−昨高)/昨高；"
-            "回落取当日追高池算(今收−今高)/今高。"
+            "回落取当日追高池算(今收−今高)/今高；"
+            "回落柱色相对近200日均值（均值上红/均值下绿）。"
             "创板=创业板+科创板；不含ST、北交所；不含上市日历天数≤10；"
             "不含一字涨停（当日最低价=当日涨停价）。"
         ),

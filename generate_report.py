@@ -4410,7 +4410,18 @@ def load_chase_sentiment_block(
     if result_path.exists() and is_latest:
         try:
             cached = json.loads(result_path.read_text(encoding="utf-8"))
-            if cached.get("as_of") == as_of_d.isoformat() and cached.get("groups"):
+            pb = (
+                (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("pullback", {})
+            )
+            if (
+                cached.get("as_of") == as_of_d.isoformat()
+                and cached.get("groups")
+                and cached.get("schema") == 8
+                and pb.get("mean_200d") is not None
+            ):
                 return cached
         except json.JSONDecodeError:
             pass
@@ -4427,8 +4438,13 @@ def load_chase_sentiment_block(
     return compute_chase_sentiment(as_of_d, force=False, progress=True)
 
 
-def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
-    """零轴对称柱图：正红负绿；value 已为百分比。"""
+def _render_chase_metric_chart(
+    title: str,
+    series: list[dict],
+    *,
+    baseline: float | None = None,
+) -> str:
+    """效应柱图：默认零轴对称（正红负绿）；若给 baseline（回落近200日均值），则以均值为零轴。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart">
@@ -4439,7 +4455,11 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
     <div class="news-empty">该窗口暂无追高样本</div>
   </div>'''
 
-    scale = max(abs(v) for v in vals)
+    base = float(baseline) if baseline is not None else 0.0
+    if baseline is not None:
+        scale = max(abs(v - base) for v in vals)
+    else:
+        scale = max(abs(v) for v in vals)
     if scale < 1e-9:
         scale = 1.0
     # 略留顶，避免贴边
@@ -4452,6 +4472,12 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
         tick_idxs.add((2 * n_bars) // 3)
     if n_bars >= 60:
         tick_idxs.add(n_bars // 2)
+
+    axis_title = (
+        f' title="近200日均值 {base:+.2f}%"'
+        if baseline is not None
+        else ""
+    )
 
     cols = []
     ticks = []
@@ -4470,13 +4496,14 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
             cols.append(
                 f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 无样本">
       <div class="chase-val">—</div>
-      <div class="chase-track"><div class="chase-zero"></div></div>
+      <div class="chase-track"><div class="chase-zero"{axis_title}></div></div>
     </div>'''
             )
         else:
             v = float(raw)
-            h = min(50.0, abs(v) / scale * 50.0)
-            if v >= 0:
+            delta = v - base
+            h = min(50.0, abs(delta) / scale * 50.0)
+            if delta >= 0:
                 bar = f'<div class="chase-bar pos" style="height:{h:.1f}%"></div>'
                 tag = "pos"
             else:
@@ -4484,10 +4511,11 @@ def _render_chase_metric_chart(title: str, series: list[dict]) -> str:
                 tag = "neg"
             val_lab = f"{v:+.1f}%"
             n = int(row.get("n") or 0)
+            tip_extra = f" · 均值{base:+.2f}%" if baseline is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}">
       <div class="chase-val {tag}">{val_lab}</div>
-      <div class="chase-track"><div class="chase-zero"></div>{bar}</div>
+      <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
             )
         ticks.append(
@@ -4623,6 +4651,15 @@ def render_chase_sentiment_html(block: dict) -> str:
             ser = m.get("series") or []
             if mk == "count":
                 charts.append(_render_chase_count_chart(title, ser))
+            elif mk == "pullback":
+                mean_200d = m.get("mean_200d")
+                try:
+                    baseline = float(mean_200d) if mean_200d is not None else None
+                except (TypeError, ValueError):
+                    baseline = None
+                charts.append(
+                    _render_chase_metric_chart(title, ser, baseline=baseline)
+                )
             else:
                 charts.append(_render_chase_metric_chart(title, ser))
         parts.append(
@@ -4638,7 +4675,8 @@ def render_chase_sentiment_html(block: dict) -> str:
         "追高数量：近120日，当日追高池家数的近2日均值（今日与昨日算术平均）。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
-        "回落取当日追高池，计算(今收−今高)/今高。"
+        "回落取当日追高池，计算(今收−今高)/今高；"
+        "回落柱色以近200日均值为零轴（均值上红 / 均值下绿）。"
         "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
         "不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
