@@ -3421,10 +3421,18 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; color: var(--text); font-weight: 400;
   }}
   .fund-tip-b {{ display: inline; }}
-  .fund-list {{ display: flex; flex-direction: column; gap: 12px; }}
+  .fund-list {{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }}
+  @media (min-width: 960px) {{
+    .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+  }}
   .fund-card {{
     padding: 12px 14px 10px; border: 1px solid var(--border);
     border-radius: var(--radius-sm); background: #fafafa;
+    min-width: 0;
   }}
   .fund-card-head {{
     display: flex; align-items: center; justify-content: space-between;
