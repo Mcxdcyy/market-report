@@ -486,10 +486,9 @@ def filter_display_counts(counts: dict[str, int]) -> list[tuple[str, int]]:
 
 def default_day() -> str:
     try:
-        from generate_report import load_market_data
+        from trading_calendar import resolve_report_as_of
 
-        df = load_market_data()
-        return df.index[-1].strftime("%Y-%m-%d")
+        return resolve_report_as_of(refresh=True, progress=False).isoformat()
     except Exception:
         return datetime.now().strftime("%Y-%m-%d")
 

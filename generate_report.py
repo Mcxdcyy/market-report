@@ -3261,12 +3261,16 @@ def render_html(ctx: dict) -> str:
     width: 100%; overflow: visible;
   }}
   .ts-cnt-bars {{
-    display: flex; align-items: flex-end; gap: 2px; height: 120px;
+    position: relative; display: flex; align-items: flex-end; gap: 2px; height: 120px;
+  }}
+  .ts-cnt-mark {{
+    position: absolute; left: 0; right: 0; height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.12); pointer-events: none; z-index: 1;
   }}
   .ts-cnt-col {{
     flex: 1 1 0; min-width: 0; max-width: none;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    height: 100%;
+    height: 100%; position: relative; z-index: 2;
   }}
   .ts-cnt-val {{
     font-size: 9px; font-weight: 600; color: var(--muted);
@@ -4148,8 +4152,12 @@ def load_trend_strength_block(
     return block
 
 
-def _render_ts_count_bars_html(series: list[dict]) -> str:
-    """近30日全场强趋势占比柱图（放在分板块占比图上方）。"""
+def _render_ts_count_bars_html(
+    series: list[dict],
+    *,
+    mean_200d: float | None = None,
+) -> str:
+    """近30日全场强趋势占比柱图；浅线=近200日均值；柱色相对均值上红下绿。"""
     if not series:
         return ""
 
@@ -4166,6 +4174,15 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
     ratios = [_ratio(d) for d in series]
     vmax = max(ratios) if ratios else 0.0
     vmin = min(ratios) if ratios else 0.0
+    mean_f: float | None = None
+    if mean_200d is not None:
+        try:
+            mean_f = float(mean_200d)
+        except (TypeError, ValueError):
+            mean_f = None
+    if mean_f is not None:
+        vmax = max(vmax, mean_f)
+        vmin = min(vmin, mean_f)
     y_min = vmin * 0.85
     span = vmax - y_min
     n_bars = len(series)
@@ -4174,7 +4191,14 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
 
-    prev: float | None = None
+    mark_html = ""
+    if mean_f is not None and span > 1e-9:
+        mark_bottom = max(0.0, min(100.0, (mean_f - y_min) / span * 100.0))
+        mark_html = (
+            f'<div class="ts-cnt-mark" style="bottom:{mark_bottom:.2f}%" '
+            f'title="近200日均值 {mean_f:.2f}%" aria-hidden="true"></div>'
+        )
+
     cols = []
     ticks = []
     for i, row in enumerate(series):
@@ -4188,11 +4212,11 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
         except ValueError:
             lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
             wd = ""
-        if prev is None:
+        if mean_f is None:
             tag = "flat"
-        elif r > prev:
+        elif r > mean_f:
             tag = "up"
-        elif r < prev:
+        elif r < mean_f:
             tag = "down"
         else:
             tag = "flat"
@@ -4203,8 +4227,9 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
         height = round(max(h_pct, 2.0 if r > 0 else 0.0), 1)
         is_latest = i == n_bars - 1
         val_lab = f"{r:.1f}%"
+        tip_mean = f" · 均值{mean_f:.2f}%" if mean_f is not None else ""
         cols.append(
-            f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}（{n}家）">
+            f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}（{n}家）{tip_mean}">
       <div class="ts-cnt-val">{val_lab}</div>
       <div class="ts-cnt-track">
         <div class="ts-cnt-bar {tag}" style="height:{height}%"></div>
@@ -4215,7 +4240,6 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
             f'<div class="ts-cnt-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
             f'<span>{lab}</span></div>'
         )
-        prev = r
 
     d0 = ""
     d1 = ""
@@ -4233,7 +4257,7 @@ def _render_ts_count_bars_html(series: list[dict]) -> str:
       <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_r:.1f}%</span>
     </div>
     <div class="ts-cnt-chart">
-      <div class="ts-cnt-bars">{"".join(cols)}</div>
+      <div class="ts-cnt-bars">{mark_html}{"".join(cols)}</div>
       <div class="ts-cnt-axis">{"".join(ticks)}</div>
     </div>
   </div>'''
@@ -4246,7 +4270,16 @@ def render_trend_strength_html(block: dict) -> str:
         return f'<div class="news-empty">{note}</div>'
 
     means_200d = block.get("means_200d") or load_trend_means_200d()
-    count_chart = _render_ts_count_bars_html(block.get("count_series") or [])
+    all_mean = None
+    try:
+        raw_m = (means_200d.get("all") or {}).get("mean_ratio_pct")
+        if raw_m is not None:
+            all_mean = float(raw_m)
+    except (TypeError, ValueError):
+        all_mean = None
+    count_chart = _render_ts_count_bars_html(
+        block.get("count_series") or [], mean_200d=all_mean
+    )
 
     def vs_mean_color(pct: float, mean: float | None) -> str:
         # 相对近200日均值：低于=绿、高于=红（A股惯例）

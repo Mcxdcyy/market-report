@@ -1,5 +1,99 @@
 [
   {
+    "month": 7,
+    "day": 10,
+    "dot": "机",
+    "label": "7/10",
+    "title": "2026中国具身智能机器人产业展7月10-12日举行",
+    "short": "具身",
+    "brief": "暂无补充说明。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-09-15"
+  },
+  {
+    "month": 7,
+    "day": 11,
+    "dot": "机",
+    "label": "7/11",
+    "title": "2026“机器人+”创新发展大会7月11-13日举行",
+    "short": "机器人",
+    "brief": "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-09-15"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "AI",
+    "label": "7/15",
+    "title": "中国（西部）国际人工智能与具身智能机器人产业链大会",
+    "short": "具身",
+    "brief": "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-09-15"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "dot": "15",
+    "label": "7/15",
+    "title": "中报强制预告截止日",
+    "short": "预告",
+    "brief": "财报或业绩预告验证节点，预增披露与截止日前后波动通常放大。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-09-15"
+  },
+  {
+    "month": 7,
+    "day": 16,
+    "dot": "16",
+    "label": "7/16",
+    "title": "长鑫科技打新",
+    "short": "长鑫科技打新",
+    "brief": "产业链级定价、申购或上市节点，上市前常分流场内流动性。",
+    "hot": true,
+    "importance": 4,
+    "source": "wscn",
+    "fetched_at": "2026-09-15"
+  },
+  {
+    "month": 7,
+    "day": 17,
+    "dot": "AI",
+    "label": "7/17–20",
+    "title": "世界人工智能大会（WAIC）",
+    "short": "WAIC",
+    "brief": "上海世界人工智能大会窗口，产业新品、大模型应用与治理相关议程集中发布。",
+    "hot": true,
+    "importance": 4,
+    "source": "wscn",
+    "fetched_at": "2026-09-15",
+    "span_end": [
+      7,
+      20
+    ]
+  },
+  {
+    "month": 9,
+    "day": 14,
+    "dot": "政",
+    "label": "9/14",
+    "title": "国务院政策例行吹风会",
+    "short": "吹风会",
+    "brief": "工业和信息化部会同中国人民银行、国务院国资委、市场监管总局、中国证监会有关负责人出席并答问。介绍加强中小企业回款难问题治理有关工作情况。",
+    "hot": false,
+    "importance": 3,
+    "source": "seed"
+  },
+  {
     "month": 9,
     "day": 14,
     "dot": "医",
@@ -25,33 +119,6 @@
     "brief": "行政长官李家超于立法会公布《香港特别行政区经济和社会发展第一个五年规划（2026—2030）》，并随之发表《行政长官2026年施政报告》，勾勒未来五年经济、产业与民生发展蓝图，对接国家「十五五」规划。",
     "hot": true,
     "importance": 3,
-    "source": "seed",
-    "fetched_at": "2026-09-15"
-  },
-  {
-    "month": 9,
-    "day": 18,
-    "dot": "18",
-    "label": "9/18",
-    "title": "恒生科技指数扩容与改组修订意见咨询截止",
-    "short": "恒生科技",
-    "brief": "恒生科技指数扩容与指数编制规则征求意见结束，后续关注正式方案与成分股调整。",
-    "hot": true,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-09-15"
-  },
-  {
-    "month": 9,
-    "day": 20,
-    "dot": "20",
-    "label": "9/20",
-    "title": "国务院关于修改《住房公积金管理条例》的决定正式实施",
-    "short": "公积金条例",
-    "brief": "《住房公积金管理条例》修订决定施行，关注缴存、提取与使用规则变化。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-09-15"
+    "source": "seed"
   }
 ]
