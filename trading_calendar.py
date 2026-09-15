@@ -24,6 +24,35 @@ def _as_date(v: date | datetime | str) -> date:
     return datetime.strptime(str(v)[:10], "%Y-%m-%d").date()
 
 
+def _dates_from_long_kline_cache() -> set[str]:
+    """从长K线缓存抽交易日（与趋势强度近200日均值同源覆盖）。
+
+    开盘啦量能日线目前约百余日，不足200；长K（约260根）可补齐交易日轴。
+    只取覆盖最长的一只样本股日期，避免全市场解析。
+    """
+    path = BASE / "trend_klines_cache_long.json"
+    if not path.exists():
+        return set()
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return set()
+    best: list = []
+    for rows in (raw or {}).values():
+        if not rows:
+            continue
+        if len(rows) > len(best):
+            best = rows
+            if len(best) >= 260:
+                break
+    out: set[str] = set()
+    for line in best:
+        ds = str(line).split(",")[0][:10]
+        if len(ds) == 10:
+            out.add(ds)
+    return out
+
+
 def _collect_local_dates() -> set[str]:
     """从已有本地缓存收集交易日（ISO）。"""
     out: set[str] = set()
@@ -54,6 +83,7 @@ def _collect_local_dates() -> set[str]:
                     out.add(str(ds)[:10])
         except json.JSONDecodeError:
             pass
+    out |= _dates_from_long_kline_cache()
     return out
 
 
@@ -76,7 +106,7 @@ def refresh_calendar(*, as_of: date | None = None, progress: bool = True) -> lis
         "as_of": as_of_d.isoformat(),
         "n": len(days_s),
         "days": days_s,
-        "source": "开盘啦实际量能日线 ∪ 本地序列缓存",
+        "source": "开盘啦实际量能日线 ∪ 长K线交易日 ∪ 本地序列缓存",
         "updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
     CACHE_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

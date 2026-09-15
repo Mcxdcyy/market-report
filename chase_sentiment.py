@@ -32,7 +32,7 @@ MEAN_DAYS = 200  # 今追-回落指数着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, MEAN_DAYS)  # 计算覆盖（数量展示仍截 120）
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 8  # 回落指数以近200日均值为零轴着色
+SCHEMA = 9  # 回落均值须满200交易日（与趋势强度 means_200d 对齐）
 
 GROUP_ORDER = (
     ("main", "主板追高"),
@@ -282,13 +282,41 @@ def compute_chase_sentiment(
                             "n": n,
                         }
                     )
-        # 回落近200日均值（着色零轴）；数量/效应再截展示窗
-        pb_for_mean = [
-            float(x["value"])
-            for x in metrics["pullback"][-MEAN_DAYS:]
-            if x.get("value") is not None
-        ]
-        pb_mean = round(sum(pb_for_mean) / len(pb_for_mean), 4) if pb_for_mean else None
+        # 回落近200日均值（与趋势强度 means_200d 同口径：须满200个交易日）
+        pb_window = metrics["pullback"][-MEAN_DAYS:]
+        pb_vals = [float(x["value"]) for x in pb_window if x.get("value") is not None]
+        pb_mean: float | None = None
+        mean_n = 0
+        if len(pb_vals) >= MEAN_DAYS:
+            pb_mean = round(sum(pb_vals) / len(pb_vals), 4)
+            mean_n = len(pb_vals)
+        elif out_path.exists():
+            try:
+                prev = json.loads(out_path.read_text(encoding="utf-8"))
+                old = (
+                    (prev.get("groups") or {})
+                    .get(gkey, {})
+                    .get("metrics", {})
+                    .get("pullback", {})
+                )
+                if (
+                    old.get("mean_200d") is not None
+                    and int(old.get("mean_days") or 0) >= MEAN_DAYS
+                ):
+                    pb_mean = float(old["mean_200d"])
+                    mean_n = MEAN_DAYS
+                    if progress:
+                        print(
+                            f"[chase] {gname} 回落均值交易日不足 {MEAN_DAYS}"
+                            f"（有效{len(pb_vals)}），沿用缓存均值 {pb_mean:+.4f}"
+                        )
+            except (json.JSONDecodeError, TypeError, ValueError):
+                pass
+        if pb_mean is None and progress and len(pb_vals) < MEAN_DAYS:
+            print(
+                f"[chase] {gname} 回落均值跳过：交易日不足 {MEAN_DAYS}（有效{len(pb_vals)}）"
+            )
+
         metrics["count"] = metrics["count"][-COUNT_DAYS:]
         for mk in ("money", "loss", "pullback"):
             metrics[mk] = metrics[mk][-EFFECT_DAYS:]
@@ -304,7 +332,7 @@ def compute_chase_sentiment(
             for mk, _ in METRIC_KEYS
         }
         metrics_out["pullback"]["mean_200d"] = pb_mean
-        metrics_out["pullback"]["mean_days"] = len(pb_for_mean)
+        metrics_out["pullback"]["mean_days"] = mean_n
         groups[gkey] = {
             "name": gname,
             "metrics": metrics_out,

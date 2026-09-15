@@ -4419,7 +4419,7 @@ def load_chase_sentiment_block(
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("groups")
-                and cached.get("schema") == 8
+                and cached.get("schema") == 9
                 and pb.get("mean_200d") is not None
             ):
                 return cached
