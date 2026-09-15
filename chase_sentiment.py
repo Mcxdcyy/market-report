@@ -4,7 +4,8 @@
 追高定义：（当日最高 − 昨收）/ 昨收 ≥ 7%。
 
 指标（池不同）：
-0. 追高数量：当日追高池家数的**近2日均值**（今日与昨日算术平均）；横轴近 **120** 日
+0. 追高数量：当日追高池家数的**近2日均值**（今日与昨日算术平均）；横轴近 **120** 日；
+   柱色相对近 **200** 个交易日均值（均值上红 / 均值下绿）
 1. 昨追-赚钱效应：取**前一交易日**追高池，算当日 (今高−昨高)/昨收 均值；横轴近 **30** 日；
    柱色相对近 **200** 个交易日均值（均值上红 / 均值下绿）
 2. 昨追-今日承接：取**前一交易日**追高池，算当日 (今收−昨高)/昨高 均值；横轴近 **30** 日；
@@ -34,7 +35,7 @@ MEAN_DAYS = 200  # 今追-回落指数着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, MEAN_DAYS)  # 计算覆盖（数量展示仍截 120）
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 10  # 效应三图均以近200日均值为零轴着色
+SCHEMA = 11  # 追高数量亦以近200日均值为零轴着色
 
 GROUP_ORDER = (
     ("main", "主板追高"),
@@ -210,6 +211,12 @@ def compute_chase_sentiment(
                 .get("loss", {})
                 .get("mean_200d")
                 is not None
+                and (cached.get("groups") or {})
+                .get("main", {})
+                .get("metrics", {})
+                .get("count", {})
+                .get("mean_200d")
+                is not None
             ):
                 return cached
         except json.JSONDecodeError:
@@ -333,6 +340,7 @@ def compute_chase_sentiment(
         money_mean, money_n = _mean_200d("money", "赚钱")
         loss_mean, loss_n = _mean_200d("loss", "承接")
         pb_mean, mean_n = _mean_200d("pullback", "回落")
+        count_mean, count_n = _mean_200d("count", "数量")
 
         metrics["count"] = metrics["count"][-COUNT_DAYS:]
         for mk in ("money", "loss", "pullback"):
@@ -348,6 +356,8 @@ def compute_chase_sentiment(
             mk: {"name": metric_names[mk], "series": metrics[mk]}
             for mk, _ in METRIC_KEYS
         }
+        metrics_out["count"]["mean_200d"] = count_mean
+        metrics_out["count"]["mean_days"] = count_n
         metrics_out["money"]["mean_200d"] = money_mean
         metrics_out["money"]["mean_days"] = money_n
         metrics_out["loss"]["mean_200d"] = loss_mean
@@ -378,7 +388,8 @@ def compute_chase_sentiment(
         "groups": groups,
         "note": (
             "追高：日内最高相对昨收≥7%。"
-            "追高数量：近120日；当日追高池家数的近2日均值（今日与昨日算术平均）。"
+            "追高数量：近120日；当日追高池家数的近2日均值（今日与昨日算术平均）；"
+            "柱色相对近200日均值（均值上红/均值下绿）。"
             "昨追-赚钱效应/昨追-今日承接/今追-回落指数：近30日；"
             "昨追取前一交易日追高池分别算(今高−昨高)/昨收、(今收−昨高)/昨高；"
             "回落取当日追高池算(今收−今高)/今高；"
