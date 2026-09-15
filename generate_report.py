@@ -2992,7 +2992,7 @@ def render_html(ctx: dict) -> str:
         vol120_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
-        xh120, title="近120日新高数量", dense=True, unit="家", show_latest=True
+        xh120, title="历史新高120日趋势", dense=True, unit="家", show_latest=True
     )
     vol20_html = f"{vol30_html}{vol120_html}{xh120_html}"
 
