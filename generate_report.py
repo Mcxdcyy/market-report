@@ -4540,7 +4540,7 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    return f"{count_chart}{chart}{amt_chart}{hold_chart}{note_html}"
+    return f"{count_chart}{hold_chart}{chart}{amt_chart}{note_html}"
 
 
 def load_chase_sentiment_block(
