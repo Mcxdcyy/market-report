@@ -4602,6 +4602,23 @@ def _render_chase_metric_chart(
   </div>'''
 
 
+def _chase_robust_scale(abs_deltas: list[float], *, pct: float = 0.90) -> float:
+    """纵轴尺度取 |偏离| 的高分位，避免少数极端日把其余柱压成一条线。"""
+    xs = sorted(float(x) for x in abs_deltas if x is not None)
+    if not xs:
+        return 1.0
+    if len(xs) == 1:
+        return max(xs[0], 1e-9)
+    idx = (len(xs) - 1) * pct
+    lo = int(idx)
+    hi = min(lo + 1, len(xs) - 1)
+    frac = idx - lo
+    p = xs[lo] * (1.0 - frac) + xs[hi] * frac
+    # 分位过小时退回中位数，保证常见波动可见
+    mid = xs[len(xs) // 2]
+    return max(p, mid, 1e-9)
+
+
 def _render_chase_count_chart(
     title: str,
     series: list[dict],
@@ -4611,6 +4628,7 @@ def _render_chase_count_chart(
     """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。
 
     图下方标签（同近30日成交金额）：近5日均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
+    纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶，避免压扁其余交易日。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
@@ -4624,10 +4642,11 @@ def _render_chase_count_chart(
 
     base = float(baseline) if baseline is not None else 0.0
     if baseline is not None:
-        scale = max(abs(v - base) for v in vals)
+        abs_deltas = [abs(v - base) for v in vals]
+        scale = _chase_robust_scale(abs_deltas, pct=0.90)
     else:
         # 无均值时退回自底部起柱的旧尺度（不应常态触发）
-        scale = max(vals) if vals else 1.0
+        scale = _chase_robust_scale(vals, pct=0.90)
         base = 0.0
     if scale < 1e-9:
         scale = 1.0
@@ -4687,8 +4706,11 @@ def _render_chase_count_chart(
             else:
                 val_lab = f"{v:.1f}"
             tip_mean = f" · 均值{base:.1f}家" if baseline is not None else ""
+            tip_clip = ""
+            if baseline is not None and abs(v - base) > scale:
+                tip_clip = " · 柱高已封顶"
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 当日{val_lab}家{tip_mean}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 当日{val_lab}家{tip_mean}{tip_clip}">
       <div class="chase-val{" " + tag if tag else ""}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
