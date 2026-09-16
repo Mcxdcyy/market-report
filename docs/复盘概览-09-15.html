@@ -456,8 +456,12 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
+  .chase-grid.single {
+    grid-template-columns: 1fr;
+  }
   @media (min-width: 960px) {
     .chase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .chase-grid.single { grid-template-columns: 1fr; }
   }
   .chase-chart {
     min-width: 0;
@@ -2212,173 +2216,14 @@
       <div class="section-title">趋势强度</div>
       <div class="section-sub">2026-09-15 · 强趋势个股占比</div>
     </div>
-    <div class="ts-cnt-wrap">
-    <div class="ts-chart-head">
-      <span class="ts-chart-title">近30日强趋势占比</span>
-      <span class="ts-chart-meta">08/05–09/15 · 最新 0.8%</span>
-    </div>
-    <div class="ts-cnt-chart">
-      <div class="ts-cnt-bars"><div class="ts-cnt-mark" style="bottom:21.45%" title="近200日均值 4.67%" aria-hidden="true"></div><div class="ts-cnt-col" title="8/5 周三 · 18.1%（997家） · 均值4.67%">
-      <div class="ts-cnt-val">18.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:93.9%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/6 周四 · 15.8%（870家） · 均值4.67%">
-      <div class="ts-cnt-val">15.8%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:81.4%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/7 周五 · 11.8%（649家） · 均值4.67%">
-      <div class="ts-cnt-val">11.8%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:59.8%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/10 周一 · 17.2%（949家） · 均值4.67%">
-      <div class="ts-cnt-val">17.2%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:89.1%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/11 周二 · 14.8%（816家） · 均值4.67%">
-      <div class="ts-cnt-val">14.8%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:76.1%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/12 周三 · 19.2%（1060家） · 均值4.67%">
-      <div class="ts-cnt-val">19.2%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:100.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/13 周四 · 10.5%（580家） · 均值4.67%">
-      <div class="ts-cnt-val">10.5%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:53.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/14 周五 · 10.5%（580家） · 均值4.67%">
-      <div class="ts-cnt-val">10.5%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:53.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/17 周一 · 9.7%（535家） · 均值4.67%">
-      <div class="ts-cnt-val">9.7%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:48.6%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/18 周二 · 11.2%（616家） · 均值4.67%">
-      <div class="ts-cnt-val">11.2%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:56.5%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/19 周三 · 2.1%（116家） · 均值4.67%">
-      <div class="ts-cnt-val">2.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:7.5%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/20 周四 · 1.4%（77家） · 均值4.67%">
-      <div class="ts-cnt-val">1.4%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:3.7%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/21 周五 · 1.1%（58家） · 均值4.67%">
-      <div class="ts-cnt-val">1.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:2.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/24 周一 · 1.2%（69家） · 均值4.67%">
-      <div class="ts-cnt-val">1.2%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:2.9%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/25 周二 · 1.0%（56家） · 均值4.67%">
-      <div class="ts-cnt-val">1.0%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:2.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/26 周三 · 1.0%（55家） · 均值4.67%">
-      <div class="ts-cnt-val">1.0%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:2.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/27 周四 · 1.1%（60家） · 均值4.67%">
-      <div class="ts-cnt-val">1.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:2.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/28 周五 · 1.8%（101家） · 均值4.67%">
-      <div class="ts-cnt-val">1.8%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:6.1%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="8/31 周一 · 2.1%（114家） · 均值4.67%">
-      <div class="ts-cnt-val">2.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:7.3%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/1 周二 · 8.1%（446家） · 均值4.67%">
-      <div class="ts-cnt-val">8.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:39.8%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/2 周三 · 7.3%（402家） · 均值4.67%">
-      <div class="ts-cnt-val">7.3%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:35.5%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/3 周四 · 4.8%（268家） · 均值4.67%">
-      <div class="ts-cnt-val">4.8%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar up" style="height:22.4%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/4 周五 · 4.4%（244家） · 均值4.67%">
-      <div class="ts-cnt-val">4.4%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:20.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/7 周一 · 3.7%（203家） · 均值4.67%">
-      <div class="ts-cnt-val">3.7%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:16.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/8 周二 · 4.4%（245家） · 均值4.67%">
-      <div class="ts-cnt-val">4.4%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:20.1%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/9 周三 · 4.4%（243家） · 均值4.67%">
-      <div class="ts-cnt-val">4.4%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:19.9%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/10 周四 · 3.1%（172家） · 均值4.67%">
-      <div class="ts-cnt-val">3.1%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:13.0%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/11 周五 · 1.6%（88家） · 均值4.67%">
-      <div class="ts-cnt-val">1.6%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:4.8%"></div>
-      </div>
-    </div><div class="ts-cnt-col" title="9/14 周一 · 1.3%（71家） · 均值4.67%">
-      <div class="ts-cnt-val">1.3%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:3.1%"></div>
-      </div>
-    </div><div class="ts-cnt-col latest" title="9/15 周二 · 0.8%（46家） · 均值4.67%">
-      <div class="ts-cnt-val">0.8%</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar down" style="height:2.0%"></div>
-      </div>
-    </div></div>
-      <div class="ts-cnt-axis"><div class="ts-cnt-tick show"><span>8/5</span></div><div class="ts-cnt-tick"><span>8/6</span></div><div class="ts-cnt-tick"><span>8/7</span></div><div class="ts-cnt-tick"><span>8/10</span></div><div class="ts-cnt-tick"><span>8/11</span></div><div class="ts-cnt-tick"><span>8/12</span></div><div class="ts-cnt-tick"><span>8/13</span></div><div class="ts-cnt-tick"><span>8/14</span></div><div class="ts-cnt-tick"><span>8/17</span></div><div class="ts-cnt-tick"><span>8/18</span></div><div class="ts-cnt-tick show"><span>8/19</span></div><div class="ts-cnt-tick"><span>8/20</span></div><div class="ts-cnt-tick"><span>8/21</span></div><div class="ts-cnt-tick"><span>8/24</span></div><div class="ts-cnt-tick"><span>8/25</span></div><div class="ts-cnt-tick"><span>8/26</span></div><div class="ts-cnt-tick"><span>8/27</span></div><div class="ts-cnt-tick"><span>8/28</span></div><div class="ts-cnt-tick"><span>8/31</span></div><div class="ts-cnt-tick"><span>9/1</span></div><div class="ts-cnt-tick show"><span>9/2</span></div><div class="ts-cnt-tick"><span>9/3</span></div><div class="ts-cnt-tick"><span>9/4</span></div><div class="ts-cnt-tick"><span>9/7</span></div><div class="ts-cnt-tick"><span>9/8</span></div><div class="ts-cnt-tick"><span>9/9</span></div><div class="ts-cnt-tick"><span>9/10</span></div><div class="ts-cnt-tick"><span>9/11</span></div><div class="ts-cnt-tick"><span>9/14</span></div><div class="ts-cnt-tick show latest"><span>9/15</span></div></div>
-    </div>
-  </div><div class="ts-chart">
+    <div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势占比</span>
       <span class="ts-chart-meta">满格=10%（默认） · 竖线=近200日均值</span>
     </div>
     <div class="ts-hbar ts-hbar-all">
       <div class="ts-hbar-name">全场</div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:8.3%;"></div><div class="ts-hbar-mean" style="left:46.7%" title="近200日均值 4.67%"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:8.3%;"></div><div class="ts-hbar-mean" style="left:46.8%" title="近200日均值 4.68%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">0.8%</div>
       <div class="ts-hbar-cnt"><b>46</b>/5533</div>
     </div><div class="ts-hbar">
@@ -2388,7 +2233,7 @@
       <div class="ts-hbar-cnt"><b>26</b>/3041</div>
     </div><div class="ts-hbar ts-hbar-lead">
       <div class="ts-hbar-name">创业板<span class="ts-lead-badge">最高</span></div>
-      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:9.6%;background:#34C759;"></div><div class="ts-hbar-mean" style="left:50.8%" title="近200日均值 5.08%"></div></div>
+      <div class="ts-hbar-track"><div class="ts-hbar-fill" style="width:9.6%;background:#34C759;"></div><div class="ts-hbar-mean" style="left:50.9%" title="近200日均值 5.09%"></div></div>
       <div class="ts-hbar-pct" style="color:#34C759">1.0%</div>
       <div class="ts-hbar-cnt"><b>13</b>/1356</div>
     </div><div class="ts-hbar">
@@ -2451,377 +2296,379 @@
       <div class="section-sub">2026-09-15 · 数量近120日 · 效应近30日</div>
     </div>
     <div class="chase-group">
-    <div class="chase-group-title">主板追高</div>
-    <div class="chase-grid"><div class="chase-chart">
+    <div class="chase-grid single"><div class="chase-chart">
     <div class="chase-chart-head">
-      <span class="chase-chart-title">主板追高数量</span>
-      <span class="chase-chart-meta">最新 91 家</span>
+      <span class="chase-chart-title">追高活跃度</span>
+      <span class="chase-chart-meta">最新 176 家</span>
     </div>
     <div class="chase-plot">
-      <div class="chase-bars"><div class="chase-col" title="3/25 周三 · 近2日均240.5家 · 当日225家 · 均值168.9家">
-      <div class="chase-val pos">240.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:18.3%"></div></div>
-    </div><div class="chase-col" title="3/26 周四 · 近2日均169家 · 当日113家 · 均值168.9家">
-      <div class="chase-val pos">169</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.0%"></div></div>
-    </div><div class="chase-col" title="3/27 周五 · 近2日均143.5家 · 当日174家 · 均值168.9家">
-      <div class="chase-val neg">143.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:6.5%"></div></div>
-    </div><div class="chase-col" title="3/30 周一 · 近2日均150.5家 · 当日127家 · 均值168.9家">
-      <div class="chase-val neg">150.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.7%"></div></div>
-    </div><div class="chase-col" title="3/31 周二 · 近2日均120.5家 · 当日114家 · 均值168.9家">
-      <div class="chase-val neg">120.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:12.3%"></div></div>
-    </div><div class="chase-col" title="4/1 周三 · 近2日均144.5家 · 当日175家 · 均值168.9家">
-      <div class="chase-val neg">144.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:6.2%"></div></div>
-    </div><div class="chase-col" title="4/2 周四 · 近2日均131家 · 当日87家 · 均值168.9家">
-      <div class="chase-val neg">131</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:9.7%"></div></div>
-    </div><div class="chase-col" title="4/3 周五 · 近2日均82.5家 · 当日78家 · 均值168.9家">
-      <div class="chase-val neg">82.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:22.0%"></div></div>
-    </div><div class="chase-col" title="4/7 周二 · 近2日均136.5家 · 当日195家 · 均值168.9家">
-      <div class="chase-val neg">136.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:8.3%"></div></div>
-    </div><div class="chase-col" title="4/8 周三 · 近2日均258.5家 · 当日322家 · 均值168.9家">
-      <div class="chase-val pos">258.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:22.8%"></div></div>
-    </div><div class="chase-col" title="4/9 周四 · 近2日均218.5家 · 当日115家 · 均值168.9家">
-      <div class="chase-val pos">218.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="4/10 周五 · 近2日均132.5家 · 当日150家 · 均值168.9家">
-      <div class="chase-val neg">132.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:9.3%"></div></div>
-    </div><div class="chase-col" title="4/13 周一 · 近2日均143.5家 · 当日137家 · 均值168.9家">
-      <div class="chase-val neg">143.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:6.5%"></div></div>
-    </div><div class="chase-col" title="4/14 周二 · 近2日均131.5家 · 当日126家 · 均值168.9家">
-      <div class="chase-val neg">131.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:9.5%"></div></div>
-    </div><div class="chase-col" title="4/15 周三 · 近2日均128.5家 · 当日131家 · 均值168.9家">
-      <div class="chase-val neg">128.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:10.3%"></div></div>
-    </div><div class="chase-col" title="4/16 周四 · 近2日均152家 · 当日173家 · 均值168.9家">
-      <div class="chase-val neg">152</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.3%"></div></div>
-    </div><div class="chase-col" title="4/17 周五 · 近2日均157.5家 · 当日142家 · 均值168.9家">
-      <div class="chase-val neg">157.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:2.9%"></div></div>
-    </div><div class="chase-col" title="4/20 周一 · 近2日均159家 · 当日176家 · 均值168.9家">
-      <div class="chase-val neg">159</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:2.5%"></div></div>
-    </div><div class="chase-col" title="4/21 周二 · 近2日均152家 · 当日128家 · 均值168.9家">
-      <div class="chase-val neg">152</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.3%"></div></div>
-    </div><div class="chase-col" title="4/22 周三 · 近2日均131.5家 · 当日135家 · 均值168.9家">
-      <div class="chase-val neg">131.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:9.5%"></div></div>
-    </div><div class="chase-col" title="4/23 周四 · 近2日均137家 · 当日139家 · 均值168.9家">
-      <div class="chase-val neg">137</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:8.1%"></div></div>
-    </div><div class="chase-col" title="4/24 周五 · 近2日均140.5家 · 当日142家 · 均值168.9家">
-      <div class="chase-val neg">140.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:7.2%"></div></div>
-    </div><div class="chase-col" title="4/27 周一 · 近2日均155.5家 · 当日169家 · 均值168.9家">
-      <div class="chase-val neg">155.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:3.4%"></div></div>
-    </div><div class="chase-col" title="4/28 周二 · 近2日均148家 · 当日127家 · 均值168.9家">
-      <div class="chase-val neg">148</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:5.3%"></div></div>
-    </div><div class="chase-col" title="4/29 周三 · 近2日均172家 · 当日217家 · 均值168.9家">
-      <div class="chase-val pos">172</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.8%"></div></div>
-    </div><div class="chase-col" title="4/30 周四 · 近2日均197.5家 · 当日178家 · 均值168.9家">
-      <div class="chase-val pos">197.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:7.3%"></div></div>
-    </div><div class="chase-col" title="5/6 周三 · 近2日均205家 · 当日232家 · 均值168.9家">
-      <div class="chase-val pos">205</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:9.2%"></div></div>
-    </div><div class="chase-col" title="5/7 周四 · 近2日均233家 · 当日234家 · 均值168.9家">
-      <div class="chase-val pos">233</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:16.3%"></div></div>
-    </div><div class="chase-col" title="5/8 周五 · 近2日均228家 · 当日222家 · 均值168.9家">
-      <div class="chase-val pos">228</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:15.1%"></div></div>
-    </div><div class="chase-col" title="5/11 周一 · 近2日均219.5家 · 当日217家 · 均值168.9家">
-      <div class="chase-val pos">219.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:12.9%"></div></div>
-    </div><div class="chase-col" title="5/12 周二 · 近2日均171.5家 · 当日126家 · 均值168.9家">
-      <div class="chase-val pos">171.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.7%"></div></div>
-    </div><div class="chase-col" title="5/13 周三 · 近2日均169家 · 当日212家 · 均值168.9家">
-      <div class="chase-val pos">169</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.0%"></div></div>
-    </div><div class="chase-col" title="5/14 周四 · 近2日均181家 · 当日150家 · 均值168.9家">
-      <div class="chase-val pos">181</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:3.1%"></div></div>
-    </div><div class="chase-col" title="5/15 周五 · 近2日均165.5家 · 当日181家 · 均值168.9家">
-      <div class="chase-val neg">165.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:0.9%"></div></div>
-    </div><div class="chase-col" title="5/18 周一 · 近2日均179家 · 当日177家 · 均值168.9家">
-      <div class="chase-val pos">179</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:2.6%"></div></div>
-    </div><div class="chase-col" title="5/19 周二 · 近2日均174家 · 当日171家 · 均值168.9家">
-      <div class="chase-val pos">174</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:1.3%"></div></div>
-    </div><div class="chase-col" title="5/20 周三 · 近2日均156.5家 · 当日142家 · 均值168.9家">
-      <div class="chase-val neg">156.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:3.2%"></div></div>
-    </div><div class="chase-col" title="5/21 周四 · 近2日均174.5家 · 当日207家 · 均值168.9家">
-      <div class="chase-val pos">174.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:1.4%"></div></div>
-    </div><div class="chase-col" title="5/22 周五 · 近2日均228家 · 当日249家 · 均值168.9家">
-      <div class="chase-val pos">228</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:15.1%"></div></div>
-    </div><div class="chase-col" title="5/25 周一 · 近2日均250家 · 当日251家 · 均值168.9家">
-      <div class="chase-val pos">250</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:20.7%"></div></div>
-    </div><div class="chase-col" title="5/26 周二 · 近2日均203.5家 · 当日156家 · 均值168.9家">
-      <div class="chase-val pos">203.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:8.8%"></div></div>
-    </div><div class="chase-col" title="5/27 周三 · 近2日均152.5家 · 当日149家 · 均值168.9家">
-      <div class="chase-val neg">152.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.2%"></div></div>
-    </div><div class="chase-col" title="5/28 周四 · 近2日均168.5家 · 当日188家 · 均值168.9家">
-      <div class="chase-val neg">168.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:0.1%"></div></div>
-    </div><div class="chase-col" title="5/29 周五 · 近2日均202家 · 当日216家 · 均值168.9家">
-      <div class="chase-val pos">202</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:8.4%"></div></div>
-    </div><div class="chase-col" title="6/1 周一 · 近2日均252.5家 · 当日289家 · 均值168.9家">
-      <div class="chase-val pos">252.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:21.3%"></div></div>
-    </div><div class="chase-col" title="6/2 周二 · 近2日均219.5家 · 当日150家 · 均值168.9家">
-      <div class="chase-val pos">219.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:12.9%"></div></div>
-    </div><div class="chase-col" title="6/3 周三 · 近2日均184.5家 · 当日219家 · 均值168.9家">
-      <div class="chase-val pos">184.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:4.0%"></div></div>
-    </div><div class="chase-col" title="6/4 周四 · 近2日均192家 · 当日165家 · 均值168.9家">
-      <div class="chase-val pos">192</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:5.9%"></div></div>
-    </div><div class="chase-col" title="6/5 周五 · 近2日均195家 · 当日225家 · 均值168.9家">
-      <div class="chase-val pos">195</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:6.7%"></div></div>
-    </div><div class="chase-col" title="6/8 周一 · 近2日均171.5家 · 当日118家 · 均值168.9家">
-      <div class="chase-val pos">171.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.7%"></div></div>
-    </div><div class="chase-col" title="6/9 周二 · 近2日均175.5家 · 当日233家 · 均值168.9家">
-      <div class="chase-val pos">175.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:1.7%"></div></div>
-    </div><div class="chase-col" title="6/10 周三 · 近2日均193.5家 · 当日154家 · 均值168.9家">
-      <div class="chase-val pos">193.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:6.3%"></div></div>
-    </div><div class="chase-col" title="6/11 周四 · 近2日均154家 · 当日154家 · 均值168.9家">
-      <div class="chase-val neg">154</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:3.8%"></div></div>
-    </div><div class="chase-col" title="6/12 周五 · 近2日均242家 · 当日330家 · 均值168.9家">
-      <div class="chase-val pos">242</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:18.6%"></div></div>
-    </div><div class="chase-col" title="6/15 周一 · 近2日均341家 · 当日352家 · 均值168.9家">
-      <div class="chase-val pos">341</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:43.9%"></div></div>
-    </div><div class="chase-col" title="6/16 周二 · 近2日均299家 · 当日246家 · 均值168.9家">
-      <div class="chase-val pos">299</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:33.2%"></div></div>
-    </div><div class="chase-col" title="6/17 周三 · 近2日均213家 · 当日180家 · 均值168.9家">
-      <div class="chase-val pos">213</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:11.2%"></div></div>
-    </div><div class="chase-col" title="6/18 周四 · 近2日均190家 · 当日200家 · 均值168.9家">
-      <div class="chase-val pos">190</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:5.4%"></div></div>
-    </div><div class="chase-col" title="6/22 周一 · 近2日均245.5家 · 当日291家 · 均值168.9家">
-      <div class="chase-val pos">245.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:19.5%"></div></div>
-    </div><div class="chase-col" title="6/23 周二 · 近2日均283家 · 当日275家 · 均值168.9家">
-      <div class="chase-val pos">283</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:29.1%"></div></div>
-    </div><div class="chase-col" title="6/24 周三 · 近2日均235.5家 · 当日196家 · 均值168.9家">
-      <div class="chase-val pos">235.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:17.0%"></div></div>
-    </div><div class="chase-col" title="6/25 周四 · 近2日均204家 · 当日212家 · 均值168.9家">
-      <div class="chase-val pos">204</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:9.0%"></div></div>
-    </div><div class="chase-col" title="6/26 周五 · 近2日均190.5家 · 当日169家 · 均值168.9家">
-      <div class="chase-val pos">190.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:5.5%"></div></div>
-    </div><div class="chase-col" title="6/29 周一 · 近2日均213家 · 当日257家 · 均值168.9家">
-      <div class="chase-val pos">213</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:11.2%"></div></div>
-    </div><div class="chase-col" title="6/30 周二 · 近2日均272家 · 当日287家 · 均值168.9家">
-      <div class="chase-val pos">272</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:26.3%"></div></div>
-    </div><div class="chase-col" title="7/1 周三 · 近2日均350.5家 · 当日414家 · 均值168.9家">
-      <div class="chase-val pos">350.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
-    </div><div class="chase-col" title="7/2 周四 · 近2日均332家 · 当日250家 · 均值168.9家">
-      <div class="chase-val pos">332</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:41.6%"></div></div>
-    </div><div class="chase-col" title="7/3 周五 · 近2日均274.5家 · 当日299家 · 均值168.9家">
-      <div class="chase-val pos">274.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:26.9%"></div></div>
-    </div><div class="chase-col" title="7/6 周一 · 近2日均252家 · 当日205家 · 均值168.9家">
-      <div class="chase-val pos">252</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:21.2%"></div></div>
-    </div><div class="chase-col" title="7/7 周二 · 近2日均157.5家 · 当日110家 · 均值168.9家">
-      <div class="chase-val neg">157.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:2.9%"></div></div>
-    </div><div class="chase-col" title="7/8 周三 · 近2日均108家 · 当日106家 · 均值168.9家">
-      <div class="chase-val neg">108</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:15.5%"></div></div>
-    </div><div class="chase-col" title="7/9 周四 · 近2日均138家 · 当日170家 · 均值168.9家">
-      <div class="chase-val neg">138</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:7.9%"></div></div>
-    </div><div class="chase-col" title="7/10 周五 · 近2日均264.5家 · 当日359家 · 均值168.9家">
-      <div class="chase-val pos">264.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:24.4%"></div></div>
-    </div><div class="chase-col" title="7/13 周一 · 近2日均229.5家 · 当日100家 · 均值168.9家">
-      <div class="chase-val pos">229.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:15.5%"></div></div>
-    </div><div class="chase-col" title="7/14 周二 · 近2日均149.5家 · 当日199家 · 均值168.9家">
-      <div class="chase-val neg">149.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.9%"></div></div>
-    </div><div class="chase-col" title="7/15 周三 · 近2日均207.5家 · 当日216家 · 均值168.9家">
-      <div class="chase-val pos">207.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:9.8%"></div></div>
-    </div><div class="chase-col" title="7/16 周四 · 近2日均172家 · 当日128家 · 均值168.9家">
-      <div class="chase-val pos">172</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.8%"></div></div>
-    </div><div class="chase-col" title="7/17 周五 · 近2日均103.5家 · 当日79家 · 均值168.9家">
-      <div class="chase-val neg">103.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:16.7%"></div></div>
-    </div><div class="chase-col" title="7/20 周一 · 近2日均140.5家 · 当日202家 · 均值168.9家">
-      <div class="chase-val neg">140.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:7.2%"></div></div>
-    </div><div class="chase-col" title="7/21 周二 · 近2日均219家 · 当日236家 · 均值168.9家">
-      <div class="chase-val pos">219</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:12.8%"></div></div>
-    </div><div class="chase-col" title="7/22 周三 · 近2日均197.5家 · 当日159家 · 均值168.9家">
-      <div class="chase-val pos">197.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:7.3%"></div></div>
-    </div><div class="chase-col" title="7/23 周四 · 近2日均200家 · 当日241家 · 均值168.9家">
-      <div class="chase-val pos">200</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:7.9%"></div></div>
-    </div><div class="chase-col" title="7/24 周五 · 近2日均160.5家 · 当日80家 · 均值168.9家">
-      <div class="chase-val neg">160.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:2.1%"></div></div>
-    </div><div class="chase-col" title="7/27 周一 · 近2日均154家 · 当日228家 · 均值168.9家">
-      <div class="chase-val neg">154</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:3.8%"></div></div>
-    </div><div class="chase-col" title="7/28 周二 · 近2日均174.5家 · 当日121家 · 均值168.9家">
-      <div class="chase-val pos">174.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:1.4%"></div></div>
-    </div><div class="chase-col" title="7/29 周三 · 近2日均137家 · 当日153家 · 均值168.9家">
-      <div class="chase-val neg">137</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:8.1%"></div></div>
-    </div><div class="chase-col" title="7/30 周四 · 近2日均138.5家 · 当日124家 · 均值168.9家">
-      <div class="chase-val neg">138.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:7.7%"></div></div>
-    </div><div class="chase-col" title="7/31 周五 · 近2日均294家 · 当日464家 · 均值168.9家">
-      <div class="chase-val pos">294</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:31.9%"></div></div>
-    </div><div class="chase-col" title="8/3 周一 · 近2日均308.5家 · 当日153家 · 均值168.9家">
-      <div class="chase-val pos">308.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:35.6%"></div></div>
-    </div><div class="chase-col" title="8/4 周二 · 近2日均203.5家 · 当日254家 · 均值168.9家">
-      <div class="chase-val pos">203.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:8.8%"></div></div>
-    </div><div class="chase-col" title="8/5 周三 · 近2日均265.5家 · 当日277家 · 均值168.9家">
-      <div class="chase-val pos">265.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:24.6%"></div></div>
-    </div><div class="chase-col" title="8/6 周四 · 近2日均220家 · 当日163家 · 均值168.9家">
-      <div class="chase-val pos">220</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:13.0%"></div></div>
-    </div><div class="chase-col" title="8/7 周五 · 近2日均163.5家 · 当日164家 · 均值168.9家">
-      <div class="chase-val neg">163.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:1.4%"></div></div>
-    </div><div class="chase-col" title="8/10 周一 · 近2日均179家 · 当日194家 · 均值168.9家">
-      <div class="chase-val pos">179</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:2.6%"></div></div>
-    </div><div class="chase-col" title="8/11 周二 · 近2日均158家 · 当日122家 · 均值168.9家">
-      <div class="chase-val neg">158</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:2.8%"></div></div>
-    </div><div class="chase-col" title="8/12 周三 · 近2日均139家 · 当日156家 · 均值168.9家">
-      <div class="chase-val neg">139</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:7.6%"></div></div>
-    </div><div class="chase-col" title="8/13 周四 · 近2日均151.5家 · 当日147家 · 均值168.9家">
-      <div class="chase-val neg">151.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.4%"></div></div>
-    </div><div class="chase-col" title="8/14 周五 · 近2日均129.5家 · 当日112家 · 均值168.9家">
-      <div class="chase-val neg">129.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:10.0%"></div></div>
-    </div><div class="chase-col" title="8/17 周一 · 近2日均146.5家 · 当日181家 · 均值168.9家">
-      <div class="chase-val neg">146.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:5.7%"></div></div>
-    </div><div class="chase-col" title="8/18 周二 · 近2日均165家 · 当日149家 · 均值168.9家">
-      <div class="chase-val neg">165</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:1.0%"></div></div>
-    </div><div class="chase-col" title="8/19 周三 · 近2日均112家 · 当日75家 · 均值168.9家">
-      <div class="chase-val neg">112</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:14.5%"></div></div>
-    </div><div class="chase-col" title="8/20 周四 · 近2日均132.5家 · 当日190家 · 均值168.9家">
-      <div class="chase-val neg">132.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:9.3%"></div></div>
-    </div><div class="chase-col" title="8/21 周五 · 近2日均152家 · 当日114家 · 均值168.9家">
-      <div class="chase-val neg">152</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:4.3%"></div></div>
-    </div><div class="chase-col" title="8/24 周一 · 近2日均112家 · 当日110家 · 均值168.9家">
-      <div class="chase-val neg">112</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:14.5%"></div></div>
-    </div><div class="chase-col" title="8/25 周二 · 近2日均129家 · 当日148家 · 均值168.9家">
-      <div class="chase-val neg">129</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:10.2%"></div></div>
-    </div><div class="chase-col" title="8/26 周三 · 近2日均135.5家 · 当日123家 · 均值168.9家">
-      <div class="chase-val neg">135.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:8.5%"></div></div>
-    </div><div class="chase-col" title="8/27 周四 · 近2日均138.5家 · 当日154家 · 均值168.9家">
-      <div class="chase-val neg">138.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:7.7%"></div></div>
-    </div><div class="chase-col" title="8/28 周五 · 近2日均155家 · 当日156家 · 均值168.9家">
-      <div class="chase-val neg">155</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:3.5%"></div></div>
-    </div><div class="chase-col" title="8/31 周一 · 近2日均164.5家 · 当日173家 · 均值168.9家">
-      <div class="chase-val neg">164.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:1.1%"></div></div>
-    </div><div class="chase-col" title="9/1 周二 · 近2日均166.5家 · 当日160家 · 均值168.9家">
-      <div class="chase-val neg">166.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:0.6%"></div></div>
-    </div><div class="chase-col" title="9/2 周三 · 近2日均137家 · 当日114家 · 均值168.9家">
-      <div class="chase-val neg">137</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:8.1%"></div></div>
-    </div><div class="chase-col" title="9/3 周四 · 近2日均123.5家 · 当日133家 · 均值168.9家">
-      <div class="chase-val neg">123.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:11.6%"></div></div>
-    </div><div class="chase-col" title="9/4 周五 · 近2日均143家 · 当日153家 · 均值168.9家">
-      <div class="chase-val neg">143</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:6.6%"></div></div>
-    </div><div class="chase-col" title="9/7 周一 · 近2日均172.5家 · 当日192家 · 均值168.9家">
-      <div class="chase-val pos">172.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:0.9%"></div></div>
-    </div><div class="chase-col" title="9/8 周二 · 近2日均181家 · 当日170家 · 均值168.9家">
-      <div class="chase-val pos">181</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar pos" style="height:3.1%"></div></div>
-    </div><div class="chase-col" title="9/9 周三 · 近2日均148家 · 当日126家 · 均值168.9家">
-      <div class="chase-val neg">148</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:5.3%"></div></div>
-    </div><div class="chase-col" title="9/10 周四 · 近2日均110.5家 · 当日95家 · 均值168.9家">
-      <div class="chase-val neg">110.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:14.9%"></div></div>
-    </div><div class="chase-col" title="9/11 周五 · 近2日均91家 · 当日87家 · 均值168.9家">
-      <div class="chase-val neg">91</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:19.9%"></div></div>
-    </div><div class="chase-col" title="9/14 周一 · 近2日均111.5家 · 当日136家 · 均值168.9家">
-      <div class="chase-val neg">111.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:14.6%"></div></div>
-    </div><div class="chase-col latest" title="9/15 周二 · 近2日均113.5家 · 当日91家 · 均值168.9家">
-      <div class="chase-val neg">113.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 168.9家"></div><div class="chase-bar neg" style="height:14.1%"></div></div>
+      <div class="chase-bars"><div class="chase-col" title="3/25 周三 · 近2日均436.5家 · 当日394家 · 均值324.9家">
+      <div class="chase-val pos">436.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:11.6%"></div></div>
+    </div><div class="chase-col" title="3/26 周四 · 近2日均279家 · 当日164家 · 均值324.9家">
+      <div class="chase-val neg">279</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:4.8%"></div></div>
+    </div><div class="chase-col" title="3/27 周五 · 近2日均231.5家 · 当日299家 · 均值324.9家">
+      <div class="chase-val neg">231.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:9.7%"></div></div>
+    </div><div class="chase-col" title="3/30 周一 · 近2日均258家 · 当日217家 · 均值324.9家">
+      <div class="chase-val neg">258</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:7.0%"></div></div>
+    </div><div class="chase-col" title="3/31 周二 · 近2日均198.5家 · 当日180家 · 均值324.9家">
+      <div class="chase-val neg">198.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:13.2%"></div></div>
+    </div><div class="chase-col" title="4/1 周三 · 近2日均282.5家 · 当日385家 · 均值324.9家">
+      <div class="chase-val neg">282.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:4.4%"></div></div>
+    </div><div class="chase-col" title="4/2 周四 · 近2日均265.5家 · 当日146家 · 均值324.9家">
+      <div class="chase-val neg">265.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.2%"></div></div>
+    </div><div class="chase-col" title="4/3 周五 · 近2日均156家 · 当日166家 · 均值324.9家">
+      <div class="chase-val neg">156</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:17.6%"></div></div>
+    </div><div class="chase-col" title="4/7 周二 · 近2日均241.5家 · 当日317家 · 均值324.9家">
+      <div class="chase-val neg">241.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:8.7%"></div></div>
+    </div><div class="chase-col" title="4/8 周三 · 近2日均564家 · 当日811家 · 均值324.9家">
+      <div class="chase-val pos">564</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:24.9%"></div></div>
+    </div><div class="chase-col" title="4/9 周四 · 近2日均506家 · 当日201家 · 均值324.9家">
+      <div class="chase-val pos">506</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:18.9%"></div></div>
+    </div><div class="chase-col" title="4/10 周五 · 近2日均251家 · 当日301家 · 均值324.9家">
+      <div class="chase-val neg">251</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:7.7%"></div></div>
+    </div><div class="chase-col" title="4/13 周一 · 近2日均276家 · 当日251家 · 均值324.9家">
+      <div class="chase-val neg">276</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:5.1%"></div></div>
+    </div><div class="chase-col" title="4/14 周二 · 近2日均262.5家 · 当日274家 · 均值324.9家">
+      <div class="chase-val neg">262.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.5%"></div></div>
+    </div><div class="chase-col" title="4/15 周三 · 近2日均262家 · 当日250家 · 均值324.9家">
+      <div class="chase-val neg">262</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.6%"></div></div>
+    </div><div class="chase-col" title="4/16 周四 · 近2日均288家 · 当日326家 · 均值324.9家">
+      <div class="chase-val neg">288</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:3.9%"></div></div>
+    </div><div class="chase-col" title="4/17 周五 · 近2日均300家 · 当日274家 · 均值324.9家">
+      <div class="chase-val neg">300</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:2.6%"></div></div>
+    </div><div class="chase-col" title="4/20 周一 · 近2日均292.5家 · 当日311家 · 均值324.9家">
+      <div class="chase-val neg">292.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:3.4%"></div></div>
+    </div><div class="chase-col" title="4/21 周二 · 近2日均261家 · 当日211家 · 均值324.9家">
+      <div class="chase-val neg">261</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.7%"></div></div>
+    </div><div class="chase-col" title="4/22 周三 · 近2日均243.5家 · 当日276家 · 均值324.9家">
+      <div class="chase-val neg">243.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:8.5%"></div></div>
+    </div><div class="chase-col" title="4/23 周四 · 近2日均251.5家 · 当日227家 · 均值324.9家">
+      <div class="chase-val neg">251.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:7.7%"></div></div>
+    </div><div class="chase-col" title="4/24 周五 · 近2日均240家 · 当日253家 · 均值324.9家">
+      <div class="chase-val neg">240</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:8.9%"></div></div>
+    </div><div class="chase-col" title="4/27 周一 · 近2日均306家 · 当日359家 · 均值324.9家">
+      <div class="chase-val neg">306</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:2.0%"></div></div>
+    </div><div class="chase-col" title="4/28 周二 · 近2日均297.5家 · 当日236家 · 均值324.9家">
+      <div class="chase-val neg">297.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:2.9%"></div></div>
+    </div><div class="chase-col" title="4/29 周三 · 近2日均310家 · 当日384家 · 均值324.9家">
+      <div class="chase-val neg">310</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:1.6%"></div></div>
+    </div><div class="chase-col" title="4/30 周四 · 近2日均363.5家 · 当日343家 · 均值324.9家">
+      <div class="chase-val pos">363.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:4.0%"></div></div>
+    </div><div class="chase-col" title="5/6 周三 · 近2日均429.5家 · 当日516家 · 均值324.9家">
+      <div class="chase-val pos">429.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:10.9%"></div></div>
+    </div><div class="chase-col" title="5/7 周四 · 近2日均480家 · 当日444家 · 均值324.9家">
+      <div class="chase-val pos">480</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:16.2%"></div></div>
+    </div><div class="chase-col" title="5/8 周五 · 近2日均413家 · 当日382家 · 均值324.9家">
+      <div class="chase-val pos">413</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:9.2%"></div></div>
+    </div><div class="chase-col" title="5/11 周一 · 近2日均432.5家 · 当日483家 · 均值324.9家">
+      <div class="chase-val pos">432.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:11.2%"></div></div>
+    </div><div class="chase-col" title="5/12 周二 · 近2日均367家 · 当日251家 · 均值324.9家">
+      <div class="chase-val pos">367</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:4.4%"></div></div>
+    </div><div class="chase-col" title="5/13 周三 · 近2日均336家 · 当日421家 · 均值324.9家">
+      <div class="chase-val pos">336</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:1.2%"></div></div>
+    </div><div class="chase-col" title="5/14 周四 · 近2日均357.5家 · 当日294家 · 均值324.9家">
+      <div class="chase-val pos">357.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:3.4%"></div></div>
+    </div><div class="chase-col" title="5/15 周五 · 近2日均337家 · 当日380家 · 均值324.9家">
+      <div class="chase-val pos">337</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:1.3%"></div></div>
+    </div><div class="chase-col" title="5/18 周一 · 近2日均376家 · 当日372家 · 均值324.9家">
+      <div class="chase-val pos">376</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:5.3%"></div></div>
+    </div><div class="chase-col" title="5/19 周二 · 近2日均359.5家 · 当日347家 · 均值324.9家">
+      <div class="chase-val pos">359.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:3.6%"></div></div>
+    </div><div class="chase-col" title="5/20 周三 · 近2日均317.5家 · 当日288家 · 均值324.9家">
+      <div class="chase-val neg">317.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:0.8%"></div></div>
+    </div><div class="chase-col" title="5/21 周四 · 近2日均335家 · 当日382家 · 均值324.9家">
+      <div class="chase-val pos">335</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:1.0%"></div></div>
+    </div><div class="chase-col" title="5/22 周五 · 近2日均457家 · 当日532家 · 均值324.9家">
+      <div class="chase-val pos">457</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:13.8%"></div></div>
+    </div><div class="chase-col" title="5/25 周一 · 近2日均518.5家 · 当日505家 · 均值324.9家">
+      <div class="chase-val pos">518.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:20.2%"></div></div>
+    </div><div class="chase-col" title="5/26 周二 · 近2日均372.5家 · 当日240家 · 均值324.9家">
+      <div class="chase-val pos">372.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:5.0%"></div></div>
+    </div><div class="chase-col" title="5/27 周三 · 近2日均264家 · 当日288家 · 均值324.9家">
+      <div class="chase-val neg">264</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.4%"></div></div>
+    </div><div class="chase-col" title="5/28 周四 · 近2日均331.5家 · 当日375家 · 均值324.9家">
+      <div class="chase-val pos">331.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:0.7%"></div></div>
+    </div><div class="chase-col" title="5/29 周五 · 近2日均355家 · 当日335家 · 均值324.9家">
+      <div class="chase-val pos">355</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:3.1%"></div></div>
+    </div><div class="chase-col" title="6/1 周一 · 近2日均422家 · 当日509家 · 均值324.9家">
+      <div class="chase-val pos">422</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:10.1%"></div></div>
+    </div><div class="chase-col" title="6/2 周二 · 近2日均408家 · 当日307家 · 均值324.9家">
+      <div class="chase-val pos">408</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:8.7%"></div></div>
+    </div><div class="chase-col" title="6/3 周三 · 近2日均371家 · 当日435家 · 均值324.9家">
+      <div class="chase-val pos">371</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:4.8%"></div></div>
+    </div><div class="chase-col" title="6/4 周四 · 近2日均381家 · 当日327家 · 均值324.9家">
+      <div class="chase-val pos">381</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:5.8%"></div></div>
+    </div><div class="chase-col" title="6/5 周五 · 近2日均377家 · 当日427家 · 均值324.9家">
+      <div class="chase-val pos">377</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:5.4%"></div></div>
+    </div><div class="chase-col" title="6/8 周一 · 近2日均323.5家 · 当日220家 · 均值324.9家">
+      <div class="chase-val neg">323.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:0.2%"></div></div>
+    </div><div class="chase-col" title="6/9 周二 · 近2日均379.5家 · 当日539家 · 均值324.9家">
+      <div class="chase-val pos">379.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:5.7%"></div></div>
+    </div><div class="chase-col" title="6/10 周三 · 近2日均407家 · 当日275家 · 均值324.9家">
+      <div class="chase-val pos">407</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:8.6%"></div></div>
+    </div><div class="chase-col" title="6/11 周四 · 近2日均288.5家 · 当日302家 · 均值324.9家">
+      <div class="chase-val neg">288.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:3.8%"></div></div>
+    </div><div class="chase-col" title="6/12 周五 · 近2日均475家 · 当日648家 · 均值324.9家">
+      <div class="chase-val pos">475</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:15.6%"></div></div>
+    </div><div class="chase-col" title="6/15 周一 · 近2日均704家 · 当日760家 · 均值324.9家">
+      <div class="chase-val pos">704</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:39.5%"></div></div>
+    </div><div class="chase-col" title="6/16 周二 · 近2日均628.5家 · 当日497家 · 均值324.9家">
+      <div class="chase-val pos">628.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:31.6%"></div></div>
+    </div><div class="chase-col" title="6/17 周三 · 近2日均442家 · 当日387家 · 均值324.9家">
+      <div class="chase-val pos">442</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:12.2%"></div></div>
+    </div><div class="chase-col" title="6/18 周四 · 近2日均417.5家 · 当日448家 · 均值324.9家">
+      <div class="chase-val pos">417.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:9.6%"></div></div>
+    </div><div class="chase-col" title="6/22 周一 · 近2日均471.5家 · 当日495家 · 均值324.9家">
+      <div class="chase-val pos">471.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:15.3%"></div></div>
+    </div><div class="chase-col" title="6/23 周二 · 近2日均484家 · 当日473家 · 均值324.9家">
+      <div class="chase-val pos">484</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:16.6%"></div></div>
+    </div><div class="chase-col" title="6/24 周三 · 近2日均438家 · 当日403家 · 均值324.9家">
+      <div class="chase-val pos">438</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:11.8%"></div></div>
+    </div><div class="chase-col" title="6/25 周四 · 近2日均401.5家 · 当日400家 · 均值324.9家">
+      <div class="chase-val pos">401.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:8.0%"></div></div>
+    </div><div class="chase-col" title="6/26 周五 · 近2日均366家 · 当日332家 · 均值324.9家">
+      <div class="chase-val pos">366</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:4.3%"></div></div>
+    </div><div class="chase-col" title="6/29 周一 · 近2日均448.5家 · 当日565家 · 均值324.9家">
+      <div class="chase-val pos">448.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:12.9%"></div></div>
+    </div><div class="chase-col" title="6/30 周二 · 近2日均638家 · 当日711家 · 均值324.9家">
+      <div class="chase-val pos">638</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:32.6%"></div></div>
+    </div><div class="chase-col" title="7/1 周三 · 近2日均767家 · 当日823家 · 均值324.9家">
+      <div class="chase-val pos">767</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:46.1%"></div></div>
+    </div><div class="chase-col" title="7/2 周四 · 近2日均643.5家 · 当日464家 · 均值324.9家">
+      <div class="chase-val pos">643.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:33.2%"></div></div>
+    </div><div class="chase-col" title="7/3 周五 · 近2日均519.5家 · 当日575家 · 均值324.9家">
+      <div class="chase-val pos">519.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:20.3%"></div></div>
+    </div><div class="chase-col" title="7/6 周一 · 近2日均490家 · 当日405家 · 均值324.9家">
+      <div class="chase-val pos">490</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:17.2%"></div></div>
+    </div><div class="chase-col" title="7/7 周二 · 近2日均304家 · 当日203家 · 均值324.9家">
+      <div class="chase-val neg">304</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:2.2%"></div></div>
+    </div><div class="chase-col" title="7/8 周三 · 近2日均213.5家 · 当日224家 · 均值324.9家">
+      <div class="chase-val neg">213.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:11.6%"></div></div>
+    </div><div class="chase-col" title="7/9 周四 · 近2日均321.5家 · 当日419家 · 均值324.9家">
+      <div class="chase-val neg">321.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:0.4%"></div></div>
+    </div><div class="chase-col" title="7/10 周五 · 近2日均587.5家 · 当日756家 · 均值324.9家">
+      <div class="chase-val pos">587.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:27.4%"></div></div>
+    </div><div class="chase-col" title="7/13 周一 · 近2日均465家 · 当日174家 · 均值324.9家">
+      <div class="chase-val pos">465</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:14.6%"></div></div>
+    </div><div class="chase-col" title="7/14 周二 · 近2日均273.5家 · 当日373家 · 均值324.9家">
+      <div class="chase-val neg">273.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:5.4%"></div></div>
+    </div><div class="chase-col" title="7/15 周三 · 近2日均380家 · 当日387家 · 均值324.9家">
+      <div class="chase-val pos">380</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:5.7%"></div></div>
+    </div><div class="chase-col" title="7/16 周四 · 近2日均311.5家 · 当日236家 · 均值324.9家">
+      <div class="chase-val neg">311.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:1.4%"></div></div>
+    </div><div class="chase-col" title="7/17 周五 · 近2日均184.5家 · 当日133家 · 均值324.9家">
+      <div class="chase-val neg">184.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:14.6%"></div></div>
+    </div><div class="chase-col" title="7/20 周一 · 近2日均260家 · 当日387家 · 均值324.9家">
+      <div class="chase-val neg">260</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.8%"></div></div>
+    </div><div class="chase-col" title="7/21 周二 · 近2日均531家 · 当日675家 · 均值324.9家">
+      <div class="chase-val pos">531</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:21.5%"></div></div>
+    </div><div class="chase-col" title="7/22 周三 · 近2日均491.5家 · 当日308家 · 均值324.9家">
+      <div class="chase-val pos">491.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:17.4%"></div></div>
+    </div><div class="chase-col" title="7/23 周四 · 近2日均352.5家 · 当日397家 · 均值324.9家">
+      <div class="chase-val pos">352.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:2.9%"></div></div>
+    </div><div class="chase-col" title="7/24 周五 · 近2日均281家 · 当日165家 · 均值324.9家">
+      <div class="chase-val neg">281</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:4.6%"></div></div>
+    </div><div class="chase-col" title="7/27 周一 · 近2日均319家 · 当日473家 · 均值324.9家">
+      <div class="chase-val neg">319</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:0.6%"></div></div>
+    </div><div class="chase-col" title="7/28 周二 · 近2日均336.5家 · 当日200家 · 均值324.9家">
+      <div class="chase-val pos">336.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:1.2%"></div></div>
+    </div><div class="chase-col" title="7/29 周三 · 近2日均224家 · 当日248家 · 均值324.9家">
+      <div class="chase-val neg">224</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:10.5%"></div></div>
+    </div><div class="chase-col" title="7/30 周四 · 近2日均218家 · 当日188家 · 均值324.9家">
+      <div class="chase-val neg">218</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:11.1%"></div></div>
+    </div><div class="chase-col" title="7/31 周五 · 近2日均722.5家 · 当日1257家 · 均值324.9家">
+      <div class="chase-val pos">722.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:41.4%"></div></div>
+    </div><div class="chase-col" title="8/3 周一 · 近2日均769家 · 当日281家 · 均值324.9家">
+      <div class="chase-val pos">769</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
+    </div><div class="chase-col" title="8/4 周二 · 近2日均483.5家 · 当日686家 · 均值324.9家">
+      <div class="chase-val pos">483.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:16.5%"></div></div>
+    </div><div class="chase-col" title="8/5 周三 · 近2日均668家 · 当日650家 · 均值324.9家">
+      <div class="chase-val pos">668</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:35.8%"></div></div>
+    </div><div class="chase-col" title="8/6 周四 · 近2日均483.5家 · 当日317家 · 均值324.9家">
+      <div class="chase-val pos">483.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:16.5%"></div></div>
+    </div><div class="chase-col" title="8/7 周五 · 近2日均364家 · 当日411家 · 均值324.9家">
+      <div class="chase-val pos">364</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:4.1%"></div></div>
+    </div><div class="chase-col" title="8/10 周一 · 近2日均368.5家 · 当日326家 · 均值324.9家">
+      <div class="chase-val pos">368.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:4.5%"></div></div>
+    </div><div class="chase-col" title="8/11 周二 · 近2日均280.5家 · 当日235家 · 均值324.9家">
+      <div class="chase-val neg">280.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:4.6%"></div></div>
+    </div><div class="chase-col" title="8/12 周三 · 近2日均265家 · 当日295家 · 均值324.9家">
+      <div class="chase-val neg">265</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:6.2%"></div></div>
+    </div><div class="chase-col" title="8/13 周四 · 近2日均302家 · 当日309家 · 均值324.9家">
+      <div class="chase-val neg">302</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:2.4%"></div></div>
+    </div><div class="chase-col" title="8/14 周五 · 近2日均272家 · 当日235家 · 均值324.9家">
+      <div class="chase-val neg">272</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:5.5%"></div></div>
+    </div><div class="chase-col" title="8/17 周一 · 近2日均315家 · 当日395家 · 均值324.9家">
+      <div class="chase-val neg">315</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:1.0%"></div></div>
+    </div><div class="chase-col" title="8/18 周二 · 近2日均325家 · 当日255家 · 均值324.9家">
+      <div class="chase-val pos">325</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:0.0%"></div></div>
+    </div><div class="chase-col" title="8/19 周三 · 近2日均181.5家 · 当日108家 · 均值324.9家">
+      <div class="chase-val neg">181.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:15.0%"></div></div>
+    </div><div class="chase-col" title="8/20 周四 · 近2日均289.5家 · 当日471家 · 均值324.9家">
+      <div class="chase-val neg">289.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:3.7%"></div></div>
+    </div><div class="chase-col" title="8/21 周五 · 近2日均338.5家 · 当日206家 · 均值324.9家">
+      <div class="chase-val pos">338.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:1.4%"></div></div>
+    </div><div class="chase-col" title="8/24 周一 · 近2日均197.5家 · 当日189家 · 均值324.9家">
+      <div class="chase-val neg">197.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:13.3%"></div></div>
+    </div><div class="chase-col" title="8/25 周二 · 近2日均225.5家 · 当日262家 · 均值324.9家">
+      <div class="chase-val neg">225.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:10.4%"></div></div>
+    </div><div class="chase-col" title="8/26 周三 · 近2日均228家 · 当日194家 · 均值324.9家">
+      <div class="chase-val neg">228</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:10.1%"></div></div>
+    </div><div class="chase-col" title="8/27 周四 · 近2日均273.5家 · 当日353家 · 均值324.9家">
+      <div class="chase-val neg">273.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:5.4%"></div></div>
+    </div><div class="chase-col" title="8/28 周五 · 近2日均315.5家 · 当日278家 · 均值324.9家">
+      <div class="chase-val neg">315.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:1.0%"></div></div>
+    </div><div class="chase-col" title="8/31 周一 · 近2日均312.5家 · 当日347家 · 均值324.9家">
+      <div class="chase-val neg">312.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:1.3%"></div></div>
+    </div><div class="chase-col" title="9/1 周二 · 近2日均291.5家 · 当日236家 · 均值324.9家">
+      <div class="chase-val neg">291.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:3.5%"></div></div>
+    </div><div class="chase-col" title="9/2 周三 · 近2日均195家 · 当日154家 · 均值324.9家">
+      <div class="chase-val neg">195</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:13.5%"></div></div>
+    </div><div class="chase-col" title="9/3 周四 · 近2日均189.5家 · 当日225家 · 均值324.9家">
+      <div class="chase-val neg">189.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:14.1%"></div></div>
+    </div><div class="chase-col" title="9/4 周五 · 近2日均250家 · 当日275家 · 均值324.9家">
+      <div class="chase-val neg">250</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:7.8%"></div></div>
+    </div><div class="chase-col" title="9/7 周一 · 近2日均337家 · 当日399家 · 均值324.9家">
+      <div class="chase-val pos">337</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar pos" style="height:1.3%"></div></div>
+    </div><div class="chase-col" title="9/8 周二 · 近2日均324家 · 当日249家 · 均值324.9家">
+      <div class="chase-val neg">324</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:0.1%"></div></div>
+    </div><div class="chase-col" title="9/9 周三 · 近2日均229家 · 当日209家 · 均值324.9家">
+      <div class="chase-val neg">229</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:10.0%"></div></div>
+    </div><div class="chase-col" title="9/10 周四 · 近2日均171.5家 · 当日134家 · 均值324.9家">
+      <div class="chase-val neg">171.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:16.0%"></div></div>
+    </div><div class="chase-col" title="9/11 周五 · 近2日均125.5家 · 当日117家 · 均值324.9家">
+      <div class="chase-val neg">125.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:20.8%"></div></div>
+    </div><div class="chase-col" title="9/14 周一 · 近2日均193家 · 当日269家 · 均值324.9家">
+      <div class="chase-val neg">193</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:13.8%"></div></div>
+    </div><div class="chase-col latest" title="9/15 周二 · 近2日均222.5家 · 当日176家 · 均值324.9家">
+      <div class="chase-val neg">222.5</div>
+      <div class="chase-track"><div class="chase-zero" title="近200日均值 324.9家"></div><div class="chase-bar neg" style="height:10.7%"></div></div>
     </div></div>
       <div class="chase-axis"><div class="chase-tick show"><span>3/25</span></div><div class="chase-tick"><span>3/26</span></div><div class="chase-tick"><span>3/27</span></div><div class="chase-tick"><span>3/30</span></div><div class="chase-tick"><span>3/31</span></div><div class="chase-tick"><span>4/1</span></div><div class="chase-tick"><span>4/2</span></div><div class="chase-tick"><span>4/3</span></div><div class="chase-tick"><span>4/7</span></div><div class="chase-tick"><span>4/8</span></div><div class="chase-tick"><span>4/9</span></div><div class="chase-tick"><span>4/10</span></div><div class="chase-tick"><span>4/13</span></div><div class="chase-tick"><span>4/14</span></div><div class="chase-tick"><span>4/15</span></div><div class="chase-tick"><span>4/16</span></div><div class="chase-tick"><span>4/17</span></div><div class="chase-tick"><span>4/20</span></div><div class="chase-tick"><span>4/21</span></div><div class="chase-tick"><span>4/22</span></div><div class="chase-tick"><span>4/23</span></div><div class="chase-tick"><span>4/24</span></div><div class="chase-tick"><span>4/27</span></div><div class="chase-tick"><span>4/28</span></div><div class="chase-tick"><span>4/29</span></div><div class="chase-tick"><span>4/30</span></div><div class="chase-tick"><span>5/6</span></div><div class="chase-tick"><span>5/7</span></div><div class="chase-tick"><span>5/8</span></div><div class="chase-tick"><span>5/11</span></div><div class="chase-tick"><span>5/12</span></div><div class="chase-tick"><span>5/13</span></div><div class="chase-tick"><span>5/14</span></div><div class="chase-tick"><span>5/15</span></div><div class="chase-tick"><span>5/18</span></div><div class="chase-tick"><span>5/19</span></div><div class="chase-tick"><span>5/20</span></div><div class="chase-tick"><span>5/21</span></div><div class="chase-tick"><span>5/22</span></div><div class="chase-tick"><span>5/25</span></div><div class="chase-tick show"><span>5/26</span></div><div class="chase-tick"><span>5/27</span></div><div class="chase-tick"><span>5/28</span></div><div class="chase-tick"><span>5/29</span></div><div class="chase-tick"><span>6/1</span></div><div class="chase-tick"><span>6/2</span></div><div class="chase-tick"><span>6/3</span></div><div class="chase-tick"><span>6/4</span></div><div class="chase-tick"><span>6/5</span></div><div class="chase-tick"><span>6/8</span></div><div class="chase-tick"><span>6/9</span></div><div class="chase-tick"><span>6/10</span></div><div class="chase-tick"><span>6/11</span></div><div class="chase-tick"><span>6/12</span></div><div class="chase-tick"><span>6/15</span></div><div class="chase-tick"><span>6/16</span></div><div class="chase-tick"><span>6/17</span></div><div class="chase-tick"><span>6/18</span></div><div class="chase-tick"><span>6/22</span></div><div class="chase-tick"><span>6/23</span></div><div class="chase-tick show"><span>6/24</span></div><div class="chase-tick"><span>6/25</span></div><div class="chase-tick"><span>6/26</span></div><div class="chase-tick"><span>6/29</span></div><div class="chase-tick"><span>6/30</span></div><div class="chase-tick"><span>7/1</span></div><div class="chase-tick"><span>7/2</span></div><div class="chase-tick"><span>7/3</span></div><div class="chase-tick"><span>7/6</span></div><div class="chase-tick"><span>7/7</span></div><div class="chase-tick"><span>7/8</span></div><div class="chase-tick"><span>7/9</span></div><div class="chase-tick"><span>7/10</span></div><div class="chase-tick"><span>7/13</span></div><div class="chase-tick"><span>7/14</span></div><div class="chase-tick"><span>7/15</span></div><div class="chase-tick"><span>7/16</span></div><div class="chase-tick"><span>7/17</span></div><div class="chase-tick"><span>7/20</span></div><div class="chase-tick"><span>7/21</span></div><div class="chase-tick show"><span>7/22</span></div><div class="chase-tick"><span>7/23</span></div><div class="chase-tick"><span>7/24</span></div><div class="chase-tick"><span>7/27</span></div><div class="chase-tick"><span>7/28</span></div><div class="chase-tick"><span>7/29</span></div><div class="chase-tick"><span>7/30</span></div><div class="chase-tick"><span>7/31</span></div><div class="chase-tick"><span>8/3</span></div><div class="chase-tick"><span>8/4</span></div><div class="chase-tick"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick"><span>9/14</span></div><div class="chase-tick show latest"><span>9/15</span></div></div>
     </div>
-  </div><div class="chase-chart">
+  </div></div>
+  </div><div class="chase-group">
+    <div class="chase-group-title">主板追高</div>
+    <div class="chase-grid"><div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">昨追-赚钱效应</span>
       <span class="chase-chart-meta">最新 +0.2%</span>
@@ -3123,375 +2970,6 @@
     <div class="chase-group-title">创板追高</div>
     <div class="chase-grid"><div class="chase-chart">
     <div class="chase-chart-head">
-      <span class="chase-chart-title">创板追高数量</span>
-      <span class="chase-chart-meta">最新 85 家</span>
-    </div>
-    <div class="chase-plot">
-      <div class="chase-bars"><div class="chase-col" title="3/25 周三 · 近2日均196家 · 当日169家 · 均值156.1家">
-      <div class="chase-val pos">196</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:6.1%"></div></div>
-    </div><div class="chase-col" title="3/26 周四 · 近2日均110家 · 当日51家 · 均值156.1家">
-      <div class="chase-val neg">110</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.0%"></div></div>
-    </div><div class="chase-col" title="3/27 周五 · 近2日均88家 · 当日125家 · 均值156.1家">
-      <div class="chase-val neg">88</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:10.3%"></div></div>
-    </div><div class="chase-col" title="3/30 周一 · 近2日均107.5家 · 当日90家 · 均值156.1家">
-      <div class="chase-val neg">107.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.4%"></div></div>
-    </div><div class="chase-col" title="3/31 周二 · 近2日均78家 · 当日66家 · 均值156.1家">
-      <div class="chase-val neg">78</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:11.9%"></div></div>
-    </div><div class="chase-col" title="4/1 周三 · 近2日均138家 · 当日210家 · 均值156.1家">
-      <div class="chase-val neg">138</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:2.7%"></div></div>
-    </div><div class="chase-col" title="4/2 周四 · 近2日均134.5家 · 当日59家 · 均值156.1家">
-      <div class="chase-val neg">134.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.3%"></div></div>
-    </div><div class="chase-col" title="4/3 周五 · 近2日均73.5家 · 当日88家 · 均值156.1家">
-      <div class="chase-val neg">73.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:12.6%"></div></div>
-    </div><div class="chase-col" title="4/7 周二 · 近2日均105家 · 当日122家 · 均值156.1家">
-      <div class="chase-val neg">105</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.8%"></div></div>
-    </div><div class="chase-col" title="4/8 周三 · 近2日均305.5家 · 当日489家 · 均值156.1家">
-      <div class="chase-val pos">305.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:22.7%"></div></div>
-    </div><div class="chase-col" title="4/9 周四 · 近2日均287.5家 · 当日86家 · 均值156.1家">
-      <div class="chase-val pos">287.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:20.0%"></div></div>
-    </div><div class="chase-col" title="4/10 周五 · 近2日均118.5家 · 当日151家 · 均值156.1家">
-      <div class="chase-val neg">118.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:5.7%"></div></div>
-    </div><div class="chase-col" title="4/13 周一 · 近2日均132.5家 · 当日114家 · 均值156.1家">
-      <div class="chase-val neg">132.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.6%"></div></div>
-    </div><div class="chase-col" title="4/14 周二 · 近2日均131家 · 当日148家 · 均值156.1家">
-      <div class="chase-val neg">131</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.8%"></div></div>
-    </div><div class="chase-col" title="4/15 周三 · 近2日均133.5家 · 当日119家 · 均值156.1家">
-      <div class="chase-val neg">133.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.4%"></div></div>
-    </div><div class="chase-col" title="4/16 周四 · 近2日均136家 · 当日153家 · 均值156.1家">
-      <div class="chase-val neg">136</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.0%"></div></div>
-    </div><div class="chase-col" title="4/17 周五 · 近2日均142.5家 · 当日132家 · 均值156.1家">
-      <div class="chase-val neg">142.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:2.1%"></div></div>
-    </div><div class="chase-col" title="4/20 周一 · 近2日均133.5家 · 当日135家 · 均值156.1家">
-      <div class="chase-val neg">133.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.4%"></div></div>
-    </div><div class="chase-col" title="4/21 周二 · 近2日均109家 · 当日83家 · 均值156.1家">
-      <div class="chase-val neg">109</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.2%"></div></div>
-    </div><div class="chase-col" title="4/22 周三 · 近2日均112家 · 当日141家 · 均值156.1家">
-      <div class="chase-val neg">112</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:6.7%"></div></div>
-    </div><div class="chase-col" title="4/23 周四 · 近2日均114.5家 · 当日88家 · 均值156.1家">
-      <div class="chase-val neg">114.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:6.3%"></div></div>
-    </div><div class="chase-col" title="4/24 周五 · 近2日均99.5家 · 当日111家 · 均值156.1家">
-      <div class="chase-val neg">99.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:8.6%"></div></div>
-    </div><div class="chase-col" title="4/27 周一 · 近2日均150.5家 · 当日190家 · 均值156.1家">
-      <div class="chase-val neg">150.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:0.8%"></div></div>
-    </div><div class="chase-col" title="4/28 周二 · 近2日均149.5家 · 当日109家 · 均值156.1家">
-      <div class="chase-val neg">149.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:1.0%"></div></div>
-    </div><div class="chase-col" title="4/29 周三 · 近2日均138家 · 当日167家 · 均值156.1家">
-      <div class="chase-val neg">138</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:2.7%"></div></div>
-    </div><div class="chase-col" title="4/30 周四 · 近2日均166家 · 当日165家 · 均值156.1家">
-      <div class="chase-val pos">166</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:1.5%"></div></div>
-    </div><div class="chase-col" title="5/6 周三 · 近2日均224.5家 · 当日284家 · 均值156.1家">
-      <div class="chase-val pos">224.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:10.4%"></div></div>
-    </div><div class="chase-col" title="5/7 周四 · 近2日均247家 · 当日210家 · 均值156.1家">
-      <div class="chase-val pos">247</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:13.8%"></div></div>
-    </div><div class="chase-col" title="5/8 周五 · 近2日均185家 · 当日160家 · 均值156.1家">
-      <div class="chase-val pos">185</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:4.4%"></div></div>
-    </div><div class="chase-col" title="5/11 周一 · 近2日均213家 · 当日266家 · 均值156.1家">
-      <div class="chase-val pos">213</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:8.7%"></div></div>
-    </div><div class="chase-col" title="5/12 周二 · 近2日均195.5家 · 当日125家 · 均值156.1家">
-      <div class="chase-val pos">195.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:6.0%"></div></div>
-    </div><div class="chase-col" title="5/13 周三 · 近2日均167家 · 当日209家 · 均值156.1家">
-      <div class="chase-val pos">167</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:1.7%"></div></div>
-    </div><div class="chase-col" title="5/14 周四 · 近2日均176.5家 · 当日144家 · 均值156.1家">
-      <div class="chase-val pos">176.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:3.1%"></div></div>
-    </div><div class="chase-col" title="5/15 周五 · 近2日均171.5家 · 当日199家 · 均值156.1家">
-      <div class="chase-val pos">171.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:2.3%"></div></div>
-    </div><div class="chase-col" title="5/18 周一 · 近2日均197家 · 当日195家 · 均值156.1家">
-      <div class="chase-val pos">197</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:6.2%"></div></div>
-    </div><div class="chase-col" title="5/19 周二 · 近2日均185.5家 · 当日176家 · 均值156.1家">
-      <div class="chase-val pos">185.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:4.5%"></div></div>
-    </div><div class="chase-col" title="5/20 周三 · 近2日均161家 · 当日146家 · 均值156.1家">
-      <div class="chase-val pos">161</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:0.8%"></div></div>
-    </div><div class="chase-col" title="5/21 周四 · 近2日均160.5家 · 当日175家 · 均值156.1家">
-      <div class="chase-val pos">160.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:0.7%"></div></div>
-    </div><div class="chase-col" title="5/22 周五 · 近2日均229家 · 当日283家 · 均值156.1家">
-      <div class="chase-val pos">229</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:11.1%"></div></div>
-    </div><div class="chase-col" title="5/25 周一 · 近2日均268.5家 · 当日254家 · 均值156.1家">
-      <div class="chase-val pos">268.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:17.1%"></div></div>
-    </div><div class="chase-col" title="5/26 周二 · 近2日均169家 · 当日84家 · 均值156.1家">
-      <div class="chase-val pos">169</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="5/27 周三 · 近2日均111.5家 · 当日139家 · 均值156.1家">
-      <div class="chase-val neg">111.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:6.8%"></div></div>
-    </div><div class="chase-col" title="5/28 周四 · 近2日均163家 · 当日187家 · 均值156.1家">
-      <div class="chase-val pos">163</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:1.1%"></div></div>
-    </div><div class="chase-col" title="5/29 周五 · 近2日均153家 · 当日119家 · 均值156.1家">
-      <div class="chase-val neg">153</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:0.5%"></div></div>
-    </div><div class="chase-col" title="6/1 周一 · 近2日均169.5家 · 当日220家 · 均值156.1家">
-      <div class="chase-val pos">169.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="6/2 周二 · 近2日均188.5家 · 当日157家 · 均值156.1家">
-      <div class="chase-val pos">188.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:4.9%"></div></div>
-    </div><div class="chase-col" title="6/3 周三 · 近2日均186.5家 · 当日216家 · 均值156.1家">
-      <div class="chase-val pos">186.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:4.6%"></div></div>
-    </div><div class="chase-col" title="6/4 周四 · 近2日均189家 · 当日162家 · 均值156.1家">
-      <div class="chase-val pos">189</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:5.0%"></div></div>
-    </div><div class="chase-col" title="6/5 周五 · 近2日均182家 · 当日202家 · 均值156.1家">
-      <div class="chase-val pos">182</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:3.9%"></div></div>
-    </div><div class="chase-col" title="6/8 周一 · 近2日均152家 · 当日102家 · 均值156.1家">
-      <div class="chase-val neg">152</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:0.6%"></div></div>
-    </div><div class="chase-col" title="6/9 周二 · 近2日均204家 · 当日306家 · 均值156.1家">
-      <div class="chase-val pos">204</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:7.3%"></div></div>
-    </div><div class="chase-col" title="6/10 周三 · 近2日均213.5家 · 当日121家 · 均值156.1家">
-      <div class="chase-val pos">213.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:8.7%"></div></div>
-    </div><div class="chase-col" title="6/11 周四 · 近2日均134.5家 · 当日148家 · 均值156.1家">
-      <div class="chase-val neg">134.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.3%"></div></div>
-    </div><div class="chase-col" title="6/12 周五 · 近2日均233家 · 当日318家 · 均值156.1家">
-      <div class="chase-val pos">233</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:11.7%"></div></div>
-    </div><div class="chase-col" title="6/15 周一 · 近2日均363家 · 当日408家 · 均值156.1家">
-      <div class="chase-val pos">363</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:31.5%"></div></div>
-    </div><div class="chase-col" title="6/16 周二 · 近2日均329.5家 · 当日251家 · 均值156.1家">
-      <div class="chase-val pos">329.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:26.4%"></div></div>
-    </div><div class="chase-col" title="6/17 周三 · 近2日均229家 · 当日207家 · 均值156.1家">
-      <div class="chase-val pos">229</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:11.1%"></div></div>
-    </div><div class="chase-col" title="6/18 周四 · 近2日均227.5家 · 当日248家 · 均值156.1家">
-      <div class="chase-val pos">227.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:10.9%"></div></div>
-    </div><div class="chase-col" title="6/22 周一 · 近2日均226家 · 当日204家 · 均值156.1家">
-      <div class="chase-val pos">226</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:10.6%"></div></div>
-    </div><div class="chase-col" title="6/23 周二 · 近2日均201家 · 当日198家 · 均值156.1家">
-      <div class="chase-val pos">201</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:6.8%"></div></div>
-    </div><div class="chase-col" title="6/24 周三 · 近2日均202.5家 · 当日207家 · 均值156.1家">
-      <div class="chase-val pos">202.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:7.1%"></div></div>
-    </div><div class="chase-col" title="6/25 周四 · 近2日均197.5家 · 当日188家 · 均值156.1家">
-      <div class="chase-val pos">197.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:6.3%"></div></div>
-    </div><div class="chase-col" title="6/26 周五 · 近2日均175.5家 · 当日163家 · 均值156.1家">
-      <div class="chase-val pos">175.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:3.0%"></div></div>
-    </div><div class="chase-col" title="6/29 周一 · 近2日均235.5家 · 当日308家 · 均值156.1家">
-      <div class="chase-val pos">235.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:12.1%"></div></div>
-    </div><div class="chase-col" title="6/30 周二 · 近2日均366家 · 当日424家 · 均值156.1家">
-      <div class="chase-val pos">366</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:31.9%"></div></div>
-    </div><div class="chase-col" title="7/1 周三 · 近2日均416.5家 · 当日409家 · 均值156.1家">
-      <div class="chase-val pos">416.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:39.6%"></div></div>
-    </div><div class="chase-col" title="7/2 周四 · 近2日均311.5家 · 当日214家 · 均值156.1家">
-      <div class="chase-val pos">311.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:23.6%"></div></div>
-    </div><div class="chase-col" title="7/3 周五 · 近2日均245家 · 当日276家 · 均值156.1家">
-      <div class="chase-val pos">245</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:13.5%"></div></div>
-    </div><div class="chase-col" title="7/6 周一 · 近2日均238家 · 当日200家 · 均值156.1家">
-      <div class="chase-val pos">238</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:12.5%"></div></div>
-    </div><div class="chase-col" title="7/7 周二 · 近2日均146.5家 · 当日93家 · 均值156.1家">
-      <div class="chase-val neg">146.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:1.5%"></div></div>
-    </div><div class="chase-col" title="7/8 周三 · 近2日均105.5家 · 当日118家 · 均值156.1家">
-      <div class="chase-val neg">105.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.7%"></div></div>
-    </div><div class="chase-col" title="7/9 周四 · 近2日均183.5家 · 当日249家 · 均值156.1家">
-      <div class="chase-val pos">183.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:4.2%"></div></div>
-    </div><div class="chase-col" title="7/10 周五 · 近2日均323家 · 当日397家 · 均值156.1家">
-      <div class="chase-val pos">323</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:25.4%"></div></div>
-    </div><div class="chase-col" title="7/13 周一 · 近2日均235.5家 · 当日74家 · 均值156.1家">
-      <div class="chase-val pos">235.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:12.1%"></div></div>
-    </div><div class="chase-col" title="7/14 周二 · 近2日均124家 · 当日174家 · 均值156.1家">
-      <div class="chase-val neg">124</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:4.9%"></div></div>
-    </div><div class="chase-col" title="7/15 周三 · 近2日均172.5家 · 当日171家 · 均值156.1家">
-      <div class="chase-val pos">172.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:2.5%"></div></div>
-    </div><div class="chase-col" title="7/16 周四 · 近2日均139.5家 · 当日108家 · 均值156.1家">
-      <div class="chase-val neg">139.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:2.5%"></div></div>
-    </div><div class="chase-col" title="7/17 周五 · 近2日均81家 · 当日54家 · 均值156.1家">
-      <div class="chase-val neg">81</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:11.4%"></div></div>
-    </div><div class="chase-col" title="7/20 周一 · 近2日均119.5家 · 当日185家 · 均值156.1家">
-      <div class="chase-val neg">119.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:5.6%"></div></div>
-    </div><div class="chase-col" title="7/21 周二 · 近2日均312家 · 当日439家 · 均值156.1家">
-      <div class="chase-val pos">312</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:23.7%"></div></div>
-    </div><div class="chase-col" title="7/22 周三 · 近2日均294家 · 当日149家 · 均值156.1家">
-      <div class="chase-val pos">294</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:21.0%"></div></div>
-    </div><div class="chase-col" title="7/23 周四 · 近2日均152.5家 · 当日156家 · 均值156.1家">
-      <div class="chase-val neg">152.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:0.5%"></div></div>
-    </div><div class="chase-col" title="7/24 周五 · 近2日均120.5家 · 当日85家 · 均值156.1家">
-      <div class="chase-val neg">120.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:5.4%"></div></div>
-    </div><div class="chase-col" title="7/27 周一 · 近2日均165家 · 当日245家 · 均值156.1家">
-      <div class="chase-val pos">165</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:1.4%"></div></div>
-    </div><div class="chase-col" title="7/28 周二 · 近2日均162家 · 当日79家 · 均值156.1家">
-      <div class="chase-val pos">162</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:0.9%"></div></div>
-    </div><div class="chase-col" title="7/29 周三 · 近2日均87家 · 当日95家 · 均值156.1家">
-      <div class="chase-val neg">87</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:10.5%"></div></div>
-    </div><div class="chase-col" title="7/30 周四 · 近2日均79.5家 · 当日64家 · 均值156.1家">
-      <div class="chase-val neg">79.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:11.6%"></div></div>
-    </div><div class="chase-col" title="7/31 周五 · 近2日均428.5家 · 当日793家 · 均值156.1家">
-      <div class="chase-val pos">428.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:41.4%"></div></div>
-    </div><div class="chase-col" title="8/3 周一 · 近2日均460.5家 · 当日128家 · 均值156.1家">
-      <div class="chase-val pos">460.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
-    </div><div class="chase-col" title="8/4 周二 · 近2日均280家 · 当日432家 · 均值156.1家">
-      <div class="chase-val pos">280</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:18.8%"></div></div>
-    </div><div class="chase-col" title="8/5 周三 · 近2日均402.5家 · 当日373家 · 均值156.1家">
-      <div class="chase-val pos">402.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:37.5%"></div></div>
-    </div><div class="chase-col" title="8/6 周四 · 近2日均263.5家 · 当日154家 · 均值156.1家">
-      <div class="chase-val pos">263.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:16.3%"></div></div>
-    </div><div class="chase-col" title="8/7 周五 · 近2日均200.5家 · 当日247家 · 均值156.1家">
-      <div class="chase-val pos">200.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:6.8%"></div></div>
-    </div><div class="chase-col" title="8/10 周一 · 近2日均189.5家 · 当日132家 · 均值156.1家">
-      <div class="chase-val pos">189.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:5.1%"></div></div>
-    </div><div class="chase-col" title="8/11 周二 · 近2日均122.5家 · 当日113家 · 均值156.1家">
-      <div class="chase-val neg">122.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:5.1%"></div></div>
-    </div><div class="chase-col" title="8/12 周三 · 近2日均126家 · 当日139家 · 均值156.1家">
-      <div class="chase-val neg">126</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:4.6%"></div></div>
-    </div><div class="chase-col" title="8/13 周四 · 近2日均150.5家 · 当日162家 · 均值156.1家">
-      <div class="chase-val neg">150.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:0.8%"></div></div>
-    </div><div class="chase-col" title="8/14 周五 · 近2日均142.5家 · 当日123家 · 均值156.1家">
-      <div class="chase-val neg">142.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:2.1%"></div></div>
-    </div><div class="chase-col" title="8/17 周一 · 近2日均168.5家 · 当日214家 · 均值156.1家">
-      <div class="chase-val pos">168.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:1.9%"></div></div>
-    </div><div class="chase-col" title="8/18 周二 · 近2日均160家 · 当日106家 · 均值156.1家">
-      <div class="chase-val pos">160</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:0.6%"></div></div>
-    </div><div class="chase-col" title="8/19 周三 · 近2日均69.5家 · 当日33家 · 均值156.1家">
-      <div class="chase-val neg">69.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:13.2%"></div></div>
-    </div><div class="chase-col" title="8/20 周四 · 近2日均157家 · 当日281家 · 均值156.1家">
-      <div class="chase-val pos">157</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:0.1%"></div></div>
-    </div><div class="chase-col" title="8/21 周五 · 近2日均186.5家 · 当日92家 · 均值156.1家">
-      <div class="chase-val pos">186.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:4.6%"></div></div>
-    </div><div class="chase-col" title="8/24 周一 · 近2日均85.5家 · 当日79家 · 均值156.1家">
-      <div class="chase-val neg">85.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:10.7%"></div></div>
-    </div><div class="chase-col" title="8/25 周二 · 近2日均96.5家 · 当日114家 · 均值156.1家">
-      <div class="chase-val neg">96.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:9.1%"></div></div>
-    </div><div class="chase-col" title="8/26 周三 · 近2日均92.5家 · 当日71家 · 均值156.1家">
-      <div class="chase-val neg">92.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:9.7%"></div></div>
-    </div><div class="chase-col" title="8/27 周四 · 近2日均135家 · 当日199家 · 均值156.1家">
-      <div class="chase-val neg">135</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:3.2%"></div></div>
-    </div><div class="chase-col" title="8/28 周五 · 近2日均160.5家 · 当日122家 · 均值156.1家">
-      <div class="chase-val pos">160.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:0.7%"></div></div>
-    </div><div class="chase-col" title="8/31 周一 · 近2日均148家 · 当日174家 · 均值156.1家">
-      <div class="chase-val neg">148</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:1.2%"></div></div>
-    </div><div class="chase-col" title="9/1 周二 · 近2日均125家 · 当日76家 · 均值156.1家">
-      <div class="chase-val neg">125</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:4.7%"></div></div>
-    </div><div class="chase-col" title="9/2 周三 · 近2日均58家 · 当日40家 · 均值156.1家">
-      <div class="chase-val neg">58</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:14.9%"></div></div>
-    </div><div class="chase-col" title="9/3 周四 · 近2日均66家 · 当日92家 · 均值156.1家">
-      <div class="chase-val neg">66</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:13.7%"></div></div>
-    </div><div class="chase-col" title="9/4 周五 · 近2日均107家 · 当日122家 · 均值156.1家">
-      <div class="chase-val neg">107</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.5%"></div></div>
-    </div><div class="chase-col" title="9/7 周一 · 近2日均164.5家 · 当日207家 · 均值156.1家">
-      <div class="chase-val pos">164.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar pos" style="height:1.3%"></div></div>
-    </div><div class="chase-col" title="9/8 周二 · 近2日均143家 · 当日79家 · 均值156.1家">
-      <div class="chase-val neg">143</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="9/9 周三 · 近2日均81家 · 当日83家 · 均值156.1家">
-      <div class="chase-val neg">81</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:11.4%"></div></div>
-    </div><div class="chase-col" title="9/10 周四 · 近2日均61家 · 当日39家 · 均值156.1家">
-      <div class="chase-val neg">61</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:14.5%"></div></div>
-    </div><div class="chase-col" title="9/11 周五 · 近2日均34.5家 · 当日30家 · 均值156.1家">
-      <div class="chase-val neg">34.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:18.5%"></div></div>
-    </div><div class="chase-col" title="9/14 周一 · 近2日均81.5家 · 当日133家 · 均值156.1家">
-      <div class="chase-val neg">81.5</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:11.3%"></div></div>
-    </div><div class="chase-col latest" title="9/15 周二 · 近2日均109家 · 当日85家 · 均值156.1家">
-      <div class="chase-val neg">109</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 156.1家"></div><div class="chase-bar neg" style="height:7.2%"></div></div>
-    </div></div>
-      <div class="chase-axis"><div class="chase-tick show"><span>3/25</span></div><div class="chase-tick"><span>3/26</span></div><div class="chase-tick"><span>3/27</span></div><div class="chase-tick"><span>3/30</span></div><div class="chase-tick"><span>3/31</span></div><div class="chase-tick"><span>4/1</span></div><div class="chase-tick"><span>4/2</span></div><div class="chase-tick"><span>4/3</span></div><div class="chase-tick"><span>4/7</span></div><div class="chase-tick"><span>4/8</span></div><div class="chase-tick"><span>4/9</span></div><div class="chase-tick"><span>4/10</span></div><div class="chase-tick"><span>4/13</span></div><div class="chase-tick"><span>4/14</span></div><div class="chase-tick"><span>4/15</span></div><div class="chase-tick"><span>4/16</span></div><div class="chase-tick"><span>4/17</span></div><div class="chase-tick"><span>4/20</span></div><div class="chase-tick"><span>4/21</span></div><div class="chase-tick"><span>4/22</span></div><div class="chase-tick"><span>4/23</span></div><div class="chase-tick"><span>4/24</span></div><div class="chase-tick"><span>4/27</span></div><div class="chase-tick"><span>4/28</span></div><div class="chase-tick"><span>4/29</span></div><div class="chase-tick"><span>4/30</span></div><div class="chase-tick"><span>5/6</span></div><div class="chase-tick"><span>5/7</span></div><div class="chase-tick"><span>5/8</span></div><div class="chase-tick"><span>5/11</span></div><div class="chase-tick"><span>5/12</span></div><div class="chase-tick"><span>5/13</span></div><div class="chase-tick"><span>5/14</span></div><div class="chase-tick"><span>5/15</span></div><div class="chase-tick"><span>5/18</span></div><div class="chase-tick"><span>5/19</span></div><div class="chase-tick"><span>5/20</span></div><div class="chase-tick"><span>5/21</span></div><div class="chase-tick"><span>5/22</span></div><div class="chase-tick"><span>5/25</span></div><div class="chase-tick show"><span>5/26</span></div><div class="chase-tick"><span>5/27</span></div><div class="chase-tick"><span>5/28</span></div><div class="chase-tick"><span>5/29</span></div><div class="chase-tick"><span>6/1</span></div><div class="chase-tick"><span>6/2</span></div><div class="chase-tick"><span>6/3</span></div><div class="chase-tick"><span>6/4</span></div><div class="chase-tick"><span>6/5</span></div><div class="chase-tick"><span>6/8</span></div><div class="chase-tick"><span>6/9</span></div><div class="chase-tick"><span>6/10</span></div><div class="chase-tick"><span>6/11</span></div><div class="chase-tick"><span>6/12</span></div><div class="chase-tick"><span>6/15</span></div><div class="chase-tick"><span>6/16</span></div><div class="chase-tick"><span>6/17</span></div><div class="chase-tick"><span>6/18</span></div><div class="chase-tick"><span>6/22</span></div><div class="chase-tick"><span>6/23</span></div><div class="chase-tick show"><span>6/24</span></div><div class="chase-tick"><span>6/25</span></div><div class="chase-tick"><span>6/26</span></div><div class="chase-tick"><span>6/29</span></div><div class="chase-tick"><span>6/30</span></div><div class="chase-tick"><span>7/1</span></div><div class="chase-tick"><span>7/2</span></div><div class="chase-tick"><span>7/3</span></div><div class="chase-tick"><span>7/6</span></div><div class="chase-tick"><span>7/7</span></div><div class="chase-tick"><span>7/8</span></div><div class="chase-tick"><span>7/9</span></div><div class="chase-tick"><span>7/10</span></div><div class="chase-tick"><span>7/13</span></div><div class="chase-tick"><span>7/14</span></div><div class="chase-tick"><span>7/15</span></div><div class="chase-tick"><span>7/16</span></div><div class="chase-tick"><span>7/17</span></div><div class="chase-tick"><span>7/20</span></div><div class="chase-tick"><span>7/21</span></div><div class="chase-tick show"><span>7/22</span></div><div class="chase-tick"><span>7/23</span></div><div class="chase-tick"><span>7/24</span></div><div class="chase-tick"><span>7/27</span></div><div class="chase-tick"><span>7/28</span></div><div class="chase-tick"><span>7/29</span></div><div class="chase-tick"><span>7/30</span></div><div class="chase-tick"><span>7/31</span></div><div class="chase-tick"><span>8/3</span></div><div class="chase-tick"><span>8/4</span></div><div class="chase-tick"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick"><span>9/14</span></div><div class="chase-tick show latest"><span>9/15</span></div></div>
-    </div>
-  </div><div class="chase-chart">
-    <div class="chase-chart-head">
       <span class="chase-chart-title">昨追-赚钱效应</span>
       <span class="chase-chart-meta">最新 +0.9%</span>
     </div>
@@ -3788,7 +3266,7 @@
       <div class="chase-axis"><div class="chase-tick show"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick show"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick show"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick"><span>9/14</span></div><div class="chase-tick show latest"><span>9/15</span></div></div>
     </div>
   </div></div>
-  </div><div class="chase-note">追高定义：日内最高价相对昨收涨幅≥7%。追高数量：近120日，当日追高池家数的近2日均值（今日与昨日算术平均）；柱色以近200日均值为零轴（均值上红 / 均值下绿）。昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日；昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；回落取当日追高池，计算(今收−今高)/今高；效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。</div>
+  </div><div class="chase-note">追高定义：日内最高价相对昨收涨幅≥7%。追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；柱高为合计家数的近2日均值；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；标题「最新 N 家」为当日合计原始家数。昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；回落取当日追高池，计算(今收−今高)/今高；效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。每日对相应池取算术均值；不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。</div>
   </div>
 
   <!-- 4 涨停板块 -->
@@ -3979,7 +3457,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-15 23:30</div>
+  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-16 15:58</div>
 </div>
 </body>
 </html>

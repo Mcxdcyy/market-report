@@ -3523,8 +3523,12 @@ def render_html(ctx: dict) -> str:
     grid-template-columns: 1fr;
     gap: 12px;
   }}
+  .chase-grid.single {{
+    grid-template-columns: 1fr;
+  }}
   @media (min-width: 960px) {{
     .chase-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+    .chase-grid.single {{ grid-template-columns: 1fr; }}
   }}
   .chase-chart {{
     min-width: 0;
@@ -4707,6 +4711,51 @@ def _render_chase_count_chart(
   </div>'''
 
 
+def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
+    """主板+创板追高数量按日相加 → 追高活跃度序列与近200日均值。"""
+    main_m = ((groups.get("main") or {}).get("metrics") or {}).get("count") or {}
+    cyb_m = ((groups.get("cyb") or {}).get("metrics") or {}).get("count") or {}
+    main_ser = main_m.get("series") or []
+    cyb_ser = cyb_m.get("series") or []
+    by_cyb = {str(x.get("date") or "")[:10]: x for x in cyb_ser}
+
+    merged: list[dict] = []
+    for row in main_ser:
+        ds = str(row.get("date") or "")[:10]
+        other = by_cyb.get(ds) or {}
+        try:
+            v1 = float(row["value"]) if row.get("value") is not None else None
+        except (TypeError, ValueError):
+            v1 = None
+        try:
+            v2 = float(other["value"]) if other.get("value") is not None else None
+        except (TypeError, ValueError):
+            v2 = None
+        if v1 is None and v2 is None:
+            val = None
+        else:
+            val = round((v1 or 0.0) + (v2 or 0.0), 1)
+        n_raw = int(row.get("n_raw") or row.get("n") or 0) + int(
+            other.get("n_raw") or other.get("n") or 0
+        )
+        n = int(row.get("n") or 0) + int(other.get("n") or 0)
+        merged.append({"date": ds, "value": val, "n": n, "n_raw": n_raw})
+
+    baseline: float | None = None
+    try:
+        m1 = main_m.get("mean_200d")
+        m2 = cyb_m.get("mean_200d")
+        if m1 is not None and m2 is not None:
+            baseline = float(m1) + float(m2)
+        elif m1 is not None:
+            baseline = float(m1)
+        elif m2 is not None:
+            baseline = float(m2)
+    except (TypeError, ValueError):
+        baseline = None
+    return merged, baseline
+
+
 def render_chase_sentiment_html(block: dict) -> str:
     groups = block.get("groups") or {}
     if not groups:
@@ -4714,13 +4763,21 @@ def render_chase_sentiment_html(block: dict) -> str:
         return f'<div class="news-empty">{note}</div>'
 
     parts = []
+    # 追高活跃度：主板+创板数量合计（单图）
+    act_ser, act_base = _merge_chase_count_series(groups)
+    if act_ser:
+        parts.append(
+            f'''<div class="chase-group">
+    <div class="chase-grid single">{_render_chase_count_chart("追高活跃度", act_ser, baseline=act_base)}</div>
+  </div>'''
+        )
+
     for gkey in ("main", "cyb"):
         g = groups.get(gkey) or {}
         gname = g.get("name") or gkey
         metrics = g.get("metrics") or {}
         charts = []
         for mk, default_title in (
-            ("count", "主板追高数量" if gkey == "main" else "创板追高数量"),
             ("money", "昨追-赚钱效应"),
             ("loss", "昨追-今日承接"),
             ("pullback", "今追-回落指数"),
@@ -4728,24 +4785,14 @@ def render_chase_sentiment_html(block: dict) -> str:
             m = metrics.get(mk) or {}
             title = m.get("name") or default_title
             ser = m.get("series") or []
-            if mk == "count":
-                mean_200d = m.get("mean_200d")
-                try:
-                    baseline = float(mean_200d) if mean_200d is not None else None
-                except (TypeError, ValueError):
-                    baseline = None
-                charts.append(
-                    _render_chase_count_chart(title, ser, baseline=baseline)
-                )
-            else:
-                mean_200d = m.get("mean_200d")
-                try:
-                    baseline = float(mean_200d) if mean_200d is not None else None
-                except (TypeError, ValueError):
-                    baseline = None
-                charts.append(
-                    _render_chase_metric_chart(title, ser, baseline=baseline)
-                )
+            mean_200d = m.get("mean_200d")
+            try:
+                baseline = float(mean_200d) if mean_200d is not None else None
+            except (TypeError, ValueError):
+                baseline = None
+            charts.append(
+                _render_chase_metric_chart(title, ser, baseline=baseline)
+            )
         parts.append(
             f'''<div class="chase-group">
     <div class="chase-group-title">{gname}</div>
@@ -4756,13 +4803,14 @@ def render_chase_sentiment_html(block: dict) -> str:
     note = (
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
-        "追高数量：近120日，当日追高池家数的近2日均值（今日与昨日算术平均）；"
-        "柱色以近200日均值为零轴（均值上红 / 均值下绿）。"
-        "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日；"
+        "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
+        "柱高为合计家数的近2日均值；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
+        "标题「最新 N 家」为当日合计原始家数。"
+        "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
         "效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
-        "每日对相应池取算术均值；创板含创业板与科创板；不含ST、北交所；"
+        "每日对相应池取算术均值；不含ST、北交所；"
         "不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
     )
