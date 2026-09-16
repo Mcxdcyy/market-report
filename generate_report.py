@@ -4059,7 +4059,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">3</div>
       <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近30日</div>
+      <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近120日</div>
     </div>
     {chase_sentiment_html}
   </div>
