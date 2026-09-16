@@ -5428,21 +5428,28 @@ def write_index_html() -> Path:
     return out
 
 
-def sync_pages_site() -> Path:
-    """同步静态页到 docs/，供 GitHub Pages 发布。"""
+def sync_pages_site(*extra: Path | str) -> Path:
+    """同步静态页到 docs/：只覆盖传入文件 + index，不删其它历史日 HTML。"""
     DOCS_DIR.mkdir(exist_ok=True)
     (DOCS_DIR / ".nojekyll").touch()
-    for old in DOCS_DIR.glob("复盘概览-*.html"):
-        old.unlink()
     n = 0
-    for p in sorted(BASE.glob("复盘概览-*.html")):
+    seen: set[str] = set()
+    for item in extra:
+        p = Path(item)
+        if not p.is_absolute():
+            p = BASE / p
+        if not p.exists() or not p.is_file():
+            continue
+        if p.name in seen:
+            continue
+        seen.add(p.name)
         shutil.copy2(p, DOCS_DIR / p.name)
         n += 1
     idx = BASE / "index.html"
-    if idx.exists():
+    if idx.exists() and "index.html" not in seen:
         shutil.copy2(idx, DOCS_DIR / "index.html")
         n += 1
-    print(f"已同步 GitHub Pages: {DOCS_DIR}（{n} 个文件）")
+    print(f"已同步 GitHub Pages: {DOCS_DIR}（本次 {n} 个文件，未删除历史页）")
     return DOCS_DIR
 
 
@@ -5460,17 +5467,11 @@ def main() -> None:
 
     as_of_d = resolve_report_as_of(refresh=True, progress=True)
     as_of = datetime(as_of_d.year, as_of_d.month, as_of_d.day)
-    write_report(as_of)
-    # 对照历史样式：有则重生成 07-03
-    anchor = datetime(2026, 7, 3)
-    if as_of_d != anchor.date():
-        try:
-            write_report(anchor)
-        except Exception as exc:  # noqa: BLE001
-            print(f"[report] 跳过 07-03 重生成: {exc}")
+    # 每日只写当日报表；禁止顺带重写历史日 HTML（含 07-03）
+    out = write_report(as_of)
     idx = write_index_html()
     print(f"已生成入口: {idx}")
-    sync_pages_site()
+    sync_pages_site(out, idx)
 
 
 if __name__ == "__main__":
