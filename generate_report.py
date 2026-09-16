@@ -4618,7 +4618,7 @@ def _render_chase_count_chart(
 ) -> str:
     """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。
 
-    标题旁标签：近5日均值 ≥ 近200日均值 →「追高活跃」；否则「追高不活跃」。
+    标题旁标签：近5日均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
@@ -4713,7 +4713,7 @@ def _render_chase_count_chart(
     else:
         latest_lab = "—"
 
-    # 近5日均值 vs 近200日均值 → 追高活跃 / 追高不活跃
+    # 近5日均值 vs 近200日均值 → 活跃周期 / 不活跃周期
     act_tag = ""
     if baseline is not None:
         last5: list[float] = []
@@ -4729,9 +4729,9 @@ def _render_chase_count_chart(
         if len(last5) >= 5:
             m5 = sum(last5) / 5.0
             if m5 >= float(baseline):
-                act_tag = '<span class="pill ok chase-act-tag">追高活跃</span>'
+                act_tag = '<span class="pill ok chase-act-tag">活跃周期</span>'
             else:
-                act_tag = '<span class="pill bad chase-act-tag">追高不活跃</span>'
+                act_tag = '<span class="pill bad chase-act-tag">不活跃周期</span>'
 
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
@@ -4843,7 +4843,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
         "柱高为当日合计原始家数；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
         "标题「最新 N 家」为当日合计原始家数；"
-        "标签：近5日均值≥近200日均值标「追高活跃」，否则「追高不活跃」。"
+        "标签：近5日均值≥近200日均值标「活跃周期」，否则「不活跃周期」。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
