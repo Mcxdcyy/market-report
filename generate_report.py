@@ -3434,8 +3434,9 @@ def render_html(ctx: dict) -> str:
     .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   }}
   .fund-card {{
-    padding: 12px 14px 10px; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); background: #fafafa;
+    padding: 12px 0 10px; border: none; border-radius: 0;
+    border-top: 1px solid var(--border);
+    background: transparent;
     min-width: 0;
     display: flex; flex-direction: column; gap: 10px;
   }}
@@ -3523,9 +3524,10 @@ def render_html(ctx: dict) -> str:
   .chase-chart {{
     min-width: 0;
     overflow: hidden;
-    padding: 12px 12px 10px;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: #fafafa;
+    padding: 12px 0 10px;
+    border: none; border-radius: 0;
+    border-top: 1px solid var(--border);
+    background: transparent;
     display: flex; flex-direction: column; gap: 10px;
   }}
   .chase-chart-head {{
