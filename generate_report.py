@@ -2977,7 +2977,7 @@ def render_html(ctx: dict) -> str:
         pills = "".join(
             f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
         )
-        vol_tags_html = f'<div class="vol20-tags">{pills}</div>'
+        vol_tags_html = f'<div class="chart-tags vol20-tags">{pills}</div>'
     vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
     after_30 = vol_tags_html
     vol30_html = _render_vol_bars_block(
@@ -3437,24 +3437,14 @@ def render_html(ctx: dict) -> str:
     padding: 12px 14px 10px; border: 1px solid var(--border);
     border-radius: var(--radius-sm); background: #fafafa;
     min-width: 0;
+    display: flex; flex-direction: column; gap: 10px;
   }}
   .fund-card-head {{
     display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
-  }}
-  .fund-card-left {{
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;
+    gap: 8px; margin-bottom: 0; flex-wrap: wrap;
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
-  .fund-pill {{
-    display: inline-flex; align-items: center; gap: 2px;
-    font-size: 11px; font-weight: 600; line-height: 1.2;
-    padding: 2px 7px; border-radius: 999px; white-space: nowrap;
-  }}
-  .fund-pill.ok {{ background: #ffebee; color: #c62828; }}
-  .fund-pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
-  .fund-pill.flat {{ background: #eef2f6; color: #5a6472; }}
   .fund-chart {{ width: 100%; }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
@@ -3536,19 +3526,14 @@ def render_html(ctx: dict) -> str:
     padding: 12px 12px 10px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fafafa;
+    display: flex; flex-direction: column; gap: 10px;
   }}
   .chase-chart-head {{
     display: flex; align-items: baseline; justify-content: space-between;
-    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+    gap: 8px; margin-bottom: 0; flex-wrap: wrap;
   }}
   .chase-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
   .chase-chart-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  .chase-head-left {{
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;
-  }}
-  /* 追高活跃度标签：A 股红强绿弱（同量能标签） */
-  .chase-act-tag.pill.ok {{ background: #ffebee; color: #c62828; }}
-  .chase-act-tag.pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .chase-plot {{ width: 100%; overflow: hidden; }}
   .chase-bars {{
     display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
@@ -3675,13 +3660,17 @@ def render_html(ctx: dict) -> str:
     left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
   }}
+  .chart-tags,
   .vol20-tags {{
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-top: 0;
   }}
-  /* 量能标签 .pill：A 股红强绿弱 */
+  /* 图表标签 .pill：A 股红强绿弱（近30日成交金额 / 追高活跃度 / 板块-资金认可度 统一） */
+  .chart-tags .pill.ok,
   .vol20-tags .pill.ok {{ background: #ffebee; color: #c62828; }}
+  .chart-tags .pill.warn,
   .vol20-tags .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
+  .chart-tags .pill.bad,
   .vol20-tags .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .vol20-note {{
     margin-top: 0; padding: 8px 10px;
@@ -4618,13 +4607,13 @@ def _render_chase_count_chart(
 ) -> str:
     """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。
 
-    标题旁标签：近5日均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
+    图下方标签（同近30日成交金额）：近5日均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart">
     <div class="chase-chart-head">
-      <div class="chase-head-left"><span class="chase-chart-title">{title}</span></div>
+      <span class="chase-chart-title">{title}</span>
       <span class="chase-chart-meta">无样本</span>
     </div>
     <div class="news-empty">该窗口暂无追高样本</div>
@@ -4713,8 +4702,8 @@ def _render_chase_count_chart(
     else:
         latest_lab = "—"
 
-    # 近5日均值 vs 近200日均值 → 活跃周期 / 不活跃周期
-    act_tag = ""
+    # 近5日均值 vs 近200日均值 → 活跃周期 / 不活跃周期（图下方，同量能标签样式）
+    act_tags_html = ""
     if baseline is not None:
         last5: list[float] = []
         for row in reversed(series):
@@ -4729,22 +4718,21 @@ def _render_chase_count_chart(
         if len(last5) >= 5:
             m5 = sum(last5) / 5.0
             if m5 >= float(baseline):
-                act_tag = '<span class="pill ok chase-act-tag">活跃周期</span>'
+                pill = '<span class="pill ok">活跃周期</span>'
             else:
-                act_tag = '<span class="pill bad chase-act-tag">不活跃周期</span>'
+                pill = '<span class="pill bad">不活跃周期</span>'
+            act_tags_html = f'<div class="chart-tags vol20-tags">{pill}</div>'
 
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
-      <div class="chase-head-left">
-        <span class="chase-chart-title">{title}</span>
-        {act_tag}
-      </div>
+      <span class="chase-chart-title">{title}</span>
       <span class="chase-chart-meta">最新 {latest_lab}</span>
     </div>
     <div class="chase-plot">
       <div class="chase-bars">{"".join(cols)}</div>
       <div class="chase-axis">{"".join(ticks)}</div>
     </div>
+    {act_tags_html}
   </div>'''
 
 
@@ -4843,7 +4831,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
         "柱高为当日合计原始家数；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
         "标题「最新 N 家」为当日合计原始家数；"
-        "标签：近5日均值≥近200日均值标「活跃周期」，否则「不活跃周期」。"
+        "标签：近5日均值≥近200日均值标「活跃周期」，否则「不活跃周期」（图下方，样式同量能标签）。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
@@ -4996,12 +4984,14 @@ def render_fund_recognition_html(block: dict) -> str:
             )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
-        badges = []
+        tags_html = ""
         if today is not None:
             today_f = float(today)
-            badges.append(
-                f'<span class="fund-pill {"ok" if today_f > 50.0 else "bad"}">'
-                f'占比 {today_f:.1f}%</span>'
+            cls = "ok" if today_f > 50.0 else "bad"
+            tags_html = (
+                f'<div class="chart-tags vol20-tags">'
+                f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
+                f"</div>"
             )
         meta = (
             f'共 {it.get("pool_n", 0)} 只 · '
@@ -5010,16 +5000,14 @@ def render_fund_recognition_html(block: dict) -> str:
         cards.append(
             f'''<div class="fund-card">
     <div class="fund-card-head">
-      <div class="fund-card-left">
-        <span class="fund-card-title">{it.get("name", "")}</span>
-        {"".join(badges)}
-      </div>
+      <span class="fund-card-title">{it.get("name", "")}</span>
       <span class="fund-card-meta">{meta}</span>
     </div>
     <div class="fund-chart">
       <div class="fund-bars"><div class="fund-mark" aria-hidden="true"></div>{"".join(cols)}</div>
       <div class="fund-axis">{"".join(ticks)}</div>
     </div>
+    {tags_html}
   </div>'''
         )
 
@@ -5032,7 +5020,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱色：占比&gt;50%为红、≤50%为绿；标题旁「占比」为当日数值。柱图浅线为50%刻度。"
+        "柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图浅线为50%刻度。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
