@@ -34,6 +34,7 @@ LONG_CACHE_FILE = BASE / "trend_klines_cache_long.json"
 MEANS_200D_FILE = RESULT_DIR / "means_200d.json"
 COUNT_SERIES_30D_FILE = RESULT_DIR / "count_series_30d.json"
 HOLD_SERIES_120D_FILE = RESULT_DIR / "hold_series_120d.json"
+HOLD_SCHEMA = 2  # 昨均价仅成交额/成交量；异常标「数据异常」，无 HL2 兜底
 WORKERS = 48
 KLINE_LEN = 40
 LONG_KLINE_LEN = 260  # 200 交易日均值 + MA20 余量
@@ -969,9 +970,10 @@ def _count_all_on_day(series: list[tuple], d: date) -> tuple[int, int]:
 
 
 def _bar_avg_price(row: dict, *, high: float, low: float) -> float | None:
-    """日均价：优先成交额/成交量；结果须落在当日高低附近，否则 (最高+最低)/2。
+    """日均价 = 成交额/成交量（成交均价）。
 
-    QQ 等源对「手/股」单位不一致时，VWAP 会偏离高低价几个数量级，故做合理性校验。
+    结果须落在当日高低附近（含手/股单位修正一次）。算不出则返回 None，
+    **不用** (最高+最低)/2。
     """
     hi = max(float(high), float(low)) if high and low else float(high or low or 0)
     lo = min(float(high), float(low)) if high and low else float(low or high or 0)
@@ -980,18 +982,17 @@ def _bar_avg_price(row: dict, *, high: float, low: float) -> float | None:
         vol = float(row["volume"]) if row.get("volume") is not None else None
     except (TypeError, ValueError):
         amt, vol = None, None
-    if amt is not None and vol is not None and vol > 0 and amt > 0 and lo > 0 and hi > 0:
-        avg = amt / vol
-        # 正常均价应在当日高低之间（略放宽浮点误差）
-        if lo * 0.98 <= avg <= hi * 1.02:
-            return avg
-        # 若 volume 被多乘/少乘 100，试一次修正
-        for factor in (100.0, 0.01):
-            avg2 = amt / (vol * factor)
-            if lo * 0.98 <= avg2 <= hi * 1.02:
-                return avg2
-    if hi > 0 and lo > 0:
-        return (hi + lo) / 2.0
+    if amt is None or vol is None or vol <= 0 or amt <= 0 or lo <= 0 or hi <= 0:
+        return None
+    avg = amt / vol
+    # 正常均价应在当日高低之间（略放宽浮点误差）
+    if lo * 0.98 <= avg <= hi * 1.02:
+        return avg
+    # 若 volume 被多乘/少乘 100，试一次修正
+    for factor in (100.0, 0.01):
+        avg2 = amt / (vol * factor)
+        if lo * 0.98 <= avg2 <= hi * 1.02:
+            return avg2
     return None
 
 
@@ -1000,11 +1001,15 @@ def _day_trend_hold_mean(
     cache: dict[str, list[dict]],
     d: date,
     prev: date,
-) -> tuple[float | None, int]:
-    """取 prev 日强趋势池，算 d 日 (收盘−prev均价)/prev均价 的算术均值（小数，非%）。"""
+) -> tuple[float | None, int, int]:
+    """取 prev 日强趋势池，算 d 日 (收盘−prev均价)/prev均价 的算术均值（小数，非%）。
+
+    返回 (均值, 有效家数 n_ok, 均价异常家数 n_bad)。
+    """
     ds = d.isoformat()
     ps = prev.isoformat()
     vals: list[float] = []
+    n_bad = 0
     for s, idx, closes, highs, lows in series:
         list_date = s.get("list_date")
         if list_date is not None and (prev - list_date).days <= LIST_DAYS_MIN:
@@ -1027,17 +1032,19 @@ def _day_trend_hold_mean(
             continue
         rows = cache.get(s["code"]) or []
         if i_prev >= len(rows):
+            n_bad += 1
             continue
         avg_prev = _bar_avg_price(
             rows[i_prev], high=float(highs[i_prev]), low=float(lows[i_prev])
         )
         cur_c = float(closes[i_cur])
         if avg_prev is None or avg_prev <= 0 or cur_c <= 0:
+            n_bad += 1
             continue
         vals.append((cur_c - avg_prev) / avg_prev)
     if not vals:
-        return None, 0
-    return sum(vals) / len(vals), len(vals)
+        return None, 0, n_bad
+    return sum(vals) / len(vals), len(vals), n_bad
 
 
 def ensure_trend_hold_series_120d(
@@ -1060,6 +1067,7 @@ def ensure_trend_hold_series_120d(
             cached = None
         if (
             cached
+            and cached.get("schema") == HOLD_SCHEMA
             and cached.get("as_of") == as_of_d.isoformat()
             and isinstance(cached.get("daily"), list)
             and len(cached["daily"]) >= min(10, HOLD_SERIES_DAYS)
@@ -1084,6 +1092,7 @@ def ensure_trend_hold_series_120d(
     if len(days) < 2:
         payload = {
             "as_of": as_of_d.isoformat(),
+            "schema": HOLD_SCHEMA,
             "daily": [],
             "note": "交易日不足",
             "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -1110,12 +1119,13 @@ def ensure_trend_hold_series_120d(
     for j in range(1, len(days)):
         d = days[j]
         prev = days[j - 1]
-        mean_v, n = _day_trend_hold_mean(series, cache, d, prev)
+        mean_v, n, n_bad = _day_trend_hold_mean(series, cache, d, prev)
         daily_all.append(
             {
                 "date": d.isoformat(),
                 "value": round(100.0 * mean_v, 4) if mean_v is not None else None,
                 "n": n,
+                "n_bad": n_bad,
             }
         )
 
@@ -1129,17 +1139,22 @@ def ensure_trend_hold_series_120d(
     )
 
     daily = daily_all[-HOLD_SERIES_DAYS:]
+    last = daily[-1] if daily else {}
+    data_error = int(last.get("n_bad") or 0) > 0
     payload = {
         "as_of": as_of_d.isoformat(),
+        "schema": HOLD_SCHEMA,
         "start": daily[0]["date"] if daily else None,
         "end": daily[-1]["date"] if daily else None,
         "n_days": len(daily),
         "mean_200d": mean_200d,
         "mean_days": len(mean_vals),
+        "data_error": data_error,
         "daily": daily,
         "note": (
             "今日趋势承接：取前一交易日强趋势池（五条件同趋势强度），"
-            "算 (今收−昨均价)/昨均价 的池内算术均值；昨均价优先成交额/成交量，否则(最高+最低)/2。"
+            "算 (今收−昨均价)/昨均价 的池内算术均值；"
+            "昨均价=成交额/成交量；算不出则剔除该票并标「数据异常」。"
         ),
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
@@ -1147,10 +1162,9 @@ def ensure_trend_hold_series_120d(
         json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     if progress:
-        last = daily[-1] if daily else {}
         print(
             f"[trend-hold] 完成 · 末日 {last.get('value')}% "
-            f"n={last.get('n')} 均值200d={mean_200d} "
+            f"n={last.get('n')} n_bad={last.get('n_bad')} 均值200d={mean_200d} "
             f"用时{time.time()-t0:.0f}s → {HOLD_SERIES_120D_FILE.name}"
         )
     return payload

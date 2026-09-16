@@ -4172,6 +4172,7 @@ def load_trend_strength_block(
             block = dict(block)
             block["hold_series"] = list(hold.get("daily") or [])
             block["hold_mean_200d"] = hold.get("mean_200d")
+            block["hold_data_error"] = bool(hold.get("data_error"))
         except Exception as exc:  # noqa: BLE001
             print(f"[trend-hold] 更新失败: {exc}")
     elif not block.get("hold_series"):
@@ -4191,9 +4192,10 @@ def load_trend_strength_block(
                     if clipped:
                         block = dict(block)
                         block["hold_series"] = clipped
-                        # 历史页沿用全序列均值（与最新缓存一致）
                         if hdata.get("mean_200d") is not None:
                             block["hold_mean_200d"] = hdata.get("mean_200d")
+                        last = clipped[-1] if clipped else {}
+                        block["hold_data_error"] = int(last.get("n_bad") or 0) > 0
             except json.JSONDecodeError:
                 pass
     return block
@@ -4473,6 +4475,16 @@ def render_trend_strength_html(block: dict) -> str:
             hold_series,
             baseline=hold_mean_f,
         )
+        # 末日有均价算不出的池内个股 → 图下方「数据异常」
+        data_err = bool(block.get("hold_data_error"))
+        if not data_err:
+            last = hold_series[-1] if hold_series else {}
+            data_err = int(last.get("n_bad") or 0) > 0
+        if data_err:
+            hold_chart += (
+                '<div class="chart-tags vol20-tags">'
+                '<span class="pill bad">数据异常</span></div>'
+            )
 
     note_html = (
         '<div class="ts-note">'
@@ -4485,7 +4497,8 @@ def render_trend_strength_html(block: dict) -> str:
         hold_note = (
             '<div class="ts-note ts-hold-note">'
             "今日趋势承接：取前一交易日强趋势池，算 (今收−昨均价)/昨均价 的池内算术均值；"
-            "昨均价优先成交额/成交量，否则 (最高+最低)/2；横轴近120日，零轴=近200日均值。"
+            "昨均价=成交额/成交量；算不出则剔除该票并标「数据异常」；"
+            "横轴近120日，零轴=近200日均值。"
             "</div>"
         )
     return f"{count_chart}{chart}{amt_chart}{hold_chart}{note_html}{hold_note}"
