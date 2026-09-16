@@ -4700,7 +4700,17 @@ def _render_chase_metric_chart(
         )
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
-    latest_lab = f"{float(last['value']):+.1f}%" if last else "—"
+    # 若有 value_raw（今日趋势承接）：meta「最新」用当日原始值；柱高仍用 value（近2日均）
+    if last is not None:
+        meta_v = last.get("value_raw")
+        if meta_v is None:
+            meta_v = last.get("value")
+        try:
+            latest_lab = f"{float(meta_v):+.1f}%"
+        except (TypeError, ValueError):
+            latest_lab = "—"
+    else:
+        latest_lab = "—"
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
