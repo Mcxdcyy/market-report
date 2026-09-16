@@ -240,6 +240,59 @@
     display: block; left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
   }
+  /* 今日趋势承接：与近30日强趋势占比同卡片壳；柱为相对近200日均值的零轴红绿柱 */
+  .ts-cnt-wrap .chart-tags {
+    margin-top: 10px;
+  }
+  .ts-hold-bars {
+    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+  }
+  .ts-hold-col {
+    flex: 1 1 0; min-width: 0; max-width: none;
+    display: flex; flex-direction: column; align-items: center; height: 100%;
+  }
+  .ts-hold-val {
+    font-size: 9px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
+    white-space: nowrap;
+  }
+  .ts-hold-col.latest .ts-hold-val { color: var(--accent); font-weight: 700; }
+  .ts-hold-track {
+    flex: 1; width: 100%; min-height: 0; position: relative;
+  }
+  .ts-hold-zero {
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(60,60,67,.22); z-index: 1; pointer-events: none;
+  }
+  .ts-hold-bar {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 70%; max-width: 14px; min-height: 2px; z-index: 2;
+  }
+  .ts-hold-bar.pos {
+    bottom: 50%; border-radius: 2px 2px 0 0;
+    background: var(--bar-ok, #E53935);
+  }
+  .ts-hold-bar.neg {
+    top: 50%; border-radius: 0 0 2px 2px;
+    background: var(--bar-bad, #34C759);
+  }
+  .ts-hold-col.latest .ts-hold-bar { box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }
+  .ts-hold-axis {
+    display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
+  }
+  .ts-hold-tick {
+    flex: 1 1 0; min-width: 0; height: 18px; position: relative;
+  }
+  .ts-hold-tick span {
+    display: none; position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: var(--muted); white-space: nowrap;
+  }
+  .ts-hold-tick.show span { display: block; }
+  .ts-hold-tick.show:first-child span { left: 0; transform: none; }
+  .ts-hold-tick.latest span {
+    display: block; left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }
 
   .ts-chart {
     margin-bottom: 12px; padding: 14px 14px 12px;
@@ -842,6 +895,12 @@
     .ts-cnt-axis { gap: 1px; margin-top: 8px; min-height: 20px; }
     .ts-cnt-tick { height: 20px; }
     .ts-cnt-tick span { font-size: 10px; }
+    .ts-hold-bars { height: 110px; gap: 1px; }
+    .ts-hold-val { display: none !important; }
+    .ts-hold-bar { width: 85%; max-width: none; }
+    .ts-hold-axis { gap: 1px; margin-top: 8px; min-height: 20px; }
+    .ts-hold-tick { height: 20px; }
+    .ts-hold-tick span { font-size: 10px; }
     .sector-rank { font-size: 13px; }
     .sector-name { font-size: 17px; }
     .sector-stat { font-size: 13px; }
@@ -2377,376 +2436,107 @@
     </div></div>
       <div class="ts-cnt-axis"><div class="ts-cnt-tick show"><span>8/6</span></div><div class="ts-cnt-tick"><span>8/7</span></div><div class="ts-cnt-tick"><span>8/10</span></div><div class="ts-cnt-tick"><span>8/11</span></div><div class="ts-cnt-tick"><span>8/12</span></div><div class="ts-cnt-tick"><span>8/13</span></div><div class="ts-cnt-tick"><span>8/14</span></div><div class="ts-cnt-tick"><span>8/17</span></div><div class="ts-cnt-tick"><span>8/18</span></div><div class="ts-cnt-tick"><span>8/19</span></div><div class="ts-cnt-tick show"><span>8/20</span></div><div class="ts-cnt-tick"><span>8/21</span></div><div class="ts-cnt-tick"><span>8/24</span></div><div class="ts-cnt-tick"><span>8/25</span></div><div class="ts-cnt-tick"><span>8/26</span></div><div class="ts-cnt-tick"><span>8/27</span></div><div class="ts-cnt-tick"><span>8/28</span></div><div class="ts-cnt-tick"><span>8/31</span></div><div class="ts-cnt-tick"><span>9/1</span></div><div class="ts-cnt-tick"><span>9/2</span></div><div class="ts-cnt-tick show"><span>9/3</span></div><div class="ts-cnt-tick"><span>9/4</span></div><div class="ts-cnt-tick"><span>9/7</span></div><div class="ts-cnt-tick"><span>9/8</span></div><div class="ts-cnt-tick"><span>9/9</span></div><div class="ts-cnt-tick"><span>9/10</span></div><div class="ts-cnt-tick"><span>9/11</span></div><div class="ts-cnt-tick"><span>9/14</span></div><div class="ts-cnt-tick"><span>9/15</span></div><div class="ts-cnt-tick show latest"><span>9/16</span></div></div>
     </div>
-  </div><div class="chase-chart">
-    <div class="chase-chart-head">
-      <span class="chase-chart-title">今日趋势承接</span>
-      <span class="chase-chart-meta">2日均值 · 最新 +2.4%</span>
+  </div><div class="ts-cnt-wrap">
+    <div class="ts-chart-head">
+      <span class="ts-chart-title">今日趋势承接</span>
+      <span class="ts-chart-meta">08/06–09/16 · 最新 +2.4%</span>
     </div>
-    <div class="chase-plot">
-      <div class="chase-bars"><div class="chase-col" title="3/26 周四 · -2.0% · 26家 · 均值-0.02%">
-      <div class="chase-val neg">-2.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:21.4%"></div></div>
-    </div><div class="chase-col" title="3/27 周五 · -1.4% · 24家 · 均值-0.02%">
-      <div class="chase-val neg">-1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:14.9%"></div></div>
-    </div><div class="chase-col" title="3/30 周一 · -0.9% · 28家 · 均值-0.02%">
-      <div class="chase-val neg">-0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:9.6%"></div></div>
-    </div><div class="chase-col" title="3/31 周二 · -2.1% · 28家 · 均值-0.02%">
-      <div class="chase-val neg">-2.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:22.4%"></div></div>
-    </div><div class="chase-col" title="4/1 周三 · -1.4% · 50家 · 均值-0.02%">
-      <div class="chase-val neg">-1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:15.1%"></div></div>
-    </div><div class="chase-col" title="4/2 周四 · -0.1% · 60家 · 均值-0.02%">
-      <div class="chase-val neg">-0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:0.9%"></div></div>
-    </div><div class="chase-col" title="4/3 周五 · -1.6% · 53家 · 均值-0.02%">
-      <div class="chase-val neg">-1.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:16.8%"></div></div>
-    </div><div class="chase-col" title="4/7 周二 · -1.5% · 90家 · 均值-0.02%">
-      <div class="chase-val neg">-1.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:16.1%"></div></div>
-    </div><div class="chase-col" title="4/8 周三 · +0.2% · 92家 · 均值-0.02%">
-      <div class="chase-val pos">+0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:2.7%"></div></div>
-    </div><div class="chase-col" title="4/9 周四 · +1.1% · 106家 · 均值-0.02%">
-      <div class="chase-val pos">+1.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:11.9%"></div></div>
-    </div><div class="chase-col" title="4/10 周五 · +0.9% · 126家 · 均值-0.02%">
-      <div class="chase-val pos">+0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:10.1%"></div></div>
-    </div><div class="chase-col" title="4/13 周一 · +0.3% · 162家 · 均值-0.02%">
-      <div class="chase-val pos">+0.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:3.6%"></div></div>
-    </div><div class="chase-col" title="4/14 周二 · +0.6% · 171家 · 均值-0.02%">
-      <div class="chase-val pos">+0.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:6.4%"></div></div>
-    </div><div class="chase-col" title="4/15 周三 · +0.1% · 338家 · 均值-0.02%">
-      <div class="chase-val pos">+0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:1.8%"></div></div>
-    </div><div class="chase-col" title="4/16 周四 · -0.0% · 412家 · 均值-0.02%">
-      <div class="chase-val neg">-0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:0.3%"></div></div>
-    </div><div class="chase-col" title="4/17 周五 · +1.2% · 492家 · 均值-0.02%">
-      <div class="chase-val pos">+1.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:13.6%"></div></div>
-    </div><div class="chase-col" title="4/20 周一 · +1.2% · 562家 · 均值-0.02%">
-      <div class="chase-val pos">+1.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:13.2%"></div></div>
-    </div><div class="chase-col" title="4/21 周二 · +0.0% · 922家 · 均值-0.02%">
-      <div class="chase-val pos">+0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.3%"></div></div>
-    </div><div class="chase-col" title="4/22 周三 · +0.2% · 766家 · 均值-0.02%">
-      <div class="chase-val pos">+0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:2.8%"></div></div>
-    </div><div class="chase-col" title="4/23 周四 · -0.1% · 664家 · 均值-0.02%">
-      <div class="chase-val neg">-0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:1.1%"></div></div>
-    </div><div class="chase-col" title="4/24 周五 · -1.4% · 370家 · 均值-0.02%">
-      <div class="chase-val neg">-1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:15.3%"></div></div>
-    </div><div class="chase-col" title="4/27 周一 · -0.4% · 241家 · 均值-0.02%">
-      <div class="chase-val neg">-0.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:4.4%"></div></div>
-    </div><div class="chase-col" title="4/28 周二 · +0.2% · 203家 · 均值-0.02%">
-      <div class="chase-val pos">+0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:2.0%"></div></div>
-    </div><div class="chase-col" title="4/29 周三 · +0.0% · 185家 · 均值-0.02%">
-      <div class="chase-val pos">+0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.5%"></div></div>
-    </div><div class="chase-col" title="4/30 周四 · +0.5% · 202家 · 均值-0.02%">
-      <div class="chase-val pos">+0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:5.9%"></div></div>
-    </div><div class="chase-col" title="5/6 周三 · +0.9% · 186家 · 均值-0.02%">
-      <div class="chase-val pos">+0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:10.3%"></div></div>
-    </div><div class="chase-col" title="5/7 周四 · +1.1% · 252家 · 均值-0.02%">
-      <div class="chase-val pos">+1.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:11.8%"></div></div>
-    </div><div class="chase-col" title="5/8 周五 · +0.9% · 419家 · 均值-0.02%">
-      <div class="chase-val pos">+0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:9.5%"></div></div>
-    </div><div class="chase-col" title="5/11 周一 · +1.4% · 494家 · 均值-0.02%">
-      <div class="chase-val pos">+1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:15.1%"></div></div>
-    </div><div class="chase-col" title="5/12 周二 · +0.8% · 775家 · 均值-0.02%">
-      <div class="chase-val pos">+0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:8.4%"></div></div>
-    </div><div class="chase-col" title="5/13 周三 · +0.4% · 709家 · 均值-0.02%">
-      <div class="chase-val pos">+0.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:4.4%"></div></div>
-    </div><div class="chase-col" title="5/14 周四 · +0.1% · 723家 · 均值-0.02%">
-      <div class="chase-val pos">+0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:1.1%"></div></div>
-    </div><div class="chase-col" title="5/15 周五 · -1.4% · 441家 · 均值-0.02%">
-      <div class="chase-val neg">-1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:14.8%"></div></div>
-    </div><div class="chase-col" title="5/18 周一 · -0.9% · 322家 · 均值-0.02%">
-      <div class="chase-val neg">-0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:9.5%"></div></div>
-    </div><div class="chase-col" title="5/19 周二 · +0.7% · 231家 · 均值-0.02%">
-      <div class="chase-val pos">+0.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:7.7%"></div></div>
-    </div><div class="chase-col" title="5/20 周三 · +1.4% · 224家 · 均值-0.02%">
-      <div class="chase-val pos">+1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:15.5%"></div></div>
-    </div><div class="chase-col" title="5/21 周四 · -0.8% · 220家 · 均值-0.02%">
-      <div class="chase-val neg">-0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:8.4%"></div></div>
-    </div><div class="chase-col" title="5/22 周五 · -1.0% · 109家 · 均值-0.02%">
-      <div class="chase-val neg">-1.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:10.4%"></div></div>
-    </div><div class="chase-col" title="5/25 周一 · +1.8% · 125家 · 均值-0.02%">
-      <div class="chase-val pos">+1.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:20.0%"></div></div>
-    </div><div class="chase-col" title="5/26 周二 · +1.4% · 135家 · 均值-0.02%">
-      <div class="chase-val pos">+1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:15.2%"></div></div>
-    </div><div class="chase-col" title="5/27 周三 · -0.3% · 133家 · 均值-0.02%">
-      <div class="chase-val neg">-0.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:3.4%"></div></div>
-    </div><div class="chase-col" title="5/28 周四 · +0.3% · 115家 · 均值-0.02%">
-      <div class="chase-val pos">+0.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:3.9%"></div></div>
-    </div><div class="chase-col" title="5/29 周五 · -0.2% · 101家 · 均值-0.02%">
-      <div class="chase-val neg">-0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:2.2%"></div></div>
-    </div><div class="chase-col" title="6/1 周一 · -2.5% · 91家 · 均值-0.02%">
-      <div class="chase-val neg">-2.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:27.1%"></div></div>
-    </div><div class="chase-col" title="6/2 周二 · -0.5% · 58家 · 均值-0.02%">
-      <div class="chase-val neg">-0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:5.4%"></div></div>
-    </div><div class="chase-col" title="6/3 周三 · +1.7% · 59家 · 均值-0.02%">
-      <div class="chase-val pos">+1.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:18.9%"></div></div>
-    </div><div class="chase-col" title="6/4 周四 · +1.0% · 64家 · 均值-0.02%">
-      <div class="chase-val pos">+1.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:11.1%"></div></div>
-    </div><div class="chase-col" title="6/5 周五 · -0.5% · 72家 · 均值-0.02%">
-      <div class="chase-val neg">-0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:4.8%"></div></div>
-    </div><div class="chase-col" title="6/8 周一 · -2.2% · 60家 · 均值-0.02%">
-      <div class="chase-val neg">-2.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:23.7%"></div></div>
-    </div><div class="chase-col" title="6/9 周二 · -0.8% · 39家 · 均值-0.02%">
-      <div class="chase-val neg">-0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:8.2%"></div></div>
-    </div><div class="chase-col" title="6/10 周三 · +1.0% · 48家 · 均值-0.02%">
-      <div class="chase-val pos">+1.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:11.0%"></div></div>
-    </div><div class="chase-col" title="6/11 周四 · +0.5% · 42家 · 均值-0.02%">
-      <div class="chase-val pos">+0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:5.7%"></div></div>
-    </div><div class="chase-col" title="6/12 周五 · -0.1% · 50家 · 均值-0.02%">
-      <div class="chase-val neg">-0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:0.5%"></div></div>
-    </div><div class="chase-col" title="6/15 周一 · +0.0% · 46家 · 均值-0.02%">
-      <div class="chase-val pos">+0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.4%"></div></div>
-    </div><div class="chase-col" title="6/16 周二 · +3.3% · 67家 · 均值-0.02%">
-      <div class="chase-val pos">+3.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:35.4%"></div></div>
-    </div><div class="chase-col" title="6/17 周三 · +4.3% · 109家 · 均值-0.02%">
-      <div class="chase-val pos">+4.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:46.3%"></div></div>
-    </div><div class="chase-col" title="6/18 周四 · +2.5% · 146家 · 均值-0.02%">
-      <div class="chase-val pos">+2.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:27.3%"></div></div>
-    </div><div class="chase-col" title="6/22 周一 · +2.7% · 208家 · 均值-0.02%">
-      <div class="chase-val pos">+2.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:29.5%"></div></div>
-    </div><div class="chase-col" title="6/23 周二 · +1.0% · 227家 · 均值-0.02%">
-      <div class="chase-val pos">+1.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:10.9%"></div></div>
-    </div><div class="chase-col" title="6/24 周三 · +0.9% · 251家 · 均值-0.02%">
-      <div class="chase-val pos">+0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:9.9%"></div></div>
-    </div><div class="chase-col" title="6/25 周四 · +3.0% · 274家 · 均值-0.02%">
-      <div class="chase-val pos">+3.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:32.2%"></div></div>
-    </div><div class="chase-col" title="6/26 周五 · +1.0% · 264家 · 均值-0.02%">
-      <div class="chase-val pos">+1.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:10.8%"></div></div>
-    </div><div class="chase-col" title="6/29 周一 · -0.4% · 198家 · 均值-0.02%">
-      <div class="chase-val neg">-0.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:4.0%"></div></div>
-    </div><div class="chase-col" title="6/30 周二 · +2.4% · 160家 · 均值-0.02%">
-      <div class="chase-val pos">+2.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:26.0%"></div></div>
-    </div><div class="chase-col" title="7/1 周三 · +2.9% · 153家 · 均值-0.02%">
-      <div class="chase-val pos">+2.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:31.4%"></div></div>
-    </div><div class="chase-col" title="7/2 周四 · -1.7% · 174家 · 均值-0.02%">
-      <div class="chase-val neg">-1.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:18.0%"></div></div>
-    </div><div class="chase-col" title="7/3 周五 · -3.9% · 90家 · 均值-0.02%">
-      <div class="chase-val neg">-3.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:41.7%"></div></div>
-    </div><div class="chase-col" title="7/6 周一 · -2.2% · 64家 · 均值-0.02%">
-      <div class="chase-val neg">-2.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:23.0%"></div></div>
-    </div><div class="chase-col" title="7/7 周二 · -2.8% · 98家 · 均值-0.02%">
-      <div class="chase-val neg">-2.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:30.3%"></div></div>
-    </div><div class="chase-col" title="7/8 周三 · -3.7% · 71家 · 均值-0.02%">
-      <div class="chase-val neg">-3.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:39.3%"></div></div>
-    </div><div class="chase-col" title="7/9 周四 · -1.2% · 56家 · 均值-0.02%">
-      <div class="chase-val neg">-1.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:12.4%"></div></div>
-    </div><div class="chase-col" title="7/10 周五 · +1.8% · 44家 · 均值-0.02%">
-      <div class="chase-val pos">+1.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:19.1%"></div></div>
-    </div><div class="chase-col" title="7/13 周一 · +0.1% · 52家 · 均值-0.02%">
-      <div class="chase-val pos">+0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:1.1%"></div></div>
-    </div><div class="chase-col" title="7/14 周二 · -1.6% · 40家 · 均值-0.02%">
-      <div class="chase-val neg">-1.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:17.0%"></div></div>
-    </div><div class="chase-col" title="7/15 周三 · -0.0% · 46家 · 均值-0.02%">
-      <div class="chase-val pos">-0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.0%"></div></div>
-    </div><div class="chase-col" title="7/16 周四 · +0.0% · 60家 · 均值-0.02%">
-      <div class="chase-val pos">+0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.6%"></div></div>
-    </div><div class="chase-col" title="7/17 周五 · -0.9% · 64家 · 均值-0.02%">
-      <div class="chase-val neg">-0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:9.4%"></div></div>
-    </div><div class="chase-col" title="7/20 周一 · -0.8% · 101家 · 均值-0.02%">
-      <div class="chase-val neg">-0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:8.1%"></div></div>
-    </div><div class="chase-col" title="7/21 周二 · -0.7% · 118家 · 均值-0.02%">
-      <div class="chase-val neg">-0.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:7.3%"></div></div>
-    </div><div class="chase-col" title="7/22 周三 · -0.8% · 104家 · 均值-0.02%">
-      <div class="chase-val neg">-0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:8.9%"></div></div>
-    </div><div class="chase-col" title="7/23 周四 · +0.2% · 145家 · 均值-0.02%">
-      <div class="chase-val pos">+0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:2.2%"></div></div>
-    </div><div class="chase-col" title="7/24 周五 · -0.8% · 126家 · 均值-0.02%">
-      <div class="chase-val neg">-0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:8.0%"></div></div>
-    </div><div class="chase-col" title="7/27 周一 · -1.3% · 46家 · 均值-0.02%">
-      <div class="chase-val neg">-1.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:14.3%"></div></div>
-    </div><div class="chase-col" title="7/28 周二 · -0.3% · 38家 · 均值-0.02%">
-      <div class="chase-val neg">-0.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:3.3%"></div></div>
-    </div><div class="chase-col" title="7/29 周三 · +0.4% · 33家 · 均值-0.02%">
-      <div class="chase-val pos">+0.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:4.7%"></div></div>
-    </div><div class="chase-col" title="7/30 周四 · +1.1% · 74家 · 均值-0.02%">
-      <div class="chase-val pos">+1.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:11.7%"></div></div>
-    </div><div class="chase-col" title="7/31 周五 · +0.0% · 102家 · 均值-0.02%">
-      <div class="chase-val pos">+0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.6%"></div></div>
-    </div><div class="chase-col" title="8/3 周一 · -0.1% · 96家 · 均值-0.02%">
-      <div class="chase-val neg">-0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:1.0%"></div></div>
-    </div><div class="chase-col" title="8/4 周二 · +0.6% · 270家 · 均值-0.02%">
-      <div class="chase-val pos">+0.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:6.9%"></div></div>
-    </div><div class="chase-col" title="8/5 周三 · +0.6% · 685家 · 均值-0.02%">
-      <div class="chase-val pos">+0.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:6.5%"></div></div>
-    </div><div class="chase-col" title="8/6 周四 · +0.4% · 992家 · 均值-0.02%">
-      <div class="chase-val pos">+0.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:4.7%"></div></div>
-    </div><div class="chase-col" title="8/7 周五 · +0.1% · 867家 · 均值-0.02%">
-      <div class="chase-val pos">+0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:1.2%"></div></div>
-    </div><div class="chase-col" title="8/10 周一 · +1.2% · 648家 · 均值-0.02%">
-      <div class="chase-val pos">+1.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:13.3%"></div></div>
-    </div><div class="chase-col" title="8/11 周二 · +1.4% · 947家 · 均值-0.02%">
-      <div class="chase-val pos">+1.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:15.0%"></div></div>
-    </div><div class="chase-col" title="8/12 周三 · +0.7% · 814家 · 均值-0.02%">
-      <div class="chase-val pos">+0.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:8.2%"></div></div>
-    </div><div class="chase-col" title="8/13 周四 · +0.1% · 1059家 · 均值-0.02%">
-      <div class="chase-val pos">+0.1%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:1.2%"></div></div>
-    </div><div class="chase-col" title="8/14 周五 · -0.8% · 580家 · 均值-0.02%">
-      <div class="chase-val neg">-0.8%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:8.9%"></div></div>
-    </div><div class="chase-col" title="8/17 周一 · +1.0% · 580家 · 均值-0.02%">
-      <div class="chase-val pos">+1.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:10.7%"></div></div>
-    </div><div class="chase-col" title="8/18 周二 · +1.9% · 534家 · 均值-0.02%">
-      <div class="chase-val pos">+1.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:20.1%"></div></div>
-    </div><div class="chase-col" title="8/19 周三 · -2.6% · 614家 · 均值-0.02%">
-      <div class="chase-val neg">-2.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:27.8%"></div></div>
-    </div><div class="chase-col" title="8/20 周四 · -3.6% · 116家 · 均值-0.02%">
-      <div class="chase-val neg">-3.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:38.4%"></div></div>
-    </div><div class="chase-col" title="8/21 周五 · -0.3% · 77家 · 均值-0.02%">
-      <div class="chase-val neg">-0.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:3.1%"></div></div>
-    </div><div class="chase-col" title="8/24 周一 · +0.2% · 58家 · 均值-0.02%">
-      <div class="chase-val pos">+0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:2.4%"></div></div>
-    </div><div class="chase-col" title="8/25 周二 · +0.5% · 67家 · 均值-0.02%">
-      <div class="chase-val pos">+0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:5.3%"></div></div>
-    </div><div class="chase-col" title="8/26 周三 · +0.2% · 56家 · 均值-0.02%">
-      <div class="chase-val pos">+0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:2.6%"></div></div>
-    </div><div class="chase-col" title="8/27 周四 · +0.3% · 55家 · 均值-0.02%">
-      <div class="chase-val pos">+0.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:3.4%"></div></div>
-    </div><div class="chase-col" title="8/28 周五 · +0.6% · 60家 · 均值-0.02%">
-      <div class="chase-val pos">+0.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:6.7%"></div></div>
-    </div><div class="chase-col" title="8/31 周一 · -0.0% · 101家 · 均值-0.02%">
-      <div class="chase-val neg">-0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:0.3%"></div></div>
-    </div><div class="chase-col" title="9/1 周二 · +0.5% · 114家 · 均值-0.02%">
-      <div class="chase-val pos">+0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:5.7%"></div></div>
-    </div><div class="chase-col" title="9/2 周三 · +0.5% · 445家 · 均值-0.02%">
-      <div class="chase-val pos">+0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:5.3%"></div></div>
-    </div><div class="chase-col" title="9/3 周四 · -0.7% · 401家 · 均值-0.02%">
-      <div class="chase-val neg">-0.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:7.6%"></div></div>
-    </div><div class="chase-col" title="9/4 周五 · -0.7% · 266家 · 均值-0.02%">
-      <div class="chase-val neg">-0.7%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:7.3%"></div></div>
-    </div><div class="chase-col" title="9/7 周一 · -0.2% · 243家 · 均值-0.02%">
-      <div class="chase-val neg">-0.2%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:1.7%"></div></div>
-    </div><div class="chase-col" title="9/8 周二 · +0.6% · 202家 · 均值-0.02%">
-      <div class="chase-val pos">+0.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:6.7%"></div></div>
-    </div><div class="chase-col" title="9/9 周三 · +0.5% · 244家 · 均值-0.02%">
-      <div class="chase-val pos">+0.5%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:5.1%"></div></div>
-    </div><div class="chase-col" title="9/10 周四 · -0.6% · 242家 · 均值-0.02%">
-      <div class="chase-val neg">-0.6%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:6.2%"></div></div>
-    </div><div class="chase-col" title="9/11 周五 · -1.3% · 171家 · 均值-0.02%">
-      <div class="chase-val neg">-1.3%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:13.5%"></div></div>
-    </div><div class="chase-col" title="9/14 周一 · -0.4% · 87家 · 均值-0.02%">
-      <div class="chase-val neg">-0.4%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar neg" style="height:4.6%"></div></div>
-    </div><div class="chase-col" title="9/15 周二 · +0.0% · 70家 · 均值-0.02%">
-      <div class="chase-val pos">+0.0%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:0.6%"></div></div>
-    </div><div class="chase-col latest" title="9/16 周三 · +0.9% · 46家 · 均值-0.02%">
-      <div class="chase-val pos">+0.9%</div>
-      <div class="chase-track"><div class="chase-zero" title="近200日均值 -0.02%"></div><div class="chase-bar pos" style="height:9.7%"></div></div>
+    <div class="ts-cnt-chart">
+      <div class="ts-hold-bars"><div class="ts-hold-col" title="8/6 周四 · +0.3% · 992家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.3%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:2.1%"></div></div>
+    </div><div class="ts-hold-col" title="8/7 周五 · -0.1% · 867家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.1%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:0.5%"></div></div>
+    </div><div class="ts-hold-col" title="8/10 周一 · +2.5% · 648家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+2.5%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:18.6%"></div></div>
+    </div><div class="ts-hold-col" title="8/11 周二 · +0.2% · 947家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.2%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:1.9%"></div></div>
+    </div><div class="ts-hold-col" title="8/12 周三 · +1.3% · 814家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+1.3%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:9.4%"></div></div>
+    </div><div class="ts-hold-col" title="8/13 周四 · -1.1% · 1059家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-1.1%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:7.7%"></div></div>
+    </div><div class="ts-hold-col" title="8/14 周五 · -0.6% · 580家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.6%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:4.4%"></div></div>
+    </div><div class="ts-hold-col" title="8/17 周一 · +2.6% · 580家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+2.6%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:19.1%"></div></div>
+    </div><div class="ts-hold-col" title="8/18 周二 · +1.1% · 534家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+1.1%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:8.4%"></div></div>
+    </div><div class="ts-hold-col" title="8/19 周三 · -6.3% · 614家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-6.3%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:46.3%"></div></div>
+    </div><div class="ts-hold-col" title="8/20 周四 · -0.8% · 116家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.8%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:6.0%"></div></div>
+    </div><div class="ts-hold-col" title="8/21 周五 · +0.2% · 77家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.2%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:1.8%"></div></div>
+    </div><div class="ts-hold-col" title="8/24 周一 · +0.2% · 58家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.2%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:1.5%"></div></div>
+    </div><div class="ts-hold-col" title="8/25 周二 · +0.8% · 67家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.8%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:5.8%"></div></div>
+    </div><div class="ts-hold-col" title="8/26 周三 · -0.3% · 56家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.3%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:2.2%"></div></div>
+    </div><div class="ts-hold-col" title="8/27 周四 · +0.9% · 55家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.9%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:6.8%"></div></div>
+    </div><div class="ts-hold-col" title="8/28 周五 · +0.3% · 60家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.3%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:2.3%"></div></div>
+    </div><div class="ts-hold-col" title="8/31 周一 · -0.4% · 101家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.4%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:2.8%"></div></div>
+    </div><div class="ts-hold-col" title="9/1 周二 · +1.4% · 114家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+1.4%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:10.6%"></div></div>
+    </div><div class="ts-hold-col" title="9/2 周三 · -0.5% · 445家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.5%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:3.3%"></div></div>
+    </div><div class="ts-hold-col" title="9/3 周四 · -1.0% · 401家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-1.0%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:7.0%"></div></div>
+    </div><div class="ts-hold-col" title="9/4 周五 · -0.4% · 266家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.4%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:2.9%"></div></div>
+    </div><div class="ts-hold-col" title="9/7 周一 · +0.1% · 243家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.1%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:0.6%"></div></div>
+    </div><div class="ts-hold-col" title="9/8 周二 · +1.1% · 202家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+1.1%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:8.5%"></div></div>
+    </div><div class="ts-hold-col" title="9/9 周三 · -0.2% · 244家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.2%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:1.5%"></div></div>
+    </div><div class="ts-hold-col" title="9/10 周四 · -1.0% · 242家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-1.0%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:6.9%"></div></div>
+    </div><div class="ts-hold-col" title="9/11 周五 · -1.6% · 171家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-1.6%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:11.4%"></div></div>
+    </div><div class="ts-hold-col" title="9/14 周一 · +0.7% · 87家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+0.7%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:5.1%"></div></div>
+    </div><div class="ts-hold-col" title="9/15 周二 · -0.6% · 70家 · 均值-0.02%">
+      <div class="ts-hold-val neg">-0.6%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar neg" style="height:4.3%"></div></div>
+    </div><div class="ts-hold-col latest" title="9/16 周三 · +2.4% · 46家 · 均值-0.02%">
+      <div class="ts-hold-val pos">+2.4%</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero" title="近200日均值 -0.02%"></div><div class="ts-hold-bar pos" style="height:17.5%"></div></div>
     </div></div>
-      <div class="chase-axis"><div class="chase-tick show"><span>3/26</span></div><div class="chase-tick"><span>3/27</span></div><div class="chase-tick"><span>3/30</span></div><div class="chase-tick"><span>3/31</span></div><div class="chase-tick"><span>4/1</span></div><div class="chase-tick"><span>4/2</span></div><div class="chase-tick"><span>4/3</span></div><div class="chase-tick"><span>4/7</span></div><div class="chase-tick"><span>4/8</span></div><div class="chase-tick"><span>4/9</span></div><div class="chase-tick"><span>4/10</span></div><div class="chase-tick"><span>4/13</span></div><div class="chase-tick"><span>4/14</span></div><div class="chase-tick"><span>4/15</span></div><div class="chase-tick"><span>4/16</span></div><div class="chase-tick"><span>4/17</span></div><div class="chase-tick"><span>4/20</span></div><div class="chase-tick"><span>4/21</span></div><div class="chase-tick"><span>4/22</span></div><div class="chase-tick"><span>4/23</span></div><div class="chase-tick"><span>4/24</span></div><div class="chase-tick"><span>4/27</span></div><div class="chase-tick"><span>4/28</span></div><div class="chase-tick"><span>4/29</span></div><div class="chase-tick"><span>4/30</span></div><div class="chase-tick"><span>5/6</span></div><div class="chase-tick"><span>5/7</span></div><div class="chase-tick"><span>5/8</span></div><div class="chase-tick"><span>5/11</span></div><div class="chase-tick"><span>5/12</span></div><div class="chase-tick"><span>5/13</span></div><div class="chase-tick"><span>5/14</span></div><div class="chase-tick"><span>5/15</span></div><div class="chase-tick"><span>5/18</span></div><div class="chase-tick"><span>5/19</span></div><div class="chase-tick"><span>5/20</span></div><div class="chase-tick"><span>5/21</span></div><div class="chase-tick"><span>5/22</span></div><div class="chase-tick"><span>5/25</span></div><div class="chase-tick"><span>5/26</span></div><div class="chase-tick show"><span>5/27</span></div><div class="chase-tick"><span>5/28</span></div><div class="chase-tick"><span>5/29</span></div><div class="chase-tick"><span>6/1</span></div><div class="chase-tick"><span>6/2</span></div><div class="chase-tick"><span>6/3</span></div><div class="chase-tick"><span>6/4</span></div><div class="chase-tick"><span>6/5</span></div><div class="chase-tick"><span>6/8</span></div><div class="chase-tick"><span>6/9</span></div><div class="chase-tick"><span>6/10</span></div><div class="chase-tick"><span>6/11</span></div><div class="chase-tick"><span>6/12</span></div><div class="chase-tick"><span>6/15</span></div><div class="chase-tick"><span>6/16</span></div><div class="chase-tick"><span>6/17</span></div><div class="chase-tick"><span>6/18</span></div><div class="chase-tick"><span>6/22</span></div><div class="chase-tick"><span>6/23</span></div><div class="chase-tick"><span>6/24</span></div><div class="chase-tick show"><span>6/25</span></div><div class="chase-tick"><span>6/26</span></div><div class="chase-tick"><span>6/29</span></div><div class="chase-tick"><span>6/30</span></div><div class="chase-tick"><span>7/1</span></div><div class="chase-tick"><span>7/2</span></div><div class="chase-tick"><span>7/3</span></div><div class="chase-tick"><span>7/6</span></div><div class="chase-tick"><span>7/7</span></div><div class="chase-tick"><span>7/8</span></div><div class="chase-tick"><span>7/9</span></div><div class="chase-tick"><span>7/10</span></div><div class="chase-tick"><span>7/13</span></div><div class="chase-tick"><span>7/14</span></div><div class="chase-tick"><span>7/15</span></div><div class="chase-tick"><span>7/16</span></div><div class="chase-tick"><span>7/17</span></div><div class="chase-tick"><span>7/20</span></div><div class="chase-tick"><span>7/21</span></div><div class="chase-tick"><span>7/22</span></div><div class="chase-tick show"><span>7/23</span></div><div class="chase-tick"><span>7/24</span></div><div class="chase-tick"><span>7/27</span></div><div class="chase-tick"><span>7/28</span></div><div class="chase-tick"><span>7/29</span></div><div class="chase-tick"><span>7/30</span></div><div class="chase-tick"><span>7/31</span></div><div class="chase-tick"><span>8/3</span></div><div class="chase-tick"><span>8/4</span></div><div class="chase-tick"><span>8/5</span></div><div class="chase-tick"><span>8/6</span></div><div class="chase-tick"><span>8/7</span></div><div class="chase-tick"><span>8/10</span></div><div class="chase-tick"><span>8/11</span></div><div class="chase-tick"><span>8/12</span></div><div class="chase-tick"><span>8/13</span></div><div class="chase-tick"><span>8/14</span></div><div class="chase-tick"><span>8/17</span></div><div class="chase-tick"><span>8/18</span></div><div class="chase-tick"><span>8/19</span></div><div class="chase-tick"><span>8/20</span></div><div class="chase-tick"><span>8/21</span></div><div class="chase-tick"><span>8/24</span></div><div class="chase-tick"><span>8/25</span></div><div class="chase-tick"><span>8/26</span></div><div class="chase-tick"><span>8/27</span></div><div class="chase-tick"><span>8/28</span></div><div class="chase-tick"><span>8/31</span></div><div class="chase-tick"><span>9/1</span></div><div class="chase-tick"><span>9/2</span></div><div class="chase-tick"><span>9/3</span></div><div class="chase-tick"><span>9/4</span></div><div class="chase-tick"><span>9/7</span></div><div class="chase-tick"><span>9/8</span></div><div class="chase-tick"><span>9/9</span></div><div class="chase-tick"><span>9/10</span></div><div class="chase-tick"><span>9/11</span></div><div class="chase-tick"><span>9/14</span></div><div class="chase-tick"><span>9/15</span></div><div class="chase-tick show latest"><span>9/16</span></div></div>
+      <div class="ts-hold-axis"><div class="ts-hold-tick show"><span>8/6</span></div><div class="ts-hold-tick"><span>8/7</span></div><div class="ts-hold-tick"><span>8/10</span></div><div class="ts-hold-tick"><span>8/11</span></div><div class="ts-hold-tick"><span>8/12</span></div><div class="ts-hold-tick"><span>8/13</span></div><div class="ts-hold-tick"><span>8/14</span></div><div class="ts-hold-tick"><span>8/17</span></div><div class="ts-hold-tick"><span>8/18</span></div><div class="ts-hold-tick"><span>8/19</span></div><div class="ts-hold-tick show"><span>8/20</span></div><div class="ts-hold-tick"><span>8/21</span></div><div class="ts-hold-tick"><span>8/24</span></div><div class="ts-hold-tick"><span>8/25</span></div><div class="ts-hold-tick"><span>8/26</span></div><div class="ts-hold-tick"><span>8/27</span></div><div class="ts-hold-tick"><span>8/28</span></div><div class="ts-hold-tick"><span>8/31</span></div><div class="ts-hold-tick"><span>9/1</span></div><div class="ts-hold-tick"><span>9/2</span></div><div class="ts-hold-tick show"><span>9/3</span></div><div class="ts-hold-tick"><span>9/4</span></div><div class="ts-hold-tick"><span>9/7</span></div><div class="ts-hold-tick"><span>9/8</span></div><div class="ts-hold-tick"><span>9/9</span></div><div class="ts-hold-tick"><span>9/10</span></div><div class="ts-hold-tick"><span>9/11</span></div><div class="ts-hold-tick"><span>9/14</span></div><div class="ts-hold-tick"><span>9/15</span></div><div class="ts-hold-tick show latest"><span>9/16</span></div></div>
     </div>
-  </div><div class="chart-tags vol20-tags"><span class="pill bad">次日承接不好</span></div><div class="ts-chart">
+    <div class="chart-tags vol20-tags"><span class="pill bad">次日承接不好</span></div>
+  </div><div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势占比</span>
       <span class="ts-chart-meta">满格=10%（默认） · 竖线=近200日均值</span>
@@ -4067,7 +3857,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-16 23:30</div>
+  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-16 23:36</div>
 </div>
 </body>
 </html>

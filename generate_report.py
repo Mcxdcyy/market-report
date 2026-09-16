@@ -3309,6 +3309,59 @@ def render_html(ctx: dict) -> str:
     display: block; left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
   }}
+  /* 今日趋势承接：与近30日强趋势占比同卡片壳；柱为相对近200日均值的零轴红绿柱 */
+  .ts-cnt-wrap .chart-tags {{
+    margin-top: 10px;
+  }}
+  .ts-hold-bars {{
+    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+  }}
+  .ts-hold-col {{
+    flex: 1 1 0; min-width: 0; max-width: none;
+    display: flex; flex-direction: column; align-items: center; height: 100%;
+  }}
+  .ts-hold-val {{
+    font-size: 9px; font-weight: 600; color: var(--muted);
+    font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
+    white-space: nowrap;
+  }}
+  .ts-hold-col.latest .ts-hold-val {{ color: var(--accent); font-weight: 700; }}
+  .ts-hold-track {{
+    flex: 1; width: 100%; min-height: 0; position: relative;
+  }}
+  .ts-hold-zero {{
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(60,60,67,.22); z-index: 1; pointer-events: none;
+  }}
+  .ts-hold-bar {{
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 70%; max-width: 14px; min-height: 2px; z-index: 2;
+  }}
+  .ts-hold-bar.pos {{
+    bottom: 50%; border-radius: 2px 2px 0 0;
+    background: var(--bar-ok, #E53935);
+  }}
+  .ts-hold-bar.neg {{
+    top: 50%; border-radius: 0 0 2px 2px;
+    background: var(--bar-bad, #34C759);
+  }}
+  .ts-hold-col.latest .ts-hold-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
+  .ts-hold-axis {{
+    display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
+  }}
+  .ts-hold-tick {{
+    flex: 1 1 0; min-width: 0; height: 18px; position: relative;
+  }}
+  .ts-hold-tick span {{
+    display: none; position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: var(--muted); white-space: nowrap;
+  }}
+  .ts-hold-tick.show span {{ display: block; }}
+  .ts-hold-tick.show:first-child span {{ left: 0; transform: none; }}
+  .ts-hold-tick.latest span {{
+    display: block; left: auto; right: 0; transform: none;
+    color: var(--accent); font-weight: 700;
+  }}
 
   .ts-chart {{
     margin-bottom: 12px; padding: 14px 14px 12px;
@@ -3911,6 +3964,12 @@ def render_html(ctx: dict) -> str:
     .ts-cnt-axis {{ gap: 1px; margin-top: 8px; min-height: 20px; }}
     .ts-cnt-tick {{ height: 20px; }}
     .ts-cnt-tick span {{ font-size: 10px; }}
+    .ts-hold-bars {{ height: 110px; gap: 1px; }}
+    .ts-hold-val {{ display: none !important; }}
+    .ts-hold-bar {{ width: 85%; max-width: none; }}
+    .ts-hold-axis {{ gap: 1px; margin-top: 8px; min-height: 20px; }}
+    .ts-hold-tick {{ height: 20px; }}
+    .ts-hold-tick span {{ font-size: 10px; }}
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
@@ -4312,6 +4371,118 @@ def _render_ts_count_bars_html(
   </div>'''
 
 
+def _render_ts_hold_bars_html(
+    series: list[dict],
+    *,
+    mean_200d: float | None = None,
+    after_html: str = "",
+) -> str:
+    """今日趋势承接柱图（近30日）：柱高=当日原始值；零轴=近200日均值（上红下绿）。
+
+    卡片壳与「近30日强趋势占比」统一（`.ts-cnt-wrap`）；标签放卡片内，避免与下方横条重叠。
+    """
+    if not series:
+        return ""
+
+    vals: list[float] = []
+    for row in series:
+        try:
+            vals.append(float(row["value"]))
+        except (TypeError, ValueError, KeyError):
+            continue
+    if not vals:
+        return ""
+
+    base = float(mean_200d) if mean_200d is not None else 0.0
+    if mean_200d is not None:
+        scale = max(abs(v - base) for v in vals)
+    else:
+        scale = max(abs(v) for v in vals)
+    if scale < 1e-9:
+        scale = 1.0
+    scale *= 1.08
+
+    n_bars = len(series)
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+
+    axis_title = (
+        f' title="近200日均值 {base:+.2f}%"'
+        if mean_200d is not None
+        else ""
+    )
+
+    cols: list[str] = []
+    ticks: list[str] = []
+    for i, row in enumerate(series):
+        raw = row.get("value")
+        ds = str(row.get("date") or "")
+        try:
+            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
+            lab = f"{dt.month}/{dt.day}"
+            wd = WEEKDAY[dt.weekday()]
+        except ValueError:
+            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
+            wd = ""
+        is_latest = i == n_bars - 1
+        if raw is None:
+            cols.append(
+                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 无样本">
+      <div class="ts-hold-val">—</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div></div>
+    </div>'''
+            )
+        else:
+            v = float(raw)
+            delta = v - base
+            h = min(50.0, abs(delta) / scale * 50.0)
+            if delta >= 0:
+                bar = f'<div class="ts-hold-bar pos" style="height:{h:.1f}%"></div>'
+                tag = "pos"
+            else:
+                bar = f'<div class="ts-hold-bar neg" style="height:{h:.1f}%"></div>'
+                tag = "neg"
+            val_lab = f"{v:+.1f}%"
+            n = int(row.get("n") or 0)
+            tip_extra = f" · 均值{base:+.2f}%" if mean_200d is not None else ""
+            cols.append(
+                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}">
+      <div class="ts-hold-val {tag}">{val_lab}</div>
+      <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div>{bar}</div>
+    </div>'''
+            )
+        ticks.append(
+            f'<div class="ts-hold-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'<span>{lab}</span></div>'
+        )
+
+    last = next((x for x in reversed(series) if x.get("value") is not None), None)
+    try:
+        latest_lab = f"{float(last['value']):+.1f}%" if last else "—"
+    except (TypeError, ValueError, KeyError):
+        latest_lab = "—"
+    try:
+        d0 = fmt_md(datetime.strptime(str(series[0]["date"])[:10], "%Y-%m-%d"))
+        d1 = fmt_md(datetime.strptime(str(series[-1]["date"])[:10], "%Y-%m-%d"))
+    except (ValueError, KeyError, TypeError):
+        d0 = str(series[0].get("date") or "")[5:]
+        d1 = str(series[-1].get("date") or "")[5:]
+
+    return f'''<div class="ts-cnt-wrap">
+    <div class="ts-chart-head">
+      <span class="ts-chart-title">今日趋势承接</span>
+      <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_lab}</span>
+    </div>
+    <div class="ts-cnt-chart">
+      <div class="ts-hold-bars">{"".join(cols)}</div>
+      <div class="ts-hold-axis">{"".join(ticks)}</div>
+    </div>
+    {after_html}
+  </div>'''
+
+
 def render_trend_strength_html(block: dict) -> str:
     items = block.get("items") or []
     if not items:
@@ -4470,42 +4641,9 @@ def render_trend_strength_html(block: dict) -> str:
         hold_mean_f = None
     hold_chart = ""
     if hold_series_raw:
-        # 柱高：近2日原始日值均值；五日标签仍用原始日值（非五个2日均值再平均）
-        hold_series_plot: list[dict] = []
-        for i, row in enumerate(hold_series_raw):
-            raw = row.get("value")
-            try:
-                raw_f = float(raw) if raw is not None else None
-            except (TypeError, ValueError):
-                raw_f = None
-            prev_raw = None
-            if i > 0:
-                try:
-                    pr = hold_series_raw[i - 1].get("value")
-                    prev_raw = float(pr) if pr is not None else None
-                except (TypeError, ValueError):
-                    prev_raw = None
-            if raw_f is None:
-                plot_v = None
-            elif prev_raw is None:
-                plot_v = raw_f
-            else:
-                plot_v = round((raw_f + prev_raw) / 2.0, 4)
-            hold_series_plot.append(
-                {
-                    **row,
-                    "value": plot_v,
-                    "value_raw": raw_f,
-                }
-            )
-        hold_chart = _render_chase_metric_chart(
-            "今日趋势承接",
-            hold_series_plot,
-            baseline=hold_mean_f,
-            avg2d=True,
-        )
+        # 页面近30日；柱高=当日原始值（不再近2日均值）；标签仍用近5日原始 vs 近200日均值
+        hold_series_plot = list(hold_series_raw[-30:])
         pills: list[str] = []
-        # 近5日**原始日值**均值 vs 近200日均值 → 次日承接较好 / 次日承接不好
         if hold_mean_f is not None:
             last5: list[float] = []
             for row in reversed(hold_series_raw):
@@ -4523,17 +4661,22 @@ def render_trend_strength_html(block: dict) -> str:
                     pills.append('<span class="pill ok">次日承接较好</span>')
                 else:
                     pills.append('<span class="pill bad">次日承接不好</span>')
-        # 末日有均价算不出的池内个股 → 「数据异常」
         data_err = bool(block.get("hold_data_error"))
         if not data_err:
             last = hold_series_raw[-1] if hold_series_raw else {}
             data_err = int(last.get("n_bad") or 0) > 0
         if data_err:
             pills.append('<span class="pill bad">数据异常</span>')
-        if pills:
-            hold_chart += (
-                f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>'
-            )
+        tags_html = (
+            f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>'
+            if pills
+            else ""
+        )
+        hold_chart = _render_ts_hold_bars_html(
+            hold_series_plot,
+            mean_200d=hold_mean_f,
+            after_html=tags_html,
+        )
 
     note_html = (
         '<div class="ts-note">'
