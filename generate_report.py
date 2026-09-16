@@ -4621,6 +4621,23 @@ def load_chase_sentiment_block(
     return compute_chase_sentiment(as_of_d, force=False, progress=True)
 
 
+def _chase_raw_series_values(series: list[dict]) -> list[float | None]:
+    """按日取出原始日值（优先 value_raw，否则 value）；缺测为 None。"""
+    out: list[float | None] = []
+    for row in series:
+        raw = row.get("value_raw")
+        if raw is None:
+            raw = row.get("value")
+        if raw is None:
+            out.append(None)
+            continue
+        try:
+            out.append(float(raw))
+        except (TypeError, ValueError):
+            out.append(None)
+    return out
+
+
 def _chase_raw_ma_tag_html(
     series: list[dict],
     baseline: float | None,
@@ -4657,6 +4674,62 @@ def _chase_raw_ma_tag_html(
     else:
         pill = f'<span class="pill bad">{bad_label}</span>'
     return f'<div class="chart-tags vol20-tags">{pill}</div>'
+
+
+def _chase_loss_hold_tag_html(
+    series: list[dict],
+    baseline: float | None,
+    *,
+    window: int = 4,
+) -> str:
+    """昨追-今日承接图下标签。
+
+    - 近 window 日原始均值 ≥ 近200日均值 →「追高承接较好」，否则「追高承接不好」
+    - 若末日是状态翻转首日，且翻转前旧状态已连续 ≥2 日 → 追加「需次日验证」
+    """
+    if baseline is None or window <= 0:
+        return ""
+    vals = _chase_raw_series_values(series)
+    n = len(vals)
+    tags: list[str | None] = [None] * n
+    base = float(baseline)
+    for i in range(n):
+        if i + 1 < window:
+            continue
+        chunk = vals[i - window + 1 : i + 1]
+        if any(v is None for v in chunk):
+            continue
+        m = sum(float(v) for v in chunk) / float(window)
+        tags[i] = "好" if m >= base else "不好"
+
+    # 取末日有效标签
+    last_i = None
+    for i in range(n - 1, -1, -1):
+        if tags[i] is not None:
+            last_i = i
+            break
+    if last_i is None:
+        return ""
+
+    cur = tags[last_i]
+    pills: list[str] = []
+    if cur == "好":
+        pills.append('<span class="pill ok">追高承接较好</span>')
+    else:
+        pills.append('<span class="pill bad">追高承接不好</span>')
+
+    # 翻转首日 + 旧状态连续 ≥2 日 → 需次日验证
+    if last_i >= 1 and tags[last_i - 1] is not None and tags[last_i - 1] != cur:
+        prev = tags[last_i - 1]
+        streak = 0
+        j = last_i - 1
+        while j >= 0 and tags[j] == prev:
+            streak += 1
+            j -= 1
+        if streak >= 2:
+            pills.append('<span class="pill warn">需次日验证</span>')
+
+    return f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>'
 
 
 def _render_chase_metric_chart(
@@ -5116,7 +5189,8 @@ def render_chase_sentiment_html(block: dict) -> str:
 
     # 效应两图：主板+创板按家数加权合并，近120日（已删「昨追-赚钱效应」）
     # 柱高均为近2日均值；meta「最新」仍用当日原始值（value_raw）
-    # 昨追-今日承接：图下标签 = 近4日原始均值 ≥ 近200日均值 → 承接好 / 否则承接不好
+    # 昨追-今日承接：图下标签 = 近4日原始均值 ≥ 近200日均值
+    # →「追高承接较好」/「追高承接不好」；连续≥2日状态翻转首日追加「需次日验证」
     effect_charts = []
     for mk, title in (
         ("loss", "昨追-今日承接"),
@@ -5128,13 +5202,7 @@ def render_chase_sentiment_html(block: dict) -> str:
             title, ser, baseline=baseline, avg2d=True
         )
         if mk == "loss":
-            chart_html += _chase_raw_ma_tag_html(
-                ser,
-                baseline,
-                window=4,
-                ok_label="承接好",
-                bad_label="承接不好",
-            )
+            chart_html += _chase_loss_hold_tag_html(ser, baseline, window=4)
         effect_charts.append(chart_html)
     if effect_charts:
         parts.append(
