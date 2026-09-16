@@ -4133,7 +4133,7 @@ def load_trend_strength_block(
         block = dict(block)
         block["means_200d"] = means
 
-    # 近30日全场强趋势家数：仅最新交易日报表计算/刷新缓存
+    # 近30日全场强趋势占比：最新交易日刷新缓存；历史日从缓存截取至报表日
     if is_latest and ensure_count_series_30d is not None:
         try:
             days30 = _trading_days_ending(as_of_d, 30)
@@ -4143,14 +4143,23 @@ def load_trend_strength_block(
         except Exception as exc:  # noqa: BLE001
             print(f"[trend-count] 更新失败: {exc}")
     elif not block.get("count_series"):
-        # 历史日：若有对齐 as_of 的缓存则挂上
         cpath = TREND_RESULT_DIR / "count_series_30d.json"
         if cpath.exists():
             try:
                 cdata = json.loads(cpath.read_text(encoding="utf-8"))
-                if cdata.get("as_of") == as_of_d.isoformat():
-                    block = dict(block)
-                    block["count_series"] = cdata.get("daily") or []
+                daily = list(cdata.get("daily") or [])
+                as_of_s = as_of_d.isoformat()
+                # 缓存对齐当日，或覆盖至更晚日期时，截取 ≤ 报表日的近 30 条
+                if daily and (
+                    cdata.get("as_of") == as_of_s
+                    or any(str(r.get("date") or "")[:10] == as_of_s for r in daily)
+                ):
+                    clipped = [
+                        r for r in daily if str(r.get("date") or "")[:10] <= as_of_s
+                    ][-30:]
+                    if clipped:
+                        block = dict(block)
+                        block["count_series"] = clipped
             except json.JSONDecodeError:
                 pass
     return block
@@ -5092,7 +5101,11 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     try:
         from new_high_count import compute_new_high_count
 
-        xh_payload = compute_new_high_count(report_d, force=False, progress=True)
+        # 不自动唤起本机 Chrome。缺当日新高时由助手用 Cursor 内置浏览器
+        # 跑问财网页并 save；生成报表只读本地 series/days 缓存。
+        xh_payload = compute_new_high_count(
+            report_d, force=False, progress=True, fetch=False
+        )
         xh_daily = list(xh_payload.get("daily") or [])
 
         def _slice_count_bars(rows: list[dict], n: int) -> list[dict]:
