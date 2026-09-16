@@ -4475,15 +4475,35 @@ def render_trend_strength_html(block: dict) -> str:
             hold_series,
             baseline=hold_mean_f,
         )
-        # 末日有均价算不出的池内个股 → 图下方「数据异常」
+        pills: list[str] = []
+        # 近5日均值 vs 近200日均值 → 承接较好 / 承接不好（前4日凑不满则不打）
+        if hold_mean_f is not None:
+            last5: list[float] = []
+            for row in reversed(hold_series):
+                if row.get("value") is None:
+                    continue
+                try:
+                    last5.append(float(row["value"]))
+                except (TypeError, ValueError):
+                    continue
+                if len(last5) >= 5:
+                    break
+            if len(last5) >= 5:
+                m5 = sum(last5) / 5.0
+                if m5 > float(hold_mean_f):
+                    pills.append('<span class="pill ok">承接较好</span>')
+                else:
+                    pills.append('<span class="pill bad">承接不好</span>')
+        # 末日有均价算不出的池内个股 → 「数据异常」
         data_err = bool(block.get("hold_data_error"))
         if not data_err:
             last = hold_series[-1] if hold_series else {}
             data_err = int(last.get("n_bad") or 0) > 0
         if data_err:
+            pills.append('<span class="pill bad">数据异常</span>')
+        if pills:
             hold_chart += (
-                '<div class="chart-tags vol20-tags">'
-                '<span class="pill bad">数据异常</span></div>'
+                f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>'
             )
 
     note_html = (
