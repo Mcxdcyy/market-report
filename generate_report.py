@@ -5143,40 +5143,13 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 低吸赚钱效应：柱高近2日均值；meta「最新」仍用当日原始值（已删「低吸锁仓收益」）
-    # 图下标签 = 近4日原始均值 ≥ 近200日均值 → 可谨慎低吸 / 否则低吸次日无溢价
-    dip = block.get("dip_buy") or {}
-    dip_ser = list(dip.get("series") or [])
-    dip_base = dip.get("mean_200d")
-    try:
-        dip_base_f = float(dip_base) if dip_base is not None else None
-    except (TypeError, ValueError):
-        dip_base_f = None
-    if dip_ser:
-        dip_ser = _smooth_metric_series_2d(dip_ser)
-        dip_chart = _render_chase_metric_chart(
-            "低吸赚钱效应", dip_ser, baseline=dip_base_f, avg2d=True
-        )
-        dip_chart += _chase_raw_ma_tag_html(
-            dip_ser,
-            dip_base_f,
-            window=4,
-            ok_label="可谨慎低吸",
-            bad_label="低吸次日无溢价",
-        )
-        parts.append(
-            f'''<div class="chase-group">
-    <div class="chase-grid single">{dip_chart}</div>
-  </div>'''
-        )
+    # 已删「低吸赚钱效应」「低吸锁仓收益」——页面不再渲染低吸图
 
     note = (
         '<div class="chase-note">'
         "追高池：日内最高价相对昨收涨幅≥7%；主板与创板（创业板+科创板）分池统计后合计展示；"
         "不含ST、北交所，不含上市日历天数≤10，不含一字涨停（当日最低价=当日涨停价）。"
         "昨追效应取前一交易日追高池；回落指数取当日追高池。"
-        "低吸池：前一交易日振幅>8%（(最高−最低)/昨收）且(最高−开盘)/开盘>5%；"
-        "不含ST、北交所，不含上市日历天数≤10。"
         "</div>"
     )
     return "".join(parts) + note
