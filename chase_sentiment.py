@@ -10,8 +10,11 @@
    算当日 (今高−昨高)/昨收 均值；横轴近 **120** 日；近200日均值零轴
 2. 昨追-今日承接：同上加权合并；(今收−昨高)/昨高；近 **120** 日
 3. 今追-回落指数：同上加权合并；取**当日**追高池 (今收−今高)/今高；近 **120** 日
+4. 低吸赚钱效应：全场池；取**前一交易日**同时满足振幅>8% 且 (最高−开盘)/开盘>5%；
+   算当日 (今开−昨开)/昨开 池内均值；近 **120** 日；近200日均值零轴
 
 排除 ST、北交所；上市日历天数 ≤10；一字涨停（当日最低价=当日涨停价）。
+（低吸池仅排除 ST/北交所/上市≤10，不按一字涨停过滤。）
 """
 
 from __future__ import annotations
@@ -33,7 +36,9 @@ MEAN_DAYS = 200  # 效应/数量着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, EFFECT_DAYS, MEAN_DAYS)
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 13  # 追高活跃度柱高=近2日均值（展示层）；原始家数仍存 n_raw
+SCHEMA = 14  # 新增低吸赚钱效应（全场单图）
+DIP_AMP_PCT = 0.08  # 当日振幅 > 8%
+DIP_OPEN_HIGH_PCT = 0.05  # (最高−开盘)/开盘 > 5%
 
 GROUP_ORDER = (
     ("main", "主板追高"),
@@ -113,7 +118,7 @@ def _day_metric_means(
         "main": {"money": [], "loss": [], "pullback": []},
         "cyb": {"money": [], "loss": [], "pullback": []},
     }
-    for s, idx, closes, highs, lows in series:
+    for s, idx, closes, highs, lows, _opens in series:
         g = _group_of(s["bucket"])
         if g is None:
             continue
@@ -171,6 +176,64 @@ def _day_metric_means(
     return out
 
 
+def _is_dip_pool_at(
+    closes: list[float],
+    highs: list[float],
+    lows: list[float],
+    opens: list[float],
+    i: int,
+) -> bool:
+    """第 i 根是否入低吸池：振幅>8% 且 (最高−开盘)/开盘>5%（振幅=(最高−最低)/昨收）。"""
+    if i < 1:
+        return False
+    prev_c = closes[i - 1]
+    o = opens[i]
+    h = highs[i]
+    lo = lows[i]
+    if prev_c <= 0 or o <= 0 or h <= 0 or lo <= 0:
+        return False
+    amp = (h - lo) / prev_c
+    up_from_open = (h - o) / o
+    return amp > DIP_AMP_PCT and up_from_open > DIP_OPEN_HIGH_PCT
+
+
+def _day_dip_buy_mean(
+    series: list[tuple],
+    d: date,
+    prev: date,
+) -> tuple[float | None, int]:
+    """取 prev 日低吸池，算 d 日 (今开−昨开)/昨开 的算术均值（小数，非%）。"""
+    ds = d.isoformat()
+    ps = prev.isoformat()
+    vals: list[float] = []
+    for s, idx, closes, highs, lows, opens in series:
+        # 与追高模块一致：不含 ST、北交所；上市≤10 排除
+        if _group_of(s["bucket"]) is None:
+            continue
+        list_date = s.get("list_date")
+        if list_date is not None and (prev - list_date).days <= ts.LIST_DAYS_MIN:
+            continue
+        i_prev = idx.get(ps)
+        i_cur = idx.get(ds)
+        if i_prev is None or i_cur is None or i_prev < 1:
+            continue
+        n_bars = i_prev + 1
+        if n_bars < MIN_BARS:
+            continue
+        if list_date is None and n_bars <= ts.LIST_DAYS_MIN:
+            continue
+        if not _is_dip_pool_at(closes, highs, lows, opens, i_prev):
+            continue
+        o_prev = opens[i_prev]
+        o_cur = opens[i_cur]
+        if o_prev <= 0 or o_cur <= 0:
+            continue
+        vals.append((o_cur - o_prev) / o_prev)
+    if not vals:
+        return None, 0
+    return sum(vals) / len(vals), len(vals)
+
+
 def compute_chase_sentiment(
     as_of: date | datetime | str,
     trading_days: list[date] | None = None,
@@ -215,6 +278,7 @@ def compute_chase_sentiment(
                 .get("count", {})
                 .get("mean_200d")
                 is not None
+                and (cached.get("dip_buy") or {}).get("mean_200d") is not None
             ):
                 return cached
         except json.JSONDecodeError:
@@ -358,6 +422,43 @@ def compute_chase_sentiment(
             "metrics": metrics_out,
         }
 
+    # 低吸赚钱效应：全场单序列（不按主板/创板拆）
+    dip_all: list[dict] = []
+    for j in range(1, len(k_days)):
+        d = k_days[j]
+        prev = k_days[j - 1]
+        mean_v, n = _day_dip_buy_mean(long_series, d, prev)
+        dip_all.append(
+            {
+                "date": d.isoformat(),
+                "value": round(100.0 * mean_v, 4) if mean_v is not None else None,
+                "n": n,
+            }
+        )
+    # 对齐 SERIES_DAYS 窗口后再切 120 / 算 200 均值
+    dip_rows = dip_all[-SERIES_DAYS:] if len(dip_all) >= SERIES_DAYS else dip_all
+    dip_mean_vals = [
+        float(x["value"])
+        for x in dip_rows[-MEAN_DAYS:]
+        if x.get("value") is not None
+    ]
+    if len(dip_mean_vals) >= MEAN_DAYS:
+        dip_mean = round(sum(dip_mean_vals) / len(dip_mean_vals), 4)
+        dip_mean_n = len(dip_mean_vals)
+    elif dip_mean_vals:
+        dip_mean = round(sum(dip_mean_vals) / len(dip_mean_vals), 4)
+        dip_mean_n = len(dip_mean_vals)
+    else:
+        dip_mean = None
+        dip_mean_n = 0
+    dip_series = dip_rows[-EFFECT_DAYS:]
+    dip_buy = {
+        "name": "低吸赚钱效应",
+        "series": dip_series,
+        "mean_200d": dip_mean,
+        "mean_days": dip_mean_n,
+    }
+
     effect_start = (
         daily_rows[-EFFECT_DAYS]["date"]
         if len(daily_rows) >= EFFECT_DAYS
@@ -375,6 +476,7 @@ def compute_chase_sentiment(
         "n_days": len(series_days),
         "chase_pct": CHASE_PCT * 100,
         "groups": groups,
+        "dip_buy": dip_buy,
         "note": (
             "追高：日内最高相对昨收≥7%。"
             "追高数量：近120日；缓存为当日追高池原始家数；"
@@ -383,8 +485,10 @@ def compute_chase_sentiment(
             "昨追取前一交易日追高池分别算(今高−昨高)/昨收、(今收−昨高)/昨高；"
             "回落取当日追高池算(今收−今高)/今高；"
             "效应三图柱色均相对近200日均值（均值上红/均值下绿）。"
+            "低吸赚钱效应：取前一交易日振幅>8%且(最高−开盘)/开盘>5%的个股池，"
+            "算当日(今开−昨开)/昨开的池内均值；近120日；近200日均值零轴。"
             "创板=创业板+科创板；不含ST、北交所；不含上市日历天数≤10；"
-            "不含一字涨停（当日最低价=当日涨停价）。"
+            "追高池另不含一字涨停（当日最低价=当日涨停价）。"
         ),
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
@@ -392,9 +496,11 @@ def compute_chase_sentiment(
     if progress:
         main = daily_rows[-1].get("main") or {}
         cyb = daily_rows[-1].get("cyb") or {}
+        last_dip = dip_series[-1] if dip_series else {}
         print(
             f"[chase] 完成 · 末日主板昨追{main.get('n_yday')}家/今追{main.get('n_today')}家 · "
-            f"创板昨追{cyb.get('n_yday')}家/今追{cyb.get('n_today')}家 "
+            f"创板昨追{cyb.get('n_yday')}家/今追{cyb.get('n_today')}家 · "
+            f"低吸{last_dip.get('value')}% n={last_dip.get('n')} "
             f"用时{time.time()-t0:.0f}s → {out_path.name}"
         )
     return payload

@@ -4588,15 +4588,18 @@ def load_chase_sentiment_block(
                 .get("metrics", {})
                 .get("count", {})
             )
+            dip = cached.get("dip_buy") or {}
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("groups")
-                and int(cached.get("schema") or 0) >= 12
+                and int(cached.get("schema") or 0) >= 14
                 and int(cached.get("effect_days") or 0) >= 120
                 and pb.get("mean_200d") is not None
                 and money.get("mean_200d") is not None
                 and loss.get("mean_200d") is not None
                 and count_m.get("mean_200d") is not None
+                and dip.get("mean_200d") is not None
+                and isinstance(dip.get("series"), list)
             ):
                 return cached
         except json.JSONDecodeError:
@@ -5087,6 +5090,24 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
+    # 低吸赚钱效应：模块最底部
+    dip = block.get("dip_buy") or {}
+    dip_ser = list(dip.get("series") or [])
+    dip_base = dip.get("mean_200d")
+    try:
+        dip_base_f = float(dip_base) if dip_base is not None else None
+    except (TypeError, ValueError):
+        dip_base_f = None
+    if dip_ser:
+        dip_chart = _render_chase_metric_chart(
+            "低吸赚钱效应", dip_ser, baseline=dip_base_f
+        )
+        parts.append(
+            f'''<div class="chase-group">
+    <div class="chase-grid single">{dip_chart}</div>
+  </div>'''
+        )
+
     note = (
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
@@ -5099,8 +5120,11 @@ def render_chase_sentiment_html(block: dict) -> str:
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
         "回落指数柱高为近2日均值，标题「最新」仍为当日值；"
-        "效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
-        "不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
+        "低吸赚钱效应：取前一交易日振幅>8%且(最高−开盘)/开盘>5%的个股池，"
+        "计算当日(今开−昨开)/昨开的池内算术均值；近120日；柱色以近200日均值为零轴；"
+        "效应图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
+        "不含ST、北交所；不含上市日历天数≤10的个股；"
+        "追高池另不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
     )
     return "".join(parts) + note

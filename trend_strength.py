@@ -937,8 +937,9 @@ def _prepare_long_series(
         closes = [float(r["close"]) for r in rows]
         highs = [float(r["high"]) for r in rows]
         lows = [float(r["low"]) for r in rows]
+        opens = [float(r["open"]) for r in rows]
         idx = {r["date"]: i for i, r in enumerate(rows)}
-        series.append((s, idx, closes, highs, lows))
+        series.append((s, idx, closes, highs, lows, opens))
     return series
 
 
@@ -947,7 +948,7 @@ def _count_all_on_day(series: list[tuple], d: date) -> tuple[int, int]:
     ds = d.isoformat()
     trend_n = 0
     total_n = 0
-    for s, idx, closes, highs, lows in series:
+    for s, idx, closes, highs, lows, _opens in series:
         list_date = s.get("list_date")
         if list_date is not None and (d - list_date).days <= LIST_DAYS_MIN:
             continue
@@ -1010,7 +1011,7 @@ def _day_trend_hold_mean(
     ps = prev.isoformat()
     vals: list[float] = []
     n_bad = 0
-    for s, idx, closes, highs, lows in series:
+    for s, idx, closes, highs, lows, _opens in series:
         list_date = s.get("list_date")
         if list_date is not None and (prev - list_date).days <= LIST_DAYS_MIN:
             continue
@@ -1307,7 +1308,7 @@ def ensure_means_200d(
         ds = d.isoformat()
         trend = {k: 0 for k in keys}
         total = {k: 0 for k in keys}
-        for s, idx, closes, highs, lows in series:
+        for s, idx, closes, highs, lows, _opens in series:
             list_date = s.get("list_date")
             if list_date is not None and (d - list_date).days <= LIST_DAYS_MIN:
                 continue
