@@ -4502,6 +4502,7 @@ def render_trend_strength_html(block: dict) -> str:
             "今日趋势承接",
             hold_series_plot,
             baseline=hold_mean_f,
+            avg2d=True,
         )
         pills: list[str] = []
         # 近5日**原始日值**均值 vs 近200日均值 → 次日承接较好 / 次日承接不好
@@ -4624,6 +4625,7 @@ def _render_chase_metric_chart(
     series: list[dict],
     *,
     baseline: float | None = None,
+    avg2d: bool = False,
 ) -> str:
     """效应柱图：以 baseline（近200日均值）为零轴，均值上红 / 均值下绿；无 baseline 时退回绝对零轴。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
@@ -4705,7 +4707,7 @@ def _render_chase_metric_chart(
         )
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
-    # 若有 value_raw（今日趋势承接）：meta「最新」用当日原始值；柱高仍用 value（近2日均）
+    # 若有 value_raw（今日趋势承接 / 回落指数）：meta「最新」用当日原始值；柱高仍用 value（近2日均）
     if last is not None:
         meta_v = last.get("value_raw")
         if meta_v is None:
@@ -4716,10 +4718,11 @@ def _render_chase_metric_chart(
             latest_lab = "—"
     else:
         latest_lab = "—"
+    meta_txt = f"2日均值 · 最新 {latest_lab}" if avg2d else f"最新 {latest_lab}"
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
-      <span class="chase-chart-meta">最新 {latest_lab}</span>
+      <span class="chase-chart-meta">{meta_txt}</span>
     </div>
     <div class="chase-plot">
       <div class="chase-bars">{"".join(cols)}</div>
@@ -4854,6 +4857,7 @@ def _render_chase_count_chart(
         latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
+    meta_txt = f"2日均值 · 最新 {latest_lab}"
 
     # 近5日**当日原始家数**均值 vs 近200日均值 → 活跃周期 / 不活跃周期
     # （与「今日趋势承接」一致：用近五日原始日值，不是五个近2日均值再平均）
@@ -4881,7 +4885,7 @@ def _render_chase_count_chart(
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
-      <span class="chase-chart-meta">最新 {latest_lab}</span>
+      <span class="chase-chart-meta">{meta_txt}</span>
     </div>
     <div class="chase-plot">
       <div class="chase-bars">{"".join(cols)}</div>
@@ -5083,7 +5087,9 @@ def render_chase_sentiment_html(block: dict) -> str:
         if mk == "pullback":
             ser = _smooth_metric_series_2d(ser)
         effect_charts.append(
-            _render_chase_metric_chart(title, ser, baseline=baseline)
+            _render_chase_metric_chart(
+                title, ser, baseline=baseline, avg2d=(mk == "pullback")
+            )
         )
     if effect_charts:
         parts.append(
@@ -5128,13 +5134,13 @@ def render_chase_sentiment_html(block: dict) -> str:
         "追高定义：日内最高价相对昨收涨幅≥7%。"
         "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
         "柱高为近2日合计原始家数均值（当日与前一交易日）；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
-        "标题「最新 N 家」为当日合计原始家数；"
+        "标题「2日均值 · 最新 N 家」中「最新」为当日合计原始家数；"
         "标签：近5日当日原始家数均值≥近200日均值标「活跃周期」，否则「不活跃周期」"
         "（近五日原始日值，不是五个近2日均值再平均；图下方，样式同量能标签）。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近120日；主板+创板按当日池内家数加权合并为各一张图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
-        "回落指数柱高为近2日均值，标题「最新」仍为当日值；"
+        "回落指数柱高为近2日均值，标题「2日均值 · 最新」中「最新」仍为当日值；"
         "低吸赚钱效应：取前一交易日振幅>8%且(最高−开盘)/开盘>5%的个股池，"
         "计算当日(今开−昨开)/昨开的池内算术均值；近120日；柱色以近200日均值为零轴；"
         "低吸锁仓收益：同一低吸池，计算当日(今收−昨开)/昨开的池内算术均值；近120日；"
