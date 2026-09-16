@@ -37,12 +37,14 @@ try:
         compute_trend_strength,
         ensure_count_series_30d,
         ensure_means_200d,
+        ensure_trend_hold_series_120d,
         RESULT_DIR as TREND_RESULT_DIR,
     )
 except ImportError:  # pragma: no cover
     compute_trend_strength = None  # type: ignore
     ensure_means_200d = None  # type: ignore
     ensure_count_series_30d = None  # type: ignore
+    ensure_trend_hold_series_120d = None  # type: ignore
     TREND_RESULT_DIR = BASE / "trend_strength_results"
 
 try:
@@ -4159,6 +4161,41 @@ def load_trend_strength_block(
                         block["count_series"] = clipped
             except json.JSONDecodeError:
                 pass
+
+    # 今日趋势承接（近120日）：最新交易日重算；历史日从缓存截取
+    if is_latest and ensure_trend_hold_series_120d is not None:
+        try:
+            days_hold = _trading_days_ending(as_of_d, 201)
+            hold = ensure_trend_hold_series_120d(
+                as_of_d, days_hold, force=False, progress=True
+            ) or {}
+            block = dict(block)
+            block["hold_series"] = list(hold.get("daily") or [])
+            block["hold_mean_200d"] = hold.get("mean_200d")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[trend-hold] 更新失败: {exc}")
+    elif not block.get("hold_series"):
+        hpath = TREND_RESULT_DIR / "hold_series_120d.json"
+        if hpath.exists():
+            try:
+                hdata = json.loads(hpath.read_text(encoding="utf-8"))
+                daily = list(hdata.get("daily") or [])
+                as_of_s = as_of_d.isoformat()
+                if daily and (
+                    hdata.get("as_of") == as_of_s
+                    or any(str(r.get("date") or "")[:10] == as_of_s for r in daily)
+                ):
+                    clipped = [
+                        r for r in daily if str(r.get("date") or "")[:10] <= as_of_s
+                    ][-120:]
+                    if clipped:
+                        block = dict(block)
+                        block["hold_series"] = clipped
+                        # 历史页沿用全序列均值（与最新缓存一致）
+                        if hdata.get("mean_200d") is not None:
+                            block["hold_mean_200d"] = hdata.get("mean_200d")
+            except json.JSONDecodeError:
+                pass
     return block
 
 
@@ -4423,13 +4460,35 @@ def render_trend_strength_html(block: dict) -> str:
     else:
         amt_chart = ""
 
+    hold_series = block.get("hold_series") or []
+    hold_mean = block.get("hold_mean_200d")
+    try:
+        hold_mean_f = float(hold_mean) if hold_mean is not None else None
+    except (TypeError, ValueError):
+        hold_mean_f = None
+    hold_chart = ""
+    if hold_series:
+        hold_chart = _render_chase_metric_chart(
+            "今日趋势承接",
+            hold_series,
+            baseline=hold_mean_f,
+        )
+
     note_html = (
         '<div class="ts-note">'
         "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    return f"{count_chart}{chart}{amt_chart}{note_html}"
+    hold_note = ""
+    if hold_chart:
+        hold_note = (
+            '<div class="ts-note ts-hold-note">'
+            "今日趋势承接：取前一交易日强趋势池，算 (今收−昨均价)/昨均价 的池内算术均值；"
+            "昨均价优先成交额/成交量，否则 (最高+最低)/2；横轴近120日，零轴=近200日均值。"
+            "</div>"
+        )
+    return f"{count_chart}{chart}{amt_chart}{hold_chart}{note_html}{hold_note}"
 
 
 def load_chase_sentiment_block(

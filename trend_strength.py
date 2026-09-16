@@ -33,11 +33,14 @@ CACHE_FILE = BASE / "trend_klines_cache.json"
 LONG_CACHE_FILE = BASE / "trend_klines_cache_long.json"
 MEANS_200D_FILE = RESULT_DIR / "means_200d.json"
 COUNT_SERIES_30D_FILE = RESULT_DIR / "count_series_30d.json"
+HOLD_SERIES_120D_FILE = RESULT_DIR / "hold_series_120d.json"
 WORKERS = 48
 KLINE_LEN = 40
 LONG_KLINE_LEN = 260  # 200 交易日均值 + MA20 余量
 MEANS_DAYS = 200
 COUNT_SERIES_DAYS = 30
+HOLD_SERIES_DAYS = 120
+HOLD_MEAN_DAYS = 200
 MIN_BARS = 20
 LIST_DAYS_MIN = 10
 # 符合条件个股：当日成交额分档阈值（元）
@@ -703,15 +706,22 @@ def _parse_long_cache_rows(raw_rows: list) -> list[dict]:
         if len(parts) < 5:
             continue
         try:
-            rows.append(
-                {
-                    "date": parts[0][:10],
-                    "open": float(parts[1]),
-                    "close": float(parts[2]),
-                    "high": float(parts[3]),
-                    "low": float(parts[4]),
-                }
-            )
+            row = {
+                "date": parts[0][:10],
+                "open": float(parts[1]),
+                "close": float(parts[2]),
+                "high": float(parts[3]),
+                "low": float(parts[4]),
+            }
+            # 新格式: date,o,c,h,l,volume,amount；旧格式: date,o,c,h,l,amount
+            if len(parts) >= 7:
+                if parts[5]:
+                    row["volume"] = float(parts[5])
+                if parts[6]:
+                    row["amount"] = float(parts[6])
+            elif len(parts) >= 6 and parts[5]:
+                row["amount"] = float(parts[5])
+            rows.append(row)
         except ValueError:
             continue
     return rows
@@ -730,7 +740,8 @@ def load_long_kline_cache() -> dict[str, list[dict]]:
 def save_long_kline_cache(cache: dict[str, list[dict]]) -> None:
     out = {
         code: [
-            f"{r['date']},{r['open']},{r['close']},{r['high']},{r['low']},{r.get('amount') or ''}"
+            f"{r['date']},{r['open']},{r['close']},{r['high']},{r['low']},"
+            f"{r.get('volume') or ''},{r.get('amount') or ''}"
             for r in rows
         ]
         for code, rows in cache.items()
@@ -765,6 +776,14 @@ def fetch_long_klines_qq(code: str, market: int | None) -> list[dict]:
                 "high": float(item[3]),
                 "low": float(item[4]),
             }
+            # QQ: volume 为手 → 股；amount 为万元 → 元
+            if len(item) >= 6:
+                try:
+                    vol = float(item[5]) * 100.0
+                    if vol > 0:
+                        row["volume"] = vol
+                except (TypeError, ValueError):
+                    pass
             if len(item) >= 9:
                 try:
                     amt = float(item[8]) * 10000.0
@@ -808,15 +827,28 @@ def fetch_long_klines_for_stock(code: str, market: int | None, as_of: date) -> l
                     if not isinstance(item, (list, tuple)) or len(item) < 7:
                         continue
                     try:
-                        sohu.append(
-                            {
-                                "date": str(item[0])[:10],
-                                "open": float(item[1]),
-                                "close": float(item[2]),
-                                "low": float(item[5]),
-                                "high": float(item[6]),
-                            }
-                        )
+                        row = {
+                            "date": str(item[0])[:10],
+                            "open": float(item[1]),
+                            "close": float(item[2]),
+                            "low": float(item[5]),
+                            "high": float(item[6]),
+                        }
+                        # sohu 常见: … volume, amount_万元
+                        if len(item) >= 9:
+                            try:
+                                vol = float(str(item[7]).replace(",", ""))
+                                if vol > 0:
+                                    row["volume"] = vol
+                            except (TypeError, ValueError):
+                                pass
+                            try:
+                                amt = float(str(item[8]).replace(",", "")) * 10000.0
+                                if amt > 0:
+                                    row["amount"] = amt
+                            except (TypeError, ValueError):
+                                pass
+                        sohu.append(row)
                     except (TypeError, ValueError):
                         continue
                 sohu.sort(key=lambda r: r["date"])
@@ -843,12 +875,24 @@ def _stock_meets_trend_at(closes: list[float], highs: list[float], lows: list[fl
     return True
 
 
+def _cache_rows_need_avg(rows: list[dict]) -> bool:
+    """缺成交额/量时无法算均价 VWAP，需补拉。"""
+    if not rows:
+        return True
+    ok = 0
+    for r in rows[-5:]:
+        if r.get("amount") and r.get("volume"):
+            ok += 1
+    return ok < 3
+
+
 def _prepare_long_series(
     as_of_d: date,
     days: list[date],
     *,
     progress: bool = True,
     log_tag: str = "trend-means",
+    need_avg: bool = False,
 ) -> list[tuple]:
     """拉取/复用长K线，返回 (stock, idx, closes, highs, lows) 列表。"""
     universe = fetch_universe()
@@ -860,6 +904,7 @@ def _prepare_long_series(
         if len(cache.get(s["code"]) or []) < 180
         or (cache.get(s["code"]) or [{}])[0].get("date", "9999") > day0
         or (cache.get(s["code"]) or [{}])[-1].get("date", "") < as_of_d.isoformat()
+        or (need_avg and _cache_rows_need_avg(cache.get(s["code"]) or []))
     ]
     if need:
         if progress:
@@ -921,6 +966,194 @@ def _count_all_on_day(series: list[tuple], d: date) -> tuple[int, int]:
             continue
         trend_n += 1
     return trend_n, total_n
+
+
+def _bar_avg_price(row: dict, *, high: float, low: float) -> float | None:
+    """日均价：优先成交额/成交量；结果须落在当日高低附近，否则 (最高+最低)/2。
+
+    QQ 等源对「手/股」单位不一致时，VWAP 会偏离高低价几个数量级，故做合理性校验。
+    """
+    hi = max(float(high), float(low)) if high and low else float(high or low or 0)
+    lo = min(float(high), float(low)) if high and low else float(low or high or 0)
+    try:
+        amt = float(row["amount"]) if row.get("amount") is not None else None
+        vol = float(row["volume"]) if row.get("volume") is not None else None
+    except (TypeError, ValueError):
+        amt, vol = None, None
+    if amt is not None and vol is not None and vol > 0 and amt > 0 and lo > 0 and hi > 0:
+        avg = amt / vol
+        # 正常均价应在当日高低之间（略放宽浮点误差）
+        if lo * 0.98 <= avg <= hi * 1.02:
+            return avg
+        # 若 volume 被多乘/少乘 100，试一次修正
+        for factor in (100.0, 0.01):
+            avg2 = amt / (vol * factor)
+            if lo * 0.98 <= avg2 <= hi * 1.02:
+                return avg2
+    if hi > 0 and lo > 0:
+        return (hi + lo) / 2.0
+    return None
+
+
+def _day_trend_hold_mean(
+    series: list[tuple],
+    cache: dict[str, list[dict]],
+    d: date,
+    prev: date,
+) -> tuple[float | None, int]:
+    """取 prev 日强趋势池，算 d 日 (收盘−prev均价)/prev均价 的算术均值（小数，非%）。"""
+    ds = d.isoformat()
+    ps = prev.isoformat()
+    vals: list[float] = []
+    for s, idx, closes, highs, lows in series:
+        list_date = s.get("list_date")
+        if list_date is not None and (prev - list_date).days <= LIST_DAYS_MIN:
+            continue
+        i_prev = idx.get(ps)
+        i_cur = idx.get(ds)
+        if i_prev is None or i_cur is None or i_prev < 1:
+            continue
+        if i_prev + 1 < MIN_BARS:
+            continue
+        if list_date is None and (i_prev + 1) <= LIST_DAYS_MIN:
+            continue
+        # 昨池：非跌停 + 五条件
+        c0, c1 = closes[i_prev - 1], closes[i_prev]
+        if c0 and is_limit_down(
+            s["code"], s["name"], (c1 / c0 - 1.0) * 100.0, c1, c0
+        ):
+            continue
+        if not _stock_meets_trend_at(closes, highs, lows, i_prev):
+            continue
+        rows = cache.get(s["code"]) or []
+        if i_prev >= len(rows):
+            continue
+        avg_prev = _bar_avg_price(
+            rows[i_prev], high=float(highs[i_prev]), low=float(lows[i_prev])
+        )
+        cur_c = float(closes[i_cur])
+        if avg_prev is None or avg_prev <= 0 or cur_c <= 0:
+            continue
+        vals.append((cur_c - avg_prev) / avg_prev)
+    if not vals:
+        return None, 0
+    return sum(vals) / len(vals), len(vals)
+
+
+def ensure_trend_hold_series_120d(
+    as_of: date | datetime | str,
+    trading_days: list[date] | None = None,
+    *,
+    force: bool = False,
+    progress: bool = True,
+) -> dict:
+    """近 HOLD_SERIES_DAYS 日「今日趋势承接」序列 + 近 HOLD_MEAN_DAYS 日均值。
+
+    每日取前一交易日强趋势池，算 (今收−昨均价)/昨均价 的池内均值。
+    """
+    as_of_d = _as_date(as_of)
+    RESULT_DIR.mkdir(parents=True, exist_ok=True)
+    if HOLD_SERIES_120D_FILE.exists() and not force:
+        try:
+            cached = json.loads(HOLD_SERIES_120D_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            cached = None
+        if (
+            cached
+            and cached.get("as_of") == as_of_d.isoformat()
+            and isinstance(cached.get("daily"), list)
+            and len(cached["daily"]) >= min(10, HOLD_SERIES_DAYS)
+            and cached.get("mean_200d") is not None
+        ):
+            return cached
+
+    # 展示 120 日 + 均值 200 日 + 再多 1 日供首日昨池
+    need = HOLD_MEAN_DAYS + 1
+    from trading_calendar import trading_days_ending as _cal_days
+
+    if trading_days is None:
+        days = _cal_days(as_of_d, need, refresh=False)
+    else:
+        days = [d for d in trading_days if d <= as_of_d]
+        days = sorted(set(days))
+        if len(days) < need:
+            extra = _cal_days(as_of_d, need, refresh=False)
+            days = sorted(set(days) | set(extra))
+        days = days[-need:]
+
+    if len(days) < 2:
+        payload = {
+            "as_of": as_of_d.isoformat(),
+            "daily": [],
+            "note": "交易日不足",
+            "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        HOLD_SERIES_120D_FILE.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        return payload
+
+    # 计算日 = days[1:]，每日前一日为池
+    calc_days = days[1:]
+    if progress:
+        print(
+            f"[trend-hold] 近{min(len(calc_days), HOLD_MEAN_DAYS)}日趋势承接 "
+            f"→ {calc_days[0]}…{calc_days[-1]}"
+        )
+
+    series = _prepare_long_series(
+        as_of_d, days, progress=progress, log_tag="trend-hold", need_avg=True
+    )
+    cache = load_long_kline_cache()
+    daily_all: list[dict] = []
+    t0 = time.time()
+    for j in range(1, len(days)):
+        d = days[j]
+        prev = days[j - 1]
+        mean_v, n = _day_trend_hold_mean(series, cache, d, prev)
+        daily_all.append(
+            {
+                "date": d.isoformat(),
+                "value": round(100.0 * mean_v, 4) if mean_v is not None else None,
+                "n": n,
+            }
+        )
+
+    # 近200日均值（有效样本）
+    mean_window = daily_all[-HOLD_MEAN_DAYS:]
+    mean_vals = [float(x["value"]) for x in mean_window if x.get("value") is not None]
+    mean_200d = (
+        round(sum(mean_vals) / len(mean_vals), 4)
+        if len(mean_vals) >= HOLD_MEAN_DAYS
+        else (round(sum(mean_vals) / len(mean_vals), 4) if mean_vals else None)
+    )
+
+    daily = daily_all[-HOLD_SERIES_DAYS:]
+    payload = {
+        "as_of": as_of_d.isoformat(),
+        "start": daily[0]["date"] if daily else None,
+        "end": daily[-1]["date"] if daily else None,
+        "n_days": len(daily),
+        "mean_200d": mean_200d,
+        "mean_days": len(mean_vals),
+        "daily": daily,
+        "note": (
+            "今日趋势承接：取前一交易日强趋势池（五条件同趋势强度），"
+            "算 (今收−昨均价)/昨均价 的池内算术均值；昨均价优先成交额/成交量，否则(最高+最低)/2。"
+        ),
+        "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    HOLD_SERIES_120D_FILE.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    if progress:
+        last = daily[-1] if daily else {}
+        print(
+            f"[trend-hold] 完成 · 末日 {last.get('value')}% "
+            f"n={last.get('n')} 均值200d={mean_200d} "
+            f"用时{time.time()-t0:.0f}s → {HOLD_SERIES_120D_FILE.name}"
+        )
+    return payload
 
 
 def _overlay_daily_result(daily: list[dict], as_of_d: date) -> None:

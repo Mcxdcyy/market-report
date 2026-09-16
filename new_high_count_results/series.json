@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "note": "新高家数本地序列：历史段已固化（source=numbers_seed）；此后仅按日写入问财结果，不读大盘数据.numbers。删除桌面大盘表不影响本序列。",
+  "note": "新高家数本地序列：历史段已固化（source=numbers_seed/history）；此后仅按日写入问财结果，不读大盘数据.numbers。",
   "query_today": "今日最高价创历史新高，非st，非退市，非北京证券交易所，上市天数大于10天",
   "days": {
     "2026-04-21": {
@@ -740,9 +740,17 @@
       ],
       "codes": [],
       "fetched": "2026-09-15 17:08:40"
+    },
+    "2026-09-16": {
+      "count": 11,
+      "source": "wencai_browser",
+      "query": "今日最高价创历史新高，非st，非退市，非北京证券交易所，上市天数大于10天",
+      "names": [],
+      "codes": [],
+      "fetched": "2026-09-16 16:47:59"
     }
   },
-  "updated": "2026-09-15 17:49:07",
+  "updated": "2026-09-16 16:47:59",
   "frozen": true,
   "no_numbers_dependency": true
 }
