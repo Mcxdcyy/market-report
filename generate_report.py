@@ -4478,7 +4478,8 @@ def load_chase_sentiment_block(
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("groups")
-                and cached.get("schema") == 11
+                and int(cached.get("schema") or 0) >= 12
+                and int(cached.get("effect_days") or 0) >= 120
                 and pb.get("mean_200d") is not None
                 and money.get("mean_200d") is not None
                 and loss.get("mean_200d") is not None
@@ -4781,6 +4782,67 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
     return merged, baseline
 
 
+def _merge_chase_effect_series(
+    groups: dict,
+    metric_key: str,
+) -> tuple[list[dict], float | None]:
+    """主板+创板效应指标按日家数加权合并 → 序列与近200日均值。"""
+    main_m = ((groups.get("main") or {}).get("metrics") or {}).get(metric_key) or {}
+    cyb_m = ((groups.get("cyb") or {}).get("metrics") or {}).get(metric_key) or {}
+    main_ser = main_m.get("series") or []
+    cyb_ser = cyb_m.get("series") or []
+    by_cyb = {str(x.get("date") or "")[:10]: x for x in cyb_ser}
+
+    merged: list[dict] = []
+    for row in main_ser:
+        ds = str(row.get("date") or "")[:10]
+        other = by_cyb.get(ds) or {}
+        try:
+            v1 = float(row["value"]) if row.get("value") is not None else None
+        except (TypeError, ValueError):
+            v1 = None
+        try:
+            v2 = float(other["value"]) if other.get("value") is not None else None
+        except (TypeError, ValueError):
+            v2 = None
+        n1 = int(row.get("n") or 0)
+        n2 = int(other.get("n") or 0)
+        n = n1 + n2
+        if v1 is None and v2 is None:
+            val = None
+        elif n > 0 and v1 is not None and v2 is not None:
+            val = (v1 * n1 + v2 * n2) / n
+        elif n > 0 and v1 is not None and n1 > 0:
+            val = v1
+        elif n > 0 and v2 is not None and n2 > 0:
+            val = v2
+        elif v1 is not None and v2 is not None:
+            val = (v1 + v2) / 2.0
+        else:
+            val = v1 if v1 is not None else v2
+        if val is not None:
+            val = round(float(val), 4)
+        merged.append({"date": ds, "value": val, "n": n})
+
+    baseline: float | None = None
+    try:
+        m1 = main_m.get("mean_200d")
+        m2 = cyb_m.get("mean_200d")
+        w1 = sum(int(x.get("n") or 0) for x in main_ser)
+        w2 = sum(int(x.get("n") or 0) for x in cyb_ser)
+        if m1 is not None and m2 is not None and (w1 + w2) > 0:
+            baseline = (float(m1) * w1 + float(m2) * w2) / (w1 + w2)
+        elif m1 is not None and m2 is not None:
+            baseline = (float(m1) + float(m2)) / 2.0
+        elif m1 is not None:
+            baseline = float(m1)
+        elif m2 is not None:
+            baseline = float(m2)
+    except (TypeError, ValueError):
+        baseline = None
+    return merged, baseline
+
+
 def render_chase_sentiment_html(block: dict) -> str:
     groups = block.get("groups") or {}
     if not groups:
@@ -4797,31 +4859,21 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    for gkey in ("main", "cyb"):
-        g = groups.get(gkey) or {}
-        gname = g.get("name") or gkey
-        metrics = g.get("metrics") or {}
-        charts = []
-        for mk, default_title in (
-            ("money", "昨追-赚钱效应"),
-            ("loss", "昨追-今日承接"),
-            ("pullback", "今追-回落指数"),
-        ):
-            m = metrics.get(mk) or {}
-            title = m.get("name") or default_title
-            ser = m.get("series") or []
-            mean_200d = m.get("mean_200d")
-            try:
-                baseline = float(mean_200d) if mean_200d is not None else None
-            except (TypeError, ValueError):
-                baseline = None
-            charts.append(
-                _render_chase_metric_chart(title, ser, baseline=baseline)
-            )
+    # 效应三图：主板+创板按家数加权合并，近120日
+    effect_charts = []
+    for mk, title in (
+        ("money", "昨追-赚钱效应"),
+        ("loss", "昨追-今日承接"),
+        ("pullback", "今追-回落指数"),
+    ):
+        ser, baseline = _merge_chase_effect_series(groups, mk)
+        effect_charts.append(
+            _render_chase_metric_chart(title, ser, baseline=baseline)
+        )
+    if effect_charts:
         parts.append(
             f'''<div class="chase-group">
-    <div class="chase-group-title">{gname}</div>
-    <div class="chase-grid">{"".join(charts)}</div>
+    <div class="chase-grid single">{"".join(effect_charts)}</div>
   </div>'''
         )
 
@@ -4832,12 +4884,11 @@ def render_chase_sentiment_html(block: dict) -> str:
         "柱高为当日合计原始家数；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
         "标题「最新 N 家」为当日合计原始家数；"
         "标签：近5日均值≥近200日均值标「活跃周期」，否则「不活跃周期」（图下方，样式同量能标签）。"
-        "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；"
+        "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近120日；主板+创板按当日池内家数加权合并为各一张图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
         "效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
-        "每日对相应池取算术均值；不含ST、北交所；"
-        "不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
+        "不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
     )
     return "".join(parts) + note
