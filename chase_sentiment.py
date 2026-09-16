@@ -12,7 +12,7 @@
 3. 今追-回落指数：同上加权合并；取**当日**追高池 (今收−今高)/今高；近 **120** 日
 4. 低吸赚钱效应：全场池；取**前一交易日**同时满足振幅>8% 且 (最高−开盘)/开盘>5%；
    算当日 (今开−昨开)/昨开 池内均值；近 **120** 日；近200日均值零轴
-5. 低吸锁仓收益：同上低吸池；算当日 (今收−昨开)/昨开 池内均值；近 **120** 日；**绝对零轴**
+5. 低吸锁仓收益：同上低吸池；算当日 (今收−昨开)/昨开 池内均值；近 **120** 日；近200日均值零轴
 6. 低吸锁仓收益T+2：取**前两交易日**低吸池；算当日 (今收−池日开盘)/池日开盘 池内均值；近 **120** 日；**绝对零轴**
 
 排除 ST、北交所；上市日历天数 ≤10；一字涨停（当日最低价=当日涨停价）。
@@ -38,7 +38,7 @@ MEAN_DAYS = 200  # 效应/数量着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, EFFECT_DAYS, MEAN_DAYS)
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 16  # 新增低吸锁仓收益T+2（池取前两交易日）
+SCHEMA = 17  # 低吸锁仓收益改近200日均值零轴（T+2 仍绝对零轴）
 DIP_AMP_PCT = 0.08  # 当日振幅 > 8%
 DIP_OPEN_HIGH_PCT = 0.05  # (最高−开盘)/开盘 > 5%
 
@@ -289,6 +289,7 @@ def compute_chase_sentiment(
                 .get("mean_200d")
                 is not None
                 and (cached.get("dip_buy") or {}).get("mean_200d") is not None
+                and (cached.get("dip_lock") or {}).get("mean_200d") is not None
                 and isinstance((cached.get("dip_lock") or {}).get("series"), list)
                 and len((cached.get("dip_lock") or {}).get("series") or []) >= EFFECT_DAYS
                 and isinstance((cached.get("dip_lock_t2") or {}).get("series"), list)
@@ -468,26 +469,25 @@ def compute_chase_sentiment(
                     "n": n_lock_t2,
                 }
             )
-    # 对齐 SERIES_DAYS 窗口后再切 120 / 算 200 均值（赚钱效应用）
+    # 对齐 SERIES_DAYS 窗口后再切 120 / 算 200 均值（赚钱效应、锁仓收益）
     dip_rows = dip_all[-SERIES_DAYS:] if len(dip_all) >= SERIES_DAYS else dip_all
     lock_rows = lock_all[-SERIES_DAYS:] if len(lock_all) >= SERIES_DAYS else lock_all
     lock_t2_rows = (
         lock_t2_all[-SERIES_DAYS:] if len(lock_t2_all) >= SERIES_DAYS else lock_t2_all
     )
-    dip_mean_vals = [
-        float(x["value"])
-        for x in dip_rows[-MEAN_DAYS:]
-        if x.get("value") is not None
-    ]
-    if len(dip_mean_vals) >= MEAN_DAYS:
-        dip_mean = round(sum(dip_mean_vals) / len(dip_mean_vals), 4)
-        dip_mean_n = len(dip_mean_vals)
-    elif dip_mean_vals:
-        dip_mean = round(sum(dip_mean_vals) / len(dip_mean_vals), 4)
-        dip_mean_n = len(dip_mean_vals)
-    else:
-        dip_mean = None
-        dip_mean_n = 0
+
+    def _mean_200(rows: list[dict]) -> tuple[float | None, int]:
+        vals = [
+            float(x["value"])
+            for x in rows[-MEAN_DAYS:]
+            if x.get("value") is not None
+        ]
+        if not vals:
+            return None, 0
+        return round(sum(vals) / len(vals), 4), len(vals)
+
+    dip_mean, dip_mean_n = _mean_200(dip_rows)
+    lock_mean, lock_mean_n = _mean_200(lock_rows)
     dip_series = dip_rows[-EFFECT_DAYS:]
     lock_series = lock_rows[-EFFECT_DAYS:]
     lock_t2_series = lock_t2_rows[-EFFECT_DAYS:]
@@ -500,7 +500,8 @@ def compute_chase_sentiment(
     dip_lock = {
         "name": "低吸锁仓收益",
         "series": lock_series,
-        "axis": 0,
+        "mean_200d": lock_mean,
+        "mean_days": lock_mean_n,
     }
     dip_lock_t2 = {
         "name": "低吸锁仓收益T+2",
@@ -539,7 +540,7 @@ def compute_chase_sentiment(
             "效应三图柱色均相对近200日均值（均值上红/均值下绿）。"
             "低吸赚钱效应：取前一交易日振幅>8%且(最高−开盘)/开盘>5%的个股池，"
             "算当日(今开−昨开)/昨开的池内均值；近120日；近200日均值零轴。"
-            "低吸锁仓收益：同一低吸池，算当日(今收−昨开)/昨开的池内均值；近120日；绝对零轴。"
+            "低吸锁仓收益：同一低吸池，算当日(今收−昨开)/昨开的池内均值；近120日；近200日均值零轴。"
             "低吸锁仓收益T+2：取前两交易日同一低吸条件池，算当日(今收−池日开盘)/池日开盘的池内均值；"
             "近120日；绝对零轴。"
             "创板=创业板+科创板；不含ST、北交所；不含上市日历天数≤10；"

@@ -4595,13 +4595,14 @@ def load_chase_sentiment_block(
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("groups")
-                and int(cached.get("schema") or 0) >= 16
+                and int(cached.get("schema") or 0) >= 17
                 and int(cached.get("effect_days") or 0) >= 120
                 and pb.get("mean_200d") is not None
                 and money.get("mean_200d") is not None
                 and loss.get("mean_200d") is not None
                 and count_m.get("mean_200d") is not None
                 and dip.get("mean_200d") is not None
+                and lock.get("mean_200d") is not None
                 and isinstance(dip.get("series"), list)
                 and isinstance(lock.get("series"), list)
                 and isinstance(lock_t2.get("series"), list)
@@ -5118,12 +5119,17 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 低吸锁仓收益：同一低吸池，绝对零轴
+    # 低吸锁仓收益：同一低吸池，近200日均值零轴
     lock = block.get("dip_lock") or {}
     lock_ser = list(lock.get("series") or [])
+    lock_base = lock.get("mean_200d")
+    try:
+        lock_base_f = float(lock_base) if lock_base is not None else None
+    except (TypeError, ValueError):
+        lock_base_f = None
     if lock_ser:
         lock_chart = _render_chase_metric_chart(
-            "低吸锁仓收益", lock_ser, baseline=None
+            "低吸锁仓收益", lock_ser, baseline=lock_base_f
         )
         parts.append(
             f'''<div class="chase-group">
@@ -5131,7 +5137,7 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 低吸锁仓收益T+2：池取前两交易日，其余同锁仓收益
+    # 低吸锁仓收益T+2：池取前两交易日，绝对零轴
     lock_t2 = block.get("dip_lock_t2") or {}
     lock_t2_ser = list(lock_t2.get("series") or [])
     if lock_t2_ser:
@@ -5159,10 +5165,10 @@ def render_chase_sentiment_html(block: dict) -> str:
         "低吸赚钱效应：取前一交易日振幅>8%且(最高−开盘)/开盘>5%的个股池，"
         "计算当日(今开−昨开)/昨开的池内算术均值；近120日；柱色以近200日均值为零轴；"
         "低吸锁仓收益：同一低吸池，计算当日(今收−昨开)/昨开的池内算术均值；近120日；"
-        "柱色以绝对0为零轴（0上红 / 0下绿）；"
+        "柱色以近200日均值为零轴（均值上红 / 均值下绿）；"
         "低吸锁仓收益T+2：取前两交易日同一低吸条件池，计算当日(今收−池日开盘)/池日开盘的池内算术均值；"
         "近120日；柱色以绝对0为零轴（0上红 / 0下绿）；"
-        "效应图（除锁仓收益两图外）柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
+        "效应图（除低吸锁仓收益T+2外）柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
         "不含ST、北交所；不含上市日历天数≤10的个股；"
         "追高池另不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
