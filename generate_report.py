@@ -4492,16 +4492,7 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    hold_note = ""
-    if hold_chart:
-        hold_note = (
-            '<div class="ts-note ts-hold-note">'
-            "今日趋势承接：取前一交易日强趋势池，算 (今收−昨均价)/昨均价 的池内算术均值；"
-            "昨均价=成交额/成交量；算不出则剔除该票并标「数据异常」；"
-            "横轴近120日，零轴=近200日均值。"
-            "</div>"
-        )
-    return f"{count_chart}{chart}{amt_chart}{hold_chart}{note_html}{hold_note}"
+    return f"{count_chart}{chart}{amt_chart}{hold_chart}{note_html}"
 
 
 def load_chase_sentiment_block(
