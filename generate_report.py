@@ -4963,6 +4963,32 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
     return out, baseline
 
 
+def _smooth_metric_series_2d(series: list[dict]) -> list[dict]:
+    """柱高改为近2日原始值均值；保留 value_raw 供 meta「最新」用当日值。"""
+    out: list[dict] = []
+    for i, row in enumerate(series):
+        raw = row.get("value")
+        try:
+            raw_f = float(raw) if raw is not None else None
+        except (TypeError, ValueError):
+            raw_f = None
+        prev_raw = None
+        if i > 0:
+            try:
+                pr = series[i - 1].get("value")
+                prev_raw = float(pr) if pr is not None else None
+            except (TypeError, ValueError):
+                prev_raw = None
+        if raw_f is None:
+            plot_v = None
+        elif prev_raw is None:
+            plot_v = raw_f
+        else:
+            plot_v = round((raw_f + prev_raw) / 2.0, 4)
+        out.append({**row, "value": plot_v, "value_raw": raw_f})
+    return out
+
+
 def _merge_chase_effect_series(
     groups: dict,
     metric_key: str,
@@ -5048,6 +5074,9 @@ def render_chase_sentiment_html(block: dict) -> str:
         ("pullback", "今追-回落指数"),
     ):
         ser, baseline = _merge_chase_effect_series(groups, mk)
+        # 回落指数：柱高近2日均值；meta「最新」仍用当日原始值（value_raw）
+        if mk == "pullback":
+            ser = _smooth_metric_series_2d(ser)
         effect_charts.append(
             _render_chase_metric_chart(title, ser, baseline=baseline)
         )
@@ -5069,6 +5098,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近120日；主板+创板按当日池内家数加权合并为各一张图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
+        "回落指数柱高为近2日均值，标题「最新」仍为当日值；"
         "效应三图柱色均以近200日均值为零轴（均值上红 / 均值下绿）。"
         "不含ST、北交所；不含上市日历天数≤10的个股；不含一字涨停（当日最低价=当日涨停价）。"
         "</div>"
