@@ -5076,20 +5076,18 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 效应三图：主板+创板按家数加权合并，近120日
+    # 效应两图：主板+创板按家数加权合并，近120日（已删「昨追-赚钱效应」）
+    # 柱高均为近2日均值；meta「最新」仍用当日原始值（value_raw）
     effect_charts = []
     for mk, title in (
-        ("money", "昨追-赚钱效应"),
         ("loss", "昨追-今日承接"),
         ("pullback", "今追-回落指数"),
     ):
         ser, baseline = _merge_chase_effect_series(groups, mk)
-        # 回落指数：柱高近2日均值；meta「最新」仍用当日原始值（value_raw）
-        if mk == "pullback":
-            ser = _smooth_metric_series_2d(ser)
+        ser = _smooth_metric_series_2d(ser)
         effect_charts.append(
             _render_chase_metric_chart(
-                title, ser, baseline=baseline, avg2d=(mk == "pullback")
+                title, ser, baseline=baseline, avg2d=True
             )
         )
     if effect_charts:
@@ -5099,7 +5097,7 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 低吸赚钱效应
+    # 低吸赚钱效应：柱高近2日均值；meta「最新」仍用当日原始值（已删「低吸锁仓收益」）
     dip = block.get("dip_buy") or {}
     dip_ser = list(dip.get("series") or [])
     dip_base = dip.get("mean_200d")
@@ -5108,30 +5106,13 @@ def render_chase_sentiment_html(block: dict) -> str:
     except (TypeError, ValueError):
         dip_base_f = None
     if dip_ser:
+        dip_ser = _smooth_metric_series_2d(dip_ser)
         dip_chart = _render_chase_metric_chart(
-            "低吸赚钱效应", dip_ser, baseline=dip_base_f
+            "低吸赚钱效应", dip_ser, baseline=dip_base_f, avg2d=True
         )
         parts.append(
             f'''<div class="chase-group">
     <div class="chase-grid single">{dip_chart}</div>
-  </div>'''
-        )
-
-    # 低吸锁仓收益：同一低吸池，近200日均值零轴
-    lock = block.get("dip_lock") or {}
-    lock_ser = list(lock.get("series") or [])
-    lock_base = lock.get("mean_200d")
-    try:
-        lock_base_f = float(lock_base) if lock_base is not None else None
-    except (TypeError, ValueError):
-        lock_base_f = None
-    if lock_ser:
-        lock_chart = _render_chase_metric_chart(
-            "低吸锁仓收益", lock_ser, baseline=lock_base_f
-        )
-        parts.append(
-            f'''<div class="chase-group">
-    <div class="chase-grid single">{lock_chart}</div>
   </div>'''
         )
 
