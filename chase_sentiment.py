@@ -13,7 +13,6 @@
 4. 低吸赚钱效应：全场池；取**前一交易日**同时满足振幅>8% 且 (最高−开盘)/开盘>5%；
    算当日 (今开−昨开)/昨开 池内均值；近 **120** 日；近200日均值零轴
 5. 低吸锁仓收益：同上低吸池；算当日 (今收−昨开)/昨开 池内均值；近 **120** 日；近200日均值零轴
-6. 低吸锁仓收益T+2：取**前两交易日**低吸池；算当日 (今收−池日开盘)/池日开盘 池内均值；近 **120** 日；**绝对零轴**
 
 排除 ST、北交所；上市日历天数 ≤10；一字涨停（当日最低价=当日涨停价）。
 （低吸池仅排除 ST/北交所/上市≤10，不按一字涨停过滤。）
@@ -38,7 +37,7 @@ MEAN_DAYS = 200  # 效应/数量着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, EFFECT_DAYS, MEAN_DAYS)
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 17  # 低吸锁仓收益改近200日均值零轴（T+2 仍绝对零轴）
+SCHEMA = 18  # 删除低吸锁仓收益T+2
 DIP_AMP_PCT = 0.08  # 当日振幅 > 8%
 DIP_OPEN_HIGH_PCT = 0.05  # (最高−开盘)/开盘 > 5%
 
@@ -292,15 +291,13 @@ def compute_chase_sentiment(
                 and (cached.get("dip_lock") or {}).get("mean_200d") is not None
                 and isinstance((cached.get("dip_lock") or {}).get("series"), list)
                 and len((cached.get("dip_lock") or {}).get("series") or []) >= EFFECT_DAYS
-                and isinstance((cached.get("dip_lock_t2") or {}).get("series"), list)
-                and len((cached.get("dip_lock_t2") or {}).get("series") or []) >= EFFECT_DAYS
             ):
                 return cached
         except json.JSONDecodeError:
             pass
 
-    # 多取 2 日：昨追池需再往前 1 日；低吸锁仓 T+2 池需再往前 2 日
-    need = SERIES_DAYS + 2
+    # 多取 1 日：昨追池 / 低吸池需再往前 1 日
+    need = SERIES_DAYS + 1
     if trading_days is None:
         days = trading_days_ending(as_of_d, need)
     else:
@@ -311,7 +308,7 @@ def compute_chase_sentiment(
             days = sorted(set(days) | set(extra))
         days = days[-need:]
 
-    if len(days) < 3:
+    if len(days) < 2:
         payload = {
             "as_of": as_of_d.isoformat(),
             "schema": SCHEMA,
@@ -323,8 +320,8 @@ def compute_chase_sentiment(
         return payload
 
     series_days = days[-SERIES_DAYS:]
-    # 长 K 覆盖到 series 前两日，便于昨追池与低吸 T+2 池
-    k_days = days[-(SERIES_DAYS + 2) :] if len(days) >= SERIES_DAYS + 2 else days
+    # 长 K 覆盖到 series 前一日，便于昨追池与低吸池
+    k_days = days[-(SERIES_DAYS + 1) :] if len(days) >= SERIES_DAYS + 1 else days
     if progress:
         print(
             f"[chase] 数量{COUNT_DAYS}日 / 效应{EFFECT_DAYS}日 / 回落均值{MEAN_DAYS}日 → "
@@ -437,10 +434,9 @@ def compute_chase_sentiment(
             "metrics": metrics_out,
         }
 
-    # 低吸赚钱效应 / 低吸锁仓收益 / 低吸锁仓收益T+2
+    # 低吸赚钱效应 / 低吸锁仓收益：同一低吸池，全场单序列
     dip_all: list[dict] = []
     lock_all: list[dict] = []
-    lock_t2_all: list[dict] = []
     for j in range(1, len(k_days)):
         d = k_days[j]
         prev = k_days[j - 1]
@@ -459,22 +455,9 @@ def compute_chase_sentiment(
                 "n": n_lock,
             }
         )
-        if j >= 2:
-            pool_t2 = k_days[j - 2]
-            _buy, lock_t2_v, _nb, n_lock_t2 = _day_dip_metrics(long_series, d, pool_t2)
-            lock_t2_all.append(
-                {
-                    "date": d.isoformat(),
-                    "value": round(100.0 * lock_t2_v, 4) if lock_t2_v is not None else None,
-                    "n": n_lock_t2,
-                }
-            )
-    # 对齐 SERIES_DAYS 窗口后再切 120 / 算 200 均值（赚钱效应、锁仓收益）
+    # 对齐 SERIES_DAYS 窗口后再切 120 / 算 200 均值
     dip_rows = dip_all[-SERIES_DAYS:] if len(dip_all) >= SERIES_DAYS else dip_all
     lock_rows = lock_all[-SERIES_DAYS:] if len(lock_all) >= SERIES_DAYS else lock_all
-    lock_t2_rows = (
-        lock_t2_all[-SERIES_DAYS:] if len(lock_t2_all) >= SERIES_DAYS else lock_t2_all
-    )
 
     def _mean_200(rows: list[dict]) -> tuple[float | None, int]:
         vals = [
@@ -490,7 +473,6 @@ def compute_chase_sentiment(
     lock_mean, lock_mean_n = _mean_200(lock_rows)
     dip_series = dip_rows[-EFFECT_DAYS:]
     lock_series = lock_rows[-EFFECT_DAYS:]
-    lock_t2_series = lock_t2_rows[-EFFECT_DAYS:]
     dip_buy = {
         "name": "低吸赚钱效应",
         "series": dip_series,
@@ -502,12 +484,6 @@ def compute_chase_sentiment(
         "series": lock_series,
         "mean_200d": lock_mean,
         "mean_days": lock_mean_n,
-    }
-    dip_lock_t2 = {
-        "name": "低吸锁仓收益T+2",
-        "series": lock_t2_series,
-        "axis": 0,
-        "pool_lag": 2,
     }
 
     effect_start = (
@@ -529,7 +505,6 @@ def compute_chase_sentiment(
         "groups": groups,
         "dip_buy": dip_buy,
         "dip_lock": dip_lock,
-        "dip_lock_t2": dip_lock_t2,
         "note": (
             "追高：日内最高相对昨收≥7%。"
             "追高数量：近120日；缓存为当日追高池原始家数；"
@@ -541,8 +516,6 @@ def compute_chase_sentiment(
             "低吸赚钱效应：取前一交易日振幅>8%且(最高−开盘)/开盘>5%的个股池，"
             "算当日(今开−昨开)/昨开的池内均值；近120日；近200日均值零轴。"
             "低吸锁仓收益：同一低吸池，算当日(今收−昨开)/昨开的池内均值；近120日；近200日均值零轴。"
-            "低吸锁仓收益T+2：取前两交易日同一低吸条件池，算当日(今收−池日开盘)/池日开盘的池内均值；"
-            "近120日；绝对零轴。"
             "创板=创业板+科创板；不含ST、北交所；不含上市日历天数≤10；"
             "追高池另不含一字涨停（当日最低价=当日涨停价）。"
         ),
@@ -554,13 +527,11 @@ def compute_chase_sentiment(
         cyb = daily_rows[-1].get("cyb") or {}
         last_dip = dip_series[-1] if dip_series else {}
         last_lock = lock_series[-1] if lock_series else {}
-        last_lock_t2 = lock_t2_series[-1] if lock_t2_series else {}
         print(
             f"[chase] 完成 · 末日主板昨追{main.get('n_yday')}家/今追{main.get('n_today')}家 · "
             f"创板昨追{cyb.get('n_yday')}家/今追{cyb.get('n_today')}家 · "
             f"低吸{last_dip.get('value')}% n={last_dip.get('n')} · "
-            f"锁仓{last_lock.get('value')}% n={last_lock.get('n')} · "
-            f"锁仓T+2 {last_lock_t2.get('value')}% n={last_lock_t2.get('n')} "
+            f"锁仓{last_lock.get('value')}% n={last_lock.get('n')} "
             f"用时{time.time()-t0:.0f}s → {out_path.name}"
         )
     return payload
