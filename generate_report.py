@@ -4684,9 +4684,9 @@ def _render_chase_count_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。
+    """追高活跃度柱图：柱高为近2日合计家数均值；以近200日均值为零轴（均值上红 / 均值下绿）。
 
-    图下方标签（同近30日成交金额）：近5日均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
+    图下方标签（同近30日成交金额）：近5日**当日原始家数**均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
     纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶，避免压扁其余交易日。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
@@ -4768,8 +4768,10 @@ def _render_chase_count_chart(
             tip_clip = ""
             if baseline is not None and abs(v - base) > scale:
                 tip_clip = " · 柱高已封顶"
+            n_today = row.get("n_raw")
+            tip_today = f" · 当日{int(n_today)}家" if n_today is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 当日{val_lab}家{tip_mean}{tip_clip}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}家{tip_today}{tip_mean}{tip_clip}">
       <div class="chase-val{" " + tag if tag else ""}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -4786,15 +4788,18 @@ def _render_chase_count_chart(
     else:
         latest_lab = "—"
 
-    # 近5日均值 vs 近200日均值 → 活跃周期 / 不活跃周期（图下方，同量能标签样式）
+    # 近5日当日原始家数均值 vs 近200日均值 → 活跃周期 / 不活跃周期（口径不变）
     act_tags_html = ""
     if baseline is not None:
         last5: list[float] = []
         for row in reversed(series):
-            if row.get("value") is None:
+            raw_n = row.get("n_raw")
+            if raw_n is None:
+                raw_n = row.get("value")
+            if raw_n is None:
                 continue
             try:
-                last5.append(float(row["value"]))
+                last5.append(float(raw_n))
             except (TypeError, ValueError):
                 continue
             if len(last5) >= 5:
@@ -4821,7 +4826,11 @@ def _render_chase_count_chart(
 
 
 def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
-    """主板+创板追高数量按日相加 → 追高活跃度序列与近200日均值。"""
+    """主板+创板追高数量按日相加 → 追高活跃度序列与近200日均值。
+
+    柱高 value = 近2日合计原始家数均值（当日与前一交易日）；n_raw = 当日合计原始家数。
+    近200日均值仍按**当日原始家数**（与活跃周期标签口径一致）。
+    """
     main_m = ((groups.get("main") or {}).get("metrics") or {}).get("count") or {}
     cyb_m = ((groups.get("cyb") or {}).get("metrics") or {}).get("count") or {}
     main_ser = main_m.get("series") or []
@@ -4840,15 +4849,43 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
             v2 = float(other["value"]) if other.get("value") is not None else None
         except (TypeError, ValueError):
             v2 = None
-        if v1 is None and v2 is None:
-            val = None
+        # 缓存里 value 可能已是家数；优先用 n_raw 作为当日原始
+        try:
+            r1 = row.get("n_raw")
+            n1 = int(r1) if r1 is not None else (int(v1) if v1 is not None else 0)
+        except (TypeError, ValueError):
+            n1 = int(v1) if v1 is not None else 0
+        try:
+            r2 = other.get("n_raw")
+            n2 = int(r2) if r2 is not None else (int(v2) if v2 is not None else 0)
+        except (TypeError, ValueError):
+            n2 = int(v2) if v2 is not None else 0
+        if v1 is None and v2 is None and row.get("n_raw") is None and other.get("n_raw") is None:
+            n_raw = None
         else:
-            val = round((v1 or 0.0) + (v2 or 0.0), 1)
-        n_raw = int(row.get("n_raw") or row.get("n") or 0) + int(
-            other.get("n_raw") or other.get("n") or 0
-        )
+            n_raw = n1 + n2
         n = int(row.get("n") or 0) + int(other.get("n") or 0)
-        merged.append({"date": ds, "value": val, "n": n, "n_raw": n_raw})
+        merged.append({"date": ds, "n": n, "n_raw": n_raw})
+
+    # 柱高：近2日原始家数均值
+    out: list[dict] = []
+    for i, row in enumerate(merged):
+        today = row.get("n_raw")
+        prev = merged[i - 1].get("n_raw") if i > 0 else None
+        if today is None:
+            val = None
+        elif prev is None:
+            val = float(today)
+        else:
+            val = round((float(today) + float(prev)) / 2.0, 1)
+        out.append(
+            {
+                "date": row["date"],
+                "value": val,
+                "n": row["n"],
+                "n_raw": row["n_raw"],
+            }
+        )
 
     baseline: float | None = None
     try:
@@ -4862,7 +4899,7 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
             baseline = float(m2)
     except (TypeError, ValueError):
         baseline = None
-    return merged, baseline
+    return out, baseline
 
 
 def _merge_chase_effect_series(
@@ -4964,9 +5001,9 @@ def render_chase_sentiment_html(block: dict) -> str:
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
         "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
-        "柱高为当日合计原始家数；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
+        "柱高为近2日合计原始家数均值（当日与前一交易日）；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
         "标题「最新 N 家」为当日合计原始家数；"
-        "标签：近5日均值≥近200日均值标「活跃周期」，否则「不活跃周期」（图下方，样式同量能标签）。"
+        "标签：近5日当日原始家数均值≥近200日均值标「活跃周期」，否则「不活跃周期」（图下方，样式同量能标签）。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近120日；主板+创板按当日池内家数加权合并为各一张图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
