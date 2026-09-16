@@ -3543,6 +3543,12 @@ def render_html(ctx: dict) -> str:
   }}
   .chase-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
   .chase-chart-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
+  .chase-head-left {{
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;
+  }}
+  /* 追高活跃度标签：A 股红强绿弱（同量能标签） */
+  .chase-act-tag.pill.ok {{ background: #ffebee; color: #c62828; }}
+  .chase-act-tag.pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .chase-plot {{ width: 100%; overflow: hidden; }}
   .chase-bars {{
     display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
@@ -4610,12 +4616,15 @@ def _render_chase_count_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。"""
+    """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。
+
+    标题旁标签：近5日均值 ≥ 近200日均值 →「追高活跃」；否则「追高不活跃」。
+    """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart">
     <div class="chase-chart-head">
-      <span class="chase-chart-title">{title}</span>
+      <div class="chase-head-left"><span class="chase-chart-title">{title}</span></div>
       <span class="chase-chart-meta">无样本</span>
     </div>
     <div class="news-empty">该窗口暂无追高样本</div>
@@ -4703,9 +4712,33 @@ def _render_chase_count_chart(
         latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
+
+    # 近5日均值 vs 近200日均值 → 追高活跃 / 追高不活跃
+    act_tag = ""
+    if baseline is not None:
+        last5: list[float] = []
+        for row in reversed(series):
+            if row.get("value") is None:
+                continue
+            try:
+                last5.append(float(row["value"]))
+            except (TypeError, ValueError):
+                continue
+            if len(last5) >= 5:
+                break
+        if len(last5) >= 5:
+            m5 = sum(last5) / 5.0
+            if m5 >= float(baseline):
+                act_tag = '<span class="pill ok chase-act-tag">追高活跃</span>'
+            else:
+                act_tag = '<span class="pill bad chase-act-tag">追高不活跃</span>'
+
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
-      <span class="chase-chart-title">{title}</span>
+      <div class="chase-head-left">
+        <span class="chase-chart-title">{title}</span>
+        {act_tag}
+      </div>
       <span class="chase-chart-meta">最新 {latest_lab}</span>
     </div>
     <div class="chase-plot">
@@ -4809,7 +4842,8 @@ def render_chase_sentiment_html(block: dict) -> str:
         "追高定义：日内最高价相对昨收涨幅≥7%。"
         "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
         "柱高为当日合计原始家数；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
-        "标题「最新 N 家」为当日合计原始家数。"
+        "标题「最新 N 家」为当日合计原始家数；"
+        "标签：近5日均值≥近200日均值标「追高活跃」，否则「追高不活跃」。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
         "回落取当日追高池，计算(今收−今高)/今高；"
