@@ -4462,24 +4462,52 @@ def render_trend_strength_html(block: dict) -> str:
     else:
         amt_chart = ""
 
-    hold_series = block.get("hold_series") or []
+    hold_series_raw = block.get("hold_series") or []
     hold_mean = block.get("hold_mean_200d")
     try:
         hold_mean_f = float(hold_mean) if hold_mean is not None else None
     except (TypeError, ValueError):
         hold_mean_f = None
     hold_chart = ""
-    if hold_series:
+    if hold_series_raw:
+        # 柱高：近2日原始日值均值；五日标签仍用原始日值（非五个2日均值再平均）
+        hold_series_plot: list[dict] = []
+        for i, row in enumerate(hold_series_raw):
+            raw = row.get("value")
+            try:
+                raw_f = float(raw) if raw is not None else None
+            except (TypeError, ValueError):
+                raw_f = None
+            prev_raw = None
+            if i > 0:
+                try:
+                    pr = hold_series_raw[i - 1].get("value")
+                    prev_raw = float(pr) if pr is not None else None
+                except (TypeError, ValueError):
+                    prev_raw = None
+            if raw_f is None:
+                plot_v = None
+            elif prev_raw is None:
+                plot_v = raw_f
+            else:
+                plot_v = round((raw_f + prev_raw) / 2.0, 4)
+            hold_series_plot.append(
+                {
+                    **row,
+                    "value": plot_v,
+                    "value_raw": raw_f,
+                }
+            )
         hold_chart = _render_chase_metric_chart(
             "今日趋势承接",
-            hold_series,
+            hold_series_plot,
             baseline=hold_mean_f,
         )
         pills: list[str] = []
-        # 近5日均值 vs 近200日均值 → 承接较好 / 承接不好（前4日凑不满则不打）
+        # 近5日**原始日值**均值 vs 近200日均值 → 承接较好 / 承接不好
         if hold_mean_f is not None:
             last5: list[float] = []
-            for row in reversed(hold_series):
+            for row in reversed(hold_series_raw):
                 if row.get("value") is None:
                     continue
                 try:
@@ -4497,7 +4525,7 @@ def render_trend_strength_html(block: dict) -> str:
         # 末日有均价算不出的池内个股 → 「数据异常」
         data_err = bool(block.get("hold_data_error"))
         if not data_err:
-            last = hold_series[-1] if hold_series else {}
+            last = hold_series_raw[-1] if hold_series_raw else {}
             data_err = int(last.get("n_bad") or 0) > 0
         if data_err:
             pills.append('<span class="pill bad">数据异常</span>')
