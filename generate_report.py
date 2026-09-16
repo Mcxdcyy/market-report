@@ -4621,6 +4621,44 @@ def load_chase_sentiment_block(
     return compute_chase_sentiment(as_of_d, force=False, progress=True)
 
 
+def _chase_raw_ma_tag_html(
+    series: list[dict],
+    baseline: float | None,
+    *,
+    window: int,
+    ok_label: str,
+    bad_label: str,
+) -> str:
+    """近 N 日**原始日值**均值 vs 近200日均值 → 图下标签（同追高活跃度：≥ 为好档）。
+
+    优先读 `value_raw`（柱高为近2日均值时），否则读 `value`。
+    不足 N 个有效日不打标签。
+    """
+    if baseline is None or window <= 0:
+        return ""
+    last_n: list[float] = []
+    for row in reversed(series):
+        raw = row.get("value_raw")
+        if raw is None:
+            raw = row.get("value")
+        if raw is None:
+            continue
+        try:
+            last_n.append(float(raw))
+        except (TypeError, ValueError):
+            continue
+        if len(last_n) >= window:
+            break
+    if len(last_n) < window:
+        return ""
+    m = sum(last_n) / float(window)
+    if m >= float(baseline):
+        pill = f'<span class="pill ok">{ok_label}</span>'
+    else:
+        pill = f'<span class="pill bad">{bad_label}</span>'
+    return f'<div class="chart-tags vol20-tags">{pill}</div>'
+
+
 def _render_chase_metric_chart(
     title: str,
     series: list[dict],
@@ -5078,6 +5116,7 @@ def render_chase_sentiment_html(block: dict) -> str:
 
     # 效应两图：主板+创板按家数加权合并，近120日（已删「昨追-赚钱效应」）
     # 柱高均为近2日均值；meta「最新」仍用当日原始值（value_raw）
+    # 昨追-今日承接：图下标签 = 近4日原始均值 ≥ 近200日均值 → 承接好 / 否则承接不好
     effect_charts = []
     for mk, title in (
         ("loss", "昨追-今日承接"),
@@ -5085,11 +5124,18 @@ def render_chase_sentiment_html(block: dict) -> str:
     ):
         ser, baseline = _merge_chase_effect_series(groups, mk)
         ser = _smooth_metric_series_2d(ser)
-        effect_charts.append(
-            _render_chase_metric_chart(
-                title, ser, baseline=baseline, avg2d=True
-            )
+        chart_html = _render_chase_metric_chart(
+            title, ser, baseline=baseline, avg2d=True
         )
+        if mk == "loss":
+            chart_html += _chase_raw_ma_tag_html(
+                ser,
+                baseline,
+                window=4,
+                ok_label="承接好",
+                bad_label="承接不好",
+            )
+        effect_charts.append(chart_html)
     if effect_charts:
         parts.append(
             f'''<div class="chase-group">
@@ -5098,6 +5144,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         )
 
     # 低吸赚钱效应：柱高近2日均值；meta「最新」仍用当日原始值（已删「低吸锁仓收益」）
+    # 图下标签 = 近4日原始均值 ≥ 近200日均值 → 可谨慎低吸 / 否则低吸次日无溢价
     dip = block.get("dip_buy") or {}
     dip_ser = list(dip.get("series") or [])
     dip_base = dip.get("mean_200d")
@@ -5109,6 +5156,13 @@ def render_chase_sentiment_html(block: dict) -> str:
         dip_ser = _smooth_metric_series_2d(dip_ser)
         dip_chart = _render_chase_metric_chart(
             "低吸赚钱效应", dip_ser, baseline=dip_base_f, avg2d=True
+        )
+        dip_chart += _chase_raw_ma_tag_html(
+            dip_ser,
+            dip_base_f,
+            window=4,
+            ok_label="可谨慎低吸",
+            bad_label="低吸次日无溢价",
         )
         parts.append(
             f'''<div class="chase-group">
