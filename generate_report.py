@@ -4610,7 +4610,7 @@ def _render_chase_count_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """追高数量柱图：柱高为近2日均值；以近200日均值为零轴（均值上红 / 均值下绿）。"""
+    """追高活跃度柱图：柱高为当日合计家数；以近200日均值为零轴（均值上红 / 均值下绿）。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart">
@@ -4685,11 +4685,9 @@ def _render_chase_count_chart(
                 val_lab = f"{int(round(v))}"
             else:
                 val_lab = f"{v:.1f}"
-            n_raw = row.get("n_raw")
-            tip_extra = f" · 当日{int(n_raw)}家" if n_raw is not None else ""
             tip_mean = f" · 均值{base:.1f}家" if baseline is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}家{tip_extra}{tip_mean}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 当日{val_lab}家{tip_mean}">
       <div class="chase-val{" " + tag if tag else ""}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -4701,11 +4699,8 @@ def _render_chase_count_chart(
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
     if last:
-        if last.get("n_raw") is not None:
-            latest_lab = f"{int(last['n_raw'])} 家"
-        else:
-            lv = float(last["value"])
-            latest_lab = f"{int(round(lv))} 家"
+        lv = float(last.get("n_raw") if last.get("n_raw") is not None else last["value"])
+        latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
     return f'''<div class="chase-chart">
@@ -4813,7 +4808,7 @@ def render_chase_sentiment_html(block: dict) -> str:
         '<div class="chase-note">'
         "追高定义：日内最高价相对昨收涨幅≥7%。"
         "追高活跃度：主板+创板（创业板与科创板）追高家数合计；近120日；"
-        "柱高为合计家数的近2日均值；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
+        "柱高为当日合计原始家数；柱色以合计近200日均值为零轴（均值上红 / 均值下绿）；"
         "标题「最新 N 家」为当日合计原始家数。"
         "昨追-赚钱效应 / 昨追-今日承接 / 今追-回落指数：近30日，分主板/创板各三图；"
         "昨追取前一交易日追高池，分别计算(今高−昨高)/昨收、(今收−昨高)/昨高；"
