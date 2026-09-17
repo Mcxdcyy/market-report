@@ -793,6 +793,41 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     return bars
 
 
+def _slice_vol_bars_avg2d(rows: list[dict], n: int) -> list[dict]:
+    """近 n 日量能柱：柱高为当日与前一交易日成交额均值；首日无前值则用当日。"""
+    if not rows:
+        return []
+    if len(rows) > n:
+        chunk = rows[-(n + 1) :]
+        start = 1
+    else:
+        chunk = rows
+        start = 0
+    smoothed: list[dict] = []
+    for i in range(start, len(chunk)):
+        cur = float(chunk[i].get("amount_yi") or 0)
+        if i > 0:
+            prev = float(chunk[i - 1].get("amount_yi") or 0)
+            avg = (cur + prev) / 2.0
+        else:
+            avg = cur
+        smoothed.append({
+            "date": chunk[i].get("date"),
+            "amount_yi": avg,
+            "amount_yi_raw": cur,
+        })
+    prior = None
+    if start == 1 and len(chunk) >= 2:
+        # 窗口首根的「较前日」用窗口外一日与再前一日的均值，避免首日一律灰
+        a0 = float(chunk[0].get("amount_yi") or 0)
+        if len(rows) > n + 1:
+            a_m1 = float(rows[-(n + 2)].get("amount_yi") or 0)
+            prior = (a0 + a_m1) / 2.0
+        else:
+            prior = a0
+    return build_vol_bars_from_amounts(smoothed, prior_amount=prior)
+
+
 def build_vol_bars_from_amounts(
     rows: list[dict],
     *,
@@ -2988,16 +3023,23 @@ def render_html(ctx: dict) -> str:
     if not vol30_html and after_30:
         vol30_html = after_30
     vol120_html = _render_vol_bars_block(
-        vol120, title="量能120日趋势", dense=True, after_html=vol_note_html
+        vol120, title="量能120日趋势", dense=True
     )
-    if not vol120_html and vol_note_html:
-        vol120_html = vol_note_html
+    vol120_avg2d = ctx.get("vol120_avg2d_bars") or []
+    vol120_avg2d_html = _render_vol_bars_block(
+        vol120_avg2d,
+        title="量能120日趋势-2日均值",
+        dense=True,
+        after_html=vol_note_html,
+    )
+    if not vol120_html and not vol120_avg2d_html and vol_note_html:
+        vol120_avg2d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="历史新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日（历史新高120日已迁至资金追高情绪末尾）
-    vol20_html = f"{vol30_html}{vol120_html}"
+    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-2日均值（历史新高在追高模块末）
+    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg2d_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -5656,6 +5698,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
 
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
+    vol120_avg2d_bars = _slice_vol_bars_avg2d(kpl_rows, 120)
 
     xh120_bars: list[dict] = []
     try:
@@ -5759,6 +5802,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_headline": "",
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
+        "vol120_avg2d_bars": vol120_avg2d_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
