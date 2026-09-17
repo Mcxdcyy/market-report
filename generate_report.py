@@ -2996,7 +2996,8 @@ def render_html(ctx: dict) -> str:
     xh120_html = _render_vol_bars_block(
         xh120, title="历史新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    vol20_html = f"{vol30_html}{vol120_html}{xh120_html}"
+    # 大盘环境：近30日成交金额 + 量能120日（历史新高120日已迁至资金追高情绪末尾）
+    vol20_html = f"{vol30_html}{vol120_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4039,7 +4040,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">大盘环境</div>
-      <div class="section-sub">{ctx['data_date']} · 量能与新高数量</div>
+      <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
     {vol20_html}
   </div>
@@ -4062,6 +4063,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['data_date']} · 近120日</div>
     </div>
     {chase_sentiment_html}
+    {xh120_html}
   </div>
 
   <!-- 4 涨停板块 -->
