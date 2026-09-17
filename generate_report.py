@@ -3346,6 +3346,39 @@ def render_html(ctx: dict) -> str:
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }}
+  /* 纵轴封顶：锯齿切口，标明真实值超出可视范围 */
+  .ts-hold-bar.clip.pos {{
+    clip-path: polygon(
+      0 100%, 0 14%,
+      12% 6%, 24% 14%, 36% 6%, 48% 14%, 60% 6%, 72% 14%, 84% 6%, 100% 14%,
+      100% 100%
+    );
+  }}
+  .ts-hold-bar.clip.neg {{
+    clip-path: polygon(
+      0 0, 100% 0,
+      100% 86%, 84% 94%, 72% 86%, 60% 94%, 48% 86%, 36% 94%, 24% 86%, 12% 94%, 0 86%
+    );
+  }}
+  .ts-hold-bar.clip::after {{
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 0; height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 3;
+  }}
+  .ts-hold-bar.clip.pos::after {{
+    top: -5px;
+    border-bottom: 4px solid var(--bar-ok, #E53935);
+  }}
+  .ts-hold-bar.clip.neg::after {{
+    bottom: -5px;
+    border-top: 4px solid var(--bar-bad, #34C759);
+  }}
   .ts-hold-col.latest .ts-hold-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .ts-hold-axis {{
     display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
@@ -4442,16 +4475,18 @@ def _render_ts_hold_bars_html(
             v = float(raw)
             delta = v - base
             h = min(50.0, abs(delta) / scale * 50.0)
+            clipped = abs(delta) > scale
+            clip_cls = " clip" if clipped else ""
             if delta >= 0:
-                bar = f'<div class="ts-hold-bar pos" style="height:{h:.1f}%"></div>'
+                bar = f'<div class="ts-hold-bar pos{clip_cls}" style="height:{h:.1f}%"></div>'
                 tag = "pos"
             else:
-                bar = f'<div class="ts-hold-bar neg" style="height:{h:.1f}%"></div>'
+                bar = f'<div class="ts-hold-bar neg{clip_cls}" style="height:{h:.1f}%"></div>'
                 tag = "neg"
             val_lab = f"{v:+.1f}%"
             n = int(row.get("n") or 0)
             tip_extra = f" · 均值{base:+.2f}%" if mean_200d is not None else ""
-            tip_clip = " · 柱高已封顶" if abs(delta) > scale else ""
+            tip_clip = " · 柱高已封顶（真实值超出纵轴）" if clipped else ""
             cols.append(
                 f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}{tip_clip}">
       <div class="ts-hold-val {tag}">{val_lab}</div>
