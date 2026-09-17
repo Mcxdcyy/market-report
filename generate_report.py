@@ -793,7 +793,7 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     return bars
 
 
-def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 3) -> list[dict]:
+def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 4) -> list[dict]:
     """近 n 日量能柱：柱高为近 days 个交易日成交额均值（含当日）；不足则天数内有多少算多少。"""
     if not rows or days < 1:
         return []
@@ -823,7 +823,7 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 3) -> list[d
         })
     prior = None
     if start > 0 and len(chunk) >= start:
-        # 窗口首根的「较前日」用再往前一天的同窗口均值，避免首日一律灰
+        # 窗口首根的「较前日」用再往前一天的同窗口均值（着色关闭时仅影响内部 tag，页面不展示）
         i0 = start - 1
         vals0: list[float] = []
         for k in range(days):
@@ -833,8 +833,9 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 3) -> list[d
             vals0.append(float(chunk[j].get("amount_yi") or 0))
         if vals0:
             prior = sum(vals0) / len(vals0)
+    # 页面统一中性灰（dense 默认不套 tag）；不再用连续涨跌着色
     return build_vol_bars_from_amounts(
-        smoothed, prior_amount=prior, color_mode="streak"
+        smoothed, prior_amount=prior, color_mode="vs_prev"
     )
 
 
@@ -3089,22 +3090,21 @@ def render_html(ctx: dict) -> str:
     vol120_html = _render_vol_bars_block(
         vol120, title="量能120日趋势", dense=True
     )
-    vol120_avg3d = ctx.get("vol120_avg3d_bars") or []
-    vol120_avg3d_html = _render_vol_bars_block(
-        vol120_avg3d,
-        title="量能120日趋势-3日均值",
+    vol120_avg4d = ctx.get("vol120_avg4d_bars") or []
+    vol120_avg4d_html = _render_vol_bars_block(
+        vol120_avg4d,
+        title="量能120日趋势-4日均值",
         dense=True,
-        colored=True,
         after_html=vol_note_html,
     )
-    if not vol120_html and not vol120_avg3d_html and vol_note_html:
-        vol120_avg3d_html = vol_note_html
+    if not vol120_html and not vol120_avg4d_html and vol_note_html:
+        vol120_avg4d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-3日均值（百日新高在追高模块末）
-    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg3d_html}"
+    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-4日均值（百日新高在追高模块末）
+    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg4d_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -3658,7 +3658,7 @@ def render_html(ctx: dict) -> str:
     width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
     background: #8e8e93;
   }}
-  /* 3日均值等带 up/down/flat 的柱：须压过上方默认灰 */
+  /* 120日密柱默认灰；若带 up/down 类则覆盖（近30日等） */
   .vol20-wrap.vol120 .vol20-bar.up {{ background: var(--bar-ok); }}
   .vol20-wrap.vol120 .vol20-bar.down {{ background: var(--bar-bad); }}
   .vol20-wrap.vol120 .vol20-bar.flat {{ background: #8e8e93; }}
@@ -5743,7 +5743,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
 
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
-    vol120_avg3d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=3)
+    vol120_avg4d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=4)
 
     xh120_bars: list[dict] = []
     try:
@@ -5846,7 +5846,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_headline": "",
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
-        "vol120_avg3d_bars": vol120_avg3d_bars,
+        "vol120_avg4d_bars": vol120_avg4d_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
