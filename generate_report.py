@@ -793,38 +793,46 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     return bars
 
 
-def _slice_vol_bars_avg2d(rows: list[dict], n: int) -> list[dict]:
-    """近 n 日量能柱：柱高为当日与前一交易日成交额均值；首日无前值则用当日。"""
-    if not rows:
+def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 3) -> list[dict]:
+    """近 n 日量能柱：柱高为近 days 个交易日成交额均值（含当日）；不足则天数内有多少算多少。"""
+    if not rows or days < 1:
         return []
-    if len(rows) > n:
-        chunk = rows[-(n + 1) :]
-        start = 1
+    need = n + days - 1
+    if len(rows) >= need:
+        chunk = rows[-need:]
+        start = days - 1
     else:
         chunk = rows
         start = 0
     smoothed: list[dict] = []
     for i in range(start, len(chunk)):
+        vals: list[float] = []
+        for k in range(days):
+            j = i - k
+            if j < 0:
+                break
+            vals.append(float(chunk[j].get("amount_yi") or 0))
+        if not vals:
+            continue
+        avg = sum(vals) / len(vals)
         cur = float(chunk[i].get("amount_yi") or 0)
-        if i > 0:
-            prev = float(chunk[i - 1].get("amount_yi") or 0)
-            avg = (cur + prev) / 2.0
-        else:
-            avg = cur
         smoothed.append({
             "date": chunk[i].get("date"),
             "amount_yi": avg,
             "amount_yi_raw": cur,
         })
     prior = None
-    if start == 1 and len(chunk) >= 2:
-        # 窗口首根的「较前日」用窗口外一日与再前一日的均值，避免首日一律灰
-        a0 = float(chunk[0].get("amount_yi") or 0)
-        if len(rows) > n + 1:
-            a_m1 = float(rows[-(n + 2)].get("amount_yi") or 0)
-            prior = (a0 + a_m1) / 2.0
-        else:
-            prior = a0
+    if start > 0 and len(chunk) >= start:
+        # 窗口首根的「较前日」用再往前一天的同窗口均值，避免首日一律灰
+        i0 = start - 1
+        vals0: list[float] = []
+        for k in range(days):
+            j = i0 - k
+            if j < 0:
+                break
+            vals0.append(float(chunk[j].get("amount_yi") or 0))
+        if vals0:
+            prior = sum(vals0) / len(vals0)
     return build_vol_bars_from_amounts(smoothed, prior_amount=prior)
 
 
@@ -3025,21 +3033,21 @@ def render_html(ctx: dict) -> str:
     vol120_html = _render_vol_bars_block(
         vol120, title="量能120日趋势", dense=True
     )
-    vol120_avg2d = ctx.get("vol120_avg2d_bars") or []
-    vol120_avg2d_html = _render_vol_bars_block(
-        vol120_avg2d,
-        title="量能120日趋势-2日均值",
+    vol120_avg3d = ctx.get("vol120_avg3d_bars") or []
+    vol120_avg3d_html = _render_vol_bars_block(
+        vol120_avg3d,
+        title="量能120日趋势-3日均值",
         dense=True,
         after_html=vol_note_html,
     )
-    if not vol120_html and not vol120_avg2d_html and vol_note_html:
-        vol120_avg2d_html = vol_note_html
+    if not vol120_html and not vol120_avg3d_html and vol_note_html:
+        vol120_avg3d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="历史新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-2日均值（历史新高在追高模块末）
-    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg2d_html}"
+    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-3日均值（历史新高在追高模块末）
+    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg3d_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -5674,7 +5682,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
 
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
-    vol120_avg2d_bars = _slice_vol_bars_avg2d(kpl_rows, 120)
+    vol120_avg3d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=3)
 
     xh120_bars: list[dict] = []
     try:
@@ -5778,7 +5786,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_headline": "",
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
-        "vol120_avg2d_bars": vol120_avg2d_bars,
+        "vol120_avg3d_bars": vol120_avg3d_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
