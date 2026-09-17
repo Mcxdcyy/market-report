@@ -833,17 +833,65 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 3) -> list[d
             vals0.append(float(chunk[j].get("amount_yi") or 0))
         if vals0:
             prior = sum(vals0) / len(vals0)
-    return build_vol_bars_from_amounts(smoothed, prior_amount=prior)
+    return build_vol_bars_from_amounts(
+        smoothed, prior_amount=prior, color_mode="streak"
+    )
+
+
+def _retag_bars_by_streak(
+    bars: list[dict],
+    *,
+    prior_vol: float | None = None,
+) -> list[dict]:
+    """按连续涨跌着色：同向连续≥2 根 → 红/绿；单次变动 / 持平 → 灰。"""
+    if not bars:
+        return bars
+    dirs: list[int] = []
+    prev: float | None = prior_vol if prior_vol and prior_vol > 0 else None
+    for b in bars:
+        vol = float(b.get("vol") or 0)
+        if prev is None or prev <= 0:
+            dirs.append(0)
+        elif vol > prev:
+            dirs.append(1)
+        elif vol < prev:
+            dirs.append(-1)
+        else:
+            dirs.append(0)
+        prev = vol
+    tags = ["flat"] * len(bars)
+    i = 0
+    while i < len(dirs):
+        d = dirs[i]
+        if d == 0:
+            tags[i] = "flat"
+            i += 1
+            continue
+        j = i + 1
+        while j < len(dirs) and dirs[j] == d:
+            j += 1
+        if j - i >= 2:
+            tag = "up" if d > 0 else "down"
+            for k in range(i, j):
+                tags[k] = tag
+        else:
+            tags[i] = "flat"
+        i = j
+    for bar, tag in zip(bars, tags):
+        bar["tag"] = tag
+    return bars
 
 
 def build_vol_bars_from_amounts(
     rows: list[dict],
     *,
     prior_amount: float | None = None,
+    color_mode: str = "vs_prev",
 ) -> list[dict]:
     """由成交额序列（亿元）生成柱图数据；口径同 build_vol20_bars。
 
     rows: [{date: YYYY-MM-DD|datetime, amount_yi: float}, ...] 升序。
+    color_mode: ``vs_prev`` 较前日红/绿；``streak`` 连续涨红、连续跌绿、单次变灰。
     """
     if not rows:
         return []
@@ -897,6 +945,11 @@ def build_vol_bars_from_amounts(
             "show_tick": i in tick_idxs,
         })
         prev_vol = vol
+    if color_mode == "streak":
+        return _retag_bars_by_streak(
+            bars,
+            prior_vol=prior_amount if prior_amount and prior_amount > 0 else None,
+        )
     return bars
 
 
@@ -971,18 +1024,21 @@ def _render_vol_bars_block(
     after_html: str = "",
     unit: str = "万亿",
     show_latest: bool = False,
+    colored: bool | None = None,
 ) -> str:
-    """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（无红绿、柱更细）。
+    """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（柱更细）。
 
-    默认 dense 只写日期区间；show_latest=True 时附加「最新 N 单位」（如近120日新高）。
+    默认 dense 不着色、meta 只写日期区间；colored=True 时仍套 tag 红绿。
+    show_latest=True 时附加「最新 N 单位」（如近120日新高）。
     """
     if not bars:
         return ""
+    use_tags = (not dense) if colored is None else colored
     cols = "".join(
         f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}{unit}">
       <div class="vol20-val">{b["label"]}</div>
       <div class="vol20-bar-track">
-        <div class="vol20-bar{" " + b["tag"] if not dense else ""}" style="height:{b["height_pct"]}%"></div>
+        <div class="vol20-bar{" " + b["tag"] if use_tags and b.get("tag") else ""}" style="height:{b["height_pct"]}%"></div>
       </div>
     </div>'''
         for b in bars
@@ -3038,6 +3094,7 @@ def render_html(ctx: dict) -> str:
         vol120_avg3d,
         title="量能120日趋势-3日均值",
         dense=True,
+        colored=True,
         after_html=vol_note_html,
     )
     if not vol120_html and not vol120_avg3d_html and vol_note_html:
