@@ -3346,39 +3346,26 @@ def render_html(ctx: dict) -> str:
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }}
-  /* 纵轴封顶：锯齿切口，标明真实值超出可视范围 */
-  .ts-hold-bar.clip.pos {{
-    clip-path: polygon(
-      0 100%, 0 14%,
-      12% 6%, 24% 14%, 36% 6%, 48% 14%, 60% 6%, 72% 14%, 84% 6%, 100% 14%,
-      100% 100%
-    );
-  }}
-  .ts-hold-bar.clip.neg {{
-    clip-path: polygon(
-      0 0, 100% 0,
-      100% 86%, 84% 94%, 72% 86%, 60% 94%, 48% 86%, 36% 94%, 24% 86%, 12% 94%, 0 86%
-    );
-  }}
+  /* 纵轴封顶：端头双斜线断口（断轴惯例），标明真实值超出可视范围 */
+  .ts-hold-bar.clip::before,
   .ts-hold-bar.clip::after {{
     content: "";
     position: absolute;
-    left: 50%;
-    width: 0; height: 0;
-    border-left: 3px solid transparent;
-    border-right: 3px solid transparent;
-    transform: translateX(-50%);
+    left: -55%;
+    width: 210%;
+    height: 3px;
+    background: #fff;
+    border-top: 1px solid rgba(0,0,0,.18);
+    border-bottom: 1px solid rgba(0,0,0,.18);
+    transform: rotate(-32deg);
     pointer-events: none;
-    z-index: 3;
+    z-index: 4;
+    box-sizing: border-box;
   }}
-  .ts-hold-bar.clip.pos::after {{
-    top: -5px;
-    border-bottom: 4px solid var(--bar-ok, #E53935);
-  }}
-  .ts-hold-bar.clip.neg::after {{
-    bottom: -5px;
-    border-top: 4px solid var(--bar-bad, #34C759);
-  }}
+  .ts-hold-bar.clip.pos::before {{ top: 2px; }}
+  .ts-hold-bar.clip.pos::after {{ top: 8px; }}
+  .ts-hold-bar.clip.neg::before {{ bottom: 2px; }}
+  .ts-hold-bar.clip.neg::after {{ bottom: 8px; }}
   .ts-hold-col.latest .ts-hold-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .ts-hold-axis {{
     display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
