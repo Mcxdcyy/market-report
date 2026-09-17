@@ -77,7 +77,7 @@ def load_market_data() -> pd.DataFrame:
     """已废弃：报表不再读大盘表。保留空实现以免旧脚本 import 报错。"""
     raise RuntimeError(
         "load_market_data 已废弃：报表不依赖大盘数据.numbers。"
-        "新高序列见 new_high_count_results/series.json；交易日见 trading_calendar.py。"
+        "百日新高序列见 new_high_count_results/series.json；交易日见 trading_calendar.py。"
     )
 
 
@@ -1029,7 +1029,7 @@ def _render_vol_bars_block(
     """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（柱更细）。
 
     默认 dense 不着色、meta 只写日期区间；colored=True 时仍套 tag 红绿。
-    show_latest=True 时附加「最新 N 单位」（如近120日新高）。
+    show_latest=True 时附加「最新 N 单位」（如近120日百日新高）。
     """
     if not bars:
         return ""
@@ -3101,9 +3101,9 @@ def render_html(ctx: dict) -> str:
         vol120_avg3d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
-        xh120, title="历史新高120日趋势", dense=True, unit="家", show_latest=True
+        xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-3日均值（历史新高在追高模块末）
+    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-3日均值（百日新高在追高模块末）
     vol20_html = f"{vol30_html}{vol120_html}{vol120_avg3d_html}"
 
     def post_close_html(items: list) -> str:
@@ -5745,10 +5745,9 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     try:
         from new_high_count import compute_new_high_count
 
-        # 不自动唤起本机 Chrome。缺当日新高时由助手用 Cursor 内置浏览器
-        # 跑问财网页并 save；生成报表只读本地 series/days 缓存。
+        # 本地日K：当日最高=近200交易日最高；生成时对齐 as_of 自动补算。
         xh_payload = compute_new_high_count(
-            report_d, force=False, progress=True, fetch=False
+            report_d, force=False, progress=True
         )
         xh_daily = list(xh_payload.get("daily") or [])
 

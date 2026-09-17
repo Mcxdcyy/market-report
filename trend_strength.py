@@ -37,7 +37,7 @@ HOLD_SERIES_120D_FILE = RESULT_DIR / "hold_series_120d.json"
 HOLD_SCHEMA = 2  # 昨均价仅成交额/成交量；异常标「数据异常」，无 HL2 兜底
 WORKERS = 48
 KLINE_LEN = 40
-LONG_KLINE_LEN = 260  # 200 交易日均值 + MA20 余量
+LONG_KLINE_LEN = 340  # 百日新高(200) + 120日图 + 余量；追高/均值亦够用
 MEANS_DAYS = 200
 COUNT_SERIES_DAYS = 30
 HOLD_SERIES_DAYS = 120
@@ -753,11 +753,12 @@ def save_long_kline_cache(cache: dict[str, list[dict]]) -> None:
     )
 
 
-def fetch_long_klines_qq(code: str, market: int | None) -> list[dict]:
+def fetch_long_klines_qq(code: str, market: int | None, n: int | None = None) -> list[dict]:
     sym = sina_symbol(code, market)
+    n_bars = int(n or LONG_KLINE_LEN)
     url = (
         "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/newfqkline/get"
-        f"?param={sym},day,,,{LONG_KLINE_LEN},qfq"
+        f"?param={sym},day,,,{n_bars},qfq"
     )
     try:
         payload = _http_json(url, timeout=20)
@@ -802,7 +803,7 @@ def fetch_long_klines_for_stock(code: str, market: int | None, as_of: date) -> l
     rows = fetch_long_klines_qq(code, market)
     if len(rows) < MIN_BARS:
         # 拉长搜狐窗口
-        start = as_of - timedelta(days=420)
+        start = as_of - timedelta(days=560)
         url = (
             "https://q.stock.sohu.com/hisHq?"
             + urllib.parse.urlencode(
@@ -902,7 +903,7 @@ def _prepare_long_series(
     need = [
         s
         for s in universe
-        if len(cache.get(s["code"]) or []) < 180
+        if len(cache.get(s["code"]) or []) < max(180, LONG_KLINE_LEN - 40)
         or (cache.get(s["code"]) or [{}])[0].get("date", "9999") > day0
         or (cache.get(s["code"]) or [{}])[-1].get("date", "") < as_of_d.isoformat()
         or (need_avg and _cache_rows_need_avg(cache.get(s["code"]) or []))

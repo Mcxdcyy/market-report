@@ -1,35 +1,6 @@
 [
   {
     "month": 9,
-    "day": 14,
-    "dot": "医",
-    "label": "9/14–16",
-    "title": "第二届医学人工智能大会（MAIC2nd 2026）",
-    "short": "医学AI大会",
-    "brief": "《中国卫生信息管理杂志》社主办，于重庆举行。围绕卫生健康领域人工智能应用落地、规范治理与产业协同，设置主论坛及临床诊疗、医院管理、伦理治理等平行专题，并开展国家级医学人工智能优秀案例展示。",
-    "hot": true,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      9,
-      16
-    ]
-  },
-  {
-    "month": 9,
-    "day": 16,
-    "dot": "港",
-    "label": "9/16",
-    "title": "香港第一个五年规划公布",
-    "short": "港五年规划",
-    "brief": "行政长官李家超于立法会公布《香港特别行政区经济和社会发展第一个五年规划（2026—2030）》，并随之发表《行政长官2026年施政报告》，勾勒未来五年经济、产业与民生发展蓝图，对接国家「十五五」规划。",
-    "hot": true,
-    "importance": 3,
-    "source": "seed",
-    "fetched_at": "2026-09-16"
-  },
-  {
-    "month": 9,
     "day": 18,
     "dot": "18",
     "label": "9/18",
@@ -39,7 +10,7 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-09-16"
+    "fetched_at": "2026-09-17"
   },
   {
     "month": 9,
@@ -52,7 +23,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-16"
+    "fetched_at": "2026-09-17"
   },
   {
     "month": 9,
@@ -65,6 +36,19 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-16"
+    "fetched_at": "2026-09-17"
+  },
+  {
+    "month": 10,
+    "day": 1,
+    "dot": "1",
+    "label": "10/1",
+    "title": "中国台湾地区功率半导体厂商酝酿第三波涨价",
+    "short": "中国台湾地区功率…",
+    "brief": "暂无补充说明。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-09-17"
   }
 ]
