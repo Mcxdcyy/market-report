@@ -3352,23 +3352,21 @@ def render_html(ctx: dict) -> str:
     display: block; left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
   }}
-  /* 今日趋势承接：与近30日强趋势占比同卡片壳；柱为相对近200日均值的零轴红绿柱 */
+  /* 强趋势-次日承接：与近30日强趋势占比同卡片壳；柱为相对近200日均值的零轴红绿柱；近120日 */
   .ts-cnt-wrap .chart-tags {{
     margin-top: 10px;
   }}
   .ts-hold-bars {{
-    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
   }}
   .ts-hold-col {{
     flex: 1 1 0; min-width: 0; max-width: none;
     display: flex; flex-direction: column; align-items: center; height: 100%;
   }}
+  /* 近120柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
   .ts-hold-val {{
-    font-size: 9px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
-    white-space: nowrap;
+    display: none !important;
   }}
-  .ts-hold-col.latest .ts-hold-val {{ color: var(--accent); font-weight: 700; }}
   .ts-hold-track {{
     flex: 1; width: 100%; min-height: 0; position: relative;
   }}
@@ -3378,7 +3376,7 @@ def render_html(ctx: dict) -> str:
   }}
   .ts-hold-bar {{
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 70%; max-width: 14px; min-height: 2px; z-index: 2;
+    width: 90%; max-width: 6px; min-height: 2px; z-index: 2;
   }}
   .ts-hold-bar.pos {{
     bottom: 50%; border-radius: 2px 2px 0 0;
@@ -3388,29 +3386,9 @@ def render_html(ctx: dict) -> str:
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }}
-  /* 纵轴封顶：端头双斜线断口（断轴惯例），标明真实值超出可视范围 */
-  .ts-hold-bar.clip::before,
-  .ts-hold-bar.clip::after {{
-    content: "";
-    position: absolute;
-    left: -55%;
-    width: 210%;
-    height: 3px;
-    background: #fff;
-    border-top: 1px solid rgba(0,0,0,.18);
-    border-bottom: 1px solid rgba(0,0,0,.18);
-    transform: rotate(-32deg);
-    pointer-events: none;
-    z-index: 4;
-    box-sizing: border-box;
-  }}
-  .ts-hold-bar.clip.pos::before {{ top: 2px; }}
-  .ts-hold-bar.clip.pos::after {{ top: 8px; }}
-  .ts-hold-bar.clip.neg::before {{ bottom: 2px; }}
-  .ts-hold-bar.clip.neg::after {{ bottom: 8px; }}
   .ts-hold-col.latest .ts-hold-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .ts-hold-axis {{
-    display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
+    display: flex; gap: 1px; margin-top: 6px; min-height: 18px; position: relative;
   }}
   .ts-hold-tick {{
     flex: 1 1 0; min-width: 0; height: 18px; position: relative;
@@ -4441,10 +4419,10 @@ def _render_ts_hold_bars_html(
     mean_200d: float | None = None,
     after_html: str = "",
 ) -> str:
-    """今日趋势承接柱图（近30日）：柱高=当日原始值；零轴=近200日均值（上红下绿）。
+    """强趋势-次日承接柱图（近120日）：柱高=近2日均值；零轴=近200日均值（上红下绿）。
 
-    纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶（悬停仍显示真实值），
-    避免单根长柱把其余柱压成一条线。卡片壳与「近30日强趋势占比」统一。
+    meta「最新」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
+    卡片壳与「近30日强趋势占比」统一。
     """
     if not series:
         return ""
@@ -4460,10 +4438,9 @@ def _render_ts_hold_bars_html(
 
     base = float(mean_200d) if mean_200d is not None else 0.0
     if mean_200d is not None:
-        abs_deltas = [abs(v - base) for v in vals]
-        scale = _chase_robust_scale(abs_deltas, pct=0.90)
+        scale = max(abs(v - base) for v in vals)
     else:
-        scale = _chase_robust_scale([abs(v) for v in vals], pct=0.90)
+        scale = max(abs(v) for v in vals)
     if scale < 1e-9:
         scale = 1.0
     scale *= 1.08
@@ -4473,6 +4450,8 @@ def _render_ts_hold_bars_html(
     if n_bars >= 8:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
 
     axis_title = (
         f' title="近200日均值 {base:+.2f}%"'
@@ -4504,20 +4483,24 @@ def _render_ts_hold_bars_html(
             v = float(raw)
             delta = v - base
             h = min(50.0, abs(delta) / scale * 50.0)
-            clipped = abs(delta) > scale
-            clip_cls = " clip" if clipped else ""
             if delta >= 0:
-                bar = f'<div class="ts-hold-bar pos{clip_cls}" style="height:{h:.1f}%"></div>'
+                bar = f'<div class="ts-hold-bar pos" style="height:{h:.1f}%"></div>'
                 tag = "pos"
             else:
-                bar = f'<div class="ts-hold-bar neg{clip_cls}" style="height:{h:.1f}%"></div>'
+                bar = f'<div class="ts-hold-bar neg" style="height:{h:.1f}%"></div>'
                 tag = "neg"
             val_lab = f"{v:+.1f}%"
             n = int(row.get("n") or 0)
             tip_extra = f" · 均值{base:+.2f}%" if mean_200d is not None else ""
-            tip_clip = " · 柱高已封顶（真实值超出纵轴）" if clipped else ""
+            raw_v = row.get("value_raw")
+            tip_raw = ""
+            if raw_v is not None:
+                try:
+                    tip_raw = f" · 当日{float(raw_v):+.1f}%"
+                except (TypeError, ValueError):
+                    tip_raw = ""
             cols.append(
-                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}{tip_clip}">
+                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}{tip_raw} · {n}家{tip_extra}">
       <div class="ts-hold-val {tag}">{val_lab}</div>
       <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -4529,7 +4512,12 @@ def _render_ts_hold_bars_html(
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
     try:
-        latest_lab = f"{float(last['value']):+.1f}%" if last else "—"
+        if last is not None and last.get("value_raw") is not None:
+            latest_lab = f"{float(last['value_raw']):+.1f}%"
+        elif last is not None:
+            latest_lab = f"{float(last['value']):+.1f}%"
+        else:
+            latest_lab = "—"
     except (TypeError, ValueError, KeyError):
         latest_lab = "—"
     try:
@@ -4541,7 +4529,7 @@ def _render_ts_hold_bars_html(
 
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">今日趋势承接</span>
+      <span class="ts-chart-title">强趋势-次日承接</span>
       <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_lab}</span>
     </div>
     <div class="ts-cnt-chart">
@@ -4710,8 +4698,8 @@ def render_trend_strength_html(block: dict) -> str:
         hold_mean_f = None
     hold_chart = ""
     if hold_series_raw:
-        # 页面近30日；柱高=当日原始值（不再近2日均值）；标签仍用近5日原始 vs 近200日均值
-        hold_series_plot = list(hold_series_raw[-30:])
+        # 页面近120日；柱高=近2日均值；meta「最新」=当日原始；标签仍用近5日原始 vs 近200日均值
+        hold_series_plot = _smooth_metric_series_2d(list(hold_series_raw[-120:]))
         pills: list[str] = []
         if hold_mean_f is not None:
             last5: list[float] = []
@@ -4753,7 +4741,8 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    return f"{count_chart}{hold_chart}{chart}{amt_chart}{note_html}"
+    # 强趋势-次日承接在「近30日强趋势占比」上方
+    return f"{hold_chart}{count_chart}{chart}{amt_chart}{note_html}"
 
 
 def load_chase_sentiment_block(
