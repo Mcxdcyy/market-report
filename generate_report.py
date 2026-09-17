@@ -1068,6 +1068,115 @@ def _render_vol_bars_block(
   </div>'''
 
 
+def _vol_mean_lookback(
+    rows: list[dict],
+    *,
+    n: int = 200,
+) -> tuple[float | None, int]:
+    """近 n 日成交额均值（亿元）；序列不足 n 日则按已有日数。返回 (均值, 实际日数)。"""
+    if not rows:
+        return None, 0
+    use = rows[-n:] if len(rows) >= n else rows
+    vals = [float(r.get("amount_yi") or 0) for r in use if r.get("amount_yi") is not None]
+    if not vals:
+        return None, 0
+    return sum(vals) / len(vals), len(vals)
+
+
+def _render_vol120_mean_zero_chart(
+    rows: list[dict],
+    *,
+    mean_200d: float,
+    mean_n: int = 200,
+    title: str = "量能120日趋势",
+    after_html: str = "",
+) -> str:
+    """量能120日趋势：零轴=近200日成交额均值（不足则按已有）；均值上红 / 均值下绿。
+
+    纵轴按窗口内 |偏离| 最大值定尺；meta 只写日期区间。
+    """
+    if not rows:
+        return ""
+    vals = [float(r.get("amount_yi") or 0) for r in rows]
+    base = float(mean_200d)
+    scale = max(abs(v - base) for v in vals) if vals else 0.0
+    if scale < 1e-9:
+        scale = 1.0
+    scale *= 1.08
+
+    n_bars = len(rows)
+    tick_idxs = {0, n_bars - 1} if n_bars else set()
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
+
+    mean_wy = base / 10000.0
+    if mean_n >= 200:
+        axis_tip = f"近200日均值 {mean_wy:.2f}万亿"
+    else:
+        axis_tip = f"近{mean_n}日均值 {mean_wy:.2f}万亿"
+    axis_title = f' title="{axis_tip}"'
+
+    cols: list[str] = []
+    ticks: list[str] = []
+    for i, row in enumerate(rows):
+        raw_d = row.get("date")
+        if hasattr(raw_d, "to_pydatetime"):
+            dt = raw_d.to_pydatetime()
+        elif isinstance(raw_d, datetime):
+            dt = raw_d
+        elif isinstance(raw_d, date) and not isinstance(raw_d, datetime):
+            dt = datetime(raw_d.year, raw_d.month, raw_d.day)
+        else:
+            dt = datetime.strptime(str(raw_d)[:10], "%Y-%m-%d")
+        lab = fmt_md(dt)
+        wd = WEEKDAY[dt.weekday()]
+        vol = float(row.get("amount_yi") or 0)
+        vol_wy = vol / 10000.0
+        is_latest = i == n_bars - 1
+        delta = vol - base
+        h = min(50.0, abs(delta) / scale * 50.0)
+        if delta >= 0:
+            bar = f'<div class="vol120z-bar pos" style="height:{h:.1f}%"></div>'
+        else:
+            bar = f'<div class="vol120z-bar neg" style="height:{h:.1f}%"></div>'
+        tip = f"{lab} 周{wd} · {vol_wy:.2f}万亿 · {axis_tip}"
+        cols.append(
+            f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{tip}">
+      <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div>{bar}</div>
+    </div>'''
+        )
+        ticks.append(
+            f'<div class="vol20-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'{"<span>" + lab + "</span>" if i in tick_idxs else ""}</div>'
+        )
+
+    def _md(r: dict) -> str:
+        raw = r.get("date")
+        if hasattr(raw, "to_pydatetime"):
+            raw = raw.to_pydatetime()
+        if isinstance(raw, datetime):
+            return fmt_md(raw)
+        if isinstance(raw, date):
+            return fmt_md(datetime(raw.year, raw.month, raw.day))
+        return fmt_md(datetime.strptime(str(raw)[:10], "%Y-%m-%d"))
+
+    meta = f"{_md(rows[0])}–{_md(rows[-1])}"
+    return f'''<div class="vol20-wrap vol120 mean-zero">
+    <div class="vol20-head">
+      <span class="vol20-title">{title}</span>
+      <span class="vol20-meta">{meta}</span>
+    </div>
+    <div class="vol20-chart">
+      <div class="vol120z-bars">{"".join(cols)}</div>
+      <div class="vol20-axis">{"".join(ticks)}</div>
+    </div>
+    {after_html}
+  </div>'''
+
+
 def analyze_3d(df: pd.DataFrame, row: pd.Series) -> list[tuple[str, str]]:
     """近3日方向标签，仅用于环境结论（不展示在八维卡片）。"""
     prev = df.iloc[-2] if len(df) >= 2 else row
@@ -3087,9 +3196,20 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and after_30:
         vol30_html = after_30
-    vol120_html = _render_vol_bars_block(
-        vol120, title="量能120日趋势", dense=True
-    )
+    vol120_rows = ctx.get("vol120_amount_rows") or []
+    vol120_mean = ctx.get("vol120_mean_200d")
+    vol120_mean_n = int(ctx.get("vol120_mean_n") or 0)
+    if vol120_rows and vol120_mean is not None:
+        vol120_html = _render_vol120_mean_zero_chart(
+            vol120_rows,
+            mean_200d=float(vol120_mean),
+            mean_n=vol120_mean_n or 200,
+            title="量能120日趋势",
+        )
+    else:
+        vol120_html = _render_vol_bars_block(
+            vol120, title="量能120日趋势", dense=True
+        )
     vol120_avg4d = ctx.get("vol120_avg4d_bars") or []
     vol120_avg4d_html = _render_vol_bars_block(
         vol120_avg4d,
@@ -3664,6 +3784,34 @@ def render_html(ctx: dict) -> str:
   .vol20-wrap.vol120 .vol20-bar.flat {{ background: #8e8e93; }}
   .vol20-wrap.vol120 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
+  /* 量能120日趋势：零轴=近200日均值，上红下绿 */
+  .vol20-wrap.vol120.mean-zero .vol120z-bars {{
+    display: flex; align-items: stretch; gap: 1px; height: 118px; width: 100%;
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-col {{
+    flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; align-items: center; height: 100%;
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-track {{
+    flex: 1; width: 100%; min-height: 0; position: relative;
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-zero {{
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(60,60,67,.22); z-index: 1; pointer-events: none;
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-bar {{
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 6px; min-height: 1px; z-index: 2;
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-bar.pos {{
+    bottom: 50%; border-radius: 1px 1px 0 0;
+    background: var(--bar-ok, #E53935);
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-bar.neg {{
+    top: 50%; border-radius: 0 0 1px 1px;
+    background: var(--bar-bad, #34C759);
+  }}
+  .vol20-wrap.vol120.mean-zero .vol120z-col.latest .vol120z-bar {{ box-shadow: none; }}
 
   /* ── 资金追高情绪 ── */
   .chase-group {{
@@ -5743,6 +5891,8 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
 
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
+    vol120_amount_rows = kpl_rows[-120:] if len(kpl_rows) >= 120 else list(kpl_rows)
+    vol120_mean_200d, vol120_mean_n = _vol_mean_lookback(kpl_rows, n=200)
     vol120_avg4d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=4)
 
     xh120_bars: list[dict] = []
@@ -5846,6 +5996,9 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_headline": "",
         "vol20_bars": vol20_bars,
         "vol120_bars": vol120_bars,
+        "vol120_amount_rows": vol120_amount_rows,
+        "vol120_mean_200d": vol120_mean_200d,
+        "vol120_mean_n": vol120_mean_n,
         "vol120_avg4d_bars": vol120_avg4d_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
