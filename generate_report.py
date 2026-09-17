@@ -4392,19 +4392,12 @@ def _render_ts_count_bars_html(
         )
 
     d0 = ""
-    d1 = ""
     latest_r = ratios[-1] if ratios else 0.0
-    try:
-        d0 = fmt_md(datetime.strptime(str(series[0]["date"])[:10], "%Y-%m-%d"))
-        d1 = fmt_md(datetime.strptime(str(series[-1]["date"])[:10], "%Y-%m-%d"))
-    except (ValueError, KeyError, TypeError):
-        d0 = str(series[0].get("date") or "")[5:]
-        d1 = str(series[-1].get("date") or "")[5:]
 
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">近30日强趋势占比</span>
-      <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_r:.1f}%</span>
+      <span class="ts-chart-meta">最新 {latest_r:.1f}%</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-cnt-bars">{mark_html}{"".join(cols)}</div>
@@ -4520,17 +4513,11 @@ def _render_ts_hold_bars_html(
             latest_lab = "—"
     except (TypeError, ValueError, KeyError):
         latest_lab = "—"
-    try:
-        d0 = fmt_md(datetime.strptime(str(series[0]["date"])[:10], "%Y-%m-%d"))
-        d1 = fmt_md(datetime.strptime(str(series[-1]["date"])[:10], "%Y-%m-%d"))
-    except (ValueError, KeyError, TypeError):
-        d0 = str(series[0].get("date") or "")[5:]
-        d1 = str(series[-1].get("date") or "")[5:]
 
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势-次日承接</span>
-      <span class="ts-chart-meta">{d0}–{d1} · 最新 {latest_lab}</span>
+      <span class="ts-chart-meta">2日均值 · 最新 {latest_lab}</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-hold-bars">{"".join(cols)}</div>
