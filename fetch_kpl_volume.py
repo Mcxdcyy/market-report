@@ -125,6 +125,34 @@ def save_volume_cache(payload: dict) -> None:
     CACHE_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def _overlay_live_day(
+    series: list[dict[str, Any]],
+    live: dict[str, Any] | None,
+    *,
+    as_of: date,
+) -> bool:
+    """用实时实际量能覆盖对应交易日（避免盘中写入后收盘不更新）。返回是否改动。"""
+    if not live or not live.get("date"):
+        return False
+    ds = str(live["date"])[:10]
+    if ds > as_of.isoformat():
+        return False
+    amt = float(live.get("amount_yi") or 0)
+    lp = float(live.get("last_point") or 0)
+    if amt <= 0:
+        return False
+    for row in series:
+        if row.get("date") == ds:
+            if float(row.get("last_point") or 0) == lp and float(row.get("amount_yi") or 0) == amt:
+                return False
+            row["amount_yi"] = amt
+            row["last_point"] = lp
+            return True
+    series.append({"date": ds, "amount_yi": amt, "last_point": lp})
+    series.sort(key=lambda r: r["date"])
+    return True
+
+
 def ensure_kpl_volume_series(
     as_of: date | datetime | str,
     *,
@@ -133,7 +161,11 @@ def ensure_kpl_volume_series(
     force: bool = False,
     progress: bool = True,
 ) -> list[dict[str, Any]]:
-    """确保缓存有完整日线，返回按日期升序、截至 as_of 的近 n 日实际量能（亿元）。"""
+    """确保缓存有完整日线，返回按日期升序、截至 as_of 的近 n 日实际量能（亿元）。
+
+    每次调用都会用 MarketCapacity 实时接口覆盖 as_of 当日（及实时接口返回日），
+    避免盘中生成报表后缓存锁死不完整成交额。
+    """
     as_of_d = _as_date(as_of)
     cached = load_volume_cache()
     series = list(cached.get("daily") or [])
@@ -144,31 +176,27 @@ def ensure_kpl_volume_series(
         or cached.get("type") != type_
         or cache_end < as_of_d.isoformat()
     )
+    changed = False
     if need_fetch:
         if progress:
             print(f"[kpl-vol] 拉取开盘啦实际量能日线 Type={type_} …")
         raw = fetch_market_capacity_kline(type_=type_)
-        raw_asc = sorted(raw, key=lambda r: r["date"])
-        live = fetch_market_capacity_live(type_=type_)
-        if live and live.get("date"):
-            ds = live["date"]
-            replaced = False
-            for row in raw_asc:
-                if row["date"] == ds:
-                    row["amount_yi"] = live["amount_yi"]
-                    row["last_point"] = live["last_point"]
-                    replaced = True
-                    break
-            if not replaced:
-                raw_asc.append(
-                    {
-                        "date": ds,
-                        "amount_yi": live["amount_yi"],
-                        "last_point": live["last_point"],
-                    }
-                )
-                raw_asc.sort(key=lambda r: r["date"])
-        series = raw_asc
+        series = sorted(raw, key=lambda r: r["date"])
+        changed = True
+        if progress:
+            print(f"[kpl-vol] 已拉日线 {len(series)} 日")
+
+    # 无论是否重拉日线，都刷新实时量能（修正盘中不完整缓存）
+    live = fetch_market_capacity_live(type_=type_)
+    if _overlay_live_day(series, live, as_of=as_of_d):
+        changed = True
+        if progress and live:
+            print(
+                f"[kpl-vol] 实时覆盖 {live.get('date')} → "
+                f"{float(live.get('amount_yi') or 0):.2f} 亿"
+            )
+
+    if changed or not cached.get("daily"):
         payload = {
             "as_of": as_of_d.isoformat(),
             "type": type_,

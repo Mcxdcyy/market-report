@@ -536,7 +536,7 @@ A股惯例：**好=红、中=橙、不好=绿**。用于 10 日趋势表 `.trend
 | 项 | 固定规则 |
 |---|---|
 | 数据源 | **开盘啦** App：首页 → 市场情绪 → 市场量能 → **实际量能（沪深京）**；接口 `MarketCapacityKLine`（`Type=0`）+ 当日可叠 `MarketCapacity`；**禁止**再用 `大盘数据.numbers` 成交额列 |
-| 缓存 | `kpl_market_volume.json`（`fetch_kpl_volume.py` / `ensure_kpl_volume_series`） |
+| 缓存 | `kpl_market_volume.json`（`fetch_kpl_volume.py` / `ensure_kpl_volume_series`）；**每次生成报表必须用 `MarketCapacity` 实时接口覆盖 as_of 当日**，禁止沿用盘中写入的不完整成交额 |
 | 窗口 | **近 120 个交易日** |
 | 标题 | **量能120日趋势**（勿改名；勿回潮「量能90日趋势」） |
 | 单位 | 展示万亿；接口 `lastPoint` 为万元，先 ÷10000 得亿元再 ÷10000 展示 |
