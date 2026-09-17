@@ -4059,7 +4059,7 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">3</div>
       <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 数量近120日 · 效应近120日</div>
+      <div class="section-sub">{ctx['data_date']} · 近120日</div>
     </div>
     {chase_sentiment_html}
   </div>
@@ -5330,37 +5330,30 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 效应两图：主板+创板按家数加权合并，近120日（已删「昨追-赚钱效应」）
-    # 柱高均为近2日均值；meta「最新」仍用当日原始值（value_raw）
-    # 昨追-今日承接：图下标签 = 近4日原始均值 ≥ 近200日均值
+    # 效应仅「昨追-今日承接」：主板+创板按家数加权合并，近120日
+    # （已删「昨追-赚钱效应」「今追-回落指数」；后台 pullback 仍可算）
+    # 柱高为近2日均值；meta「最新」仍用当日原始值（value_raw）
+    # 图下标签 = 近4日原始均值 ≥ 近200日均值
     # →「追高承接较好」/「追高承接不好」；连续≥2日状态翻转首日追加「需次日验证」
-    effect_charts = []
-    for mk, title in (
-        ("loss", "昨追-今日承接"),
-        ("pullback", "今追-回落指数"),
-    ):
-        ser, baseline = _merge_chase_effect_series(groups, mk)
-        ser = _smooth_metric_series_2d(ser)
-        chart_html = _render_chase_metric_chart(
-            title, ser, baseline=baseline, avg2d=True
-        )
-        if mk == "loss":
-            chart_html += _chase_loss_hold_tag_html(ser, baseline, window=4)
-        effect_charts.append(chart_html)
-    if effect_charts:
-        parts.append(
-            f'''<div class="chase-group">
-    <div class="chase-grid single">{"".join(effect_charts)}</div>
+    ser, baseline = _merge_chase_effect_series(groups, "loss")
+    ser = _smooth_metric_series_2d(ser)
+    chart_html = _render_chase_metric_chart(
+        "昨追-今日承接", ser, baseline=baseline, avg2d=True
+    )
+    chart_html += _chase_loss_hold_tag_html(ser, baseline, window=4)
+    parts.append(
+        f'''<div class="chase-group">
+    <div class="chase-grid single">{chart_html}</div>
   </div>'''
-        )
+    )
 
-    # 已删「低吸赚钱效应」「低吸锁仓收益」——页面不再渲染低吸图
+    # 已删「昨追-赚钱效应」「今追-回落指数」「低吸赚钱效应」「低吸锁仓收益」
 
     note = (
         '<div class="chase-note">'
         "追高池：日内最高价相对昨收涨幅≥7%；主板与创板（创业板+科创板）分池统计后合计展示；"
         "不含ST、北交所，不含上市日历天数≤10，不含一字涨停（当日最低价=当日涨停价）。"
-        "昨追效应取前一交易日追高池；回落指数取当日追高池。"
+        "昨追效应取前一交易日追高池。"
         "</div>"
     )
     return "".join(parts) + note
