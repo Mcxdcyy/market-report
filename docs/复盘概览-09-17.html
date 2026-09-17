@@ -481,6 +481,10 @@
     width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
     background: #8e8e93;
   }
+  /* 3日均值等带 up/down/flat 的柱：须压过上方默认灰 */
+  .vol20-wrap.vol120 .vol20-bar.up { background: var(--bar-ok); }
+  .vol20-wrap.vol120 .vol20-bar.down { background: var(--bar-bad); }
+  .vol20-wrap.vol120 .vol20-bar.flat { background: #8e8e93; }
   .vol20-wrap.vol120 .vol20-col.latest .vol20-bar { box-shadow: none; }
   .vol20-wrap.vol120 .vol20-axis { gap: 1px; }
 
@@ -4493,7 +4497,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-17 23:26</div>
+  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-17 23:43</div>
 </div>
 </body>
 </html>

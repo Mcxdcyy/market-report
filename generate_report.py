@@ -3658,6 +3658,10 @@ def render_html(ctx: dict) -> str:
     width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
     background: #8e8e93;
   }}
+  /* 3日均值等带 up/down/flat 的柱：须压过上方默认灰 */
+  .vol20-wrap.vol120 .vol20-bar.up {{ background: var(--bar-ok); }}
+  .vol20-wrap.vol120 .vol20-bar.down {{ background: var(--bar-bad); }}
+  .vol20-wrap.vol120 .vol20-bar.flat {{ background: #8e8e93; }}
   .vol20-wrap.vol120 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
 
