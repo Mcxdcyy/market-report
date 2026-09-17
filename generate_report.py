@@ -4381,7 +4381,8 @@ def _render_ts_hold_bars_html(
 ) -> str:
     """今日趋势承接柱图（近30日）：柱高=当日原始值；零轴=近200日均值（上红下绿）。
 
-    卡片壳与「近30日强趋势占比」统一（`.ts-cnt-wrap`）；标签放卡片内，避免与下方横条重叠。
+    纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶（悬停仍显示真实值），
+    避免单根长柱把其余柱压成一条线。卡片壳与「近30日强趋势占比」统一。
     """
     if not series:
         return ""
@@ -4397,9 +4398,10 @@ def _render_ts_hold_bars_html(
 
     base = float(mean_200d) if mean_200d is not None else 0.0
     if mean_200d is not None:
-        scale = max(abs(v - base) for v in vals)
+        abs_deltas = [abs(v - base) for v in vals]
+        scale = _chase_robust_scale(abs_deltas, pct=0.90)
     else:
-        scale = max(abs(v) for v in vals)
+        scale = _chase_robust_scale([abs(v) for v in vals], pct=0.90)
     if scale < 1e-9:
         scale = 1.0
     scale *= 1.08
@@ -4449,8 +4451,9 @@ def _render_ts_hold_bars_html(
             val_lab = f"{v:+.1f}%"
             n = int(row.get("n") or 0)
             tip_extra = f" · 均值{base:+.2f}%" if mean_200d is not None else ""
+            tip_clip = " · 柱高已封顶" if abs(delta) > scale else ""
             cols.append(
-                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}">
+                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}{tip_clip}">
       <div class="ts-hold-val {tag}">{val_lab}</div>
       <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div>{bar}</div>
     </div>'''
