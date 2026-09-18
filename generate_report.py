@@ -794,6 +794,21 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     return bars
 
 
+def _ma_amount_rows(rows: list[dict], days: int) -> list[dict]:
+    """整段序列的近 days 日成交额均值，供5日图按柱高本身判断周期。"""
+    amts = [float(r.get("amount_yi") or 0) for r in rows]
+    out: list[dict] = []
+    for i, row in enumerate(rows):
+        vals = [v for v in amts[max(0, i - days + 1) : i + 1] if v > 0]
+        if not vals:
+            continue
+        out.append({
+            "date": row.get("date"),
+            "amount_yi": sum(vals) / len(vals),
+        })
+    return out
+
+
 def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[dict]:
     """近 n 日量能柱：柱高为近 days 个交易日成交额均值（含当日）；不足则天数内有多少算多少。"""
     if not rows or days < 1:
@@ -834,21 +849,12 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[d
             vals0.append(float(chunk[j].get("amount_yi") or 0))
         if vals0:
             prior = sum(vals0) / len(vals0)
-    # 柱高仍是5日均值；颜色用全日序列的周期，单日波动不改色
+    # 柱高是5日均值；颜色也按这列均值判断，不拿单日成交额套过来
     bars = build_vol_bars_from_amounts(
         smoothed, prior_amount=prior, color_mode="vs_prev"
     )
-    held = _hold_vol_cycle_colors(rows)
-    by_date = {
-        str(r.get("date") or "")[:10]: col
-        for r, col in zip(rows, held)
-        if r.get("date")
-    }
-    for bar, src in zip(bars, smoothed):
-        key = str(src.get("date") or "")[:10]
-        col = by_date.get(key) or "shrink"
-        bar["tag"] = "up" if col == "expand" else "down"
-        bar["cycle_label"] = "增量周期" if col == "expand" else "缩量周期"
+    ma_rows = _ma_amount_rows(rows, days)
+    _apply_held_cycle_tags(bars, smoothed, ma_rows)
     return bars
 
 
@@ -897,32 +903,19 @@ def _retag_bars_by_streak(
 
 
 def _hold_vol_cycle_colors(rows: list[dict]) -> list[str]:
-    """5日均值图用色：与原始量能同一套周期，但只有红/绿。
-
-    连续≥2日同向周期才切换；单日放量或缩量、以及未触发的日子，延续前一根颜色。
-    """
+    """只有红/绿。条件命中当日就切换；没触发的日子延续前一根颜色。"""
     tagged = rows if rows and "vol_cycle" in rows[0] else _annotate_vol_cycle(rows)
-    cycles = [str(r.get("vol_cycle") or "flat") for r in tagged]
-    n = len(cycles)
     held: str | None = None
-    out: list[str | None] = [None] * n
-    i = 0
-    while i < n:
-        cur = cycles[i]
-        if cur not in ("expand", "shrink"):
-            out[i] = held
-            i += 1
-            continue
-        j = i + 1
-        while j < n and cycles[j] == cur:
-            j += 1
-        if j - i >= 2:
+    out: list[str] = []
+    for row in tagged:
+        cur = str(row.get("vol_cycle") or "flat")
+        if cur in ("expand", "shrink"):
             held = cur
-        for k in range(i, j):
-            out[k] = held
-        i = j
-    first = next((x for x in out if x), "shrink")
-    return [x or first for x in out]
+        out.append(held or "shrink")
+    if out and held is None:
+        return ["shrink"] * len(out)
+    first = next((x for x in out if x in ("expand", "shrink")), "shrink")
+    return [x if x in ("expand", "shrink") else first for x in out]
 
 
 def _apply_held_cycle_tags(
@@ -1182,39 +1175,49 @@ def _vol_risk_value(amts: list[float], i: int) -> float | None:
 
 
 def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
-    """给每日打量能周期。
+    """给序列打量能周期。量能可以是单日成交额，也可以是5日均值。
 
-    缩量：风险值 < -1（连续2日大幅缩量），或连续3日增量变化 < 0。
-    放量：连续2日增量变化 > 0，或当日量能 > 前3个交易日最高量能。
-    其余为中性。
+    缩量：风险值 < -1，或连续3日增量变化 < 0。
+    增量：连续2日增量变化 > 0（两天都算），或当日量能 > 前3日最高。
+    同时命中时增量优先。未触发为中性。
     """
     amts = [float(r.get("amount_yi") or 0) for r in rows]
     incs: list[float | None] = [None]
     for i in range(1, len(amts)):
         incs.append(_vol_increment(amts[i - 1], amts[i]))
-    out: list[dict] = []
-    for i, row in enumerate(rows):
+    cycles = ["flat"] * len(rows)
+    risks: list[float | None] = [None] * len(rows)
+    for i in range(len(rows)):
         shrink = False
         expand = False
         inc = incs[i]
-        risk = _vol_risk_value(amts, i)
         prev_inc = incs[i - 1] if i >= 1 else None
+        risk = _vol_risk_value(amts, i)
+        risks[i] = risk
+        two_up = (
+            inc is not None
+            and prev_inc is not None
+            and inc > 0
+            and prev_inc > 0
+        )
         if risk is not None and risk < VOL_RISK_SHRINK:
             shrink = True
-        if inc is not None and prev_inc is not None and inc > 0 and prev_inc > 0:
+        if two_up:
             expand = True
-        if i >= 3 and all(incs[i - k] is not None and incs[i - k] < 0 for k in range(3)):
+        if i >= 3 and all(
+            incs[i - k] is not None and incs[i - k] < 0 for k in range(3)
+        ):
             shrink = True
         if i >= 3 and amts[i] > max(amts[i - 3 : i]):
             expand = True
-        if expand and shrink:
-            cycle = "flat"
-        elif expand:
-            cycle = "expand"
+        if expand:
+            cycles[i] = "expand"
+            if two_up:
+                cycles[i - 1] = "expand"
         elif shrink:
-            cycle = "shrink"
-        else:
-            cycle = "flat"
+            cycles[i] = "shrink"
+    out: list[dict] = []
+    for row, inc, risk, cycle in zip(rows, incs, risks, cycles):
         stamped = dict(row)
         stamped["vol_inc"] = inc
         stamped["vol_risk"] = risk
