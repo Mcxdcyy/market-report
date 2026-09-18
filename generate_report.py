@@ -848,7 +848,7 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[d
         key = str(src.get("date") or "")[:10]
         col = by_date.get(key) or "shrink"
         bar["tag"] = "up" if col == "expand" else "down"
-        bar["cycle_label"] = "放量周期" if col == "expand" else "缩量周期"
+        bar["cycle_label"] = "增量周期" if col == "expand" else "缩量周期"
     return bars
 
 
@@ -923,6 +923,37 @@ def _hold_vol_cycle_colors(rows: list[dict]) -> list[str]:
         i = j
     first = next((x for x in out if x), "shrink")
     return [x or first for x in out]
+
+
+def _apply_held_cycle_tags(
+    bars: list[dict],
+    src_rows: list[dict],
+    full_rows: list[dict],
+) -> list[dict]:
+    """按持有周期给柱上色：增量红、缩量绿，无灰。"""
+    held = _hold_vol_cycle_colors(full_rows)
+    by_date = {
+        str(r.get("date") or "")[:10]: col
+        for r, col in zip(full_rows, held)
+        if r.get("date")
+    }
+    for bar, src in zip(bars, src_rows):
+        key = str(src.get("date") or "")[:10]
+        col = by_date.get(key) or "shrink"
+        bar["tag"] = "up" if col == "expand" else "down"
+        bar["cycle_label"] = "增量周期" if col == "expand" else "缩量周期"
+    return bars
+
+
+def _vol_cycle_tag_html(bars: list[dict]) -> str:
+    """图下标签：末日持有色为增量周期（红）或缩量周期（绿）。"""
+    if not bars:
+        return ""
+    if bars[-1].get("tag") == "up":
+        pill = '<span class="pill ok">增量周期</span>'
+    else:
+        pill = '<span class="pill bad">缩量周期</span>'
+    return f'<div class="chart-tags vol20-tags">{pill}</div>'
 
 
 def build_vol_bars_from_amounts(
@@ -3310,26 +3341,23 @@ def render_html(ctx: dict) -> str:
     if not vol30_html and after_30:
         vol30_html = after_30
     vol120_rows = ctx.get("vol120_amount_rows") or []
-    vol120_mean = ctx.get("vol120_mean_200d")
-    vol120_mean_n = int(ctx.get("vol120_mean_n") or 0)
-    if vol120_rows and vol120_mean is not None:
-        vol120_html = _render_vol120_mean_zero_chart(
-            vol120_rows,
-            mean_200d=float(vol120_mean),
-            mean_n=vol120_mean_n or 200,
-            title="量能120日趋势",
-        )
-    else:
-        vol120_html = _render_vol_bars_block(
-            vol120, title="量能120日趋势", dense=True
-        )
+    vol120_tag = _vol_cycle_tag_html(vol120 if vol120 else [])
+    if not vol120 and vol120_rows:
+        vol120_tag = ""
+    vol120_html = _render_vol_bars_block(
+        vol120,
+        title="量能120日趋势",
+        dense=True,
+        colored=True,
+        after_html=vol120_tag,
+    )
     vol120_avg5d = ctx.get("vol120_avg5d_bars") or []
     vol120_avg5d_html = _render_vol_bars_block(
         vol120_avg5d,
         title="量能120日趋势-5日均值",
         dense=True,
         colored=True,
-        after_html=vol_note_html,
+        after_html=_vol_cycle_tag_html(vol120_avg5d) + vol_note_html,
     )
     if not vol120_html and not vol120_avg5d_html and vol_note_html:
         vol120_avg5d_html = vol_note_html
@@ -3898,7 +3926,7 @@ def render_html(ctx: dict) -> str:
   .vol20-wrap.vol120 .vol20-bar.flat {{ background: #8e8e93; }}
   .vol20-wrap.vol120 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
-  /* 量能120日趋势：零轴=近200日均值；柱色=放量红/缩量绿/其余灰 */
+  /* 量能120日密柱：默认灰；带 up/down 的量能周期图覆盖为红/绿 */
   .vol20-wrap.vol120.mean-zero .vol120z-bars {{
     display: flex; align-items: stretch; gap: 1px; height: 118px; width: 100%;
   }}
@@ -6037,7 +6065,15 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         return build_vol_bars_from_amounts(use, prior_amount=prior)
 
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
-    vol120_bars = _slice_vol_bars(kpl_rows, 120)
+    if len(kpl_rows) > 120:
+        vol120_src = kpl_rows[-120:]
+    else:
+        vol120_src = list(kpl_rows)
+    vol120_bars = _apply_held_cycle_tags(
+        _slice_vol_bars(kpl_rows, 120),
+        vol120_src,
+        kpl_rows,
+    )
     annotated = _annotate_vol_cycle(kpl_rows)
     vol120_amount_rows = annotated[-120:] if len(annotated) >= 120 else annotated
     vol120_mean_200d, vol120_mean_n = _vol_mean_lookback(kpl_rows, n=200)
