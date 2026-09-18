@@ -1178,8 +1178,8 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
     """给序列打量能周期。量能可以是单日成交额，也可以是5日均值。
 
     缩量：风险值 < -1，或连续3日增量变化 < 0。
-    增量：连续2日增量变化 > 0（两天都算），或当日量能 > 前3日最高。
-    同时命中时增量优先。未触发为中性。
+    增量：连续2日增量变化 > 0 时只标当天，或当日量能 > 前3日最高。
+    只改当天，不回改前一天。同时命中时增量优先。未触发为中性。
     """
     amts = [float(r.get("amount_yi") or 0) for r in rows]
     incs: list[float | None] = [None]
@@ -1212,8 +1212,6 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
             expand = True
         if expand:
             cycles[i] = "expand"
-            if two_up:
-                cycles[i - 1] = "expand"
         elif shrink:
             cycles[i] = "shrink"
     out: list[dict] = []
