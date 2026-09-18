@@ -1030,7 +1030,7 @@ def _render_vol_bars_block(
     """成交金额 / 家数柱图 HTML 块；dense=True 用于长周期趋势（柱更细）。
 
     默认 dense 不着色、meta 只写日期区间；colored=True 时仍套 tag 红绿。
-    show_latest=True 时附加「最新 N 单位」（如近120日百日新高）。
+    show_latest=True 时附加「今日 N 单位」（如近120日百日新高）。
     """
     if not bars:
         return ""
@@ -1053,7 +1053,7 @@ def _render_vol_bars_block(
     if dense and not show_latest:
         meta = f"{d0}–{d1}"
     else:
-        meta = f"{d0}–{d1} · 最新 {bars[-1]['label']} {unit}"
+        meta = f"{d0}–{d1} · 今日 {bars[-1]['label']} {unit}"
     wrap_cls = "vol20-wrap vol120" if dense else "vol20-wrap"
     return f'''<div class="{wrap_cls}">
     <div class="vol20-head">
@@ -4614,7 +4614,7 @@ def _render_ts_count_bars_html(
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">近30日强趋势占比</span>
-      <span class="ts-chart-meta">最新 {latest_r:.1f}%</span>
+      <span class="ts-chart-meta">今日 {latest_r:.1f}%</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-cnt-bars">{mark_html}{"".join(cols)}</div>
@@ -4734,7 +4734,7 @@ def _render_ts_hold_bars_html(
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势-次日承接</span>
-      <span class="ts-chart-meta">4日均值 · 最新 {latest_lab}</span>
+      <span class="ts-chart-meta">4日均值 · 今日 {latest_lab}</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-hold-bars">{"".join(cols)}</div>
@@ -5236,7 +5236,7 @@ def _render_chase_metric_chart(
             latest_lab = "—"
     else:
         latest_lab = "—"
-    meta_txt = f"2日均值 · 最新 {latest_lab}" if avg2d else f"最新 {latest_lab}"
+    meta_txt = f"2日均值 · 今日 {latest_lab}" if avg2d else f"今日 {latest_lab}"
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
@@ -5375,7 +5375,7 @@ def _render_chase_count_chart(
         latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
-    meta_txt = f"2日均值 · 最新 {latest_lab}"
+    meta_txt = f"2日均值 · 今日 {latest_lab}"
 
     # 近5日**当日原始家数**均值 vs 近200日均值 → 活跃周期 / 不活跃周期
     # （与「今日趋势承接」一致：用近五日原始日值，不是五个近2日均值再平均）
