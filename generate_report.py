@@ -834,10 +834,22 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[d
             vals0.append(float(chunk[j].get("amount_yi") or 0))
         if vals0:
             prior = sum(vals0) / len(vals0)
-    # 页面统一中性灰（dense 默认不套 tag）；不再用连续涨跌着色
-    return build_vol_bars_from_amounts(
+    # 柱高仍是5日均值；颜色用全日序列的周期，单日波动不改色
+    bars = build_vol_bars_from_amounts(
         smoothed, prior_amount=prior, color_mode="vs_prev"
     )
+    held = _hold_vol_cycle_colors(rows)
+    by_date = {
+        str(r.get("date") or "")[:10]: col
+        for r, col in zip(rows, held)
+        if r.get("date")
+    }
+    for bar, src in zip(bars, smoothed):
+        key = str(src.get("date") or "")[:10]
+        col = by_date.get(key) or "shrink"
+        bar["tag"] = "up" if col == "expand" else "down"
+        bar["cycle_label"] = "放量周期" if col == "expand" else "缩量周期"
+    return bars
 
 
 def _retag_bars_by_streak(
@@ -882,6 +894,35 @@ def _retag_bars_by_streak(
     for bar, tag in zip(bars, tags):
         bar["tag"] = tag
     return bars
+
+
+def _hold_vol_cycle_colors(rows: list[dict]) -> list[str]:
+    """5日均值图用色：与原始量能同一套周期，但只有红/绿。
+
+    连续≥2日同向周期才切换；单日放量或缩量、以及未触发的日子，延续前一根颜色。
+    """
+    tagged = rows if rows and "vol_cycle" in rows[0] else _annotate_vol_cycle(rows)
+    cycles = [str(r.get("vol_cycle") or "flat") for r in tagged]
+    n = len(cycles)
+    held: str | None = None
+    out: list[str | None] = [None] * n
+    i = 0
+    while i < n:
+        cur = cycles[i]
+        if cur not in ("expand", "shrink"):
+            out[i] = held
+            i += 1
+            continue
+        j = i + 1
+        while j < n and cycles[j] == cur:
+            j += 1
+        if j - i >= 2:
+            held = cur
+        for k in range(i, j):
+            out[k] = held
+        i = j
+    first = next((x for x in out if x), "shrink")
+    return [x or first for x in out]
 
 
 def build_vol_bars_from_amounts(
@@ -1037,7 +1078,7 @@ def _render_vol_bars_block(
         return ""
     use_tags = (not dense) if colored is None else colored
     cols = "".join(
-        f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}{unit}">
+        f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}{unit}{(" · " + b["cycle_label"]) if b.get("cycle_label") else ""}">
       <div class="vol20-val">{b["label"]}</div>
       <div class="vol20-bar-track">
         <div class="vol20-bar{" " + b["tag"] if use_tags and b.get("tag") else ""}" style="height:{b["height_pct"]}%"></div>
@@ -3287,6 +3328,7 @@ def render_html(ctx: dict) -> str:
         vol120_avg5d,
         title="量能120日趋势-5日均值",
         dense=True,
+        colored=True,
         after_html=vol_note_html,
     )
     if not vol120_html and not vol120_avg5d_html and vol_note_html:
