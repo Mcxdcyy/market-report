@@ -91,8 +91,7 @@ HIST_WINDOW = 300
 
 # 大盘量能：规则阈值（成交额，单位与表格一致）
 VOL_TWO_DAY_SHRINK = -0.15  # 连续2日缩量时，两日合计较前一日起点缩量超 15%
-VOL_SHARP_DAY = -0.05  # 增量变化 < -5% 视为大幅缩量日
-VOL_SHARP_DAY = -0.05  # 增量变化 < -5% 视为大幅缩量日（大盘数据「增量变化」列）
+VOL_RISK_SHRINK = -1.0  # 大盘数据「风险值」< -1 视为连续2日大幅缩量
 VOL_NEUTRAL_BAND = (42, 58)  # 震荡场景分数区间
 VOL_GOOD_BAND = (65, 85)
 VOL_BAD_BAND = (15, 35)
@@ -1092,12 +1091,30 @@ def _vol_increment(prev_amt: float, cur_amt: float) -> float | None:
     return float(cur_amt) / float(prev_amt) - 1.0
 
 
+def _vol_risk_value(amts: list[float], i: int) -> float | None:
+    """大盘数据「风险值」= 变量1 × 变量2 × 变量3 × 1000。
+
+    2日均值 = (当日 + 前一日) / 2。
+    变量1 = (当日 − 前一日的2日均值) / 当日
+    变量2 = (当日 − 再前一日的2日均值) / 当日
+    变量3 = (前一日 − 再前一日的2日均值) / 前一日
+    """
+    if i < 3 or amts[i] <= 0 or amts[i - 1] <= 0:
+        return None
+    mean_yday = (amts[i - 2] + amts[i - 1]) / 2.0
+    mean_before = (amts[i - 3] + amts[i - 2]) / 2.0
+    v1 = (amts[i] - mean_yday) / amts[i]
+    v2 = (amts[i] - mean_before) / amts[i]
+    v3 = (amts[i - 1] - mean_before) / amts[i - 1]
+    return v1 * v2 * v3 * 1000.0
+
+
 def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
     """给每日打量能周期。
 
-    缩量：连续2日增量变化均 < -5%，或连续3日增量变化 < 0。
+    缩量：风险值 < -1（连续2日大幅缩量），或连续3日增量变化 < 0。
     放量：连续2日增量变化 > 0，或当日量能 > 前3个交易日最高量能。
-    其余为中性。增量变化公式同大盘数据「增量变化」列。
+    其余为中性。
     """
     amts = [float(r.get("amount_yi") or 0) for r in rows]
     incs: list[float | None] = [None]
@@ -1108,12 +1125,12 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
         shrink = False
         expand = False
         inc = incs[i]
+        risk = _vol_risk_value(amts, i)
         prev_inc = incs[i - 1] if i >= 1 else None
-        if inc is not None and prev_inc is not None:
-            if inc < VOL_SHARP_DAY and prev_inc < VOL_SHARP_DAY:
-                shrink = True
-            if inc > 0 and prev_inc > 0:
-                expand = True
+        if risk is not None and risk < VOL_RISK_SHRINK:
+            shrink = True
+        if inc is not None and prev_inc is not None and inc > 0 and prev_inc > 0:
+            expand = True
         if i >= 3 and all(incs[i - k] is not None and incs[i - k] < 0 for k in range(3)):
             shrink = True
         if i >= 3 and amts[i] > max(amts[i - 3 : i]):
@@ -1128,6 +1145,7 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
             cycle = "flat"
         stamped = dict(row)
         stamped["vol_inc"] = inc
+        stamped["vol_risk"] = risk
         stamped["vol_cycle"] = cycle
         out.append(stamped)
     return out
@@ -1193,10 +1211,10 @@ def _render_vol120_mean_zero_chart(
         if cycle not in ("expand", "shrink", "flat"):
             cycle = "flat"
         bar = f'<div class="vol120z-bar {side} {cycle}" style="height:{h:.1f}%"></div>'
-        inc = row.get("vol_inc")
-        inc_s = f" · 增量{float(inc):+.1%}" if isinstance(inc, (int, float)) else ""
+        risk = row.get("vol_risk")
+        risk_s = f" · 风险值{float(risk):+.2f}" if isinstance(risk, (int, float)) else ""
         cycle_s = {"expand": "放量周期", "shrink": "缩量周期", "flat": "中性"}.get(cycle, "")
-        tip = f"{lab} 周{wd} · {vol_wy:.2f}万亿{inc_s} · {cycle_s} · {axis_tip}"
+        tip = f"{lab} 周{wd} · {vol_wy:.2f}万亿{risk_s} · {cycle_s} · {axis_tip}"
         cols.append(
             f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{tip}">
       <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div>{bar}</div>
