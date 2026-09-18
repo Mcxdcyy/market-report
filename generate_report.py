@@ -793,7 +793,7 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
     return bars
 
 
-def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 2) -> list[dict]:
+def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[dict]:
     """近 n 日量能柱：柱高为近 days 个交易日成交额均值（含当日）；不足则天数内有多少算多少。"""
     if not rows or days < 1:
         return []
@@ -3210,21 +3210,21 @@ def render_html(ctx: dict) -> str:
         vol120_html = _render_vol_bars_block(
             vol120, title="量能120日趋势", dense=True
         )
-    vol120_avg2d = ctx.get("vol120_avg2d_bars") or []
-    vol120_avg2d_html = _render_vol_bars_block(
-        vol120_avg2d,
-        title="量能120日趋势-2日均值",
+    vol120_avg5d = ctx.get("vol120_avg5d_bars") or []
+    vol120_avg5d_html = _render_vol_bars_block(
+        vol120_avg5d,
+        title="量能120日趋势-5日均值",
         dense=True,
         after_html=vol_note_html,
     )
-    if not vol120_html and not vol120_avg2d_html and vol_note_html:
-        vol120_avg2d_html = vol_note_html
+    if not vol120_html and not vol120_avg5d_html and vol_note_html:
+        vol120_avg5d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-2日均值（百日新高在追高模块末）
-    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg2d_html}"
+    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-5日均值（百日新高在追高模块末）
+    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg5d_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -5893,7 +5893,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
     vol120_amount_rows = kpl_rows[-120:] if len(kpl_rows) >= 120 else list(kpl_rows)
     vol120_mean_200d, vol120_mean_n = _vol_mean_lookback(kpl_rows, n=200)
-    vol120_avg2d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=2)
+    vol120_avg5d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=5)
 
     xh120_bars: list[dict] = []
     try:
@@ -5999,7 +5999,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "vol120_amount_rows": vol120_amount_rows,
         "vol120_mean_200d": vol120_mean_200d,
         "vol120_mean_n": vol120_mean_n,
-        "vol120_avg2d_bars": vol120_avg2d_bars,
+        "vol120_avg5d_bars": vol120_avg5d_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
