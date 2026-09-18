@@ -4629,7 +4629,7 @@ def _render_ts_hold_bars_html(
     mean_200d: float | None = None,
     after_html: str = "",
 ) -> str:
-    """强趋势-次日承接柱图（近120日）：柱高=近2日均值；零轴=近200日均值（上红下绿）。
+    """强趋势-次日承接柱图（近120日）：柱高=近4日均值；零轴=近200日均值（上红下绿）。
 
     meta「最新」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
     卡片壳与「近30日强趋势占比」统一。
@@ -4710,7 +4710,7 @@ def _render_ts_hold_bars_html(
                 except (TypeError, ValueError):
                     tip_raw = ""
             cols.append(
-                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}{tip_raw} · {n}家{tip_extra}">
+                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近4日均{val_lab}{tip_raw} · {n}家{tip_extra}">
       <div class="ts-hold-val {tag}">{val_lab}</div>
       <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -4734,7 +4734,7 @@ def _render_ts_hold_bars_html(
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势-次日承接</span>
-      <span class="ts-chart-meta">2日均值 · 最新 {latest_lab}</span>
+      <span class="ts-chart-meta">4日均值 · 最新 {latest_lab}</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-hold-bars">{"".join(cols)}</div>
@@ -4902,8 +4902,9 @@ def render_trend_strength_html(block: dict) -> str:
         hold_mean_f = None
     hold_chart = ""
     if hold_series_raw:
-        # 页面近120日；柱高=近2日均值；meta「最新」=当日原始；标签仍用近5日原始 vs 近200日均值
-        hold_series_plot = _smooth_metric_series_2d(list(hold_series_raw[-120:]))
+        # 页面近120日；柱高=近4日均值；meta「最新」=当日原始；标签仍用近5日原始 vs 近200日均值
+        hold_smoothed = _smooth_metric_series_nd(list(hold_series_raw), days=4)
+        hold_series_plot = hold_smoothed[-120:]
         pills: list[str] = []
         if hold_mean_f is not None:
             last5: list[float] = []
@@ -5487,6 +5488,34 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
     except (TypeError, ValueError):
         baseline = None
     return out, baseline
+
+
+def _smooth_metric_series_nd(series: list[dict], *, days: int = 4) -> list[dict]:
+    """柱高改为近 days 日原始值均值（含当日）；不足则按已有日数平均。保留 value_raw。"""
+    if days < 1:
+        days = 1
+    out: list[dict] = []
+    for i, row in enumerate(series):
+        try:
+            raw_f = float(row["value"]) if row.get("value") is not None else None
+        except (TypeError, ValueError):
+            raw_f = None
+        window: list[float] = []
+        if raw_f is not None:
+            for k in range(days):
+                j = i - k
+                if j < 0:
+                    break
+                try:
+                    v = series[j].get("value")
+                    if v is None:
+                        continue
+                    window.append(float(v))
+                except (TypeError, ValueError):
+                    continue
+        plot_v = round(sum(window) / len(window), 4) if window else None
+        out.append({**row, "value": plot_v, "value_raw": raw_f})
+    return out
 
 
 def _smooth_metric_series_2d(series: list[dict]) -> list[dict]:
