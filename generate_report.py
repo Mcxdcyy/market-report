@@ -904,7 +904,7 @@ def _retag_bars_by_streak(
 
 def _hold_vol_cycle_colors(rows: list[dict]) -> list[str]:
     """只有红/绿。条件命中当日就切换；没触发的日子延续前一根颜色。"""
-    tagged = rows if rows and "vol_cycle" in rows[0] else _annotate_vol_cycle(rows)
+    tagged = _annotate_vol_cycle(rows)
     held: str | None = None
     out: list[str] = []
     for row in tagged:
@@ -923,7 +923,7 @@ def _apply_held_cycle_tags(
     src_rows: list[dict],
     full_rows: list[dict],
 ) -> list[dict]:
-    """按持有周期给柱上色：增量红、缩量绿，无灰。"""
+    """按持有周期给柱上色：增量红、缩量绿，无灰。比较序列就是传入的 full_rows。"""
     held = _hold_vol_cycle_colors(full_rows)
     by_date = {
         str(r.get("date") or "")[:10]: col
@@ -1174,12 +1174,59 @@ def _vol_risk_value(amts: list[float], i: int) -> float | None:
     return v1 * v2 * v3 * 1000.0
 
 
+def _prev_expand_peak_index(
+    amts: list[float],
+    held: list[str | None],
+    i: int,
+) -> int | None:
+    """上一个增量周期最高点的下标。
+
+    从昨日往前找到最近一段持有色为增量的区间，取该段最高量能
+    （并列取最早一天）。held[j] 为处理完第 j 日后的持有色。
+    """
+    j = i - 1
+    while j >= 0 and held[j] != "expand":
+        j -= 1
+    if j < 0:
+        return None
+    end = j
+    while j >= 0 and held[j] == "expand":
+        j -= 1
+    start = j + 1
+    peak_idx = start
+    peak_val = amts[start]
+    for k in range(start + 1, end + 1):
+        if amts[k] > peak_val:
+            peak_val = amts[k]
+            peak_idx = k
+    return peak_idx
+
+
+def _is_stage_new_low(amts: list[float], held: list[str | None], i: int) -> bool:
+    """阶段新低 = 上一个增量周期最高点至今日的最低量能。
+
+    今日严格低于「该最高点至昨日」的每一根才算。只标记当天。
+    """
+    if i <= 0 or amts[i] <= 0:
+        return False
+    peak_idx = _prev_expand_peak_index(amts, held, i)
+    if peak_idx is None:
+        return False
+    prior = amts[peak_idx:i]
+    if not prior:
+        return False
+    return amts[i] < min(prior)
+
+
 def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
     """给序列打量能周期。量能可以是单日成交额，也可以是5日均值。
 
-    缩量：风险值 < -1，或连续3日增量变化 < 0。
-    增量：连续2日增量变化 > 0 时只标当天，或当日量能 > 前3日最高。
-    只改当天，不回改前一天。同时命中时增量优先。未触发为中性。
+    缩量（满足任一，只改当天，不回改前柱）：
+    - 连续2天大幅缩量：风险值 < -1
+    - 连续3天缩量：增量变化连续 3 日 < 0（从第 3 天起）
+    - 阶段新低：上一个增量周期最高点至今日的最低量能
+    增量：连续2日增量变化 > 0 时只标第二天，或当日量能 > 前3日最高。
+    同时命中时增量优先。未触发为中性（延续前色）。
     """
     amts = [float(r.get("amount_yi") or 0) for r in rows]
     incs: list[float | None] = [None]
@@ -1187,6 +1234,9 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
         incs.append(_vol_increment(amts[i - 1], amts[i]))
     cycles = ["flat"] * len(rows)
     risks: list[float | None] = [None] * len(rows)
+    held: str | None = None
+    held_hist: list[str | None] = []
+    stage_low = [False] * len(rows)
     for i in range(len(rows)):
         shrink = False
         expand = False
@@ -1210,16 +1260,24 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
             shrink = True
         if i >= 3 and amts[i] > max(amts[i - 3 : i]):
             expand = True
+        is_low = (not expand) and _is_stage_new_low(amts, held_hist, i)
+        stage_low[i] = is_low
+        if is_low:
+            shrink = True
         if expand:
             cycles[i] = "expand"
+            held = "expand"
         elif shrink:
             cycles[i] = "shrink"
+            held = "shrink"
+        held_hist.append(held)
     out: list[dict] = []
-    for row, inc, risk, cycle in zip(rows, incs, risks, cycles):
+    for row, inc, risk, cycle, low in zip(rows, incs, risks, cycles, stage_low):
         stamped = dict(row)
         stamped["vol_inc"] = inc
         stamped["vol_risk"] = risk
         stamped["vol_cycle"] = cycle
+        stamped["vol_stage_low"] = low
         out.append(stamped)
     return out
 
