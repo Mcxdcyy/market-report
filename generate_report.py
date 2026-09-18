@@ -3339,7 +3339,10 @@ def render_html(ctx: dict) -> str:
     vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
     after_30 = vol_tags_html
     vol30_html = _render_vol_bars_block(
-        vol20, title="近30日成交金额", after_html=after_30
+        vol20,
+        title="近30日成交金额",
+        colored=True,
+        after_html=vol_tags_html + _vol_cycle_tag_html(vol20),
     )
     if not vol30_html and after_30:
         vol30_html = after_30
@@ -6067,7 +6070,12 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
             use = rows
         return build_vol_bars_from_amounts(use, prior_amount=prior)
 
-    vol20_bars = _slice_vol_bars(kpl_rows, 30)
+    vol20_src = kpl_rows[-30:] if len(kpl_rows) > 30 else list(kpl_rows)
+    vol20_bars = _apply_held_cycle_tags(
+        _slice_vol_bars(kpl_rows, 30),
+        vol20_src,
+        kpl_rows,
+    )
     if len(kpl_rows) > 120:
         vol120_src = kpl_rows[-120:]
     else:
