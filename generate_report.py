@@ -1174,48 +1174,49 @@ def _vol_risk_value(amts: list[float], i: int) -> float | None:
     return v1 * v2 * v3 * 1000.0
 
 
-def _prev_expand_peak_index(
+def _prev_shrink_cycle_low(
     amts: list[float],
     held: list[str | None],
     i: int,
-) -> int | None:
-    """上一个增量周期最高点的下标。
+) -> float | None:
+    """上一个已结束缩量周期的最低量能。
 
-    从昨日往前找到最近一段持有色为增量的区间，取该段最高量能
-    （并列取最早一天）。held[j] 为处理完第 j 日后的持有色。
+    缩量周期 = 持有色连续为缩量的一段。昨日若仍在某段里，那段是当前周期，
+    不算「上一个」。没有已结束的缩量周期则返回 None。
     """
-    j = i - 1
-    while j >= 0 and held[j] != "expand":
-        j -= 1
-    if j < 0:
+    if i <= 0:
         return None
-    end = j
-    while j >= 0 and held[j] == "expand":
-        j -= 1
-    start = j + 1
-    peak_idx = start
-    peak_val = amts[start]
-    for k in range(start + 1, end + 1):
-        if amts[k] > peak_val:
-            peak_val = amts[k]
-            peak_idx = k
-    return peak_idx
+    runs: list[tuple[int, int]] = []
+    k = 0
+    while k < i and k < len(held):
+        if held[k] != "shrink":
+            k += 1
+            continue
+        start = k
+        while k < i and k < len(held) and held[k] == "shrink":
+            k += 1
+        runs.append((start, k - 1))
+    if not runs:
+        return None
+    if runs[-1][1] == i - 1:
+        runs = runs[:-1]
+    if not runs:
+        return None
+    start, end = runs[-1]
+    vals = [amts[j] for j in range(start, end + 1) if amts[j] > 0]
+    if not vals:
+        return None
+    return min(vals)
 
 
 def _is_stage_new_low(amts: list[float], held: list[str | None], i: int) -> bool:
-    """阶段新低 = 上一个增量周期最高点至今日的最低量能。
-
-    今日严格低于「该最高点至昨日」的每一根才算。只标记当天。
-    """
+    """阶段新低 = 小于上一个缩量周期的最低点。只标记当天。"""
     if i <= 0 or amts[i] <= 0:
         return False
-    peak_idx = _prev_expand_peak_index(amts, held, i)
-    if peak_idx is None:
+    low = _prev_shrink_cycle_low(amts, held, i)
+    if low is None:
         return False
-    prior = amts[peak_idx:i]
-    if not prior:
-        return False
-    return amts[i] < min(prior)
+    return amts[i] < low
 
 
 def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
@@ -1224,7 +1225,7 @@ def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
     缩量（满足任一，只改当天，不回改前柱）：
     - 连续2天大幅缩量：风险值 < -1
     - 连续3天缩量：增量变化连续 3 日 < 0（从第 3 天起）
-    - 阶段新低：上一个增量周期最高点至今日的最低量能
+    - 阶段新低：小于上一个已结束缩量周期的最低点
     增量：连续2日增量变化 > 0 时只标第二天，或当日量能 > 前3日最高。
     同时命中时增量优先。未触发为中性（延续前色）。
     """
