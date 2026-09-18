@@ -91,6 +91,8 @@ HIST_WINDOW = 300
 
 # 大盘量能：规则阈值（成交额，单位与表格一致）
 VOL_TWO_DAY_SHRINK = -0.15  # 连续2日缩量时，两日合计较前一日起点缩量超 15%
+VOL_SHARP_DAY = -0.05  # 增量变化 < -5% 视为大幅缩量日
+VOL_SHARP_DAY = -0.05  # 增量变化 < -5% 视为大幅缩量日（大盘数据「增量变化」列）
 VOL_NEUTRAL_BAND = (42, 58)  # 震荡场景分数区间
 VOL_GOOD_BAND = (65, 85)
 VOL_BAD_BAND = (15, 35)
@@ -1083,6 +1085,54 @@ def _vol_mean_lookback(
     return sum(vals) / len(vals), len(vals)
 
 
+def _vol_increment(prev_amt: float, cur_amt: float) -> float | None:
+    """增量变化 = (当日成交额 − 前一日成交额) / 前一日成交额。"""
+    if prev_amt is None or cur_amt is None or prev_amt <= 0:
+        return None
+    return float(cur_amt) / float(prev_amt) - 1.0
+
+
+def _annotate_vol_cycle(rows: list[dict]) -> list[dict]:
+    """给每日打量能周期。
+
+    缩量：连续2日增量变化均 < -5%，或连续3日增量变化 < 0。
+    放量：连续2日增量变化 > 0，或当日量能 > 前3个交易日最高量能。
+    其余为中性。增量变化公式同大盘数据「增量变化」列。
+    """
+    amts = [float(r.get("amount_yi") or 0) for r in rows]
+    incs: list[float | None] = [None]
+    for i in range(1, len(amts)):
+        incs.append(_vol_increment(amts[i - 1], amts[i]))
+    out: list[dict] = []
+    for i, row in enumerate(rows):
+        shrink = False
+        expand = False
+        inc = incs[i]
+        prev_inc = incs[i - 1] if i >= 1 else None
+        if inc is not None and prev_inc is not None:
+            if inc < VOL_SHARP_DAY and prev_inc < VOL_SHARP_DAY:
+                shrink = True
+            if inc > 0 and prev_inc > 0:
+                expand = True
+        if i >= 3 and all(incs[i - k] is not None and incs[i - k] < 0 for k in range(3)):
+            shrink = True
+        if i >= 3 and amts[i] > max(amts[i - 3 : i]):
+            expand = True
+        if expand and shrink:
+            cycle = "flat"
+        elif expand:
+            cycle = "expand"
+        elif shrink:
+            cycle = "shrink"
+        else:
+            cycle = "flat"
+        stamped = dict(row)
+        stamped["vol_inc"] = inc
+        stamped["vol_cycle"] = cycle
+        out.append(stamped)
+    return out
+
+
 def _render_vol120_mean_zero_chart(
     rows: list[dict],
     *,
@@ -1138,11 +1188,15 @@ def _render_vol120_mean_zero_chart(
         is_latest = i == n_bars - 1
         delta = vol - base
         h = min(50.0, abs(delta) / scale * 50.0)
-        if delta >= 0:
-            bar = f'<div class="vol120z-bar pos" style="height:{h:.1f}%"></div>'
-        else:
-            bar = f'<div class="vol120z-bar neg" style="height:{h:.1f}%"></div>'
-        tip = f"{lab} 周{wd} · {vol_wy:.2f}万亿 · {axis_tip}"
+        side = "pos" if delta >= 0 else "neg"
+        cycle = str(row.get("vol_cycle") or "flat")
+        if cycle not in ("expand", "shrink", "flat"):
+            cycle = "flat"
+        bar = f'<div class="vol120z-bar {side} {cycle}" style="height:{h:.1f}%"></div>'
+        inc = row.get("vol_inc")
+        inc_s = f" · 增量{float(inc):+.1%}" if isinstance(inc, (int, float)) else ""
+        cycle_s = {"expand": "放量周期", "shrink": "缩量周期", "flat": "中性"}.get(cycle, "")
+        tip = f"{lab} 周{wd} · {vol_wy:.2f}万亿{inc_s} · {cycle_s} · {axis_tip}"
         cols.append(
             f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{tip}">
       <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div>{bar}</div>
@@ -3784,7 +3838,7 @@ def render_html(ctx: dict) -> str:
   .vol20-wrap.vol120 .vol20-bar.flat {{ background: #8e8e93; }}
   .vol20-wrap.vol120 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
-  /* 量能120日趋势：零轴=近200日均值，上红下绿 */
+  /* 量能120日趋势：零轴=近200日均值；柱色=放量红/缩量绿/其余灰 */
   .vol20-wrap.vol120.mean-zero .vol120z-bars {{
     display: flex; align-items: stretch; gap: 1px; height: 118px; width: 100%;
   }}
@@ -3811,6 +3865,10 @@ def render_html(ctx: dict) -> str:
     top: 50%; border-radius: 0 0 1px 1px;
     background: var(--bar-bad, #34C759);
   }}
+  /* 周期色压过零轴默认红绿：放量红 / 缩量绿 / 其余灰 */
+  .vol20-wrap.vol120.mean-zero .vol120z-bar.expand {{ background: var(--bar-ok, #E53935); }}
+  .vol20-wrap.vol120.mean-zero .vol120z-bar.shrink {{ background: var(--bar-bad, #34C759); }}
+  .vol20-wrap.vol120.mean-zero .vol120z-bar.flat {{ background: #8e8e93; }}
   .vol20-wrap.vol120.mean-zero .vol120z-col.latest .vol120z-bar {{ box-shadow: none; }}
 
   /* ── 资金追高情绪 ── */
@@ -4631,7 +4689,7 @@ def _render_ts_hold_bars_html(
 ) -> str:
     """强趋势-次日承接柱图（近120日）：柱高=近4日均值；零轴=近200日均值（上红下绿）。
 
-    meta「最新」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
+    meta「今日」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
     卡片壳与「近30日强趋势占比」统一。
     """
     if not series:
@@ -4902,7 +4960,7 @@ def render_trend_strength_html(block: dict) -> str:
         hold_mean_f = None
     hold_chart = ""
     if hold_series_raw:
-        # 页面近120日；柱高=近4日均值；meta「最新」=当日原始；标签仍用近5日原始 vs 近200日均值
+        # 页面近120日；柱高=近4日均值；meta「今日」=当日原始；标签仍用近5日原始 vs 近200日均值
         hold_smoothed = _smooth_metric_series_nd(list(hold_series_raw), days=4)
         hold_series_plot = hold_smoothed[-120:]
         pills: list[str] = []
@@ -5225,7 +5283,7 @@ def _render_chase_metric_chart(
         )
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
-    # 若有 value_raw（今日趋势承接 / 回落指数）：meta「最新」用当日原始值；柱高仍用 value（近2日均）
+    # 若有 value_raw（今日趋势承接 / 回落指数）：meta「今日」用当日原始值；柱高仍用 value（近2日均）
     if last is not None:
         meta_v = last.get("value_raw")
         if meta_v is None:
@@ -5519,7 +5577,7 @@ def _smooth_metric_series_nd(series: list[dict], *, days: int = 4) -> list[dict]
 
 
 def _smooth_metric_series_2d(series: list[dict]) -> list[dict]:
-    """柱高改为近2日原始值均值；保留 value_raw 供 meta「最新」用当日值。"""
+    """柱高改为近2日原始值均值；保留 value_raw 供 meta「今日」用当日值。"""
     out: list[dict] = []
     for i, row in enumerate(series):
         raw = row.get("value")
@@ -5623,7 +5681,7 @@ def render_chase_sentiment_html(block: dict) -> str:
 
     # 效应仅「昨追-今日承接」：主板+创板按家数加权合并，近120日
     # （已删「昨追-赚钱效应」「今追-回落指数」；后台 pullback 仍可算）
-    # 柱高为近2日均值；meta「最新」仍用当日原始值（value_raw）
+    # 柱高为近2日均值；meta「今日」仍用当日原始值（value_raw）
     # 图下标签 = 近4日原始均值 ≥ 近200日均值
     # →「追高承接较好」/「追高承接不好」；连续≥2日状态翻转首日追加「需次日验证」
     ser, baseline = _merge_chase_effect_series(groups, "loss")
@@ -5920,7 +5978,8 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
 
     vol20_bars = _slice_vol_bars(kpl_rows, 30)
     vol120_bars = _slice_vol_bars(kpl_rows, 120)
-    vol120_amount_rows = kpl_rows[-120:] if len(kpl_rows) >= 120 else list(kpl_rows)
+    annotated = _annotate_vol_cycle(kpl_rows)
+    vol120_amount_rows = annotated[-120:] if len(annotated) >= 120 else annotated
     vol120_mean_200d, vol120_mean_n = _vol_mean_lookback(kpl_rows, n=200)
     vol120_avg5d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=5)
 
