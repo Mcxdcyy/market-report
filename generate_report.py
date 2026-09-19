@@ -978,7 +978,21 @@ def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
         text = "大周期缩量，小周期增量，谨慎做多。"
     else:
         text = "资金可能撤退，冲高先减仓，卖出后别开新仓。（等次日看）"
-    return f'<p class="vol-sum">{text}</p>'
+    main, sub = text, ""
+    if "。——" in text:
+        head, tail = text.split("。——", 1)
+        main, sub = head + "。", "——" + tail
+    elif "。（" in text:
+        head, tail = text.split("。（", 1)
+        main, sub = head + "。", "（" + tail
+    sub_html = f'<p class="vol-sum-sub">{sub}</p>' if sub else ""
+    return (
+        f'<div class="vol-sum">'
+        f'<div class="vol-sum-k">结论</div>'
+        f'<p class="vol-sum-main">{main}</p>'
+        f"{sub_html}"
+        f"</div>"
+    )
 
 
 def build_vol_bars_from_amounts(
@@ -4309,9 +4323,20 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; color: var(--text);
   }}
   .vol-sum {{
-    margin: 14px 0 0; padding: 0;
-    font-size: 13px; line-height: 1.55; font-weight: 500;
-    color: var(--text); text-align: left;
+    margin: 16px 0 2px; padding: 14px 0 2px;
+    border-top: 1px solid var(--border);
+  }}
+  .vol-sum-k {{
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--muted); margin-bottom: 6px;
+  }}
+  .vol-sum-main {{
+    margin: 0; font-size: 16px; font-weight: 700; line-height: 1.45;
+    letter-spacing: -0.2px; color: var(--text);
+  }}
+  .vol-sum-sub {{
+    margin: 6px 0 0; font-size: 13px; font-weight: 400; line-height: 1.55;
+    color: var(--sub);
   }}
 
   /* ── 涨停板块 ── */
@@ -4529,7 +4554,10 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; }}
-    .vol-sum {{ font-size: 14px; }}
+    .vol-sum {{ margin-top: 14px; padding-top: 12px; }}
+    .vol-sum-k {{ font-size: 12px; }}
+    .vol-sum-main {{ font-size: 17px; }}
+    .vol-sum-sub {{ font-size: 14px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
     .chase-bar {{ width: 85%; max-width: none; }}
