@@ -3454,7 +3454,6 @@ def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
 
 def render_html(ctx: dict) -> str:
     vol20 = ctx.get("vol20_bars") or []
-    vol_note = (ctx.get("vol_note") or "").strip()
     vol_tags = [t for t in (ctx.get("vol_tags") or []) if isinstance(t, dict) and str(t.get("text") or "").strip()]
     # 近30日：周期标签在最前，其后按固定顺序挂结构标签，同一行
     cycle_pill = _vol_cycle_tag_html(vol20, wrap=False)
@@ -3466,7 +3465,6 @@ def render_html(ctx: dict) -> str:
         f'<div class="chart-tags vol20-tags vol30-tags">{vol30_pills}</div>'
         if vol30_pills else ""
     )
-    vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
     after_30 = vol_tags_html
     vol30_html = _render_vol_bars_block(
         vol20,
@@ -3486,10 +3484,8 @@ def render_html(ctx: dict) -> str:
             vol120_avg5d,
             expand_label="大周期·增量",
             shrink_label="大周期·缩量",
-        ) + vol_note_html,
+        ),
     )
-    if not vol120_avg5d_html and vol_note_html:
-        vol120_avg5d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True
