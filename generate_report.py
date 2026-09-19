@@ -1119,11 +1119,22 @@ def _render_vol_bars_block(
     if not bars:
         return ""
     use_tags = (not dense) if colored is None else colored
+    def _bar_style(b: dict) -> str:
+        bits = [f"height:{b['height_pct']}%"]
+        if use_tags:
+            tag = b.get("tag")
+            if tag == "up":
+                bits.append("background:#E53935")
+            elif tag == "down":
+                bits.append("background:#34C759")
+            elif tag == "flat":
+                bits.append("background:#8e8e93")
+        return ";".join(bits)
     cols = "".join(
         f'''<div class="vol20-col{" latest" if b["is_latest"] else ""}" title="{b["date"]} 周{b["weekday"]} · {b["label"]}{unit}{(" · " + b["cycle_label"]) if b.get("cycle_label") else ""}">
       <div class="vol20-val">{b["label"]}</div>
       <div class="vol20-bar-track">
-        <div class="vol20-bar{" " + b["tag"] if use_tags and b.get("tag") else ""}" style="height:{b["height_pct"]}%"></div>
+        <div class="vol20-bar{" " + b["tag"] if use_tags and b.get("tag") else ""}" style="{_bar_style(b)}"></div>
       </div>
     </div>'''
         for b in bars
@@ -4044,8 +4055,8 @@ def render_html(ctx: dict) -> str:
     background: #8e8e93;
   }}
   /* 120日密柱默认灰；若带 up/down 类则覆盖（近30日等） */
-  .vol20-wrap.vol120 .vol20-bar.up {{ background: var(--bar-ok); }}
-  .vol20-wrap.vol120 .vol20-bar.down {{ background: var(--bar-bad); }}
+  .vol20-wrap.vol120 .vol20-bar.up {{ background: #E53935; }}
+  .vol20-wrap.vol120 .vol20-bar.down {{ background: #34C759; }}
   .vol20-wrap.vol120 .vol20-bar.flat {{ background: #8e8e93; }}
   .vol20-wrap.vol120 .vol20-col.latest .vol20-bar {{ box-shadow: none; }}
   .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
@@ -5416,6 +5427,7 @@ def _render_chase_metric_chart(
     *,
     baseline: float | None = None,
     avg2d: bool = False,
+    mean_days: int | None = None,
 ) -> str:
     """效应柱图：以 baseline（近200日均值）为零轴，均值上红 / 均值下绿；无 baseline 时退回绝对零轴。"""
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
@@ -5508,7 +5520,12 @@ def _render_chase_metric_chart(
             latest_lab = "—"
     else:
         latest_lab = "—"
-    meta_txt = f"2日均值 · 今日 {latest_lab}" if avg2d else f"今日 {latest_lab}"
+    if mean_days and mean_days > 1:
+        meta_txt = f"{mean_days}日均值 · 今日 {latest_lab}"
+    elif avg2d:
+        meta_txt = f"2日均值 · 今日 {latest_lab}"
+    else:
+        meta_txt = f"今日 {latest_lab}"
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
@@ -5895,13 +5912,13 @@ def render_chase_sentiment_html(block: dict) -> str:
 
     # 效应仅「昨追-今日承接」：主板+创板按家数加权合并，近120日
     # （已删「昨追-赚钱效应」「今追-回落指数」；后台 pullback 仍可算）
-    # 柱高为近2日均值；meta「今日」仍用当日原始值（value_raw）
+    # 柱高为近4日均值；meta「今日」仍用当日原始值（value_raw）
     # 图下标签 = 近4日原始均值 ≥ 近200日均值
     # →「追高承接较好」/「追高承接不好」；连续≥2日状态翻转首日追加「需次日验证」
     ser, baseline = _merge_chase_effect_series(groups, "loss")
-    ser = _smooth_metric_series_2d(ser)
+    ser = _smooth_metric_series_nd(ser, days=4)
     chart_html = _render_chase_metric_chart(
-        "昨追-今日承接", ser, baseline=baseline, avg2d=True
+        "昨追-今日承接", ser, baseline=baseline, mean_days=4
     )
     chart_html += _chase_loss_hold_tag_html(ser, baseline, window=4)
     parts.append(
