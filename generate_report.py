@@ -854,7 +854,14 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[d
         smoothed, prior_amount=prior, color_mode="vs_prev"
     )
     ma_rows = _ma_amount_rows(rows, days)
-    _apply_held_cycle_tags(bars, smoothed, ma_rows)
+    if days == 5:
+        _apply_held_cycle_tags(
+            bars, smoothed, ma_rows,
+            expand_label="大周期·增量",
+            shrink_label="大周期·缩量",
+        )
+    else:
+        _apply_held_cycle_tags(bars, smoothed, ma_rows)
     return bars
 
 
@@ -922,6 +929,9 @@ def _apply_held_cycle_tags(
     bars: list[dict],
     src_rows: list[dict],
     full_rows: list[dict],
+    *,
+    expand_label: str = "增量周期",
+    shrink_label: str = "缩量周期",
 ) -> list[dict]:
     """按持有周期给柱上色：增量红、缩量绿，无灰。比较序列就是传入的 full_rows。"""
     held = _hold_vol_cycle_colors(full_rows)
@@ -934,18 +944,23 @@ def _apply_held_cycle_tags(
         key = str(src.get("date") or "")[:10]
         col = by_date.get(key) or "shrink"
         bar["tag"] = "up" if col == "expand" else "down"
-        bar["cycle_label"] = "增量周期" if col == "expand" else "缩量周期"
+        bar["cycle_label"] = expand_label if col == "expand" else shrink_label
     return bars
 
 
-def _vol_cycle_tag_html(bars: list[dict]) -> str:
-    """图下标签：末日持有色为增量周期（红）或缩量周期（绿）。"""
+def _vol_cycle_tag_html(
+    bars: list[dict],
+    *,
+    expand_label: str = "增量周期",
+    shrink_label: str = "缩量周期",
+) -> str:
+    """图下标签：末日持有色。默认「增量周期 / 缩量周期」；5日均值图用「大周期·增量 / 大周期·缩量」。"""
     if not bars:
         return ""
     if bars[-1].get("tag") == "up":
-        pill = '<span class="pill ok">增量周期</span>'
+        pill = f'<span class="pill ok">{expand_label}</span>'
     else:
-        pill = '<span class="pill bad">缩量周期</span>'
+        pill = f'<span class="pill bad">{shrink_label}</span>'
     return f'<div class="chart-tags vol20-tags">{pill}</div>'
 
 
@@ -3420,7 +3435,11 @@ def render_html(ctx: dict) -> str:
         title="量能120日趋势-5日均值",
         dense=True,
         colored=True,
-        after_html=_vol_cycle_tag_html(vol120_avg5d) + vol_note_html,
+        after_html=_vol_cycle_tag_html(
+            vol120_avg5d,
+            expand_label="大周期·增量",
+            shrink_label="大周期·缩量",
+        ) + vol_note_html,
     )
     if not vol120_html and not vol120_avg5d_html and vol_note_html:
         vol120_avg5d_html = vol_note_html
