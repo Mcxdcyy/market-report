@@ -1038,13 +1038,27 @@ def build_vol_bars_from_amounts(
     return bars
 
 
+def _held_count_tag(rows: list[dict], idx: int) -> str | None:
+    """rows[idx] 的持有色：较前一日增加红、减少绿；相同则沿用更早一日，直到出现增减。"""
+    for j in range(idx, 0, -1):
+        curr = int(rows[j].get("count") or 0)
+        prev = int(rows[j - 1].get("count") or 0)
+        if curr > prev:
+            return "up"
+        if curr < prev:
+            return "down"
+    return None
+
+
 def build_count_bars(
     rows: list[dict],
     *,
     prior_count: int | None = None,
+    prior_tag: str | None = None,
 ) -> list[dict]:
     """由家数序列生成柱图数据；纵轴口径同成交额柱（min×0.85～max）。
 
+    柱色：较前一日增加红、减少绿；家数相同则沿用前一日颜色，不用灰。
     rows: [{date: YYYY-MM-DD, count: int}, ...] 升序。
     """
     if not rows:
@@ -1063,6 +1077,7 @@ def build_count_bars(
         tick_idxs.add(n_bars // 2)
 
     prev: float | None = float(prior_count) if prior_count is not None else None
+    held = prior_tag if prior_tag in ("up", "down") else None
     bars: list[dict] = []
     for i, row in enumerate(rows):
         n = int(row.get("count") or 0)
@@ -1076,13 +1091,15 @@ def build_count_bars(
         else:
             dt = datetime.strptime(str(raw_d)[:10], "%Y-%m-%d")
         if prev is None:
-            tag = "flat"
+            tag = held
         elif n > prev:
             tag = "up"
         elif n < prev:
             tag = "down"
         else:
-            tag = "flat"
+            tag = held
+        if tag in ("up", "down"):
+            held = tag
         if span > 0:
             pct = (n - y_min) / span * 100.0
         else:
@@ -1098,6 +1115,10 @@ def build_count_bars(
             "show_tick": i in tick_idxs,
         })
         prev = float(n)
+    first = next((b["tag"] for b in bars if b.get("tag") in ("up", "down")), "up")
+    for b in bars:
+        if b.get("tag") not in ("up", "down"):
+            b["tag"] = first
     return bars
 
 
@@ -6230,12 +6251,15 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
             if not rows:
                 return []
             if len(rows) > n:
-                prior = int(rows[-(n + 1)].get("count") or 0)
+                start = len(rows) - n
+                prior = int(rows[start - 1].get("count") or 0)
+                prior_tag = _held_count_tag(rows, start - 1)
                 use = rows[-n:]
             else:
                 prior = None
+                prior_tag = None
                 use = rows
-            return build_count_bars(use, prior_count=prior)
+            return build_count_bars(use, prior_count=prior, prior_tag=prior_tag)
 
         xh120_bars = _slice_count_bars(xh_daily, 120)
     except Exception as exc:  # noqa: BLE001
