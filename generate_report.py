@@ -1204,7 +1204,7 @@ def _vol30_struct_tags(rows: list[dict]) -> list[dict]:
     """近30日成交金额图下结构标签。周期标签之外，命中才展示，顺序固定。
 
     1. 连续X日放量 / 连续X日缩量（X≥2，含当日）
-    2. 今日放量X% / 今日缩量-X%（较前一交易日，绝对值超过 10%）
+    2. 今日放量+X% / 今日缩量-X%（较前一交易日，绝对值超过 10%）
     3. 突破前三日新高（当日成交额 > 前3日最高）
     4. 近期大幅缩量（风险值 < -1）
     """
@@ -1235,7 +1235,7 @@ def _vol30_struct_tags(rows: list[dict]) -> list[dict]:
     if inc is not None and abs(inc) > 0.10:
         pct = _vol_pct_text(inc)
         if inc > 0:
-            tags.append({"text": f"今日放量{pct}%", "cls": "ok"})
+            tags.append({"text": f"今日放量+{pct}%", "cls": "ok"})
         else:
             tags.append({"text": f"今日缩量-{pct}%", "cls": "bad"})
     if i >= 3 and amts[i] > 0 and amts[i] > max(amts[i - 3 : i]):
