@@ -964,6 +964,23 @@ def _vol_cycle_tag_html(
     return f'<div class="chart-tags vol20-tags">{pill}</div>'
 
 
+def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
+    """模块1末尾：近30日周期 × 量能120日5日均值周期，四句固定文案。"""
+    if not vol30 or not vol120:
+        return ""
+    d30 = vol30[-1].get("tag") == "up"
+    d120 = vol120[-1].get("tag") == "up"
+    if d30 and d120:
+        text = "增量周期，主观做多。"
+    elif (not d30) and (not d120):
+        text = "缩量周期、资金撤退。——休息守住，别亏就行。后面增量周期会给机会。"
+    elif d30 and (not d120):
+        text = "大周期缩量，小周期增量，谨慎做多。"
+    else:
+        text = "资金可能撤退，冲高先减仓，卖出后别开新仓。（等次日看）"
+    return f'<p class="vol-sum">{text}</p>'
+
+
 def build_vol_bars_from_amounts(
     rows: list[dict],
     *,
@@ -3519,8 +3536,11 @@ def render_html(ctx: dict) -> str:
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日-5日均值（原始「量能120日趋势」已删；百日新高在追高模块末）
-    vol20_html = f"{vol30_html}{vol120_avg5d_html}"
+    # 大盘环境：近30日成交金额 + 量能120日-5日均值 + 周期组合总结
+    vol20_html = (
+        f"{vol30_html}{vol120_avg5d_html}"
+        f"{_vol_cycle_summary_html(vol20, vol120_avg5d)}"
+    )
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4288,6 +4308,11 @@ def render_html(ctx: dict) -> str:
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 12px; line-height: 1.55; color: var(--text);
   }}
+  .vol-sum {{
+    margin: 14px 0 0; padding: 0;
+    font-size: 13px; line-height: 1.55; font-weight: 500;
+    color: var(--text); text-align: left;
+  }}
 
   /* ── 涨停板块 ── */
   .sector-list {{ display: flex; flex-direction: column; gap: 10px; }}
@@ -4504,6 +4529,7 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; }}
+    .vol-sum {{ font-size: 14px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
     .chase-bar {{ width: 85%; max-width: none; }}
