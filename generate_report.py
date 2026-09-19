@@ -972,12 +972,16 @@ def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
     d120 = vol120[-1].get("tag") == "up"
     if d30 and d120:
         text = "增量周期，主观做多。"
+        tone = "expand"
     elif (not d30) and (not d120):
         text = "缩量周期、资金撤退。——休息守住，别亏就行。后面增量周期会给机会。"
+        tone = "shrink"
     elif d30 and (not d120):
         text = "大周期缩量，小周期增量，谨慎做多。"
+        tone = "caution"
     else:
         text = "资金可能撤退，冲高先减仓，卖出后别开新仓。（等次日看）"
+        tone = "caution"
     main, sub = text, ""
     if "。——" in text:
         head, tail = text.split("。——", 1)
@@ -987,7 +991,7 @@ def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
         main, sub = head + "。", "（" + tail
     sub_html = f'<p class="vol-sum-sub">{sub}</p>' if sub else ""
     return (
-        f'<div class="vol-sum">'
+        f'<div class="vol-sum {tone}">'
         f'<div class="vol-sum-k">结论</div>'
         f'<p class="vol-sum-main">{main}</p>'
         f"{sub_html}"
@@ -4323,13 +4327,22 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; color: var(--text);
   }}
   .vol-sum {{
-    margin: 16px 0 2px; padding: 14px 0 2px;
-    border-top: 1px solid var(--border);
+    margin: 16px 0 2px;
+    padding: 14px 16px 13px;
+    border-radius: 12px;
   }}
+  .vol-sum.expand {{ background: #fff1f0; }}
+  .vol-sum.shrink {{ background: #f1faf3; }}
+  .vol-sum.caution {{ background: #fff7ed; }}
   .vol-sum-k {{
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    color: var(--muted); margin-bottom: 6px;
+    display: inline-block;
+    margin-bottom: 8px; padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
   }}
+  .vol-sum.expand .vol-sum-k {{ background: #ffebee; color: #c62828; }}
+  .vol-sum.shrink .vol-sum-k {{ background: #e8f5e9; color: #2e7d32; }}
+  .vol-sum.caution .vol-sum-k {{ background: #fff3e0; color: #b25000; }}
   .vol-sum-main {{
     margin: 0; font-size: 16px; font-weight: 700; line-height: 1.45;
     letter-spacing: -0.2px; color: var(--text);
@@ -4554,7 +4567,7 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; }}
-    .vol-sum {{ margin-top: 14px; padding-top: 12px; }}
+    .vol-sum {{ margin-top: 14px; padding: 12px 14px; }}
     .vol-sum-k {{ font-size: 12px; }}
     .vol-sum-main {{ font-size: 17px; }}
     .vol-sum-sub {{ font-size: 14px; }}

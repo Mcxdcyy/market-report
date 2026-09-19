@@ -701,13 +701,22 @@
     font-size: 12px; line-height: 1.55; color: var(--text);
   }
   .vol-sum {
-    margin: 16px 0 2px; padding: 14px 0 2px;
-    border-top: 1px solid var(--border);
+    margin: 16px 0 2px;
+    padding: 14px 16px 13px;
+    border-radius: 12px;
   }
+  .vol-sum.expand { background: #fff1f0; }
+  .vol-sum.shrink { background: #f1faf3; }
+  .vol-sum.caution { background: #fff7ed; }
   .vol-sum-k {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    color: var(--muted); margin-bottom: 6px;
+    display: inline-block;
+    margin-bottom: 8px; padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
   }
+  .vol-sum.expand .vol-sum-k { background: #ffebee; color: #c62828; }
+  .vol-sum.shrink .vol-sum-k { background: #e8f5e9; color: #2e7d32; }
+  .vol-sum.caution .vol-sum-k { background: #fff3e0; color: #b25000; }
   .vol-sum-main {
     margin: 0; font-size: 16px; font-weight: 700; line-height: 1.45;
     letter-spacing: -0.2px; color: var(--text);
@@ -932,7 +941,7 @@
     .vol20-title { font-size: 14px; }
     .vol20-meta { font-size: 12px; }
     .vol20-note { font-size: 14px; }
-    .vol-sum { margin-top: 14px; padding-top: 12px; }
+    .vol-sum { margin-top: 14px; padding: 12px 14px; }
     .vol-sum-k { font-size: 12px; }
     .vol-sum-main { font-size: 17px; }
     .vol-sum-sub { font-size: 14px; }
@@ -1790,7 +1799,7 @@
       <div class="vol20-axis"><div class="vol20-tick show"><span>03/30</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>05/29</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>06/29</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show"><span>07/27</span></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick"></div><div class="vol20-tick show latest"><span>09/18</span></div></div>
     </div>
     <div class="chart-tags vol20-tags"><span class="pill ok">大周期·增量</span></div>
-  </div><div class="vol-sum"><div class="vol-sum-k">结论</div><p class="vol-sum-main">增量周期，主观做多。</p></div>
+  </div><div class="vol-sum expand"><div class="vol-sum-k">结论</div><p class="vol-sum-main">增量周期，主观做多。</p></div>
   </div>
 
   <!-- 2 资金追高情绪 -->
@@ -3989,7 +3998,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-20 00:16</div>
+  <div class="footer">不依赖大盘数据.numbers · 生成于 2026-09-20 00:29</div>
 </div>
 </body>
 </html>
