@@ -1192,6 +1192,60 @@ def _vol_risk_value(amts: list[float], i: int) -> float | None:
     return v1 * v2 * v3 * 1000.0
 
 
+def _vol_pct_text(chg: float) -> str:
+    """涨跌幅展示到 1 位小数，整数去掉小数。"""
+    text = f"{abs(chg) * 100:.1f}"
+    if text.endswith(".0"):
+        text = text[:-2]
+    return text
+
+
+def _vol30_struct_tags(rows: list[dict]) -> list[dict]:
+    """近30日成交金额图下结构标签。周期标签之外，命中才展示，顺序固定。
+
+    1. 连续X日放量 / 连续X日缩量（X≥2，含当日）
+    2. 今日放量X% / 今日缩量-X%（较前一交易日，绝对值超过 10%）
+    3. 突破前三日新高（当日成交额 > 前3日最高）
+    4. 近期大幅缩量（风险值 < -1）
+    """
+    amts = [float(r.get("amount_yi") or 0) for r in rows]
+    i = len(amts) - 1
+    if i < 1:
+        return []
+    tags: list[dict] = []
+    inc = _vol_increment(amts[i - 1], amts[i])
+    if inc is not None and inc != 0:
+        sign = 1 if inc > 0 else -1
+        streak = 0
+        j = i
+        while j >= 1:
+            step = _vol_increment(amts[j - 1], amts[j])
+            if step is None or step == 0:
+                break
+            step_sign = 1 if step > 0 else -1
+            if step_sign != sign:
+                break
+            streak += 1
+            j -= 1
+        if streak >= 2:
+            if sign > 0:
+                tags.append({"text": f"连续{streak}日放量", "cls": "ok"})
+            else:
+                tags.append({"text": f"连续{streak}日缩量", "cls": "bad"})
+    if inc is not None and abs(inc) > 0.10:
+        pct = _vol_pct_text(inc)
+        if inc > 0:
+            tags.append({"text": f"今日放量{pct}%", "cls": "ok"})
+        else:
+            tags.append({"text": f"今日缩量-{pct}%", "cls": "bad"})
+    if i >= 3 and amts[i] > 0 and amts[i] > max(amts[i - 3 : i]):
+        tags.append({"text": "突破前三日新高", "cls": "ok"})
+    risk = _vol_risk_value(amts, i)
+    if risk is not None and risk < VOL_RISK_SHRINK:
+        tags.append({"text": "近期大幅缩量", "cls": "bad"})
+    return tags
+
+
 def _prev_shrink_cycle_low(
     amts: list[float],
     held: list[str | None],
@@ -3402,13 +3456,11 @@ def render_html(ctx: dict) -> str:
     vol20 = ctx.get("vol20_bars") or []
     vol120 = ctx.get("vol120_bars") or []
     vol_note = (ctx.get("vol_note") or "").strip()
-    vol_tags = [t for t in (ctx.get("vol_tags") or []) if str(t).strip()]
-    vol_regime = ctx.get("vol_regime") or "neutral"
-    vol_tag_cls = {"bad": "bad", "good": "ok", "neutral": "warn"}.get(vol_regime, "warn")
-    # 近30日：结构标签与增量/缩量周期同一行；周期标签排在前面
+    vol_tags = [t for t in (ctx.get("vol_tags") or []) if isinstance(t, dict) and str(t.get("text") or "").strip()]
+    # 近30日：周期标签在最前，其后按固定顺序挂结构标签，同一行
     cycle_pill = _vol_cycle_tag_html(vol20, wrap=False)
     struct_pills = "".join(
-        f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
+        f'<span class="pill {t.get("cls") or "warn"}">{t["text"]}</span>' for t in vol_tags
     )
     vol30_pills = cycle_pill + struct_pills
     vol_tags_html = (
@@ -6134,13 +6186,9 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         vol_row["主赚差"] = 0
         vm = volume_metrics(vol_row, vol_df)
         vol_note = vm.get("note") or ""
-        vol_tags = list(vm.get("tags") or [])
-        if int(vm.get("score") or 50) < 40:
-            if vol_tags:
-                if "资金在场偏弱" not in vol_note:
-                    vol_note += "，资金在场偏弱"
-            else:
-                vol_tags.append("资金在场偏弱")
+        vol_tags = _vol30_struct_tags(kpl_rows)
+        if int(vm.get("score") or 50) < 40 and "资金在场偏弱" not in vol_note:
+            vol_note += "，资金在场偏弱"
         vol_regime = vm.get("regime") or "neutral"
 
     env_weak = vol_regime == "bad"
