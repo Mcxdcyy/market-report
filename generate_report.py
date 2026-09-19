@@ -3454,7 +3454,6 @@ def render_direction_overview_html(peak: str, summary: str, rhythm: str) -> str:
 
 def render_html(ctx: dict) -> str:
     vol20 = ctx.get("vol20_bars") or []
-    vol120 = ctx.get("vol120_bars") or []
     vol_note = (ctx.get("vol_note") or "").strip()
     vol_tags = [t for t in (ctx.get("vol_tags") or []) if isinstance(t, dict) and str(t.get("text") or "").strip()]
     # 近30日：周期标签在最前，其后按固定顺序挂结构标签，同一行
@@ -3477,17 +3476,6 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and after_30:
         vol30_html = after_30
-    vol120_rows = ctx.get("vol120_amount_rows") or []
-    vol120_tag = _vol_cycle_tag_html(vol120 if vol120 else [])
-    if not vol120 and vol120_rows:
-        vol120_tag = ""
-    vol120_html = _render_vol_bars_block(
-        vol120,
-        title="量能120日趋势",
-        dense=True,
-        colored=True,
-        after_html=vol120_tag,
-    )
     vol120_avg5d = ctx.get("vol120_avg5d_bars") or []
     vol120_avg5d_html = _render_vol_bars_block(
         vol120_avg5d,
@@ -3500,14 +3488,14 @@ def render_html(ctx: dict) -> str:
             shrink_label="大周期·缩量",
         ) + vol_note_html,
     )
-    if not vol120_html and not vol120_avg5d_html and vol_note_html:
+    if not vol120_avg5d_html and vol_note_html:
         vol120_avg5d_html = vol_note_html
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日 + 量能120日-5日均值（百日新高在追高模块末）
-    vol20_html = f"{vol30_html}{vol120_html}{vol120_avg5d_html}"
+    # 大盘环境：近30日成交金额 + 量能120日-5日均值（原始「量能120日趋势」已删；百日新高在追高模块末）
+    vol20_html = f"{vol30_html}{vol120_avg5d_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
