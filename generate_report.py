@@ -4572,8 +4572,8 @@ def render_html(ctx: dict) -> str:
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-mkt">大盘环境</a>
-      <a href="#sec-ts">趋势强度</a>
       <a href="#sec-chase">资金追高情绪</a>
+      <a href="#sec-ts">趋势强度</a>
       <a href="#sec-sectors">涨停板块</a>
       <a href="#sec-post">公告与政策</a>
       <a href="#sec-event">事件方向</a>
@@ -4591,26 +4591,26 @@ def render_html(ctx: dict) -> str:
     {vol20_html}
   </div>
 
-  <!-- 2 趋势强度 -->
-  <div class="section" id="sec-ts">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">趋势强度</div>
-      <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
-    </div>
-    {trend_strength_html}
-  </div>
-
-  <!-- 3 资金追高情绪 -->
+  <!-- 2 资金追高情绪 -->
   <div class="section" id="sec-chase">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">资金追高情绪</div>
       <div class="section-sub">{ctx['data_date']} · 近120日</div>
     </div>
     {chase_sentiment_html}
     {xh120_html}
     <div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>
+  </div>
+
+  <!-- 3 趋势强度 -->
+  <div class="section" id="sec-ts">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div class="section-title">趋势强度</div>
+      <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
+    </div>
+    {trend_strength_html}
   </div>
 
   <!-- 4 涨停板块 -->
