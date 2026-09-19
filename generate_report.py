@@ -953,6 +953,7 @@ def _vol_cycle_tag_html(
     *,
     expand_label: str = "增量周期",
     shrink_label: str = "缩量周期",
+    wrap: bool = True,
 ) -> str:
     """图下标签：末日持有色。默认「增量周期 / 缩量周期」；5日均值图用「大周期·增量 / 大周期·缩量」。"""
     if not bars:
@@ -961,6 +962,8 @@ def _vol_cycle_tag_html(
         pill = f'<span class="pill ok">{expand_label}</span>'
     else:
         pill = f'<span class="pill bad">{shrink_label}</span>'
+    if not wrap:
+        return pill
     return f'<div class="chart-tags vol20-tags">{pill}</div>'
 
 
@@ -3402,19 +3405,23 @@ def render_html(ctx: dict) -> str:
     vol_tags = [t for t in (ctx.get("vol_tags") or []) if str(t).strip()]
     vol_regime = ctx.get("vol_regime") or "neutral"
     vol_tag_cls = {"bad": "bad", "good": "ok", "neutral": "warn"}.get(vol_regime, "warn")
-    vol_tags_html = ""
-    if vol_tags:
-        pills = "".join(
-            f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
-        )
-        vol_tags_html = f'<div class="chart-tags vol20-tags">{pills}</div>'
+    # 近30日：结构标签与增量/缩量周期同一行；周期标签排在前面
+    cycle_pill = _vol_cycle_tag_html(vol20, wrap=False)
+    struct_pills = "".join(
+        f'<span class="pill {vol_tag_cls}">{t}</span>' for t in vol_tags
+    )
+    vol30_pills = cycle_pill + struct_pills
+    vol_tags_html = (
+        f'<div class="chart-tags vol20-tags vol30-tags">{vol30_pills}</div>'
+        if vol30_pills else ""
+    )
     vol_note_html = f'<div class="vol20-note">{vol_note}</div>' if vol_note else ""
     after_30 = vol_tags_html
     vol30_html = _render_vol_bars_block(
         vol20,
         title="近30日成交金额",
         colored=True,
-        after_html=vol_tags_html + _vol_cycle_tag_html(vol20),
+        after_html=vol_tags_html,
     )
     if not vol30_html and after_30:
         vol30_html = after_30
@@ -4207,6 +4214,9 @@ def render_html(ctx: dict) -> str:
   .vol20-tags {{
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-top: 0;
+  }}
+  .vol30-tags {{
+    flex-wrap: nowrap;
   }}
   /* 图表标签 .pill：A 股红强绿弱（近30日成交金额 / 追高活跃度 / 板块-资金认可度 统一） */
   .chart-tags .pill.ok,
