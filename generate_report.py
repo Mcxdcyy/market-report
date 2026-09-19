@@ -4595,6 +4595,7 @@ def render_html(ctx: dict) -> str:
     </div>
     {chase_sentiment_html}
     {xh120_html}
+    <div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>
   </div>
 
   <!-- 4 涨停板块 -->
@@ -5913,15 +5914,8 @@ def render_chase_sentiment_html(block: dict) -> str:
     )
 
     # 已删「昨追-赚钱效应」「今追-回落指数」「低吸赚钱效应」「低吸锁仓收益」
-
-    note = (
-        '<div class="chase-note">'
-        "追高池：日内最高价相对昨收涨幅≥7%；主板与创板（创业板+科创板）分池统计后合计展示；"
-        "不含ST、北交所，不含上市日历天数≤10，不含一字涨停（当日最低价=当日涨停价）。"
-        "昨追效应取前一交易日追高池。"
-        "</div>"
-    )
-    return "".join(parts) + note
+    # 追高池脚注放在模块最后（百日新高图之后），不在这里拼
+    return "".join(parts)
 
 
 def load_fund_recognition_block(
