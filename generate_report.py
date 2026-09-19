@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """每日复盘概览 HTML 生成器。
 
-交易模式：
-  5/10日线试单 & 新高加仓
-
-策略层级：能做 → 按模式执行；不能做 → 空仓。
+表头不写策略标签，不做是否适合开仓的判断。
 
 用法: python3 generate_report.py
 """
@@ -3589,11 +3586,6 @@ def render_html(ctx: dict) -> str:
     chase_sentiment_html = render_chase_sentiment_html(ctx.get("chase_sentiment") or {})
     fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
 
-    m = ctx["modes"]
-    hero_summary_html = (
-        f'<div class="hero-summary">{m["summary"]}</div>' if (m.get("summary") or "").strip() else ""
-    )
-
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -4575,14 +4567,8 @@ def render_html(ctx: dict) -> str:
         <div class="hero-meta">
           数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
         </div>
-        <span class="hero-tag">5/10日线试单 & 新高加仓</span>
-      </div>
-      <div class="hero-decision {m['pill']}">
-        <span class="hero-status">{m['status']}</span>
-        <div class="hero-mode">{m['primary_label']}</div>
       </div>
     </div>
-    {hero_summary_html}
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-mkt">大盘环境</a>
@@ -6385,6 +6371,8 @@ def write_index_html() -> Path:
             mm = re.search(r'<div class="hero-mode">([^<]+)</div>', text)
             if mm:
                 mode = mm.group(1).strip()
+                if mode in ("待定", "—", "-"):
+                    mode = ""
         except OSError:
             pass
         reports.append((m.group(1), m.group(2), p.name, mode))
