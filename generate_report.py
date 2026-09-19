@@ -3488,7 +3488,7 @@ def render_html(ctx: dict) -> str:
     )
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
-        xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True
+        xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
     )
     # 大盘环境：近30日成交金额 + 量能120日-5日均值（原始「量能120日趋势」已删；百日新高在追高模块末）
     vol20_html = f"{vol30_html}{vol120_avg5d_html}"
