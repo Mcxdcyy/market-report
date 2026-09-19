@@ -3785,7 +3785,6 @@ def render_html(ctx: dict) -> str:
   .ts-cnt-bar.up {{ background: var(--bar-ok); }}
   .ts-cnt-bar.down {{ background: var(--bar-bad); }}
   .ts-cnt-bar.flat {{ background: #8e8e93; }}
-  .ts-cnt-col.latest .ts-cnt-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .ts-cnt-axis {{
     display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
   }}
@@ -3838,7 +3837,6 @@ def render_html(ctx: dict) -> str:
     top: 50%; border-radius: 0 0 2px 2px;
     background: var(--bar-bad, #34C759);
   }}
-  .ts-hold-col.latest .ts-hold-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .ts-hold-axis {{
     display: flex; gap: 1px; margin-top: 6px; min-height: 18px; position: relative;
   }}
@@ -4220,7 +4218,6 @@ def render_html(ctx: dict) -> str:
   .vol20-bar.up {{ background: var(--bar-ok); }}
   .vol20-bar.down {{ background: var(--bar-bad); }}
   .vol20-bar.flat {{ background: #8e8e93; }}
-  .vol20-col.latest .vol20-bar {{ box-shadow: 0 0 0 1.5px rgba(10,132,255,.35); }}
   .vol20-axis {{
     display: flex; align-items: flex-start; gap: 3px;
     position: relative;
