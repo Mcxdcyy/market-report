@@ -1592,6 +1592,26 @@ def _is_formal_disclosure(item: dict) -> bool:
     return not any(m in blob for m in _COMMENTARY_MARKERS)
 
 
+def _announce_edge_tag(item: dict) -> str:
+    """公告边框：ok 红=利好，warn 橙=中性，bad 绿=澄清/证伪。
+
+    正文已是否认、证伪时，禁止沿用写成的 ok。政策不按这句话改。
+    """
+    written = str(item.get("tag") or "warn")
+    if written not in ("ok", "warn", "bad"):
+        written = "warn"
+    if item.get("type") == "政策":
+        return written
+    blob = f"{item.get('title', '')}{item.get('content', '')}"
+    denial = (
+        "澄清", "不属实", "不实", "证伪", "撇清", "传闻",
+        "尚无", "无产品供货", "没有供货", "无相关",
+    )
+    if any(k in blob for k in denial):
+        return "bad"
+    return written
+
+
 def infer_announce_category(item: dict) -> str:
     if item.get("category") in CURATE_CAPS_OK:
         return item["category"]
@@ -1698,6 +1718,7 @@ def curate_post_close(
             continue
         if not _is_formal_disclosure(item):
             continue
+        item = {**item, "tag": _announce_edge_tag(item)}
         cat = infer_announce_category(item)
         enriched = {**item, "category": cat}
         enriched["_sort"] = _curate_sort_key(enriched, sector_names, env_weak)
@@ -3548,7 +3569,7 @@ def render_html(ctx: dict) -> str:
         return (
             '<div class="post-list">'
             + "".join(
-                f'''<div class="post-row {it.get("tag", "warn")}">
+                f'''<div class="post-row {_announce_edge_tag(it)}">
       <div class="post-type">{it.get("type", "公告")}</div>
       <div class="post-title">{it.get("title", "")}</div>
       <p class="post-summary">{it.get("content", it.get("text", ""))}</p>
