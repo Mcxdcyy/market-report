@@ -965,13 +965,13 @@ def _vol_cycle_tag_html(
 
 
 def _module_sum_html(text: str) -> str:
-    """模块/图表结论条：同大盘环境 `.vol20-note.vol-mkt-sum` 样式。"""
+    """模块/图表结论条：同大盘环境浅蓝条样式（`.vol-mkt-sum`）。"""
     text = (text or "").strip()
     if not text:
         return ""
     return (
         f'<div class="vol-mkt-sum-wrap">'
-        f'<div class="vol20-note vol-mkt-sum">{text}</div>'
+        f'<div class="vol-mkt-sum">{text}</div>'
         f"</div>"
     )
 
@@ -4072,8 +4072,8 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-mark {{
     position: absolute; left: 0; right: 0; height: 0;
-    /* 虚线刻度，与图表分隔实线（var(--border)）区分 */
-    border-top: 1px dashed rgba(10, 132, 255, 0.42);
+    /* 实线刻度，浅蓝；与图表分隔线（var(--border) 深灰实线）区分 */
+    border-top: 1px solid rgba(10, 132, 255, 0.35);
     pointer-events: none; z-index: 1;
   }}
   .fund-mark-50 {{ bottom: 50%; }}
@@ -4373,13 +4373,17 @@ def render_html(ctx: dict) -> str:
   .chase-group:has(.vol-mkt-sum-wrap) + .vol20-wrap {{
     margin-top: 0;
   }}
-  /* 模块末条：用本条 padding-bottom 充当底距，去掉 section 底 padding 避免叠成 28 */
-  .section:has(> .vol-mkt-sum-wrap:last-child) {{
-    padding-bottom: 0;
+  /* 模块末条：吃掉 section 底 padding，避免 14+14；本条 padding-bottom 即底距 */
+  .section > .vol-mkt-sum-wrap:last-child {{
+    margin-bottom: -14px;
   }}
   .vol-mkt-sum {{
-    margin-top: 0; padding: 14px 16px;
-    font-size: 14px; line-height: 1.6; font-weight: 500;
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 14px; line-height: 1.6; font-weight: 500; color: var(--text);
   }}
 
   /* ── 涨停板块 ── */
@@ -4618,6 +4622,7 @@ def render_html(ctx: dict) -> str:
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
     .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 0; }}
+    .section > .vol-mkt-sum-wrap:last-child {{ margin-bottom: -12px; }} /* 手机 section pad 12 */
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
@@ -6252,7 +6257,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
         "柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。"
-        "柱图内 50%、100% 各一条蓝色虚线刻度（与图表分隔实线区分）。"
+        "柱图内 50%、100% 各一条蓝色实线刻度（与图表分隔线区分）。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
