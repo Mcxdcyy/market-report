@@ -4767,7 +4767,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
-    <div class="vol-mkt-sum">【强势票占比很高】：也有可能突然一下崩。——重点看「核心票」。</div>
+    <div class="vol-mkt-sum">强势票占比很高：也有可能突然一下崩。——重点看「核心票」。</div>
     {fund_recognition_html}
   </div>
 
