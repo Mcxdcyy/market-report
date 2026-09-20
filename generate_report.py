@@ -4035,11 +4035,6 @@ def render_html(ctx: dict) -> str:
   }}
   .ts-amt-cnt .hi {{ color: #9A7EAD; font-weight: 700; }}
   .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
-  /* 模块底部说明：与公告「候选池 → 精选」同系（.module-summary） */
-  .ts-note {{
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
-  }}
 
   /* ── 板块-资金认可度 ── */
   .fund-tip {{
@@ -4108,10 +4103,6 @@ def render_html(ctx: dict) -> str:
     white-space: nowrap;
   }}
   .fund-tick.latest span {{ left: auto; right: 0; transform: none; }}
-  .fund-note {{
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
-  }}
 
 
   /* ── 近30日成交金额柱状图 ── */
@@ -4260,10 +4251,6 @@ def render_html(ctx: dict) -> str:
   .chase-tick.latest span {{
     display: block; left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
-  }}
-  .chase-note {{
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }}
 
   .vol20-head {{
@@ -4462,9 +4449,25 @@ def render_html(ctx: dict) -> str:
   .post-title {{ font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }}
   .post-summary {{ font-size: 12px; color: var(--sub); line-height: 1.55; margin: 0; }}
   .news-empty {{ font-size: 12px; color: var(--muted); padding: 4px 0; }}
-  .module-summary {{
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
+  /* 模块底部说明：白底描边小卡 + 上方分隔线（与图表分隔同距 14px） */
+  .module-summary,
+  .chase-note,
+  .ts-note,
+  .fund-note {{
+    position: relative;
+    margin-top: 28px;
+    padding: 6px 9px;
+    font-size: 11px; color: var(--sub); line-height: 1.45;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  }}
+  .module-summary::before,
+  .chase-note::before,
+  .ts-note::before,
+  .fund-note::before {{
+    content: "";
+    position: absolute; left: 0; right: 0; top: -14px;
+    border-top: 1px solid var(--border);
+    pointer-events: none;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */

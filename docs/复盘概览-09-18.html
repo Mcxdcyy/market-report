@@ -395,11 +395,6 @@
   }
   .ts-amt-cnt .hi { color: #9A7EAD; font-weight: 700; }
   .ts-amt-cnt .lo { color: #a6895c; font-weight: 700; }
-  /* 模块底部说明：与公告「候选池 → 精选」同系（.module-summary） */
-  .ts-note {
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
-  }
 
   /* ── 板块-资金认可度 ── */
   .fund-tip {
@@ -468,10 +463,6 @@
     white-space: nowrap;
   }
   .fund-tick.latest span { left: auto; right: 0; transform: none; }
-  .fund-note {
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
-  }
 
 
   /* ── 近30日成交金额柱状图 ── */
@@ -620,10 +611,6 @@
   .chase-tick.latest span {
     display: block; left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
-  }
-  .chase-note {
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }
 
   .vol20-head {
@@ -822,9 +809,25 @@
   .post-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }
   .post-summary { font-size: 12px; color: var(--sub); line-height: 1.55; margin: 0; }
   .news-empty { font-size: 12px; color: var(--muted); padding: 4px 0; }
-  .module-summary {
-    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
+  /* 模块底部说明：白底描边小卡 + 上方分隔线（与图表分隔同距 14px） */
+  .module-summary,
+  .chase-note,
+  .ts-note,
+  .fund-note {
+    position: relative;
+    margin-top: 28px;
+    padding: 6px 9px;
+    font-size: 11px; color: var(--sub); line-height: 1.45;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  }
+  .module-summary::before,
+  .chase-note::before,
+  .ts-note::before,
+  .fund-note::before {
+    content: "";
+    position: absolute; left: 0; right: 0; top: -14px;
+    border-top: 1px solid var(--border);
+    pointer-events: none;
   }
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -4019,7 +4022,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图内 50%、100% 各一条蓝色虚线刻度（与图表分隔实线区分）。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-20 14:37</div>
+  <div class="footer">生成于 2026-09-20 14:39</div>
 </div>
 </body>
 </html>
