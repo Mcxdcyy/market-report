@@ -4340,10 +4340,31 @@ def render_html(ctx: dict) -> str:
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 12px; line-height: 1.55; color: var(--text);
   }}
-  /* 大盘环境模块结论：同系浅蓝条，拉开与上方图表的间距 */
+  /* 图表结论条：与上下分隔线、模块底边距统一为 14px */
   .vol-mkt-sum-wrap {{
-    margin-top: 18px; padding-top: 16px;
+    margin-top: 14px;
+    padding-top: 14px;
+    padding-bottom: 0;
     border-top: 1px solid var(--border);
+  }}
+  /* 父级 flex/grid 的 gap 会叠在 margin 上，补齐到合计 14px */
+  .vol20-wrap > .vol-mkt-sum-wrap,
+  .ts-cnt-wrap > .vol-mkt-sum-wrap,
+  .chase-chart > .vol-mkt-sum-wrap {{
+    margin-top: 4px; /* + gap 10 → 14 */
+  }}
+  .chase-grid > .vol-mkt-sum-wrap {{
+    margin-top: 2px; /* + gap 12 → 14 */
+  }}
+  /* 结论条下方到下一条分隔线 = 14px（由下一图 margin-top / 模块 padding 承担） */
+  .chase-chart:has(.vol-mkt-sum-wrap) {{
+    padding-bottom: 0;
+  }}
+  .chase-group:has(.vol-mkt-sum-wrap) {{
+    margin-bottom: 0;
+  }}
+  .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart {{
+    margin-top: 14px;
   }}
   .vol-mkt-sum {{
     margin-top: 0; padding: 14px 16px;
@@ -4565,7 +4586,11 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; margin-top: 10px; }}
-    .vol-mkt-sum-wrap {{ margin-top: 16px; padding-top: 14px; }}
+    .vol-mkt-sum-wrap {{ margin-top: 14px; padding-top: 14px; }}
+    .vol20-wrap > .vol-mkt-sum-wrap,
+    .ts-cnt-wrap > .vol-mkt-sum-wrap,
+    .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
+    .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 2px; }}
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
