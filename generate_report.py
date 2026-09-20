@@ -3827,7 +3827,7 @@ def render_html(ctx: dict) -> str:
   /* ── 趋势强度（个股五条件占比）── */
   /* 强趋势-次日承接 / 近30日强趋势占比：与近30日成交金额同系（顶部分隔线，无边框底色） */
   .ts-cnt-wrap {{
-    margin-top: 14px; padding-top: 12px; margin-bottom: 0;
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0; margin-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
@@ -3933,7 +3933,7 @@ def render_html(ctx: dict) -> str:
   }}
 
   .ts-chart {{
-    margin-top: 14px; padding-top: 12px; margin-bottom: 0;
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0; margin-bottom: 0;
     border-top: 1px solid var(--border);
   }}
   .ts-chart-head {{
@@ -3990,7 +3990,7 @@ def render_html(ctx: dict) -> str:
 
   /* 符合条件个股 · 成交额分档（100% 堆叠） */
   .ts-amt-chart {{
-    margin-top: 14px; padding-top: 12px;
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
   }}
   .ts-amt-legend {{
@@ -4050,13 +4050,13 @@ def render_html(ctx: dict) -> str:
   .fund-list {{
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }}
   @media (min-width: 960px) {{
     .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   }}
   .fund-card {{
-    padding: 12px 0 10px; border: none; border-radius: 0;
+    margin-top: 0; padding: 14px 0 0; border: none; border-radius: 0;
     border-top: 1px solid var(--border);
     background: transparent;
     min-width: 0;
@@ -4109,7 +4109,7 @@ def render_html(ctx: dict) -> str:
 
   /* ── 近30日成交金额柱状图 ── */
   .vol20-wrap {{
-    margin-top: 14px; padding-top: 12px;
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
@@ -4160,9 +4160,8 @@ def render_html(ctx: dict) -> str:
 
   /* ── 资金追高情绪 ── */
   .chase-group {{
-    margin-bottom: 16px;
+    margin-bottom: 0;
   }}
-  .chase-group:last-of-type {{ margin-bottom: 8px; }}
   .chase-group-title {{
     font-size: 14px; font-weight: 700; color: var(--text);
     margin: 4px 0 10px; padding-left: 2px;
@@ -4170,7 +4169,7 @@ def render_html(ctx: dict) -> str:
   .chase-grid {{
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }}
   .chase-grid.single {{
     grid-template-columns: 1fr;
@@ -4182,13 +4181,19 @@ def render_html(ctx: dict) -> str:
   .chase-chart {{
     min-width: 0;
     overflow: hidden;
-    padding: 12px 0 10px;
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border: none; border-radius: 0;
     border-top: 1px solid var(--border);
     background: transparent;
     display: flex; flex-direction: column; gap: 10px;
   }}
-  .chase-chart-head {{
+  /* 同一 grid 内首张图不再叠 margin（由 grid gap / 上一条分隔线承担） */
+  .chase-grid > .chase-chart:first-child {{
+    margin-top: 0;
+  }}
+  .chase-group:first-child .chase-chart {{
+    margin-top: 14px;
+  }}  .chase-chart-head {{
     display: flex; align-items: baseline; justify-content: space-between;
     gap: 8px; margin-bottom: 0; flex-wrap: wrap;
   }}
@@ -4354,7 +4359,7 @@ def render_html(ctx: dict) -> str:
     margin-top: 4px; /* + gap 10 → 14 */
   }}
   .chase-grid > .vol-mkt-sum-wrap {{
-    margin-top: 2px; /* + gap 12 → 14 */
+    margin-top: 0; /* + gap 14 → 14 */
   }}
   /* 结论条下方到下一条分隔线 = 14px（由下一图 margin-top / 模块 padding 承担） */
   .chase-chart:has(.vol-mkt-sum-wrap) {{
@@ -4590,7 +4595,7 @@ def render_html(ctx: dict) -> str:
     .vol20-wrap > .vol-mkt-sum-wrap,
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
-    .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 2px; }}
+    .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 0; }}
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
