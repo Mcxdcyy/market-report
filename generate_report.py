@@ -4076,9 +4076,13 @@ def render_html(ctx: dict) -> str:
     width: 100%;
   }}
   .fund-mark {{
-    position: absolute; left: 0; right: 0; bottom: 50%; height: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.12); pointer-events: none; z-index: 1;
+    position: absolute; left: 0; right: 0; height: 0;
+    /* 虚线刻度，与图表分隔实线（var(--border)）区分 */
+    border-top: 1px dashed rgba(10, 132, 255, 0.42);
+    pointer-events: none; z-index: 1;
   }}
+  .fund-mark-50 {{ bottom: 50%; }}
+  .fund-mark-100 {{ bottom: 100%; }}
   .fund-col {{
     flex: 1; min-width: 0; height: 100%; position: relative; z-index: 2;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
@@ -6217,7 +6221,7 @@ def render_fund_recognition_html(block: dict) -> str:
       <span class="fund-card-meta">{meta}</span>
     </div>
     <div class="fund-chart">
-      <div class="fund-bars"><div class="fund-mark" aria-hidden="true"></div>{"".join(cols)}</div>
+      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div>{"".join(cols)}</div>
       <div class="fund-axis">{"".join(ticks)}</div>
     </div>
     {tags_html}
@@ -6233,7 +6237,8 @@ def render_fund_recognition_html(block: dict) -> str:
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图浅线为50%刻度。"
+        "柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。"
+        "柱图内 50%、100% 各一条蓝色虚线刻度（与图表分隔实线区分）。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
