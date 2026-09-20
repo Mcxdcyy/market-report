@@ -964,6 +964,18 @@ def _vol_cycle_tag_html(
     return f'<div class="chart-tags vol20-tags">{pill}</div>'
 
 
+def _module_sum_html(text: str) -> str:
+    """模块/图表结论条：同大盘环境 `.vol20-note.vol-mkt-sum` 样式。"""
+    text = (text or "").strip()
+    if not text:
+        return ""
+    return (
+        f'<div class="vol-mkt-sum-wrap">'
+        f'<div class="vol20-note vol-mkt-sum">{text}</div>'
+        f"</div>"
+    )
+
+
 def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
     """模块1末尾：近30日周期 × 量能120日5日均值周期，四句固定文案。"""
     if not vol30 or not vol120:
@@ -978,11 +990,7 @@ def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
         text = "大周期缩量，小周期增量，谨慎做多。"
     else:
         text = "资金可能撤退，冲高先减仓，卖出后别开新仓。（等次日看）"
-    return (
-        f'<div class="vol-mkt-sum-wrap">'
-        f'<div class="vol20-note vol-mkt-sum">{text}</div>'
-        f"</div>"
-    )
+    return _module_sum_html(text)
 
 
 def build_vol_bars_from_amounts(
@@ -5252,6 +5260,7 @@ def render_trend_strength_html(block: dict) -> str:
         hold_smoothed = _smooth_metric_series_nd(list(hold_series_raw), days=4)
         hold_series_plot = hold_smoothed[-120:]
         pills: list[str] = []
+        hold_sum_html = ""
         if hold_mean_f is not None:
             last5: list[float] = []
             for row in reversed(hold_series_raw):
@@ -5267,8 +5276,14 @@ def render_trend_strength_html(block: dict) -> str:
                 m5 = sum(last5) / 5.0
                 if m5 > float(hold_mean_f):
                     pills.append('<span class="pill ok">次日承接较好</span>')
+                    hold_sum_html = _module_sum_html(
+                        "强趋势-次日承接较好：趋势票可以多拿一下。"
+                    )
                 else:
                     pills.append('<span class="pill bad">次日承接不好</span>')
+                    hold_sum_html = _module_sum_html(
+                        "强趋势-次日承接不好：有溢价尽快卖出，别锁仓。"
+                    )
         data_err = bool(block.get("hold_data_error"))
         if not data_err:
             last = hold_series_raw[-1] if hold_series_raw else {}
@@ -5276,9 +5291,9 @@ def render_trend_strength_html(block: dict) -> str:
         if data_err:
             pills.append('<span class="pill bad">数据异常</span>')
         tags_html = (
-            f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>'
+            f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>{hold_sum_html}'
             if pills
-            else ""
+            else hold_sum_html
         )
         hold_chart = _render_ts_hold_bars_html(
             hold_series_plot,
@@ -5467,8 +5482,14 @@ def _chase_loss_hold_tag_html(
     pills: list[str] = []
     if cur == "好":
         pills.append('<span class="pill ok">追高承接较好</span>')
+        sum_html = _module_sum_html(
+            "多参与趋势票，向上拿。——低吸很难赚钱。"
+        )
     else:
         pills.append('<span class="pill bad">追高承接不好</span>')
+        sum_html = _module_sum_html(
+            "追高不好，低吸也很难赚钱。——只能说谨慎低吸。"
+        )
 
     # 翻转首日 + 旧状态连续 ≥2 日 → 需次日验证
     if last_i >= 1 and tags[last_i - 1] is not None and tags[last_i - 1] != cur:
@@ -5481,7 +5502,7 @@ def _chase_loss_hold_tag_html(
         if streak >= 2:
             pills.append('<span class="pill warn">需次日验证</span>')
 
-    return f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>'
+    return f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>{sum_html}'
 
 
 def _render_chase_metric_chart(
@@ -5748,9 +5769,15 @@ def _render_chase_count_chart(
             m5 = sum(last5) / 5.0
             if m5 >= float(baseline):
                 pill = '<span class="pill ok">活跃周期</span>'
+                sum_html = _module_sum_html(
+                    "追高活跃，积极做多。——如果追高承接好，可以多拿一下。"
+                )
             else:
                 pill = '<span class="pill bad">不活跃周期</span>'
-            act_tags_html = f'<div class="chart-tags vol20-tags">{pill}</div>'
+                sum_html = _module_sum_html(
+                    "追高不活跃，冲高容易回落。——主动卖出。"
+                )
+            act_tags_html = f'<div class="chart-tags vol20-tags">{pill}</div>{sum_html}'
 
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
