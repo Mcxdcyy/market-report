@@ -3933,7 +3933,7 @@ def render_html(ctx: dict) -> str:
   }}
 
   .ts-chart {{
-    margin-bottom: 12px; padding: 14px 14px 12px;
+    margin-top: 14px; margin-bottom: 12px; padding: 14px 14px 12px;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     background: #fafafa;
   }}
