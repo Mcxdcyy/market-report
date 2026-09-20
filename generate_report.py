@@ -4035,8 +4035,10 @@ def render_html(ctx: dict) -> str:
   }}
   .ts-amt-cnt .hi {{ color: #9A7EAD; font-weight: 700; }}
   .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
+  /* 模块底部说明：与公告「候选池 → 精选」同系（.module-summary） */
   .ts-note {{
-    margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }}
 
   /* ── 板块-资金认可度 ── */
@@ -4103,7 +4105,8 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-tick.latest span {{ left: auto; right: 0; transform: none; }}
   .fund-note {{
-    margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }}
 
 
@@ -4255,7 +4258,8 @@ def render_html(ctx: dict) -> str:
     color: var(--accent); font-weight: 700;
   }}
   .chase-note {{
-    margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.55;
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }}
 
   .vol20-head {{
@@ -4603,7 +4607,10 @@ def render_html(ctx: dict) -> str:
     .chase-chart-title {{ font-size: 14px; }}
     .chase-chart-meta {{ font-size: 12px; }}
     .chase-group-title {{ font-size: 15px; }}
-    .chase-note {{ font-size: 13px; }}
+    .chase-note,
+    .ts-note,
+    .fund-note,
+    .module-summary {{ font-size: 13px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
@@ -4623,7 +4630,6 @@ def render_html(ctx: dict) -> str:
     .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
     .sector-muted {{ font-size: 14px; }}
-    .module-summary {{ font-size: 13px; }}
     .post-meta {{ font-size: 13px; }}
     .post-title {{ font-size: 15px; }}
     .post-summary {{ font-size: 14px; }}

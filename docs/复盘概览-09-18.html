@@ -395,8 +395,10 @@
   }
   .ts-amt-cnt .hi { color: #9A7EAD; font-weight: 700; }
   .ts-amt-cnt .lo { color: #a6895c; font-weight: 700; }
+  /* 模块底部说明：与公告「候选池 → 精选」同系（.module-summary） */
   .ts-note {
-    margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }
 
   /* ── 板块-资金认可度 ── */
@@ -463,7 +465,8 @@
   }
   .fund-tick.latest span { left: auto; right: 0; transform: none; }
   .fund-note {
-    margin-top: 12px; font-size: 11px; color: var(--muted); line-height: 1.7;
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }
 
 
@@ -615,7 +618,8 @@
     color: var(--accent); font-weight: 700;
   }
   .chase-note {
-    margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.55;
+    font-size: 11px; color: var(--sub); margin-top: 8px; padding: 6px 9px;
+    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.45;
   }
 
   .vol20-head {
@@ -963,7 +967,10 @@
     .chase-chart-title { font-size: 14px; }
     .chase-chart-meta { font-size: 12px; }
     .chase-group-title { font-size: 15px; }
-    .chase-note { font-size: 13px; }
+    .chase-note,
+    .ts-note,
+    .fund-note,
+    .module-summary { font-size: 13px; }
     .ts-cnt-bars { height: 110px; gap: 1px; }
     .ts-cnt-val { display: none !important; }
     .ts-cnt-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
@@ -983,7 +990,6 @@
     .sector-label { font-size: 13px; }
     .sector-text { font-size: 14px; }
     .sector-muted { font-size: 14px; }
-    .module-summary { font-size: 13px; }
     .post-meta { font-size: 13px; }
     .post-title { font-size: 15px; }
     .post-summary { font-size: 14px; }
@@ -4009,7 +4015,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图浅线为50%刻度。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-20 14:28</div>
+  <div class="footer">生成于 2026-09-20 14:30</div>
 </div>
 </body>
 </html>
