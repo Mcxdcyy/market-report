@@ -2843,89 +2843,57 @@ def _sector_near_events(sector_name: str, as_of: datetime) -> list[str]:
     return events[:2]
 
 
-def _sector_post_close_boost(sector_name: str, post_close: list) -> tuple[int, str]:
-    """盘后利好/澄清对板块持续性评分的修正。"""
-    ok_n = warn_n = bad_n = 0
-    for it in post_close:
-        if not _sector_match(it, [sector_name]):
-            continue
-        tag = it.get("tag", "warn")
-        if tag == "ok":
-            ok_n += 1
-        elif tag == "bad":
-            bad_n += 1
-        else:
-            warn_n += 1
-    score = ok_n * 10 - bad_n * 8 + min(warn_n, 2) * 2
-    if ok_n:
-        note = f"盘后{ok_n}条利好"
-    elif bad_n:
-        note = f"澄清/证伪{bad_n}条"
-    else:
-        note = ""
-    return score, note
+# 事件优先级（涨停板块 pill）：只看事件性质 + 短期后续预期，不看盘面消化/涨停家数打分
+EVENT_PRIORITY_META = {
+    "P1": (
+        "ok",
+        "行业供需已变，或国家级战略落地确定；后续仍有跟进预期。",
+    ),
+    "P2": (
+        "warn",
+        "单发事件；短期仍有落地、消息、会议或涨价空间等跟进预期。",
+    ),
+    "P3": (
+        "weak",
+        "单发事件；后续无更大预期。",
+    ),
+}
 
 
-def forecast_sector_persistence(
+def _normalize_event_priority(raw) -> str:
+    """把 JSON 字段规范为 P1/P2/P3；无法识别时返回空串。"""
+    if raw is None:
+        return ""
+    s = str(raw).strip().upper().replace(" ", "")
+    if s in EVENT_PRIORITY_META:
+        return s
+    # 兼容误写
+    if s in ("1", "一级", "高"):
+        return "P1"
+    if s in ("2", "二级", "中"):
+        return "P2"
+    if s in ("3", "三级", "低"):
+        return "P3"
+    return ""
+
+
+def enrich_sector_event_priority(
     sectors: list,
     *,
     as_of: datetime,
-    row: pd.Series,
-    df: pd.DataFrame,
     directions: list,
-    env_weak: bool,
-    post_close: list,
 ) -> list[dict]:
-    """结合涨停广度 + 近端事件 + 环境，预判板块炒作持续性。
+    """为涨停板块补齐「后续事件」展示，并挂上事件优先级 P1/P2/P3。
 
-    自报表次一交易日起算：
-    - 不认可持续：不看好次日进一步走强
-    - 预估持续2天：看好次日延续，预计还能走 2 个交易日（含次日）
-    - 预估持续3天及以上：看好多日延续，可沿主线缩圈跟龙头
+    优先级须在 market_news.json 的 top_sectors[].event_priority 人工填写（按逻辑+后续事件判断）。
+    缺省时回退 P3，避免旧持续性打分回潮。
     """
     if not sectors:
         return []
-    vm = volume_metrics(row, df)
-    md = float(row.get("主赚差") or 0)
-    zt_total = int(row.get("涨停") or 0) or sum(int(s.get("count") or 0) for s in sectors)
-    top5_sum = sum(int(s.get("count") or 0) for s in sectors)
-    weekday = as_of.weekday()  # 4=周五
 
     enriched = []
     for s in sectors:
         name = s.get("name", "")
-        count = int(s.get("count") or 0)
-
-        # ── 热度基准（仅用于持续性打分，不单独展示）──
-        if count >= 15:
-            heat_score = 82
-        elif count >= 8:
-            heat_score = 62
-        else:
-            heat_score = 42
-
-        share = count / top5_sum if top5_sum else 0
-        if share >= 0.32:
-            heat_score += 6
-        if zt_total and count / zt_total >= 0.12:
-            heat_score += 5
-
-        if vm["shrink_streak"] >= 3:
-            heat_score -= 14
-        elif vm["shrink_streak"] >= 2:
-            heat_score -= 8
-        if vm["ratio2"] < 0.93:
-            heat_score -= 6
-        if count >= 12 and md < -0.05:
-            heat_score -= 16  # 高潮但承接弱
-        elif count >= 8 and md > 0.02:
-            heat_score += 8
-
-        pc_score, _pc_note = _sector_post_close_boost(name, post_close)
-        heat_score += pc_score
-        heat_score = max(20, min(95, heat_score))
-
-        # ── 近端事件 + 方向评级 ──
         manual = s.get("events")
         if isinstance(manual, str) and manual.strip():
             events = [manual.strip()]
@@ -2933,61 +2901,25 @@ def forecast_sector_persistence(
             events = [str(x).strip() for x in manual if str(x).strip()]
         else:
             events = _sector_near_events(name, as_of)
-        dir_tag, dir_hint = _find_sector_direction(name, directions)
+        _dir_tag, dir_hint = _find_sector_direction(name, directions)
         events_near = "；".join(events) if events else "暂无直接催化"
 
-        # ── 持续性得分 ──
-        persist_score = heat_score
-        if dir_tag == "ok":
-            persist_score += 18
-        elif dir_tag == "bad":
-            persist_score -= 22
-        if events and "7/15" in events[0]:
-            persist_score += 10
-        if events and any("WAIC" in e for e in events):
-            persist_score += 6 if dir_tag != "bad" else -4
-        if env_weak and count >= 14:
-            persist_score -= 18
-        if weekday == 4 and count >= 10:
-            persist_score -= 10  # 周五高潮
-        if s.get("reason") and any(k in s["reason"] for k in ("IPO", "收购", "注册生效")):
-            persist_score += 4
-
-        if persist_score >= 72:
-            persist_label, persist_tag = "预估持续3天及以上", "ok"
-            persist_note = "看好次日延续，题材预计还能走3个交易日及以上，可沿主线缩圈跟龙头"
-        elif persist_score >= 52:
-            persist_label, persist_tag = "预估持续2天", "warn"
-            persist_note = "看好次日延续，题材预计还能走2个交易日（含次日），分化中只做核心"
-        else:
-            persist_label, persist_tag = "不认可持续", "weak"
-            persist_note = "不看好次日进一步走强，谨防一日游或快速退潮"
-
-        reason_blob = s.get("reason") or ""
-        has_hard_catalyst = any(k in reason_blob for k in ("IPO", "收购", "注册生效", "订单", "预增"))
-
-        if name == "机器人" and env_weak and count >= 15:
-            persist_label, persist_tag = "预估持续2天", "warn"
-            persist_note = "宇树IPO已定价+埃斯顿收购，逻辑在但环境弱，次日或有惯性、随后看分化"
-        elif name == "化学制品":
-            persist_note = "7/15预告窗口支撑，低位预增可轮动，追高慎"
-        elif name == "黄金":
-            persist_note = "避险+金价驱动，偏独立节奏，看期货不追板"
-        elif name in ("通用设备", "汽车零部件") and count < 10:
-            if persist_tag == "ok":
-                persist_label, persist_tag = "预估持续2天", "warn"
-            persist_note = "主线扩散补涨，弹性弱于龙头，跟随不领涨"
-        elif has_hard_catalyst and pc_score > 0 and persist_tag == "weak":
-            persist_label, persist_tag = "预估持续2天", "warn"
-            persist_note = "有硬催化但环境/量能拖累，次日或有惯性，缩圈做核心"
+        priority = _normalize_event_priority(
+            s.get("event_priority") or s.get("priority") or s.get("persist")
+        )
+        if priority not in EVENT_PRIORITY_META:
+            priority = "P3"
+        tag, default_note = EVENT_PRIORITY_META[priority]
+        note = (s.get("priority_note") or s.get("persist_note") or "").strip() or default_note
 
         enriched.append({
             **s,
             "events_near": events_near,
             "dir_hint": dir_hint or "",
-            "persist": persist_label,
-            "persist_tag": persist_tag,
-            "persist_note": persist_note,
+            "event_priority": priority,
+            "persist": priority,  # 兼容旧模板字段名
+            "persist_tag": tag,
+            "persist_note": note,
         })
     return enriched
 
@@ -3604,7 +3536,7 @@ def render_html(ctx: dict) -> str:
           <span class="sector-stat{" hot" if int(s.get("streak_days") or 0) >= 3 else ""}">已持续 {int(s.get("streak_days") or 0)} 天</span>
         </div>
         <div class="sector-forecast-corner">
-          <span class="pill {s.get("persist_tag", "warn")} sector-persist-pill">{s.get("persist", "—")}</span>
+          <span class="pill {s.get("persist_tag", "warn")} sector-priority-pill">{s.get("event_priority") or s.get("persist") or "—"}</span>
         </div>
       </div>
       <div class="sector-cols">
@@ -3613,7 +3545,7 @@ def render_html(ctx: dict) -> str:
         </div>
         <div class="sector-col-right">
           <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{s.get("events_near", "—")}{("｜" + s.get("dir_hint")) if s.get("dir_hint") and s.get("dir_hint") not in (s.get("events_near") or "") else ""}</div></div>
-          <div class="sector-block"><div class="sector-label sector-label-forecast">预判</div><div class="sector-text">{s.get("persist_note", "")}</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">{s.get("persist_note", "")}</div></div>
         </div>
       </div>
     </div>'''
@@ -4400,7 +4332,7 @@ def render_html(ctx: dict) -> str:
   .sector-forecast-corner {{
     flex-shrink: 0; text-align: right;
   }}
-  .sector-persist-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
+  .sector-priority-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
   /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
   .sector-rank {{
     width: 22px; height: 22px; border-radius: 50%;
@@ -4639,7 +4571,7 @@ def render_html(ctx: dict) -> str:
     .sector-rank {{ font-size: 13px; }}
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
-    .sector-persist-pill {{ font-size: 12px; }}
+    .sector-priority-pill {{ font-size: 12px; }}
     .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
     .sector-muted {{ font-size: 14px; }}
@@ -6409,17 +6341,10 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         market_news["top_sectors"] = enrich_sector_streaks(
             market_news["top_sectors"], dt, news_raw, df=None
         )
-        # 涨停合计写入 row，供持续性打分
-        vol_row = vol_row.copy() if hasattr(vol_row, "copy") else pd.Series(vol_row)
-        vol_row["涨停"] = sum(int(s.get("count") or 0) for s in market_news["top_sectors"])
-        market_news["top_sectors"] = forecast_sector_persistence(
+        market_news["top_sectors"] = enrich_sector_event_priority(
             market_news["top_sectors"],
             as_of=dt,
-            row=vol_row,
-            df=vol_df if not vol_df.empty else pd.DataFrame([{"成交额": 0}]),
             directions=directions,
-            env_weak=env_weak,
-            post_close=market_news["post_close"],
         )
 
     modes = empty_trading_modes()
