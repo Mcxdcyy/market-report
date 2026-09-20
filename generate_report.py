@@ -4040,7 +4040,6 @@ def render_html(ctx: dict) -> str:
   #sec-fund > .vol-mkt-sum {{
     margin: 0 0 14px;
   }}
-  #sec-fund .fund-tip-b {{ display: inline; }}
   .fund-list {{
     display: grid;
     grid-template-columns: 1fr;
@@ -4579,7 +4578,6 @@ def render_html(ctx: dict) -> str:
     }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
-    #sec-fund .fund-tip-b {{ display: block; }}
     .section-num {{ font-size: 14px; }}
     .section-title {{ font-size: 18px; }}
     .section-sub {{ font-size: 14px; }}
@@ -4769,7 +4767,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
-    <div class="vol-mkt-sum"><span class="fund-tip-a">【强势票占比很高】：也有可能突然一下崩。</span><span class="fund-tip-b">——重点看「核心票」。</span></div>
+    <div class="vol-mkt-sum">【强势票占比很高】：也有可能突然一下崩。——重点看「核心票」。</div>
     {fund_recognition_html}
   </div>
 
