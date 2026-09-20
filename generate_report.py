@@ -4037,13 +4037,10 @@ def render_html(ctx: dict) -> str:
   .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
 
   /* ── 板块-资金认可度 ── */
-  .fund-tip {{
-    margin: 0 0 12px; padding: 0;
-    background: none; border: none;
-    text-align: left;
-    font-size: 12px; line-height: 1.55; color: var(--text); font-weight: 400;
+  #sec-fund > .vol-mkt-sum {{
+    margin: 0 0 14px;
   }}
-  .fund-tip-b {{ display: inline; }}
+  #sec-fund .fund-tip-b {{ display: inline; }}
   .fund-list {{
     display: grid;
     grid-template-columns: 1fr;
@@ -4582,6 +4579,7 @@ def render_html(ctx: dict) -> str:
     }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
+    #sec-fund .fund-tip-b {{ display: block; }}
     .section-num {{ font-size: 14px; }}
     .section-title {{ font-size: 18px; }}
     .section-sub {{ font-size: 14px; }}
@@ -4771,7 +4769,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
-    <div class="fund-tip"><span class="fund-tip-a">【强势票占比很高】：也有可能突然一下崩。</span><span class="fund-tip-b">——重点看「核心票」。</span></div>
+    <div class="vol-mkt-sum"><span class="fund-tip-a">【强势票占比很高】：也有可能突然一下崩。</span><span class="fund-tip-b">——重点看「核心票」。</span></div>
     {fund_recognition_html}
   </div>
 
