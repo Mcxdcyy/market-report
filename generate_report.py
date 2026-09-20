@@ -4464,25 +4464,19 @@ def render_html(ctx: dict) -> str:
   .post-title {{ font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }}
   .post-summary {{ font-size: 12px; color: var(--sub); line-height: 1.55; margin: 0; }}
   .news-empty {{ font-size: 12px; color: var(--muted); padding: 4px 0; }}
-  /* 模块底部说明：白底描边小卡 + 上方分隔线（与图表分隔同距 14px） */
+  /* 模块底部说明：顶部分隔线 + 灰色脚注（无外框） */
   .module-summary,
   .chase-note,
   .ts-note,
   .fund-note {{
-    position: relative;
-    margin-top: 28px;
-    padding: 6px 9px;
-    font-size: 11px; color: var(--sub); line-height: 1.45;
-    background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border);
-  }}
-  .module-summary::before,
-  .chase-note::before,
-  .ts-note::before,
-  .fund-note::before {{
-    content: "";
-    position: absolute; left: 0; right: 0; top: -14px;
+    margin-top: 14px;
+    padding-top: 14px;
     border-top: 1px solid var(--border);
-    pointer-events: none;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.55;
+    background: none;
+    border-radius: 0;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
