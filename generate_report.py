@@ -2844,17 +2844,21 @@ def _sector_near_events(sector_name: str, as_of: datetime) -> list[str]:
 
 
 # 事件优先级（涨停板块 pill）：只看事件性质 + 短期后续预期，不看盘面消化/涨停家数打分
+# tag 仅作 class；色：P1红 / P2橙 / P3灰（见 .sector-priority-pill）
 EVENT_PRIORITY_META = {
     "P1": (
         "ok",
+        "事件优先级 P1",
         "行业供需已变，或国家级战略落地确定；后续仍有跟进预期。",
     ),
     "P2": (
         "warn",
+        "事件优先级 P2",
         "单发事件；短期仍有落地、消息、会议或涨价空间等跟进预期。",
     ),
     "P3": (
         "weak",
+        "事件优先级 P3",
         "单发事件；后续无更大预期。",
     ),
 }
@@ -2909,7 +2913,7 @@ def enrich_sector_event_priority(
         )
         if priority not in EVENT_PRIORITY_META:
             priority = "P3"
-        tag, default_note = EVENT_PRIORITY_META[priority]
+        tag, label, default_note = EVENT_PRIORITY_META[priority]
         note = (s.get("priority_note") or s.get("persist_note") or "").strip() or default_note
 
         enriched.append({
@@ -2917,7 +2921,8 @@ def enrich_sector_event_priority(
             "events_near": events_near,
             "dir_hint": dir_hint or "",
             "event_priority": priority,
-            "persist": priority,  # 兼容旧模板字段名
+            "event_priority_label": label,
+            "persist": label,  # 兼容旧模板字段名
             "persist_tag": tag,
             "persist_note": note,
         })
@@ -3536,7 +3541,7 @@ def render_html(ctx: dict) -> str:
           <span class="sector-stat{" hot" if int(s.get("streak_days") or 0) >= 3 else ""}">已持续 {int(s.get("streak_days") or 0)} 天</span>
         </div>
         <div class="sector-forecast-corner">
-          <span class="pill {s.get("persist_tag", "warn")} sector-priority-pill">{s.get("event_priority") or s.get("persist") or "—"}</span>
+          <span class="pill {s.get("persist_tag", "warn")} sector-priority-pill">{s.get("event_priority_label") or s.get("persist") or "—"}</span>
         </div>
       </div>
       <div class="sector-cols">
@@ -4333,6 +4338,9 @@ def render_html(ctx: dict) -> str:
     flex-shrink: 0; text-align: right;
   }}
   .sector-priority-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
+  .sector-priority-pill.ok {{ background: #ffebee; color: #c62828; }}   /* P1 红 */
+  .sector-priority-pill.warn {{ background: #fff3e0; color: #ef6c00; }} /* P2 橙 */
+  .sector-priority-pill.weak {{ background: #eef2f6; color: #5a6472; }} /* P3 灰 */
   /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
   .sector-rank {{
     width: 22px; height: 22px; border-radius: 50%;
