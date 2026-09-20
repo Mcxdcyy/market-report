@@ -4072,8 +4072,8 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-mark {{
     position: absolute; left: 0; right: 0; height: 0;
-    /* 实线刻度，浅蓝；与图表分隔线（var(--border) 深灰实线）区分 */
-    border-top: 1px solid rgba(10, 132, 255, 0.35);
+    /* 浅灰实线刻度，弱于柱色、异于图表分隔线 */
+    border-top: 1px solid rgba(60, 60, 67, 0.18);
     pointer-events: none; z-index: 1;
   }}
   .fund-mark-50 {{ bottom: 50%; }}
@@ -6251,7 +6251,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
         "柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。"
-        "柱图内 50%、100% 各一条蓝色实线刻度（与图表分隔线区分）。"
+        "柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
