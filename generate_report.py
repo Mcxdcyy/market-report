@@ -3622,7 +3622,6 @@ def render_html(ctx: dict) -> str:
         sector_block = f'<div class="sector-list">{sector_cards}</div>'
     else:
         sector_block = '<div class="news-empty">暂无板块数据，请在 market_news.json 填写 top_sectors</div>'
-    sector_summary = news.get("sector_summary", "")
     post_summary = news.get("post_summary", "")
     post_block = post_close_html(news["post_close"])
 
@@ -4685,7 +4684,6 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
     {sector_block}
-    {f'<div class="module-summary">{sector_summary}</div>' if sector_summary else ''}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
@@ -6342,15 +6340,12 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         except json.JSONDecodeError:
             news_raw = {}
     if market_news["has_data"]:
-        n_sec = len(market_news["top_sectors"])
         n_post = len(market_news["post_close"])
         st = market_news.get("curate_stats") or {}
         pool_n = st.get("pool", n_post)
-        zt = sum(int(s.get("count") or 0) for s in market_news["top_sectors"])
-        mode = "偏弱" if env_weak else "尚可"
-        market_news["sector_summary"] = f"展示板块涨停合计 {zt} 家 · 展示 {n_sec} 项"
+        market_news["sector_summary"] = ""
         market_news["post_summary"] = (
-            f"候选池 {pool_n} 条 → 精选 {n_post} 条（环境{mode}）"
+            f"候选池 {pool_n} 条 → 精选 {n_post} 条" if pool_n or n_post else ""
         )
     else:
         market_news["sector_summary"] = ""
