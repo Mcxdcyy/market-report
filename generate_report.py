@@ -4340,14 +4340,14 @@ def render_html(ctx: dict) -> str:
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 12px; line-height: 1.55; color: var(--text);
   }}
-  /* 图表结论条：与上下分隔线、模块底边距统一为 14px */
+  /* 图表结论条：上分隔线→条、条→下分隔线、条→模块底 均为 14px */
   .vol-mkt-sum-wrap {{
     margin-top: 14px;
     padding-top: 14px;
-    padding-bottom: 0;
+    padding-bottom: 14px;
     border-top: 1px solid var(--border);
   }}
-  /* 父级 flex/grid 的 gap 会叠在 margin 上，补齐到合计 14px */
+  /* 父级 flex/grid 的 gap 会叠在 margin 上，补齐到合计 14px（上文→上分隔线） */
   .vol20-wrap > .vol-mkt-sum-wrap,
   .ts-cnt-wrap > .vol-mkt-sum-wrap,
   .chase-chart > .vol-mkt-sum-wrap {{
@@ -4356,15 +4356,26 @@ def render_html(ctx: dict) -> str:
   .chase-grid > .vol-mkt-sum-wrap {{
     margin-top: 0; /* + gap 14 → 14 */
   }}
-  /* 结论条下方到下一条分隔线 = 14px（由下一图 margin-top / 模块 padding 承担） */
   .chase-chart:has(.vol-mkt-sum-wrap) {{
     padding-bottom: 0;
   }}
   .chase-group:has(.vol-mkt-sum-wrap) {{
     margin-bottom: 0;
   }}
-  .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart {{
-    margin-top: 14px;
+  /* 下一方图自带 margin-top 会叠出双倍，改为由本条 padding-bottom 独占 14px */
+  .vol-mkt-sum-wrap + .vol20-wrap,
+  .vol-mkt-sum-wrap + .ts-cnt-wrap,
+  .vol-mkt-sum-wrap + .ts-chart,
+  .vol-mkt-sum-wrap + .ts-amt-chart,
+  .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-cnt-wrap,
+  .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-chart,
+  .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart,
+  .chase-group:has(.vol-mkt-sum-wrap) + .vol20-wrap {{
+    margin-top: 0;
+  }}
+  /* 模块末条：用本条 padding-bottom 充当底距，去掉 section 底 padding 避免叠成 28 */
+  .section:has(> .vol-mkt-sum-wrap:last-child) {{
+    padding-bottom: 0;
   }}
   .vol-mkt-sum {{
     margin-top: 0; padding: 14px 16px;
@@ -4602,7 +4613,7 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; margin-top: 10px; }}
-    .vol-mkt-sum-wrap {{ margin-top: 14px; padding-top: 14px; }}
+    .vol-mkt-sum-wrap {{ margin-top: 14px; padding-top: 14px; padding-bottom: 14px; }}
     .vol20-wrap > .vol-mkt-sum-wrap,
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
