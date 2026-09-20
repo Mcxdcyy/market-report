@@ -4338,9 +4338,6 @@ def render_html(ctx: dict) -> str:
     flex-shrink: 0; text-align: right;
   }}
   .sector-priority-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
-  .sector-priority-pill.ok {{ background: #ffebee; color: #c62828; }}   /* P1 红 */
-  .sector-priority-pill.warn {{ background: #fff3e0; color: #ef6c00; }} /* P2 橙 */
-  .sector-priority-pill.weak {{ background: #eef2f6; color: #5a6472; }} /* P3 灰 */
   /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
   .sector-rank {{
     width: 22px; height: 22px; border-radius: 50%;
@@ -4477,6 +4474,10 @@ def render_html(ctx: dict) -> str:
   .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
   .pill.bad {{ background: var(--bad-bg); color: #c41e16; }}
   .pill.weak {{ background: #eef2f6; color: #5a6472; }}
+  /* 涨停板块事件优先级：须压过通用 .pill.ok 绿 */
+  .pill.sector-priority-pill.ok {{ background: #ffebee; color: #c62828; }}   /* P1 红 */
+  .pill.sector-priority-pill.warn {{ background: #fff3e0; color: #ef6c00; }} /* P2 橙 */
+  .pill.sector-priority-pill.weak {{ background: #eef2f6; color: #5a6472; }} /* P3 灰 */
 
   .footer {{
     text-align: center; color: var(--muted); font-size: 11px;

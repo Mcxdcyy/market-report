@@ -761,9 +761,6 @@
     flex-shrink: 0; text-align: right;
   }
   .sector-priority-pill { font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }
-  .sector-priority-pill.ok { background: #ffebee; color: #c62828; }   /* P1 红 */
-  .sector-priority-pill.warn { background: #fff3e0; color: #ef6c00; } /* P2 橙 */
-  .sector-priority-pill.weak { background: #eef2f6; color: #5a6472; } /* P3 灰 */
   /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
   .sector-rank {
     width: 22px; height: 22px; border-radius: 50%;
@@ -900,6 +897,10 @@
   .pill.warn { background: var(--warn-bg); color: #b25000; }
   .pill.bad { background: var(--bad-bg); color: #c41e16; }
   .pill.weak { background: #eef2f6; color: #5a6472; }
+  /* 涨停板块事件优先级：须压过通用 .pill.ok 绿 */
+  .pill.sector-priority-pill.ok { background: #ffebee; color: #c62828; }   /* P1 红 */
+  .pill.sector-priority-pill.warn { background: #fff3e0; color: #ef6c00; } /* P2 橙 */
+  .pill.sector-priority-pill.weak { background: #eef2f6; color: #5a6472; } /* P3 灰 */
 
   .footer {
     text-align: center; color: var(--muted); font-size: 11px;
@@ -4031,7 +4032,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-20 15:41</div>
+  <div class="footer">生成于 2026-09-20 15:44</div>
 </div>
 </body>
 </html>
