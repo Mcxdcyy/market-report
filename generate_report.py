@@ -3825,11 +3825,13 @@ def render_html(ctx: dict) -> str:
   #sec-env .callout.bad {{ background: #e8f5e9; border-color: #34C759; }}
 
   /* ── 趋势强度（个股五条件占比）── */
+  /* 强趋势-次日承接 / 近30日强趋势占比：与近30日成交金额同系（顶部分隔线，无边框底色） */
   .ts-cnt-wrap {{
-    margin-bottom: 12px; padding: 14px 14px 12px;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: #fafafa;
+    margin-top: 14px; padding-top: 12px; margin-bottom: 0;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
   }}
+  .ts-cnt-wrap .ts-chart-head {{ margin-bottom: 0; }}
   .ts-cnt-chart {{
     width: 100%; overflow: visible;
   }}
@@ -3879,9 +3881,9 @@ def render_html(ctx: dict) -> str:
     display: block; left: auto; right: 0; transform: none;
     color: var(--accent); font-weight: 700;
   }}
-  /* 强趋势-次日承接：与近30日强趋势占比同卡片壳；柱为相对近200日均值的零轴红绿柱；近120日 */
+  /* 强趋势-次日承接：柱为相对近200日均值的零轴红绿柱；近120日 */
   .ts-cnt-wrap .chart-tags {{
-    margin-top: 10px;
+    margin-top: 0;
   }}
   .ts-hold-bars {{
     display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
@@ -4984,7 +4986,7 @@ def _render_ts_hold_bars_html(
     """强趋势-次日承接柱图（近120日）：柱高=近4日均值；零轴=近200日均值（上红下绿）。
 
     meta「今日」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
-    卡片壳与「近30日强趋势占比」统一。
+    外壳与「近30日强趋势占比」、近30日成交金额同系（无边框底色）。
     """
     if not series:
         return ""
