@@ -5307,8 +5307,8 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 强趋势-次日承接在「近30日强趋势占比」上方
-    return f"{hold_chart}{count_chart}{chart}{amt_chart}{note_html}"
+    # 「近30日强趋势占比」在上，「强趋势-次日承接」在下
+    return f"{count_chart}{hold_chart}{chart}{amt_chart}{note_html}"
 
 
 def load_chase_sentiment_block(
