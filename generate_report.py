@@ -3933,9 +3933,8 @@ def render_html(ctx: dict) -> str:
   }}
 
   .ts-chart {{
-    margin-top: 14px; margin-bottom: 12px; padding: 14px 14px 12px;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: #fafafa;
+    margin-top: 14px; padding-top: 12px; margin-bottom: 0;
+    border-top: 1px solid var(--border);
   }}
   .ts-chart-head {{
     display: flex; align-items: baseline; justify-content: space-between;
@@ -3991,9 +3990,8 @@ def render_html(ctx: dict) -> str:
 
   /* 符合条件个股 · 成交额分档（100% 堆叠） */
   .ts-amt-chart {{
-    margin-top: 14px; padding: 14px 14px 12px;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: #fff;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--border);
   }}
   .ts-amt-legend {{
     display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
