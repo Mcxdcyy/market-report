@@ -978,7 +978,11 @@ def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
         text = "大周期缩量，小周期增量，谨慎做多。"
     else:
         text = "资金可能撤退，冲高先减仓，卖出后别开新仓。（等次日看）"
-    return f'<div class="vol20-note">{text}</div>'
+    return (
+        f'<div class="vol-mkt-sum-wrap">'
+        f'<div class="vol20-note vol-mkt-sum">{text}</div>'
+        f"</div>"
+    )
 
 
 def build_vol_bars_from_amounts(
@@ -4329,6 +4333,15 @@ def render_html(ctx: dict) -> str:
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 12px; line-height: 1.55; color: var(--text);
   }}
+  /* 大盘环境模块结论：同系浅蓝条，拉开与上方图表的间距 */
+  .vol-mkt-sum-wrap {{
+    margin-top: 18px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }}
+  .vol-mkt-sum {{
+    margin-top: 0; padding: 14px 16px;
+    font-size: 14px; line-height: 1.6; font-weight: 500;
+  }}
 
   /* ── 涨停板块 ── */
   .sector-list {{ display: flex; flex-direction: column; gap: 10px; }}
@@ -4545,6 +4558,8 @@ def render_html(ctx: dict) -> str:
     .vol20-title {{ font-size: 14px; }}
     .vol20-meta {{ font-size: 12px; }}
     .vol20-note {{ font-size: 14px; margin-top: 10px; }}
+    .vol-mkt-sum-wrap {{ margin-top: 16px; padding-top: 14px; }}
+    .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
     .chase-bars {{ height: 110px; gap: 1px; }}
     .chase-bar {{ width: 85%; max-width: none; }}
