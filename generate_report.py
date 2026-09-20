@@ -4722,7 +4722,7 @@ def render_html(ctx: dict) -> str:
     {fund_recognition_html}
   </div>
 
-  <div class="footer">不依赖大盘数据.numbers · 生成于 {ctx['generated']}</div>
+  <div class="footer">生成于 {ctx['generated']}</div>
 </div>
 </body>
 </html>"""
