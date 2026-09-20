@@ -5198,7 +5198,7 @@ def render_trend_strength_html(block: dict) -> str:
         scale_note += "（默认）"
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">强趋势占比</span>
+      <span class="ts-chart-title">强趋势-结构占比</span>
       <span class="ts-chart-meta">{scale_note} · 竖线=近200日均值</span>
     </div>
     {"".join(hbars)}
@@ -5237,7 +5237,7 @@ def render_trend_strength_html(block: dict) -> str:
             )
         amt_chart = f'''<div class="ts-amt-chart">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">强趋势股成交额结构</span>
+      <span class="ts-chart-title">强趋势-成交额结构</span>
     </div>
     <div class="ts-amt-legend">
       <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
@@ -5307,8 +5307,8 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 「近30日强趋势占比」在上，「强趋势-次日承接」在下
-    return f"{count_chart}{hold_chart}{chart}{amt_chart}{note_html}"
+    # 「强趋势-次日承接」在上，「近30日强趋势占比」在下
+    return f"{hold_chart}{count_chart}{chart}{amt_chart}{note_html}"
 
 
 def load_chase_sentiment_block(
