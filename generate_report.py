@@ -5227,7 +5227,7 @@ def render_trend_strength_html(block: dict) -> str:
     chart = f'''<div class="ts-chart">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势-结构占比</span>
-      <span class="ts-chart-meta">{scale_note} · 竖线=近200日均值</span>
+      <span class="ts-chart-meta">{scale_note}</span>
     </div>
     {"".join(hbars)}
   </div>'''
