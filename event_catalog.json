@@ -1,32 +1,6 @@
 [
   {
     "month": 9,
-    "day": 18,
-    "dot": "18",
-    "label": "9/18",
-    "title": "恒生科技指数扩容与改组修订意见咨询截止",
-    "short": "恒生科技",
-    "brief": "恒生科技指数扩容与指数编制规则征求意见结束，后续关注正式方案与成分股调整。",
-    "hot": true,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-09-20"
-  },
-  {
-    "month": 9,
-    "day": 20,
-    "dot": "20",
-    "label": "9/20",
-    "title": "国务院关于修改《住房公积金管理条例》的决定正式实施",
-    "short": "公积金条例",
-    "brief": "《住房公积金管理条例》修订决定施行，关注缴存、提取与使用规则变化。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-09-20"
-  },
-  {
-    "month": 9,
     "day": 23,
     "dot": "机",
     "label": "9/23",
@@ -36,7 +10,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-09-20"
+    "fetched_at": "2026-09-21"
   },
   {
     "month": 9,
@@ -49,7 +23,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-20"
+    "fetched_at": "2026-09-21"
   },
   {
     "month": 10,
@@ -62,6 +36,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-20"
+    "fetched_at": "2026-09-21"
   }
 ]
