@@ -983,7 +983,7 @@ def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
     d30 = vol30[-1].get("tag") == "up"
     d120 = vol120[-1].get("tag") == "up"
     if d30 and d120:
-        text = "增量周期，主观做多。"
+        text = "增量周期：主观做多。"
     elif (not d30) and (not d120):
         text = "缩量周期、资金撤退。——休息守住，别亏就行。后面增量周期会给机会。"
     elif d30 and (not d120):
