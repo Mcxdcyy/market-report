@@ -172,7 +172,7 @@ def is_limit_down(code: str, name: str, pct: float | None, close: float | None, 
     return False
 
 
-def fetch_universe() -> list[dict]:
+def _fetch_universe_eastmoney() -> list[dict]:
     """东财 clist 全 A（含京），分页取齐。"""
     fields = "f12,f13,f14,f2,f3,f6,f18,f26"
     stocks: list[dict] = []
@@ -236,6 +236,86 @@ def fetch_universe() -> list[dict]:
         pn += 1
         if pn > 120:
             break
+    return stocks
+
+
+def _fetch_universe_sina() -> list[dict]:
+    """新浪 Market_Center hs_a 兜底（含北交所）；无上市日，靠 K 线根数过滤新股。"""
+    stocks: list[dict] = []
+    page = 1
+    while page <= 120:
+        url = (
+            "https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/"
+            f"Market_Center.getHQNodeData?page={page}&num=80&sort=symbol&asc=1&node=hs_a"
+        )
+        req = urllib.request.Request(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                "Referer": "https://finance.sina.com.cn/",
+            },
+        )
+        last_err: Exception | None = None
+        raw = None
+        for attempt in range(3):
+            try:
+                with _opener().open(req, timeout=25) as resp:
+                    raw = resp.read().decode()
+                break
+            except Exception as exc:  # noqa: BLE001
+                last_err = exc
+                time.sleep(0.4 * (attempt + 1))
+        if raw is None:
+            raise RuntimeError(f"新浪股票列表拉取失败: {last_err}")
+        if not raw or raw in ("null", "[]"):
+            break
+        rows = json.loads(raw)
+        if not rows:
+            break
+        for row in rows:
+            code = str(row.get("code") or "").zfill(6)
+            name = str(row.get("name") or "")
+            if not code or not name or "退" in name:
+                continue
+            sym = str(row.get("symbol") or "")
+            if is_bj_code(code) or sym.startswith("bj"):
+                market = 0
+            elif sym.startswith("sh") or code.startswith(("6", "5", "9")):
+                market = 1
+            else:
+                market = 0
+            stocks.append(
+                {
+                    "code": code,
+                    "name": name,
+                    "market": market,
+                    "close": _to_float(row.get("trade")),
+                    "pct": _to_float(row.get("changepercent")),
+                    "amount": _to_float(row.get("amount")),
+                    "preclose": _to_float(row.get("settlement")),
+                    "list_date": None,
+                    "bucket": classify_bucket(code, name),
+                }
+            )
+        if len(rows) < 80:
+            break
+        page += 1
+    return stocks
+
+
+def fetch_universe() -> list[dict]:
+    """全 A 股票列表：优先东财 clist，失败则新浪 hs_a 兜底。"""
+    stocks: list[dict] = []
+    last_err: Exception | None = None
+    try:
+        stocks = _fetch_universe_eastmoney()
+    except Exception as exc:  # noqa: BLE001
+        last_err = exc
+        try:
+            print(f"[trend] 东财列表失败，改用新浪兜底：{exc}")
+            stocks = _fetch_universe_sina()
+        except Exception as exc2:  # noqa: BLE001
+            raise RuntimeError(f"股票列表拉取失败: eastmoney={last_err}; sina={exc2}") from exc2
     # 去重
     seen: set[str] = set()
     out: list[dict] = []
@@ -244,6 +324,8 @@ def fetch_universe() -> list[dict]:
             continue
         seen.add(s["code"])
         out.append(s)
+    if not out:
+        raise RuntimeError(f"股票列表为空: {last_err}")
     return out
 
 
