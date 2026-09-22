@@ -5633,7 +5633,7 @@ def _render_chase_count_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """追高活跃度柱图：柱高为近2日合计家数均值；以近200日均值为零轴（均值上红 / 均值下绿）。
+    """追高活跃度柱图：柱高为近5日合计家数均值；以近200日均值为零轴（均值上红 / 均值下绿）。
 
     图下方标签（同近30日成交金额）：近5日**当日原始家数**均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
     纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶，避免压扁其余交易日。
@@ -5720,7 +5720,7 @@ def _render_chase_count_chart(
             n_today = row.get("n_raw")
             tip_today = f" · 当日{int(n_today)}家" if n_today is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}家{tip_today}{tip_mean}{tip_clip}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近5日均{val_lab}家{tip_today}{tip_mean}{tip_clip}">
       <div class="chase-val{" " + tag if tag else ""}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -5736,10 +5736,10 @@ def _render_chase_count_chart(
         latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
-    meta_txt = f"2日均值 · 今日 {latest_lab}"
+    meta_txt = f"5日均值 · 今日 {latest_lab}"
 
     # 近5日**当日原始家数**均值 vs 近200日均值 → 活跃周期 / 不活跃周期
-    # （与「今日趋势承接」一致：用近五日原始日值，不是五个近2日均值再平均）
+    # （与「今日趋势承接」一致：用近五日原始日值，不是五个近5日均值柱高再平均）
     act_tags_html = ""
     if baseline is not None:
         last5: list[float] = []
@@ -5783,9 +5783,11 @@ def _render_chase_count_chart(
 def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
     """主板+创板追高数量按日相加 → 追高活跃度序列与近200日均值。
 
-    柱高 value = 近2日合计原始家数均值（当日与前一交易日）；n_raw = 当日合计原始家数。
+    柱高 value = 近**5**日合计原始家数均值（含当日，不足5日按已有日数平均）；
+    n_raw = 当日合计原始家数。
     近200日均值仍按**当日原始家数**（与活跃周期标签口径一致）。
     """
+    bar_days = 5
     main_m = ((groups.get("main") or {}).get("metrics") or {}).get("count") or {}
     cyb_m = ((groups.get("cyb") or {}).get("metrics") or {}).get("count") or {}
     main_ser = main_m.get("series") or []
@@ -5822,17 +5824,19 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
         n = int(row.get("n") or 0) + int(other.get("n") or 0)
         merged.append({"date": ds, "n": n, "n_raw": n_raw})
 
-    # 柱高：近2日原始家数均值
+    # 柱高：近5日原始家数均值（含当日，不足按已有日数平均）
     out: list[dict] = []
     for i, row in enumerate(merged):
-        today = row.get("n_raw")
-        prev = merged[i - 1].get("n_raw") if i > 0 else None
-        if today is None:
-            val = None
-        elif prev is None:
-            val = float(today)
-        else:
-            val = round((float(today) + float(prev)) / 2.0, 1)
+        window: list[float] = []
+        for k in range(bar_days):
+            j = i - k
+            if j < 0:
+                break
+            raw = merged[j].get("n_raw")
+            if raw is None:
+                continue
+            window.append(float(raw))
+        val = round(sum(window) / len(window), 1) if window else None
         out.append(
             {
                 "date": row["date"],
