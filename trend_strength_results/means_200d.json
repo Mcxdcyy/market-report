@@ -1,31 +1,31 @@
 {
-  "as_of": "2026-09-22",
-  "start": "2025-11-28",
-  "end": "2026-09-22",
+  "as_of": "2026-09-23",
+  "start": "2025-12-01",
+  "end": "2026-09-23",
   "n_days": 200,
   "means": {
     "all": {
       "name": "全场",
-      "mean_ratio_pct": 4.71,
-      "mean_trend_count": 257.3,
+      "mean_ratio_pct": 4.73,
+      "mean_trend_count": 258.9,
       "n_days": 200
     },
     "main": {
       "name": "主板",
-      "mean_ratio_pct": 4.53,
-      "mean_trend_count": 137.6,
+      "mean_ratio_pct": 4.55,
+      "mean_trend_count": 138.1,
       "n_days": 200
     },
     "cyb": {
       "name": "创业板",
-      "mean_ratio_pct": 5.13,
-      "mean_trend_count": 69.0,
+      "mean_ratio_pct": 5.17,
+      "mean_trend_count": 69.5,
       "n_days": 200
     },
     "kcb": {
       "name": "科创板",
-      "mean_ratio_pct": 6.27,
-      "mean_trend_count": 36.9,
+      "mean_ratio_pct": 6.35,
+      "mean_trend_count": 37.3,
       "n_days": 200
     },
     "bj": {
@@ -36,10 +36,10 @@
     },
     "st": {
       "name": "ST",
-      "mean_ratio_pct": 3.99,
+      "mean_ratio_pct": 4.0,
       "mean_trend_count": 8.1,
       "n_days": 200
     }
   },
-  "generated": "2026-09-22 16:44:16"
+  "generated": "2026-09-23 16:21:29"
 }
