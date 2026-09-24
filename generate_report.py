@@ -5432,14 +5432,6 @@ def render_index_outlook_html(block: dict) -> str:
 
     d0 = days[0][5:].replace("-", "/") if days else ""
     d1 = days[-1][5:].replace("-", "/") if days else ""
-    note = (
-        '<div class="idx-note">'
-        "近10个交易日对比（日期自上而下，最下为最新日）；下跌通道=绿，非下跌填「-」。"
-        "口径与自选池下跌预警一致：60分钟K线；"
-        "连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；"
-        "算不出MA20时只看第1条。"
-        "</div>"
-    )
     return (
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
@@ -5452,7 +5444,6 @@ def render_index_outlook_html(block: dict) -> str:
         f'<tbody>{"".join(body_rows)}</tbody>'
         "</table>"
         "</div>"
-        f"{note}"
         "</div>"
     )
 
