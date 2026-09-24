@@ -836,69 +836,56 @@
     border-radius: 0;
   }
 
-  /* ── 指数大局观（大盘环境顶部 · 近10日网格对比） ── */
+  /* ── 指数大局观（大盘环境顶部 · 近10日对比表） ── */
   .idx-outlook-wrap {
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 12px;
   }
   .idx-outlook-scroll {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
   .idx-outlook-table {
-    width: 100%;
-    min-width: 520px;
-    border-collapse: collapse;
-    table-layout: fixed;
+    width: 100%; min-width: 480px; border-collapse: separate; border-spacing: 0;
     font-variant-numeric: tabular-nums;
-    border: 1px solid rgba(0,0,0,.12);
   }
   .idx-outlook-table th,
   .idx-outlook-table td {
-    padding: 9px 6px;
-    text-align: center;
-    vertical-align: middle;
-    border: 1px solid rgba(0,0,0,.10);
-    font-size: 12px;
-    line-height: 1.3;
-    background: #fff;
+    padding: 8px 8px; text-align: center; vertical-align: middle;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    font-size: 12px; line-height: 1.3;
   }
   .idx-outlook-table thead th {
     font-size: 12px; font-weight: 700; color: var(--text);
-    background: #f2f3f5;
+    background: #fafafa; border-bottom: 1px solid rgba(0,0,0,.08);
     white-space: nowrap;
-    padding: 10px 6px;
   }
   .idx-outlook-table thead th.idx-corner {
-    text-align: left; padding-left: 12px;
-    width: 68px; color: var(--sub);
+    text-align: left; padding-left: 10px; color: var(--sub); font-weight: 700;
   }
   .idx-outlook-table tbody th {
-    text-align: left; padding-left: 12px;
-    width: 68px; font-weight: 650; color: var(--sub);
-    white-space: nowrap; background: #fafafa;
+    text-align: left; padding-left: 10px; font-weight: 650; color: var(--muted);
+    white-space: nowrap; background: #fff; position: sticky; left: 0; z-index: 1;
+    box-shadow: 4px 0 8px -6px rgba(0,0,0,.12);
+    font-variant-numeric: tabular-nums;
   }
   .idx-outlook-table tbody tr.latest th {
     color: var(--text); font-weight: 800;
-    background: #eef5ff;
   }
+  .idx-outlook-table tbody tr:last-child th,
+  .idx-outlook-table tbody tr:last-child td { border-bottom: none; }
   .idx-outlook-table td.down {
-    background: #e8f5e9;
-    color: #1b7a36;
-    font-weight: 700;
+    background: #e8f5e9; color: #2e7d32; font-weight: 700;
+    border-radius: 6px;
   }
   .idx-outlook-table td.flat {
-    background: #fff;
-    color: #b0b0b5;
-    font-weight: 500;
+    color: var(--muted); font-weight: 500;
   }
-  .idx-outlook-table tbody tr.latest td.down {
-    background: #d8efdd;
+  .idx-outlook-table tr.latest td {
+    box-shadow: inset 0 0 0 1px rgba(10,132,255,.14);
   }
-  .idx-outlook-table tbody tr.latest td.flat {
-    background: #f5f9ff;
+  .idx-outlook-table tr.latest td.down {
+    box-shadow: inset 0 0 0 1px rgba(46,125,50,.28);
   }
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -1056,10 +1043,10 @@
     .idx-note,
     .module-summary { font-size: 13px; }
     .idx-outlook-table th,
-    .idx-outlook-table td { font-size: 12px; padding: 10px 4px; }
+    .idx-outlook-table td { font-size: 12px; padding: 9px 6px; }
     .idx-outlook-table thead th { font-size: 12px; }
-    .idx-outlook-table tbody th { font-size: 13px; padding-left: 10px; }
-    .idx-outlook-table { min-width: 480px; }
+    .idx-outlook-table tbody th { font-size: 13px; }
+    .idx-outlook-table { min-width: 520px; }
     .ts-cnt-bars { height: 110px; gap: 1px; }
     .ts-cnt-val { display: none !important; }
     .ts-cnt-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
@@ -1136,7 +1123,7 @@
       <div class="section-title">大盘环境</div>
       <div class="section-sub">2026-09-24 · 量能</div>
     </div>
-    <div class="idx-outlook-wrap"><div class="vol20-head"><span class="vol20-title">指数大局观</span><span class="vol20-meta">近10日 · 09/11–09/24</span></div><div class="idx-outlook-scroll"><table class="idx-outlook-table"><thead><tr><th class="idx-corner">日期</th><th>上证指数</th><th>深成指</th><th>创业板指数</th><th>科创板指数</th></tr></thead><tbody><tr><th scope="row">09/11</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td></tr><tr><th scope="row">09/14</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td></tr><tr><th scope="row">09/15</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="flat">-</td></tr><tr><th scope="row">09/16</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/17</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/18</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/21</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/22</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/23</th><td class="flat">-</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="flat">-</td></tr><tr class="latest"><th scope="row">09/24</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td></tr></tbody></table></div><div class="idx-note">近10个交易日对比（日期自上而下，最下为最新日）；绿格=下跌通道，非下跌填「-」。口径与自选池下跌预警一致：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。</div></div><div class="vol20-wrap">
+    <div class="idx-outlook-wrap"><div class="vol20-head"><span class="vol20-title">指数大局观</span><span class="vol20-meta">近10日 · 09/11–09/24</span></div><div class="idx-outlook-scroll"><table class="idx-outlook-table"><thead><tr><th class="idx-corner">日期</th><th>上证指数</th><th>深成指</th><th>创业板指数</th><th>科创板指数</th></tr></thead><tbody><tr><th scope="row">09/11</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td></tr><tr><th scope="row">09/14</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td></tr><tr><th scope="row">09/15</th><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="flat">-</td></tr><tr><th scope="row">09/16</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/17</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/18</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/21</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/22</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">09/23</th><td class="flat">-</td><td class="down">下跌通道</td><td class="down">下跌通道</td><td class="flat">-</td></tr><tr class="latest"><th scope="row" class="latest">09/24</th><td class="down latest">下跌通道</td><td class="down latest">下跌通道</td><td class="down latest">下跌通道</td><td class="down latest">下跌通道</td></tr></tbody></table></div><div class="idx-note">近10个交易日对比（日期自上而下，最下为最新日）；下跌通道=绿，非下跌填「-」。口径与自选池下跌预警一致：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。</div></div><div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
       <span class="vol20-meta">08/14–09/24 · 今日 1.65 万亿</span>
@@ -4072,7 +4059,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-24 17:59</div>
+  <div class="footer">生成于 2026-09-24 18:01</div>
 </div>
 </body>
 </html>
