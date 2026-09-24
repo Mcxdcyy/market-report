@@ -4423,18 +4423,59 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
   }}
   .idx-outlook-list {{
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 8px;
   }}
   .idx-outlook-row {{
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; min-height: 28px;
+    gap: 12px; padding: 11px 12px 11px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    border-left-width: 3px;
+    position: relative;
   }}
+  .idx-outlook-row.down {{
+    background: linear-gradient(90deg, rgba(52,199,89,.10), rgba(52,199,89,.03) 42%, #fafafa);
+    border-color: rgba(52,199,89,.14);
+    border-left-color: #34C759;
+  }}
+  .idx-outlook-row.ok {{
+    background: linear-gradient(90deg, rgba(229,57,53,.10), rgba(229,57,53,.03) 42%, #fafafa);
+    border-color: rgba(229,57,53,.14);
+    border-left-color: #E53935;
+  }}
+  .idx-outlook-row.warn {{
+    background: linear-gradient(90deg, rgba(255,149,0,.10), rgba(255,149,0,.03) 42%, #fafafa);
+    border-color: rgba(255,149,0,.16);
+    border-left-color: #FF9500;
+  }}
+  .idx-outlook-main {{
+    display: flex; align-items: center; gap: 10px; min-width: 0;
+  }}
+  .idx-outlook-dot {{
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(0,0,0,.04);
+  }}
+  .idx-outlook-row.down .idx-outlook-dot {{ background: #34C759; box-shadow: 0 0 0 3px rgba(52,199,89,.18); }}
+  .idx-outlook-row.ok .idx-outlook-dot {{ background: #E53935; box-shadow: 0 0 0 3px rgba(229,57,53,.18); }}
+  .idx-outlook-row.warn .idx-outlook-dot {{ background: #FF9500; box-shadow: 0 0 0 3px rgba(255,149,0,.18); }}
+  .idx-outlook-text {{ min-width: 0; display: flex; flex-direction: column; gap: 2px; }}
   .idx-outlook-name {{
-    font-size: 14px; font-weight: 650; color: var(--text); line-height: 1.4;
+    font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.35;
   }}
+  .idx-outlook-sub {{
+    font-size: 11px; font-weight: 500; color: var(--muted); line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }}
+  /* A 股惯例：下跌通道绿 / 非下跌通道红（压过通用 .pill.bad 红） */
+  .idx-outlook-wrap .pill {{
+    font-size: 12px; padding: 4px 11px; letter-spacing: .02em;
+  }}
+  .idx-outlook-wrap .pill.ok {{ background: #ffebee; color: #c62828; }}
+  .idx-outlook-wrap .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
+  .idx-outlook-wrap .pill.warn {{ background: #fff3e0; color: #ef6c00; }}
 
   /* ── 未来2周 · 事件与方向 ── */
   .fwd-block-label {{
@@ -4590,7 +4631,10 @@ def render_html(ctx: dict) -> str:
     .fund-note,
     .idx-note,
     .module-summary {{ font-size: 13px; }}
-    .idx-outlook-name {{ font-size: 15px; }}
+    .idx-outlook-name {{ font-size: 16px; }}
+    .idx-outlook-sub {{ font-size: 12px; }}
+    .idx-outlook-wrap .pill {{ font-size: 13px; }}
+    .idx-outlook-row {{ padding: 12px 12px 12px 14px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
@@ -5358,9 +5402,36 @@ def render_index_outlook_html(block: dict) -> str:
         name = it.get("name") or "—"
         label = it.get("label") or "—"
         pill = it.get("pill") or "warn"
+        status = it.get("status") or "unknown"
+        row_cls = {"down": "down", "ok": "ok"}.get(status, "warn")
+        close = it.get("last_close")
+        if isinstance(close, (int, float)):
+            close_txt = f"{close:,.2f}"
+        else:
+            close_txt = "—"
+        # 命中规则作次级说明，增加层次；未知则只写收盘
+        bits: list[str] = [f"收盘 {close_txt}"]
+        r1 = it.get("rule1_close_below_ma10")
+        r2 = it.get("rule2_high_below_ma20")
+        if status == "down":
+            hit = []
+            if r1:
+                hit.append("收盘&lt;MA10")
+            if r2:
+                hit.append("最高&lt;MA20")
+            if hit:
+                bits.append(" · ".join(hit))
+        elif status == "ok":
+            bits.append("未触发下跌条件")
+        sub = " · ".join(bits)
         rows.append(
-            f'<div class="idx-outlook-row">'
+            f'<div class="idx-outlook-row {row_cls}">'
+            f'<div class="idx-outlook-main">'
+            f'<span class="idx-outlook-dot" aria-hidden="true"></span>'
+            f'<div class="idx-outlook-text">'
             f'<span class="idx-outlook-name">{name}</span>'
+            f'<span class="idx-outlook-sub">{sub}</span>'
+            f"</div></div>"
             f'<span class="pill {pill}">{label}</span>'
             f"</div>"
         )

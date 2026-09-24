@@ -840,18 +840,59 @@
   .idx-outlook-wrap {
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
   }
   .idx-outlook-list {
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 8px;
   }
   .idx-outlook-row {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; min-height: 28px;
+    gap: 12px; padding: 11px 12px 11px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    border-left-width: 3px;
+    position: relative;
   }
+  .idx-outlook-row.down {
+    background: linear-gradient(90deg, rgba(52,199,89,.10), rgba(52,199,89,.03) 42%, #fafafa);
+    border-color: rgba(52,199,89,.14);
+    border-left-color: #34C759;
+  }
+  .idx-outlook-row.ok {
+    background: linear-gradient(90deg, rgba(229,57,53,.10), rgba(229,57,53,.03) 42%, #fafafa);
+    border-color: rgba(229,57,53,.14);
+    border-left-color: #E53935;
+  }
+  .idx-outlook-row.warn {
+    background: linear-gradient(90deg, rgba(255,149,0,.10), rgba(255,149,0,.03) 42%, #fafafa);
+    border-color: rgba(255,149,0,.16);
+    border-left-color: #FF9500;
+  }
+  .idx-outlook-main {
+    display: flex; align-items: center; gap: 10px; min-width: 0;
+  }
+  .idx-outlook-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(0,0,0,.04);
+  }
+  .idx-outlook-row.down .idx-outlook-dot { background: #34C759; box-shadow: 0 0 0 3px rgba(52,199,89,.18); }
+  .idx-outlook-row.ok .idx-outlook-dot { background: #E53935; box-shadow: 0 0 0 3px rgba(229,57,53,.18); }
+  .idx-outlook-row.warn .idx-outlook-dot { background: #FF9500; box-shadow: 0 0 0 3px rgba(255,149,0,.18); }
+  .idx-outlook-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .idx-outlook-name {
-    font-size: 14px; font-weight: 650; color: var(--text); line-height: 1.4;
+    font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.35;
   }
+  .idx-outlook-sub {
+    font-size: 11px; font-weight: 500; color: var(--muted); line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
+  /* A 股惯例：下跌通道绿 / 非下跌通道红（压过通用 .pill.bad 红） */
+  .idx-outlook-wrap .pill {
+    font-size: 12px; padding: 4px 11px; letter-spacing: .02em;
+  }
+  .idx-outlook-wrap .pill.ok { background: #ffebee; color: #c62828; }
+  .idx-outlook-wrap .pill.bad { background: #e8f5e9; color: #2e7d32; }
+  .idx-outlook-wrap .pill.warn { background: #fff3e0; color: #ef6c00; }
 
   /* ── 未来2周 · 事件与方向 ── */
   .fwd-block-label {
@@ -1007,7 +1048,10 @@
     .fund-note,
     .idx-note,
     .module-summary { font-size: 13px; }
-    .idx-outlook-name { font-size: 15px; }
+    .idx-outlook-name { font-size: 16px; }
+    .idx-outlook-sub { font-size: 12px; }
+    .idx-outlook-wrap .pill { font-size: 13px; }
+    .idx-outlook-row { padding: 12px 12px 12px 14px; }
     .ts-cnt-bars { height: 110px; gap: 1px; }
     .ts-cnt-val { display: none !important; }
     .ts-cnt-bar { width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }
@@ -1084,7 +1128,7 @@
       <div class="section-title">大盘环境</div>
       <div class="section-sub">2026-09-24 · 量能</div>
     </div>
-    <div class="idx-outlook-wrap"><div class="vol20-head"><span class="vol20-title">指数大局观</span><span class="vol20-meta">60分钟 · 下跌通道</span></div><div class="idx-outlook-list"><div class="idx-outlook-row"><span class="idx-outlook-name">上证指数</span><span class="pill bad">下跌通道</span></div><div class="idx-outlook-row"><span class="idx-outlook-name">创业板指数</span><span class="pill bad">下跌通道</span></div><div class="idx-outlook-row"><span class="idx-outlook-name">科创板指数</span><span class="pill bad">下跌通道</span></div></div><div class="idx-note">下跌通道（与自选池下跌预警同口径）：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。</div></div><div class="vol20-wrap">
+    <div class="idx-outlook-wrap"><div class="vol20-head"><span class="vol20-title">指数大局观</span><span class="vol20-meta">60分钟 · 下跌通道</span></div><div class="idx-outlook-list"><div class="idx-outlook-row down"><div class="idx-outlook-main"><span class="idx-outlook-dot" aria-hidden="true"></span><div class="idx-outlook-text"><span class="idx-outlook-name">上证指数</span><span class="idx-outlook-sub">收盘 3,888.37 · 收盘&lt;MA10</span></div></div><span class="pill bad">下跌通道</span></div><div class="idx-outlook-row down"><div class="idx-outlook-main"><span class="idx-outlook-dot" aria-hidden="true"></span><div class="idx-outlook-text"><span class="idx-outlook-name">创业板指数</span><span class="idx-outlook-sub">收盘 3,288.95 · 收盘&lt;MA10</span></div></div><span class="pill bad">下跌通道</span></div><div class="idx-outlook-row down"><div class="idx-outlook-main"><span class="idx-outlook-dot" aria-hidden="true"></span><div class="idx-outlook-text"><span class="idx-outlook-name">科创板指数</span><span class="idx-outlook-sub">收盘 1,621.87 · 收盘&lt;MA10</span></div></div><span class="pill bad">下跌通道</span></div></div><div class="idx-note">下跌通道（与自选池下跌预警同口径）：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。</div></div><div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
       <span class="vol20-meta">08/14–09/24 · 今日 1.65 万亿</span>
@@ -4020,7 +4064,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-24 17:01</div>
+  <div class="footer">生成于 2026-09-24 17:07</div>
 </div>
 </body>
 </html>
