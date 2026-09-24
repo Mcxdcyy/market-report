@@ -1,19 +1,6 @@
 [
   {
     "month": 9,
-    "day": 23,
-    "dot": "机",
-    "label": "9/23",
-    "title": "2026年家用服务机器人产业生态技术交流会",
-    "short": "机器人",
-    "brief": "暂无补充说明。",
-    "hot": false,
-    "importance": 2,
-    "source": "wscn",
-    "fetched_at": "2026-09-23"
-  },
-  {
-    "month": 9,
     "day": 30,
     "dot": "30",
     "label": "9/30",
@@ -23,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-23"
+    "fetched_at": "2026-09-24"
   },
   {
     "month": 10,
@@ -36,6 +23,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-23"
+    "fetched_at": "2026-09-24"
   }
 ]
