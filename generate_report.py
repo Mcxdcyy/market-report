@@ -4479,7 +4479,7 @@ def render_html(ctx: dict) -> str:
     box-shadow: inset 0 0 0 1px rgba(10,132,255,.14);
   }}
   .idx-outlook-table tr.latest td.down {{
-    box-shadow: inset 0 0 0 1px rgba(46,125,50,.28);
+    box-shadow: none;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
