@@ -53,6 +53,11 @@ try:
     from chase_sentiment import compute_chase_sentiment
 except ImportError:  # pragma: no cover
     compute_chase_sentiment = None  # type: ignore
+
+try:
+    from index_downtrend import load_index_downtrend
+except ImportError:  # pragma: no cover
+    load_index_downtrend = None  # type: ignore
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
 WSCN_CAL_URL = "https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas"
@@ -3506,9 +3511,10 @@ def render_html(ctx: dict) -> str:
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
     )
-    # 大盘环境：近30日成交金额 + 量能120日-5日均值 + 周期组合总结
+    # 大盘环境：指数大局观 → 近30日成交金额 → 量能120日-5日均值 → 周期组合总结
+    index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = (
-        f"{vol30_html}{vol120_avg5d_html}"
+        f"{index_outlook_html}{vol30_html}{vol120_avg5d_html}"
         f"{_vol_cycle_summary_html(vol20, vol120_avg5d)}"
     )
 
@@ -4401,7 +4407,8 @@ def render_html(ctx: dict) -> str:
   .module-summary,
   .chase-note,
   .ts-note,
-  .fund-note {{
+  .fund-note,
+  .idx-note {{
     margin-top: 14px;
     padding-top: 14px;
     border-top: 1px solid var(--border);
@@ -4410,6 +4417,23 @@ def render_html(ctx: dict) -> str:
     line-height: 1.55;
     background: none;
     border-radius: 0;
+  }}
+
+  /* ── 指数大局观（大盘环境顶部） ── */
+  .idx-outlook-wrap {{
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
+  }}
+  .idx-outlook-list {{
+    display: flex; flex-direction: column; gap: 10px;
+  }}
+  .idx-outlook-row {{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; min-height: 28px;
+  }}
+  .idx-outlook-name {{
+    font-size: 14px; font-weight: 650; color: var(--text); line-height: 1.4;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -4564,7 +4588,9 @@ def render_html(ctx: dict) -> str:
     .chase-note,
     .ts-note,
     .fund-note,
+    .idx-note,
     .module-summary {{ font-size: 13px; }}
+    .idx-outlook-name {{ font-size: 15px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
@@ -5297,6 +5323,64 @@ def render_trend_strength_html(block: dict) -> str:
     )
     # 「强趋势-次日承接」在上，「近30日强趋势占比」在下
     return f"{hold_chart}{count_chart}{chart}{amt_chart}{note_html}"
+
+
+def load_index_downtrend_block(
+    as_of: datetime,
+    latest_dt: datetime | None = None,
+) -> dict:
+    """大盘环境「指数大局观」：最新交易日重算；历史日读缓存。"""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    latest_d = None
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+    if load_index_downtrend is None:
+        return {"as_of": as_of_d.isoformat(), "indices": []}
+    try:
+        return load_index_downtrend(
+            as_of_d,
+            latest=latest_d or as_of_d,
+            force=False,
+            progress=True,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"[index-down] 加载失败: {exc}")
+        return {"as_of": as_of_d.isoformat(), "indices": [], "error": str(exc)}
+
+
+def render_index_outlook_html(block: dict) -> str:
+    """大盘环境顶部：指数大局观（上证 / 创业板 / 科创板 · 下跌通道）。"""
+    items = block.get("indices") or []
+    if not items:
+        return ""
+    rows = []
+    for it in items:
+        name = it.get("name") or "—"
+        label = it.get("label") or "—"
+        pill = it.get("pill") or "warn"
+        rows.append(
+            f'<div class="idx-outlook-row">'
+            f'<span class="idx-outlook-name">{name}</span>'
+            f'<span class="pill {pill}">{label}</span>'
+            f"</div>"
+        )
+    note = (
+        '<div class="idx-note">'
+        "下跌通道（与自选池下跌预警同口径）：60分钟K线；"
+        "连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；"
+        "算不出MA20时只看第1条。"
+        "</div>"
+    )
+    return (
+        '<div class="idx-outlook-wrap">'
+        '<div class="vol20-head">'
+        '<span class="vol20-title">指数大局观</span>'
+        '<span class="vol20-meta">60分钟 · 下跌通道</span>'
+        "</div>"
+        f'<div class="idx-outlook-list">{"".join(rows)}</div>'
+        f"{note}"
+        "</div>"
+    )
 
 
 def load_chase_sentiment_block(
@@ -6371,6 +6455,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         latest_dt = dt
     trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
     chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
+    index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
     fund_range = ""
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
@@ -6416,6 +6501,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "emo": 0,
         "trend_strength": trend_strength,
         "chase_sentiment": chase_sentiment,
+        "index_downtrend": index_downtrend,
         "fund_recognition": fund_recognition,
         "fund_range": fund_range,
     }

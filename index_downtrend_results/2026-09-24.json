@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-24",
+  "note": "下跌通道（与自选池下跌预警同口径）：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。",
+  "fetched": "2026-09-24 17:01:49",
+  "indices": [
+    {
+      "name": "上证指数",
+      "symbol": "sh000001",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": true,
+      "rule2_high_below_ma20": false,
+      "bars": 80,
+      "last_bar": "2026-09-24 15:00:00",
+      "last_close": 3888.374,
+      "error": null
+    },
+    {
+      "name": "创业板指数",
+      "symbol": "sz399006",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": true,
+      "rule2_high_below_ma20": false,
+      "bars": 80,
+      "last_bar": "2026-09-24 15:00:00",
+      "last_close": 3288.948,
+      "error": null
+    },
+    {
+      "name": "科创板指数",
+      "symbol": "sh000688",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": true,
+      "rule2_high_below_ma20": false,
+      "bars": 80,
+      "last_bar": "2026-09-24 15:00:00",
+      "last_close": 1621.872,
+      "error": null
+    }
+  ]
+}
