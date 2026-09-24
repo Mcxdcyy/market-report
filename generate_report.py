@@ -4419,7 +4419,7 @@ def render_html(ctx: dict) -> str:
     border-radius: 0;
   }}
 
-  /* ── 指数大局观（大盘环境顶部 · 近10日对比表） ── */
+  /* ── 指数大局观（大盘环境顶部 · 近10日网格对比） ── */
   .idx-outlook-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
@@ -4429,102 +4429,59 @@ def render_html(ctx: dict) -> str:
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    border: 1px solid rgba(0,0,0,.06);
-    border-radius: var(--radius-sm);
-    background: #fff;
   }}
   .idx-outlook-table {{
     width: 100%;
-    min-width: 420px;
+    min-width: 520px;
     border-collapse: collapse;
     table-layout: fixed;
     font-variant-numeric: tabular-nums;
+    border: 1px solid rgba(0,0,0,.12);
   }}
   .idx-outlook-table th,
   .idx-outlook-table td {{
     padding: 9px 6px;
     text-align: center;
     vertical-align: middle;
-    border-bottom: 1px solid rgba(0,0,0,.045);
+    border: 1px solid rgba(0,0,0,.10);
     font-size: 12px;
-    line-height: 1.25;
+    line-height: 1.3;
+    background: #fff;
   }}
   .idx-outlook-table thead th {{
-    position: sticky; top: 0; z-index: 2;
-    font-size: 11px; font-weight: 650; color: var(--muted);
-    letter-spacing: .04em;
-    background: #f7f8fa;
-    border-bottom: 1px solid rgba(0,0,0,.08);
+    font-size: 12px; font-weight: 700; color: var(--text);
+    background: #f2f3f5;
     white-space: nowrap;
-    padding-top: 11px; padding-bottom: 11px;
+    padding: 10px 6px;
   }}
   .idx-outlook-table thead th.idx-corner {{
-    text-align: left; padding-left: 14px;
-    width: 64px; color: var(--muted); font-weight: 650;
+    text-align: left; padding-left: 12px;
+    width: 68px; color: var(--sub);
   }}
   .idx-outlook-table tbody th {{
-    text-align: left; padding-left: 14px;
-    width: 64px; font-weight: 600; color: var(--sub);
-    white-space: nowrap; background: #fff;
-  }}
-  .idx-outlook-table tbody tr:nth-child(even) th,
-  .idx-outlook-table tbody tr:nth-child(even) td {{
-    background: #fafbfc;
-  }}
-  .idx-outlook-table tbody tr:last-child th,
-  .idx-outlook-table tbody tr:last-child td {{
-    border-bottom: none;
-  }}
-  .idx-outlook-table tbody tr.latest th,
-  .idx-outlook-table tbody tr.latest td {{
-    background: #f3f8ff;
-    border-top: 1px solid rgba(10,132,255,.12);
+    text-align: left; padding-left: 12px;
+    width: 68px; font-weight: 650; color: var(--sub);
+    white-space: nowrap; background: #fafafa;
   }}
   .idx-outlook-table tbody tr.latest th {{
     color: var(--text); font-weight: 800;
+    background: #eef5ff;
   }}
-  .idx-outlook-table tbody tr.latest th::after {{
-    content: "今日";
-    display: inline-block;
-    margin-left: 6px;
-    padding: 1px 5px;
-    border-radius: 4px;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .02em;
-    color: #0a84ff;
-    background: rgba(10,132,255,.1);
-    vertical-align: middle;
-  }}
-  .idx-chip {{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 3.2em;
-    padding: 4px 9px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .02em;
-    line-height: 1.2;
-    white-space: nowrap;
-  }}
-  .idx-chip.down {{
+  .idx-outlook-table td.down {{
     background: #e8f5e9;
     color: #1b7a36;
-    box-shadow: inset 0 0 0 1px rgba(52,199,89,.22);
+    font-weight: 700;
   }}
-  .idx-chip.flat {{
-    min-width: 1.6em;
-    padding: 4px 8px;
-    background: transparent;
-    color: #c7c7cc;
+  .idx-outlook-table td.flat {{
+    background: #fff;
+    color: #b0b0b5;
     font-weight: 500;
-    box-shadow: none;
   }}
-  .idx-outlook-table tbody tr.latest .idx-chip.down {{
-    background: #d7f0dd;
-    box-shadow: inset 0 0 0 1px rgba(46,125,50,.28);
+  .idx-outlook-table tbody tr.latest td.down {{
+    background: #d8efdd;
+  }}
+  .idx-outlook-table tbody tr.latest td.flat {{
+    background: #f5f9ff;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -4682,12 +4639,10 @@ def render_html(ctx: dict) -> str:
     .idx-note,
     .module-summary {{ font-size: 13px; }}
     .idx-outlook-table th,
-    .idx-outlook-table td {{ font-size: 12px; padding: 10px 5px; }}
-    .idx-outlook-table thead th {{ font-size: 11px; }}
-    .idx-outlook-table tbody th {{ font-size: 12px; padding-left: 12px; }}
-    .idx-outlook-table {{ min-width: 400px; }}
-    .idx-chip {{ font-size: 12px; padding: 5px 10px; }}
-    .idx-outlook-table tbody tr.latest th::after {{ font-size: 10px; }}
+    .idx-outlook-table td {{ font-size: 12px; padding: 10px 4px; }}
+    .idx-outlook-table thead th {{ font-size: 12px; }}
+    .idx-outlook-table tbody th {{ font-size: 13px; padding-left: 10px; }}
+    .idx-outlook-table {{ min-width: 480px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
@@ -5446,28 +5401,19 @@ def load_index_downtrend_block(
 
 
 def render_index_outlook_html(block: dict) -> str:
-    """大盘环境顶部：指数大局观 · 近10个交易日下跌通道对比表。
+    """大盘环境顶部：指数大局观 · 近10个交易日下跌通道网格表。
 
-    竖轴=日期（上旧下新），横轴=指数；下跌通道绿 chip，非下跌「-」。
+    竖轴=日期（上旧下新），横轴=指数；下跌通道绿格，非下跌「-」。
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
     if not items or not days:
         return ""
 
-    # 表头用短名，减轻拥挤
-    short_names = {
-        "上证指数": "上证",
-        "深成指": "深成",
-        "创业板指数": "创业板",
-        "科创板指数": "科创",
-    }
     head_cells = ['<th class="idx-corner">日期</th>']
     for it in items:
         name = it.get("name") or "—"
-        short = short_names.get(name, name)
-        title = f' title="{name}"' if short != name else ""
-        head_cells.append(f"<th{title}>{short}</th>")
+        head_cells.append(f"<th>{name}</th>")
 
     series_maps: list[dict[str, dict]] = []
     for it in items:
@@ -5489,18 +5435,16 @@ def render_index_outlook_html(block: dict) -> str:
             if label is None:
                 label = "下跌通道" if status == "down" else "-"
             if status == "down" or label == "下跌通道":
-                tds.append(
-                    '<td><span class="idx-chip down" title="下跌通道">下跌</span></td>'
-                )
+                tds.append('<td class="down">下跌通道</td>')
             else:
-                tds.append('<td><span class="idx-chip flat">-</span></td>')
+                tds.append('<td class="flat">-</td>')
         body_rows.append(f"<tr{row_cls}>{''.join(tds)}</tr>")
 
     d0 = days[0][5:].replace("-", "/") if days else ""
     d1 = days[-1][5:].replace("-", "/") if days else ""
     note = (
         '<div class="idx-note">'
-        "近10个交易日对比（日期自上而下，最下为最新日）；绿标「下跌」=下跌通道，非下跌填「-」。"
+        "近10个交易日对比（日期自上而下，最下为最新日）；绿格=下跌通道，非下跌填「-」。"
         "口径与自选池下跌预警一致：60分钟K线；"
         "连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；"
         "算不出MA20时只看第1条。"
