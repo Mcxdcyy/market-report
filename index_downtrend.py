@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""指数大局观：上证 / 创业板 / 科创50 是否处于下跌通道。
+"""指数大局观：近 10 个交易日 · 上证 / 深成指 / 创业板 / 科创50 下跌通道对比。
 
 口径与自选池「下跌预警」一致（60 分钟 K，收盘价 SMA）：
 
-  满足任意一条 → 下跌通道；都不满足 → 非下跌通道：
+  满足任意一条 → 下跌通道；都不满足 → 非下跌（页面填「-」）：
   1. 最近 5 根均满足 收盘 < MA10
   2. 最近 5 根均满足 最高价 < MA20
 
@@ -26,11 +26,12 @@ from typing import Any
 
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "index_downtrend_results"
-SCHEMA = 1
+SCHEMA = 2
+SERIES_DAYS = 10
 NOTE = (
     "下跌通道（与自选池下跌预警同口径）：60分钟K线；"
     "连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；"
-    "算不出MA20时只看第1条。"
+    "算不出MA20时只看第1条。页面：近10个交易日对比，非下跌填「-」。"
 )
 
 # 展示名 → 新浪代码
@@ -44,7 +45,7 @@ INDICES: tuple[tuple[str, str], ...] = (
 CHECK_BARS = 5
 MA10 = 10
 MA20 = 20
-FETCH_LEN = 80  # 需覆盖 MA20 + 连续5根
+FETCH_LEN = 200  # 覆盖 MA20 缓冲 + 近10日 60分钟K
 
 _CTX = ssl.create_default_context()
 _CTX.check_hostname = False
@@ -128,7 +129,6 @@ def fetch_60m_tencent(symbol: str, *, datalen: int = FETCH_LEN) -> list[dict]:
     m60 = block.get("m60") or []
     rows: list[dict] = []
     for it in m60:
-        # ["202609241500", open, close, high, low, volume, ...]
         if not isinstance(it, (list, tuple)) or len(it) < 5:
             continue
         try:
@@ -160,7 +160,13 @@ def fetch_60m(symbol: str) -> list[dict]:
             rows = fetcher(symbol)
             if rows:
                 return rows
-        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError, OSError) as exc:
+        except (
+            urllib.error.URLError,
+            urllib.error.HTTPError,
+            TimeoutError,
+            json.JSONDecodeError,
+            OSError,
+        ) as exc:
             last_err = exc
             time.sleep(0.2)
     if last_err:
@@ -169,7 +175,6 @@ def fetch_60m(symbol: str) -> list[dict]:
 
 
 def _sma(values: list[float], end_i: int, window: int) -> float | None:
-    """含 end_i 在内的近 window 根简单均值；不足则 None。"""
     if end_i + 1 < window or end_i < 0:
         return None
     chunk = values[end_i - window + 1 : end_i + 1]
@@ -179,13 +184,13 @@ def _sma(values: list[float], end_i: int, window: int) -> float | None:
 
 
 def judge_downtrend(bars: list[dict]) -> dict[str, Any]:
-    """判定是否下跌通道。返回 downtrend / rule1 / rule2 / detail。"""
+    """判定是否下跌通道。返回 downtrend / status / rule1 / rule2。"""
     n = len(bars)
     closes = [float(b["close"]) for b in bars]
     highs = [float(b["high"]) for b in bars]
 
-    can_ma10 = n >= MA10 + CHECK_BARS - 1  # 至少 14 根
-    can_ma20 = n >= MA20 + CHECK_BARS - 1  # 至少 24 根
+    can_ma10 = n >= MA10 + CHECK_BARS - 1
+    can_ma20 = n >= MA20 + CHECK_BARS - 1
 
     rule1 = False
     if can_ma10:
@@ -214,7 +219,6 @@ def judge_downtrend(bars: list[dict]) -> dict[str, Any]:
         downtrend = rule1 or rule2
         status = "down" if downtrend else "ok"
     else:
-        # 算不出 MA20：只看第 1 条
         downtrend = rule1
         status = "down" if downtrend else "ok"
 
@@ -230,9 +234,20 @@ def judge_downtrend(bars: list[dict]) -> dict[str, Any]:
     }
 
 
+def _cell_label(status: str) -> str:
+    """页面单元格：下跌通道 / 非下跌与不足一律「-」。"""
+    return "下跌通道" if status == "down" else "-"
+
+
 def _out_path(day: date) -> Path:
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
     return RESULT_DIR / f"{day.isoformat()}.json"
+
+
+def _trading_days(as_of_d: date, n: int) -> list[date]:
+    from trading_calendar import trading_days_ending
+
+    return trading_days_ending(as_of_d, n, refresh=False)
 
 
 def compute_index_downtrend(
@@ -241,57 +256,82 @@ def compute_index_downtrend(
     force: bool = False,
     progress: bool = False,
 ) -> dict[str, Any]:
-    """对齐 as_of 重算三指数下跌通道，写缓存并返回。"""
+    """对齐 as_of 重算近 SERIES_DAYS 日下跌通道对比，写缓存并返回。"""
     as_of_d = _as_date(as_of)
     path = _out_path(as_of_d)
     if path.exists() and not force:
         try:
             cached = json.loads(path.read_text(encoding="utf-8"))
-            if cached.get("schema") == SCHEMA and cached.get("as_of") == as_of_d.isoformat():
-                items = cached.get("indices") or []
-                if len(items) == len(INDICES):
-                    return cached
+            if (
+                cached.get("schema") == SCHEMA
+                and cached.get("as_of") == as_of_d.isoformat()
+                and cached.get("series_days") == SERIES_DAYS
+                and len(cached.get("days") or []) == SERIES_DAYS
+                and len(cached.get("indices") or []) == len(INDICES)
+            ):
+                return cached
         except (json.JSONDecodeError, OSError):
             pass
+
+    days = _trading_days(as_of_d, SERIES_DAYS)
+    day_keys = [d.isoformat() for d in days]
 
     indices: list[dict[str, Any]] = []
     for name, symbol in INDICES:
         if progress:
             print(f"[index-down] {name} ({symbol}) …", flush=True)
+        series: list[dict[str, Any]] = []
+        err: str | None = None
+        latest_judged: dict[str, Any] = {
+            "downtrend": False,
+            "status": "unknown",
+            "rule1_close_below_ma10": None,
+            "rule2_high_below_ma20": None,
+            "bars": 0,
+            "last_bar": "",
+            "last_close": None,
+        }
         try:
-            bars = fetch_60m(symbol)
-            # 若报表日已过，尽量截到 as_of 当日 15:00 及以前的 bar
-            cutoff = f"{as_of_d.isoformat()} 23:59:59"
-            bars = [b for b in bars if str(b.get("day") or "") <= cutoff]
-            judged = judge_downtrend(bars)
-            err = None
+            bars_all = fetch_60m(symbol)
+            for d in days:
+                cutoff = f"{d.isoformat()} 23:59:59"
+                bars = [b for b in bars_all if str(b.get("day") or "") <= cutoff]
+                judged = judge_downtrend(bars)
+                series.append(
+                    {
+                        "date": d.isoformat(),
+                        "status": judged["status"],
+                        "label": _cell_label(str(judged["status"])),
+                        "downtrend": bool(judged["downtrend"]),
+                        "last_close": judged.get("last_close"),
+                    }
+                )
+                if d == as_of_d:
+                    latest_judged = judged
         except Exception as exc:  # noqa: BLE001
-            judged = {
-                "downtrend": False,
-                "status": "unknown",
-                "rule1_close_below_ma10": None,
-                "rule2_high_below_ma20": None,
-                "bars": 0,
-                "last_bar": "",
-                "last_close": None,
-            }
             err = str(exc)
             if progress:
                 print(f"[index-down] {name} 失败: {exc}", flush=True)
+            series = [
+                {
+                    "date": dk,
+                    "status": "unknown",
+                    "label": "-",
+                    "downtrend": False,
+                    "last_close": None,
+                }
+                for dk in day_keys
+            ]
 
-        label = "下跌通道" if judged.get("status") == "down" else (
-            "非下跌通道" if judged.get("status") == "ok" else "数据不足"
-        )
-        pill = "bad" if judged.get("status") == "down" else (
-            "ok" if judged.get("status") == "ok" else "warn"
-        )
+        status = latest_judged.get("status") or "unknown"
         indices.append(
             {
                 "name": name,
                 "symbol": symbol,
-                "label": label,
-                "pill": pill,
-                **judged,
+                "label": _cell_label(str(status)),
+                "pill": "bad" if status == "down" else ("ok" if status == "ok" else "warn"),
+                **latest_judged,
+                "series": series,
                 "error": err,
             }
         )
@@ -299,6 +339,8 @@ def compute_index_downtrend(
     payload: dict[str, Any] = {
         "schema": SCHEMA,
         "as_of": as_of_d.isoformat(),
+        "series_days": SERIES_DAYS,
+        "days": day_keys,
         "note": NOTE,
         "fetched": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "indices": indices,
@@ -340,11 +382,16 @@ def load_index_downtrend(
 if __name__ == "__main__":
     import argparse
 
-    ap = argparse.ArgumentParser(description="指数大局观 · 下跌通道")
+    ap = argparse.ArgumentParser(description="指数大局观 · 近10日下跌通道对比")
     ap.add_argument("date", nargs="?", help="YYYY-MM-DD，默认今天")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
     day = args.date or date.today().isoformat()
     out = compute_index_downtrend(day, force=args.force, progress=True)
+    days = out.get("days") or []
+    print("日期:", " ".join(d[5:] for d in days))
     for it in out.get("indices") or []:
-        print(f"  {it['name']}: {it['label']} (bars={it.get('bars')})")
+        cells = " ".join(
+            ("跌" if s.get("downtrend") else "-") for s in (it.get("series") or [])
+        )
+        print(f"  {it['name']}: {cells}")
