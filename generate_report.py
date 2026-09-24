@@ -4429,12 +4429,17 @@ def render_html(ctx: dict) -> str:
     width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
   }}
   .idx-outlook-table {{
-    width: 100%; min-width: 480px; border-collapse: separate; border-spacing: 0;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
     font-variant-numeric: tabular-nums;
   }}
   .idx-outlook-table th,
   .idx-outlook-table td {{
-    padding: 8px 8px; text-align: center; vertical-align: middle;
+    padding: 8px 5px; text-align: center; vertical-align: middle;
     border-bottom: 1px solid rgba(0,0,0,.06);
     font-size: 12px; line-height: 1.3;
   }}
@@ -4444,13 +4449,19 @@ def render_html(ctx: dict) -> str:
     white-space: nowrap;
   }}
   .idx-outlook-table thead th.idx-corner {{
-    text-align: left; padding-left: 10px; color: var(--sub); font-weight: 700;
+    text-align: left; padding-left: 8px; padding-right: 4px;
+    width: 44px; color: var(--sub); font-weight: 700;
+  }}
+  .idx-outlook-table thead th:not(.idx-corner) {{
+    width: 78px;
   }}
   .idx-outlook-table tbody th {{
-    text-align: left; padding-left: 10px; font-weight: 650; color: var(--muted);
-    white-space: nowrap; background: #fff; position: sticky; left: 0; z-index: 1;
-    box-shadow: 4px 0 8px -6px rgba(0,0,0,.12);
-    font-variant-numeric: tabular-nums;
+    text-align: left; padding-left: 8px; padding-right: 4px;
+    width: 44px; font-weight: 650; color: var(--muted);
+    white-space: nowrap; background: #fff;
+  }}
+  .idx-outlook-table tbody td {{
+    width: 78px;
   }}
   .idx-outlook-table tbody tr.latest th {{
     color: var(--text); font-weight: 800;
@@ -4626,10 +4637,13 @@ def render_html(ctx: dict) -> str:
     .idx-note,
     .module-summary {{ font-size: 13px; }}
     .idx-outlook-table th,
-    .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
+    .idx-outlook-table td {{ font-size: 12px; padding: 9px 4px; }}
     .idx-outlook-table thead th {{ font-size: 12px; }}
-    .idx-outlook-table tbody th {{ font-size: 13px; }}
-    .idx-outlook-table {{ min-width: 520px; }}
+    .idx-outlook-table tbody th {{ font-size: 13px; padding-left: 8px; }}
+    .idx-outlook-table thead th.idx-corner,
+    .idx-outlook-table tbody th {{ width: 46px; }}
+    .idx-outlook-table thead th:not(.idx-corner),
+    .idx-outlook-table tbody td {{ width: 76px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
