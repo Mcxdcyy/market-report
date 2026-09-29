@@ -4292,6 +4292,9 @@ def render_html(ctx: dict) -> str:
   .chase-chart > .vol-mkt-sum-wrap {{
     margin-top: 4px; /* + gap 10 → 14 */
   }}
+  .idx-outlook-wrap > .vol-mkt-sum-wrap {{
+    margin-top: 2px; /* + gap 12 → 14 */
+  }}
   .chase-grid > .vol-mkt-sum-wrap {{
     margin-top: 0; /* + gap 14 → 14 */
   }}
@@ -4309,7 +4312,8 @@ def render_html(ctx: dict) -> str:
   .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-cnt-wrap,
   .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-chart,
   .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart,
-  .chase-group:has(.vol-mkt-sum-wrap) + .vol20-wrap {{
+  .chase-group:has(.vol-mkt-sum-wrap) + .vol20-wrap,
+  .idx-outlook-wrap:has(> .vol-mkt-sum-wrap) + .vol20-wrap {{
     margin-top: 0;
   }}
   /* 模块末条：吃掉 section 底 padding，避免 14+14；本条 padding-bottom 即底距 */
@@ -4622,6 +4626,7 @@ def render_html(ctx: dict) -> str:
     .vol20-wrap > .vol-mkt-sum-wrap,
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
+    .idx-outlook-wrap > .vol-mkt-sum-wrap {{ margin-top: 2px; }}
     .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 0; }}
     .section > .vol-mkt-sum-wrap:last-child {{ margin-bottom: -12px; }} /* 手机 section pad 12 */
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
@@ -5401,10 +5406,68 @@ def load_index_downtrend_block(
         return {"as_of": as_of_d.isoformat(), "indices": [], "error": str(exc)}
 
 
+def _index_day_down_flags(items: list, day: str) -> list[bool]:
+    """某日各指数是否处于下跌通道（与表内单元格同口径）。"""
+    flags: list[bool] = []
+    for it in items:
+        series = {
+            str(s.get("date")): s
+            for s in (it.get("series") or [])
+            if isinstance(s, dict)
+        }
+        cell = series.get(day) or {}
+        status = cell.get("status") or ""
+        label = cell.get("label")
+        down = (
+            status == "down"
+            or label == "下跌通道"
+            or cell.get("downtrend") is True
+        )
+        flags.append(bool(down))
+    return flags
+
+
+def _index_outlook_sum_text(block: dict) -> str:
+    """指数大局观表下结论条（固定四句，命中一条）：
+
+    - 全「-」→「指数正常，市场正常。」
+    - 全下跌通道→「指数风险：全场极弱，等指数走出"下跌"。」
+    - 全「-」转部分下跌通道→「指数风险：可能全盘走弱。」
+    - 全下跌通道转部分「-」→「部分指数走出下跌：市场可能好转。」
+
+    部分↔部分等未定义情形不写结论条。
+    """
+    items = block.get("indices") or []
+    days = [str(d) for d in (block.get("days") or [])]
+    if not items or not days:
+        return ""
+    cur = _index_day_down_flags(items, days[-1])
+    if not cur:
+        return ""
+    all_down = all(cur)
+    all_ok = not any(cur)
+    if all_ok:
+        return "指数正常，市场正常。"
+    if all_down:
+        return '指数风险：全场极弱，等指数走出"下跌"。'
+    # 部分下跌：只认「由全- / 由全下跌」两种翻转
+    if len(days) < 2:
+        return ""
+    prev = _index_day_down_flags(items, days[-2])
+    if len(prev) != len(cur):
+        return ""
+    if not any(prev):
+        return "指数风险：可能全盘走弱。"
+    if all(prev):
+        return "部分指数走出下跌：市场可能好转。"
+    return ""
+
+
 def render_index_outlook_html(block: dict) -> str:
     """大盘环境顶部：指数大局观 · 近10个交易日下跌通道对比表。
 
     竖轴=日期（上旧下新），横轴=指数；下跌通道绿底，非下跌填「-」。
+    表下结论条样式同 `.vol-mkt-sum`。
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
@@ -5446,6 +5509,7 @@ def render_index_outlook_html(block: dict) -> str:
 
     d0 = days[0][5:].replace("-", "/") if days else ""
     d1 = days[-1][5:].replace("-", "/") if days else ""
+    sum_html = _module_sum_html(_index_outlook_sum_text(block))
     return (
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
@@ -5458,6 +5522,7 @@ def render_index_outlook_html(block: dict) -> str:
         f'<tbody>{"".join(body_rows)}</tbody>'
         "</table>"
         "</div>"
+        f"{sum_html}"
         "</div>"
     )
 
