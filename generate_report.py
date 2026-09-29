@@ -969,14 +969,37 @@ def _vol_cycle_tag_html(
     return f'<div class="chart-tags vol20-tags">{pill}</div>'
 
 
-def _module_sum_html(text: str) -> str:
-    """模块/图表结论条：同大盘环境浅蓝条样式（`.vol-mkt-sum`）。"""
+# 图表/模块结论条语气（展示色）：ok=好(红) / bad=不好(绿) / warn=谨慎(橙)
+_SUM_TONE_BY_TEXT: dict[str, str] = {
+    "增量周期：主观做多。": "ok",
+    "缩量周期、资金撤退。——休息守住，别亏就行。后面增量周期会给机会。": "bad",
+    "大周期缩量，小周期增量，谨慎做多。": "warn",
+    "资金可能撤退，冲高先减仓，卖出后别开新仓。（等次日看）": "bad",
+    "指数正常，市场正常。": "ok",
+    '指数风险：全场极弱，等指数走出"下跌"。': "bad",
+    "指数风险：可能全盘走弱。": "bad",
+    "部分指数走出下跌：市场可能好转。": "ok",
+    "追高活跃，积极做多。——如果追高承接好，可以多拿一下。": "ok",
+    "追高不活跃，冲高容易回落。——主动卖出。": "bad",
+    "多参与趋势票，向上拿。——低吸很难赚钱。": "ok",
+    "追高不好，低吸也很难赚钱。——只能说谨慎低吸。": "bad",
+    "强趋势-次日承接较好：趋势票可以多拿一下。": "ok",
+    "强趋势-次日承接不好：有溢价尽快卖出，别锁仓。": "bad",
+    "强势票占比高，也可能突然一下崩。——看核心票。": "warn",
+}
+
+
+def _module_sum_html(text: str, tone: str | None = None) -> str:
+    """模块/图表结论条：`.vol-mkt-sum`；tone=ok 红 / bad 绿 / warn 橙。"""
     text = (text or "").strip()
     if not text:
         return ""
+    t = (tone or _SUM_TONE_BY_TEXT.get(text) or "").strip().lower()
+    if t not in ("ok", "bad", "warn"):
+        t = "warn"
     return (
         f'<div class="vol-mkt-sum-wrap">'
-        f'<div class="vol-mkt-sum">{text}</div>'
+        f'<div class="vol-mkt-sum {t}">{text}</div>'
         f"</div>"
     )
 
@@ -3980,6 +4003,12 @@ def render_html(ctx: dict) -> str:
   .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
 
   /* ── 板块-资金认可度 ── */
+  #sec-fund > .vol-mkt-sum-wrap {{
+    margin: 0 0 0;
+    padding-top: 0;
+    border-top: none;
+  }}
+  #sec-fund > .vol-mkt-sum-wrap .vol-mkt-sum,
   #sec-fund > .vol-mkt-sum {{
     margin: 0 0 14px;
   }}
@@ -4327,6 +4356,19 @@ def render_html(ctx: dict) -> str:
     border-left: 3px solid var(--accent);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 14px; line-height: 1.6; font-weight: 500; color: var(--text);
+  }}
+  /* 结论条好/不好/谨慎：A股惯例 好=红、不好=绿、谨慎=橙 */
+  .vol-mkt-sum.ok {{
+    background: #fff1f0;
+    border-left-color: #E53935;
+  }}
+  .vol-mkt-sum.bad {{
+    background: #f0faf3;
+    border-left-color: #34C759;
+  }}
+  .vol-mkt-sum.warn {{
+    background: #fff8eb;
+    border-left-color: #FF9500;
   }}
 
   /* ── 涨停板块 ── */
@@ -4792,7 +4834,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
-    <div class="vol-mkt-sum">强势票占比高，也可能突然一下崩。——看核心票。</div>
+    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。")}
     {fund_recognition_html}
   </div>
 
