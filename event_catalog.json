@@ -1,32 +1,6 @@
 [
   {
     "month": 9,
-    "day": 28,
-    "dot": "28",
-    "label": "9/28",
-    "title": "SHEIN预计将于收盘后公布财报数据",
-    "short": "SHEIN预计将…",
-    "brief": "正式对外发布相关规划或文件，关注要点与产业映射。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-09-28"
-  },
-  {
-    "month": 9,
-    "day": 28,
-    "dot": "28",
-    "label": "9/28",
-    "title": "国新办就落实“十五五”规划、推动中央企业高质量发展举行发布会",
-    "short": "国新办就落实“十…",
-    "brief": "围绕国新办就落实“十五五”规划、推动中央企业高质量发展举行发布会相关议题展开交流，具体议程以主办方公布为准。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-09-28"
-  },
-  {
-    "month": 9,
     "day": 30,
     "dot": "30",
     "label": "9/30",
@@ -36,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-28"
+    "fetched_at": "2026-09-29"
   },
   {
     "month": 10,
@@ -49,6 +23,6 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-09-28"
+    "fetched_at": "2026-09-29"
   }
 ]
