@@ -3689,6 +3689,17 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }}
+  /* 表头风险提示：与图表「不好」pill 同系（绿） */
+  .hero-risks {{
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+  }}
+  .hero-risks .pill {{
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
+  }}
+  .hero-risks .pill.bad {{
+    background: #e8f5e9; color: #2e7d32;
+  }}
 
   .page-nav {{
     display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
@@ -4623,6 +4634,8 @@ def render_html(ctx: dict) -> str:
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
     .hero-summary {{ font-size: 14px; font-weight: 400; }}
+    .hero-risks {{ margin-top: 10px; gap: 6px; }}
+    .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
     .page-nav {{
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       gap: 6px; padding-bottom: 2px; margin-top: 8px;
@@ -4748,6 +4761,7 @@ def render_html(ctx: dict) -> str:
         </div>
       </div>
     </div>
+    {_hero_risks_html(ctx)}
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-mkt">大盘环境</a>
@@ -5467,6 +5481,105 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
         )
         flags.append(bool(down))
     return flags
+
+
+# 表头风险提示：固定顺序 · 命中才展示（文案锁定）
+_HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
+    ("index_down", "指数下跌通道"),
+    ("vol30_shrink", "缩量周期-资金撤退"),
+    ("chase_inactive", "追高-不活跃周期"),
+    ("chase_loss_bad", "昨日追高-次日承接不好"),
+    ("trend_hold_bad", "强趋势-次日承接不好"),
+)
+
+
+def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
+    """与页内图表结论同源，算表头 5 项风险是否命中。"""
+    flags = {k: False for k, _ in _HERO_RISK_SPECS}
+
+    # 1) 指数下跌通道：当日任一指数为下跌通道
+    idx = ctx.get("index_downtrend") or {}
+    items = idx.get("indices") or []
+    days = [str(d) for d in (idx.get("days") or [])]
+    if items and days:
+        flags["index_down"] = any(_index_day_down_flags(items, days[-1]))
+
+    # 2) 缩量周期-资金撤退：只看近30日成交金额末日是否缩量
+    vol30 = ctx.get("vol20_bars") or []
+    if vol30:
+        flags["vol30_shrink"] = vol30[-1].get("tag") != "up"
+
+    chase = ctx.get("chase_sentiment") or {}
+    groups = chase.get("groups") or {}
+    if groups:
+        # 3) 追高-不活跃周期：近5日原始家数均值 < 近200日均值
+        act_ser, act_base = _merge_chase_count_series(groups)
+        if act_base is not None and act_ser:
+            last5: list[float] = []
+            for row in reversed(act_ser):
+                raw_n = row.get("n_raw")
+                if raw_n is None:
+                    continue
+                try:
+                    last5.append(float(raw_n))
+                except (TypeError, ValueError):
+                    continue
+                if len(last5) >= 5:
+                    break
+            if len(last5) >= 5:
+                flags["chase_inactive"] = (sum(last5) / 5.0) < float(act_base)
+
+        # 4) 昨日追高-次日承接不好：近4日原始均值 < 近200日均值
+        loss_ser, loss_base = _merge_chase_effect_series(groups, "loss")
+        loss_ser = _smooth_metric_series_nd(loss_ser, days=4)
+        if loss_base is not None and loss_ser:
+            vals = _chase_raw_series_values(loss_ser)
+            window = 4
+            for i in range(len(vals) - 1, -1, -1):
+                if i + 1 < window:
+                    break
+                chunk = vals[i - window + 1 : i + 1]
+                if any(v is None for v in chunk):
+                    continue
+                m = sum(float(v) for v in chunk) / float(window)
+                flags["chase_loss_bad"] = m < float(loss_base)
+                break
+
+    # 5) 强趋势-次日承接不好：近5日原始均值 ≤ 近200日均值（较好须严格 >）
+    ts = ctx.get("trend_strength") or {}
+    hold_series = ts.get("hold_series") or []
+    try:
+        hold_mean = float(ts["hold_mean_200d"]) if ts.get("hold_mean_200d") is not None else None
+    except (TypeError, ValueError):
+        hold_mean = None
+    if hold_mean is not None and hold_series:
+        last5h: list[float] = []
+        for row in reversed(hold_series):
+            if row.get("value") is None:
+                continue
+            try:
+                last5h.append(float(row["value"]))
+            except (TypeError, ValueError):
+                continue
+            if len(last5h) >= 5:
+                break
+        if len(last5h) >= 5:
+            flags["trend_hold_bad"] = (sum(last5h) / 5.0) <= float(hold_mean)
+
+    return flags
+
+
+def _hero_risks_html(ctx: dict) -> str:
+    """表头风险提示标签行：命中才展示；全未命中返回空串。"""
+    flags = _hero_risk_flags(ctx)
+    pills = [
+        f'<span class="pill bad">{label}</span>'
+        for key, label in _HERO_RISK_SPECS
+        if flags.get(key)
+    ]
+    if not pills:
+        return ""
+    return f'<div class="hero-risks" aria-label="风险提示">{"".join(pills)}</div>'
 
 
 def _index_outlook_sum_text(block: dict) -> str:

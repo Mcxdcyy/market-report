@@ -10,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-09-29"
+    "fetched_at": "2026-09-30"
   },
   {
     "month": 10,
@@ -23,6 +23,6 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-09-29"
+    "fetched_at": "2026-09-30"
   }
 ]
