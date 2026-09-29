@@ -83,16 +83,28 @@
     font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }
-  /* 表头风险提示：与图表「不好」pill 同系（绿） */
+  /* 表头风险提示：浅绿条带 + 左侧标题，与导航 pill 区分 */
   .hero-risks {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 10px;
+    display: flex; align-items: flex-start; gap: 10px 12px;
+    margin-top: 12px; padding: 10px 12px;
+    background: #f3faf4;
+    border-left: 3px solid #34C759;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .hero-risks-k {
+    flex-shrink: 0; padding-top: 3px;
+    font-size: 11px; font-weight: 700; color: #2e7d32;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .hero-risks-list {
+    display: flex; flex-wrap: wrap; gap: 6px; min-width: 0;
   }
   .hero-risks .pill {
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }
   .hero-risks .pill.bad {
-    background: #e8f5e9; color: #2e7d32;
+    background: #fff; color: #2e7d32;
+    border: 1px solid rgba(46,125,50,.22);
   }
 
   .page-nav {
@@ -1028,7 +1040,11 @@
     .hero-decision { width: 100%; text-align: left; min-width: 0; }
     .hero-mode { font-size: 22px; }
     .hero-summary { font-size: 14px; font-weight: 400; }
-    .hero-risks { margin-top: 10px; gap: 6px; }
+    .hero-risks {
+      flex-direction: column; gap: 8px;
+      margin-top: 12px; padding: 12px 12px;
+    }
+    .hero-risks-k { font-size: 12px; padding-top: 0; }
     .hero-risks .pill { font-size: 13px; padding: 5px 11px; }
     .page-nav {
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -1155,7 +1171,7 @@
         </div>
       </div>
     </div>
-    <div class="hero-risks" aria-label="风险提示"><span class="pill bad">指数下跌通道</span><span class="pill bad">缩量周期-资金撤退</span><span class="pill bad">追高-不活跃周期</span><span class="pill bad">昨日追高-次日承接不好</span><span class="pill bad">强趋势-次日承接不好</span></div>
+    <div class="hero-risks" aria-label="风险提示"><span class="hero-risks-k">风险提示</span><div class="hero-risks-list"><span class="pill bad">指数下跌通道</span><span class="pill bad">缩量周期-资金撤退</span><span class="pill bad">追高-不活跃周期</span><span class="pill bad">昨日追高-次日承接不好</span><span class="pill bad">强趋势-次日承接不好</span></div></div>
     <nav class="page-nav">
       <a href="index.html">首页</a>
       <a href="#sec-mkt">大盘环境</a>
@@ -4174,7 +4190,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-30 00:02</div>
+  <div class="footer">生成于 2026-09-30 00:24</div>
 </div>
 </body>
 </html>

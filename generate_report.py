@@ -3689,16 +3689,28 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }}
-  /* 表头风险提示：与图表「不好」pill 同系（绿） */
+  /* 表头风险提示：浅绿条带 + 左侧标题，与导航 pill 区分 */
   .hero-risks {{
-    display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 10px;
+    display: flex; align-items: flex-start; gap: 10px 12px;
+    margin-top: 12px; padding: 10px 12px;
+    background: #f3faf4;
+    border-left: 3px solid #34C759;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }}
+  .hero-risks-k {{
+    flex-shrink: 0; padding-top: 3px;
+    font-size: 11px; font-weight: 700; color: #2e7d32;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }}
+  .hero-risks-list {{
+    display: flex; flex-wrap: wrap; gap: 6px; min-width: 0;
   }}
   .hero-risks .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }}
   .hero-risks .pill.bad {{
-    background: #e8f5e9; color: #2e7d32;
+    background: #fff; color: #2e7d32;
+    border: 1px solid rgba(46,125,50,.22);
   }}
 
   .page-nav {{
@@ -4634,7 +4646,11 @@ def render_html(ctx: dict) -> str:
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
     .hero-summary {{ font-size: 14px; font-weight: 400; }}
-    .hero-risks {{ margin-top: 10px; gap: 6px; }}
+    .hero-risks {{
+      flex-direction: column; gap: 8px;
+      margin-top: 12px; padding: 12px 12px;
+    }}
+    .hero-risks-k {{ font-size: 12px; padding-top: 0; }}
     .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
     .page-nav {{
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -5579,7 +5595,12 @@ def _hero_risks_html(ctx: dict) -> str:
     ]
     if not pills:
         return ""
-    return f'<div class="hero-risks" aria-label="风险提示">{"".join(pills)}</div>'
+    return (
+        '<div class="hero-risks" aria-label="风险提示">'
+        '<span class="hero-risks-k">风险提示</span>'
+        f'<div class="hero-risks-list">{"".join(pills)}</div>'
+        "</div>"
+    )
 
 
 def _index_outlook_sum_text(block: dict) -> str:
