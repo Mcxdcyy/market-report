@@ -975,12 +975,14 @@ _SUM_TONE_BY_TEXT: dict[str, str] = {
     '指数风险：全场极弱，等指数走出"下跌"。': "bad",
     "指数风险：可能全盘走弱。": "bad",
     "部分指数走出下跌：市场可能好转。": "ok",
-    "追高活跃，积极做多。——如果追高承接好，可以多拿一下。": "ok",
-    "追高不活跃，冲高容易回落。——主动卖出。": "bad",
+    "追高活跃：积极做多。——多锁仓。": "ok",
+    "追高不活跃：冲高容易回落。——主动卖出。": "bad",
     "多参与趋势票，向上拿。——低吸很难赚钱。": "ok",
-    "追高不好，低吸也很难赚钱。——只能说谨慎低吸。": "bad",
-    "强趋势-次日承接较好：趋势票可以多拿一下。": "ok",
-    "强趋势-次日承接不好：有溢价尽快卖出，别锁仓。": "bad",
+    "追高不好，低吸也很难赚钱。——等「大幅击穿」低吸。": "bad",
+    "承接有好有差，有利润先减仓。——主动卖出。": "warn",
+    "强趋-承接较好：强趋有利润垫，可以多拿一下。": "ok",
+    "强趋-承接不好：尽快卖出。——不锁仓。": "bad",
+    "强趋承接-有好有差：有利润先减仓。——主动卖出。": "warn",
     "强势票占比高，也可能突然一下崩。——看核心票。": "warn",
 }
 
@@ -5096,7 +5098,7 @@ def _render_ts_hold_bars_html(
     mean_200d: float | None = None,
     after_html: str = "",
 ) -> str:
-    """强趋势-次日承接柱图（近120日）：柱高=近4日均值；零轴=近200日均值（上红下绿）。
+    """强趋势-次日承接柱图（近120日）：柱高=近2日均值；零轴=近200日均值（上红下绿）。
 
     meta「今日」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
     外壳与「近30日强趋势占比」、近30日成交金额同系（无边框底色）。
@@ -5177,7 +5179,7 @@ def _render_ts_hold_bars_html(
                 except (TypeError, ValueError):
                     tip_raw = ""
             cols.append(
-                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近4日均{val_lab}{tip_raw} · {n}家{tip_extra}">
+                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}{tip_raw} · {n}家{tip_extra}">
       <div class="ts-hold-val {tag}">{val_lab}</div>
       <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -5198,10 +5200,15 @@ def _render_ts_hold_bars_html(
     except (TypeError, ValueError, KeyError):
         latest_lab = "—"
 
+    meta_txt = "2日均值"
+    if mean_200d is not None:
+        meta_txt += f" · 横轴 {base:+.1f}%"
+    meta_txt += f" · 今日 {latest_lab}"
+
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">强趋势-次日承接</span>
-      <span class="ts-chart-meta">4日均值 · 今日 {latest_lab}</span>
+      <span class="ts-chart-meta">{meta_txt}</span>
     </div>
     <div class="ts-cnt-chart">
       <div class="ts-hold-bars">{"".join(cols)}</div>
@@ -5369,33 +5376,39 @@ def render_trend_strength_html(block: dict) -> str:
         hold_mean_f = None
     hold_chart = ""
     if hold_series_raw:
-        # 页面近120日；柱高=近4日均值；meta「今日」=当日原始；标签仍用近5日原始 vs 近200日均值
-        hold_smoothed = _smooth_metric_series_nd(list(hold_series_raw), days=4)
+        # 页面近120日；柱高=近2日均值；meta「今日」=当日原始
+        # 标签与柱同口径：近2日均值 vs 近200日均值，中性带 ±0.3%
+        hold_smoothed = _smooth_metric_series_nd(list(hold_series_raw), days=2)
         hold_series_plot = hold_smoothed[-120:]
         pills: list[str] = []
         hold_sum_html = ""
-        if hold_mean_f is not None:
-            last5: list[float] = []
-            for row in reversed(hold_series_raw):
+        hold_band = 0.3
+        if hold_mean_f is not None and hold_series_plot:
+            last_m2 = None
+            for row in reversed(hold_series_plot):
                 if row.get("value") is None:
                     continue
                 try:
-                    last5.append(float(row["value"]))
+                    last_m2 = float(row["value"])
                 except (TypeError, ValueError):
                     continue
-                if len(last5) >= 5:
-                    break
-            if len(last5) >= 5:
-                m5 = sum(last5) / 5.0
-                if m5 > float(hold_mean_f):
+                break
+            if last_m2 is not None:
+                delta = last_m2 - float(hold_mean_f)
+                if delta > hold_band:
                     pills.append('<span class="pill ok">次日承接较好</span>')
                     hold_sum_html = _module_sum_html(
-                        "强趋势-次日承接较好：趋势票可以多拿一下。"
+                        "强趋-承接较好：强趋有利润垫，可以多拿一下。"
                     )
-                else:
+                elif delta < -hold_band:
                     pills.append('<span class="pill bad">次日承接不好</span>')
                     hold_sum_html = _module_sum_html(
-                        "强趋势-次日承接不好：有溢价尽快卖出，别锁仓。"
+                        "强趋-承接不好：尽快卖出。——不锁仓。"
+                    )
+                else:
+                    pills.append('<span class="pill warn">次日承接-有好有差</span>')
+                    hold_sum_html = _module_sum_html(
+                        "强趋承接-有好有差：有利润先减仓。——主动卖出。"
                     )
         data_err = bool(block.get("hold_data_error"))
         if not data_err:
@@ -5497,7 +5510,7 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
     chase = ctx.get("chase_sentiment") or {}
     groups = chase.get("groups") or {}
     if groups:
-        # 3) 追高-不活跃周期：近5日原始家数均值 < 近200日均值
+        # 3) 追高-不活跃周期：近5日原始家数均值 < 近200日均值（与图下标签同口径；柱高仍为2日均）
         act_ser, act_base = _merge_chase_count_series(groups)
         if act_base is not None and act_ser:
             last5: list[float] = []
@@ -5514,12 +5527,13 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
             if len(last5) >= 5:
                 flags["chase_inactive"] = (sum(last5) / 5.0) < float(act_base)
 
-        # 4) 昨日追高-次日承接不好：近4日原始均值 < 近200日均值
+        # 4) 昨日追高-次日承接不好：近2日原始均 − 近200日均值 < −0.5%（与图下标签同口径）
         loss_ser, loss_base = _merge_chase_effect_series(groups, "loss")
-        loss_ser = _smooth_metric_series_nd(loss_ser, days=4)
+        loss_ser = _smooth_metric_series_nd(loss_ser, days=2)
         if loss_base is not None and loss_ser:
             vals = _chase_raw_series_values(loss_ser)
-            window = 4
+            window = 2
+            band = 0.5
             for i in range(len(vals) - 1, -1, -1):
                 if i + 1 < window:
                     break
@@ -5527,10 +5541,10 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
                 if any(v is None for v in chunk):
                     continue
                 m = sum(float(v) for v in chunk) / float(window)
-                flags["chase_loss_bad"] = m < float(loss_base)
+                flags["chase_loss_bad"] = (m - float(loss_base)) < -band
                 break
 
-    # 5) 强趋势-次日承接不好：近5日原始均值 ≤ 近200日均值（较好须严格 >）
+    # 5) 强趋势-次日承接不好：近2日均值 − 近200日均值 < −0.3%（与图下标签同口径）
     ts = ctx.get("trend_strength") or {}
     hold_series = ts.get("hold_series") or []
     try:
@@ -5538,18 +5552,19 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
     except (TypeError, ValueError):
         hold_mean = None
     if hold_mean is not None and hold_series:
-        last5h: list[float] = []
+        last2h: list[float] = []
         for row in reversed(hold_series):
             if row.get("value") is None:
                 continue
             try:
-                last5h.append(float(row["value"]))
+                last2h.append(float(row["value"]))
             except (TypeError, ValueError):
                 continue
-            if len(last5h) >= 5:
+            if len(last2h) >= 2:
                 break
-        if len(last5h) >= 5:
-            flags["trend_hold_bad"] = (sum(last5h) / 5.0) <= float(hold_mean)
+        if last2h:
+            m2 = sum(last2h) / float(len(last2h))
+            flags["trend_hold_bad"] = (m2 - float(hold_mean)) < -0.3
 
     return flags
 
@@ -5803,11 +5818,13 @@ def _chase_loss_hold_tag_html(
     series: list[dict],
     baseline: float | None,
     *,
-    window: int = 4,
+    window: int = 2,
+    band: float = 0.5,
 ) -> str:
     """昨追-今日承接图下标签。
 
-    - 近 window 日原始均值 ≥ 近200日均值 →「追高承接较好」，否则「追高承接不好」
+    - 近 window 日原始均值相对近200日均值，中性带 ±band：
+      >+band →「追高承接较好」；<-band →「追高承接不好」；其余 →「追高承接-有好有差」
     - 若末日是状态翻转首日，且翻转前旧状态已连续 ≥2 日 → 追加「需次日验证」
     """
     if baseline is None or window <= 0:
@@ -5823,7 +5840,13 @@ def _chase_loss_hold_tag_html(
         if any(v is None for v in chunk):
             continue
         m = sum(float(v) for v in chunk) / float(window)
-        tags[i] = "好" if m >= base else "不好"
+        delta = m - base
+        if delta > band:
+            tags[i] = "好"
+        elif delta < -band:
+            tags[i] = "不好"
+        else:
+            tags[i] = "中性"
 
     # 取末日有效标签
     last_i = None
@@ -5841,10 +5864,15 @@ def _chase_loss_hold_tag_html(
         sum_html = _module_sum_html(
             "多参与趋势票，向上拿。——低吸很难赚钱。"
         )
-    else:
+    elif cur == "不好":
         pills.append('<span class="pill bad">追高承接不好</span>')
         sum_html = _module_sum_html(
-            "追高不好，低吸也很难赚钱。——只能说谨慎低吸。"
+            "追高不好，低吸也很难赚钱。——等「大幅击穿」低吸。"
+        )
+    else:
+        pills.append('<span class="pill warn">追高承接-有好有差</span>')
+        sum_html = _module_sum_html(
+            "承接有好有差，有利润先减仓。——主动卖出。"
         )
 
     # 翻转首日 + 旧状态连续 ≥2 日 → 需次日验证
@@ -5961,11 +5989,15 @@ def _render_chase_metric_chart(
     else:
         latest_lab = "—"
     if mean_days and mean_days > 1:
-        meta_txt = f"{mean_days}日均值 · 今日 {latest_lab}"
+        parts = [f"{mean_days}日均值"]
     elif avg2d:
-        meta_txt = f"2日均值 · 今日 {latest_lab}"
+        parts = ["2日均值"]
     else:
-        meta_txt = f"今日 {latest_lab}"
+        parts = []
+    if baseline is not None:
+        parts.append(f"横轴 {base:+.1f}%")
+    parts.append(f"今日 {latest_lab}")
+    meta_txt = " · ".join(parts)
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
       <span class="chase-chart-title">{title}</span>
@@ -6001,9 +6033,10 @@ def _render_chase_count_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """追高活跃度柱图：柱高为近5日合计家数均值；以近200日均值为零轴（均值上红 / 均值下绿）。
+    """追高活跃度柱图：柱高为近2日合计家数均值；以近200日均值为零轴（均值上红 / 均值下绿）。
 
-    图下方标签（同近30日成交金额）：近5日**当日原始家数**均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
+    图下方标签（同近30日成交金额）：近5日**当日原始家数**均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」
+    （用近五日原始日值，不是五个近2日均值柱高再平均）。
     纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶，避免压扁其余交易日。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
@@ -6088,7 +6121,7 @@ def _render_chase_count_chart(
             n_today = row.get("n_raw")
             tip_today = f" · 当日{int(n_today)}家" if n_today is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近5日均{val_lab}家{tip_today}{tip_mean}{tip_clip}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}家{tip_today}{tip_mean}{tip_clip}">
       <div class="chase-val{" " + tag if tag else ""}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -6104,10 +6137,13 @@ def _render_chase_count_chart(
         latest_lab = f"{int(round(lv))} 家"
     else:
         latest_lab = "—"
-    meta_txt = f"5日均值 · 今日 {latest_lab}"
+    meta_txt = "2日均值"
+    if baseline is not None:
+        meta_txt += f" · 横轴 {int(round(base))} 家"
+    meta_txt += f" · 今日 {latest_lab}"
 
     # 近5日**当日原始家数**均值 vs 近200日均值 → 活跃周期 / 不活跃周期
-    # （与「今日趋势承接」一致：用近五日原始日值，不是五个近5日均值柱高再平均）
+    # （标签仍用五日原始；柱高为近2日均值，二者口径分开）
     act_tags_html = ""
     if baseline is not None:
         last5: list[float] = []
@@ -6126,12 +6162,12 @@ def _render_chase_count_chart(
             if m5 >= float(baseline):
                 pill = '<span class="pill ok">活跃周期</span>'
                 sum_html = _module_sum_html(
-                    "追高活跃，积极做多。——如果追高承接好，可以多拿一下。"
+                    "追高活跃：积极做多。——多锁仓。"
                 )
             else:
                 pill = '<span class="pill bad">不活跃周期</span>'
                 sum_html = _module_sum_html(
-                    "追高不活跃，冲高容易回落。——主动卖出。"
+                    "追高不活跃：冲高容易回落。——主动卖出。"
                 )
             act_tags_html = f'<div class="chart-tags vol20-tags">{pill}</div>{sum_html}'
 
@@ -6151,11 +6187,11 @@ def _render_chase_count_chart(
 def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
     """主板+创板追高数量按日相加 → 追高活跃度序列与近200日均值。
 
-    柱高 value = 近**5**日合计原始家数均值（含当日，不足5日按已有日数平均）；
+    柱高 value = 近**2**日合计原始家数均值（含当日，不足2日按已有日数平均）；
     n_raw = 当日合计原始家数。
     近200日均值仍按**当日原始家数**（与活跃周期标签口径一致）。
     """
-    bar_days = 5
+    bar_days = 2
     main_m = ((groups.get("main") or {}).get("metrics") or {}).get("count") or {}
     cyb_m = ((groups.get("cyb") or {}).get("metrics") or {}).get("count") or {}
     main_ser = main_m.get("series") or []
@@ -6192,7 +6228,7 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
         n = int(row.get("n") or 0) + int(other.get("n") or 0)
         merged.append({"date": ds, "n": n, "n_raw": n_raw})
 
-    # 柱高：近5日原始家数均值（含当日，不足按已有日数平均）
+    # 柱高：近2日原始家数均值（含当日，不足按已有日数平均）
     out: list[dict] = []
     for i, row in enumerate(merged):
         window: list[float] = []
@@ -6362,15 +6398,15 @@ def render_chase_sentiment_html(block: dict) -> str:
 
     # 效应仅「昨追-今日承接」：主板+创板按家数加权合并，近120日
     # （已删「昨追-赚钱效应」「今追-回落指数」；后台 pullback 仍可算）
-    # 柱高为近4日均值；meta「今日」仍用当日原始值（value_raw）
-    # 图下标签 = 近4日原始均值 ≥ 近200日均值
+    # 柱高为近2日均值；meta「今日」仍用当日原始值（value_raw）
+    # 图下标签 = 近2日原始均值 ≥ 近200日均值
     # →「追高承接较好」/「追高承接不好」；连续≥2日状态翻转首日追加「需次日验证」
     ser, baseline = _merge_chase_effect_series(groups, "loss")
-    ser = _smooth_metric_series_nd(ser, days=4)
+    ser = _smooth_metric_series_nd(ser, days=2)
     chart_html = _render_chase_metric_chart(
-        "昨追-今日承接", ser, baseline=baseline, mean_days=4
+        "昨追-今日承接", ser, baseline=baseline, mean_days=2
     )
-    chart_html += _chase_loss_hold_tag_html(ser, baseline, window=4)
+    chart_html += _chase_loss_hold_tag_html(ser, baseline, window=2)
     parts.append(
         f'''<div class="chase-group">
     <div class="chase-grid single">{chart_html}</div>
