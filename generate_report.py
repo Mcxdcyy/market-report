@@ -3729,36 +3729,26 @@ def render_html(ctx: dict) -> str:
     padding: 14px 16px;
     margin-bottom: 10px;
     border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
     box-shadow: var(--shadow);
   }}
   .hero-top {{
     display: block;
   }}
   .hero-mast {{
-    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+    display: flex; flex-direction: column; align-items: stretch; gap: 4px;
     min-width: 0; width: 100%;
   }}
   .hero-title-row {{
-    display: flex; align-items: flex-start; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     gap: 12px; width: 100%;
   }}
-  .hero-heading {{
-    min-width: 0; flex: 1 1 auto;
-  }}
-  .hero-kicker {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    letter-spacing: 0.06em; line-height: 1.2;
-  }}
   .hero h1 {{
-    font-size: 28px; font-weight: 800; letter-spacing: -0.7px;
-    line-height: 1.12; margin-top: 4px;
-    color: var(--text);
+    font-size: 22px; font-weight: 800; letter-spacing: -0.4px;
+    min-width: 0; flex: 1 1 auto;
   }}
   .hero-home {{
     flex: 0 0 auto;
     margin-left: auto;
-    margin-top: 2px;
     display: inline-flex; align-items: center; justify-content: center;
     width: 34px; height: 34px;
     border-radius: 10px;
@@ -3769,14 +3759,7 @@ def render_html(ctx: dict) -> str:
   }}
   .hero-home:hover {{ background: #0a84ff18; color: #0070e0; }}
   .hero-home svg {{ width: 18px; height: 18px; display: block; }}
-  .hero-meta {{
-    margin-top: 10px; padding-top: 10px;
-    border-top: 1px solid var(--border);
-    font-size: 12px; line-height: 1.5; color: var(--sub);
-  }}
-  .hero-meta-sep {{
-    display: inline-block; margin: 0 6px; color: var(--muted); opacity: .7;
-  }}
+  .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 2px; }}
   .hero-tag {{
     display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 600;
     color: var(--accent); background: var(--accent-bg); padding: 4px 10px; border-radius: 6px;
@@ -3801,13 +3784,10 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }}
-  /* 表头风险提示：独立一层托盘，与标题区拉开层次 */
+  /* 表头风险提示：与图表「不好」pill 同系（绿） */
   .hero-risks {{
     display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 12px; padding: 10px 12px;
-    background: #f7f8fa;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    margin-top: 10px;
   }}
   .hero-risks .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
@@ -4735,18 +4715,17 @@ def render_html(ctx: dict) -> str:
       margin-bottom: 8px; padding: 12px;
       box-shadow: none;
     }}
-    .hero-mast {{ gap: 0; }}
-    .hero-home {{ width: 38px; height: 38px; border-radius: 11px; margin-top: 4px; }}
+    .hero-mast {{ gap: 6px; }}
+    .hero-home {{ width: 38px; height: 38px; border-radius: 11px; }}
     .hero-home svg {{ width: 20px; height: 20px; }}
-    .hero-kicker {{ font-size: 12px; }}
-    .hero h1 {{ font-size: 30px; }}
-    .hero-meta {{ font-size: 14px; margin-top: 10px; padding-top: 10px; }}
+    .hero h1 {{ font-size: 24px; }}
+    .hero-meta {{ font-size: 14px; }}
     .hero-tag {{ font-size: 13px; }}
     .hero-status {{ font-size: 12px; }}
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
     .hero-summary {{ font-size: 14px; font-weight: 400; }}
-    .hero-risks {{ margin-top: 12px; gap: 6px; padding: 10px 12px; }}
+    .hero-risks {{ margin-top: 10px; gap: 6px; }}
     .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
@@ -4859,10 +4838,7 @@ def render_html(ctx: dict) -> str:
     <div class="hero-top">
       <div class="hero-mast">
         <div class="hero-title-row">
-          <div class="hero-heading">
-            <div class="hero-kicker">复盘报告</div>
-            <h1>{ctx['title_date']}</h1>
-          </div>
+          <h1>复盘报告 · {ctx['title_date']}</h1>
           <a class="hero-home" href="https://mcxdcyy.github.io/market-report/" aria-label="返回首页" title="首页">
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 10.5 12 3l9 7.5"/>
@@ -4872,7 +4848,7 @@ def render_html(ctx: dict) -> str:
           </a>
         </div>
         <div class="hero-meta">
-          数据 {ctx['data_date']}（周{ctx['data_weekday']}）<span class="hero-meta-sep">|</span>下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
+          数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
         </div>
       </div>
     </div>
