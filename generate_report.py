@@ -3740,8 +3740,18 @@ def render_html(ctx: dict) -> str:
   }}
   .hero-top {{
     display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 16px; flex-wrap: wrap;
+    gap: 12px; flex-wrap: wrap;
   }}
+  .hero-mast {{
+    display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+    min-width: 0;
+  }}
+  .hero-back {{
+    display: inline-flex; align-items: center;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    text-decoration: none; line-height: 1.2;
+  }}
+  .hero-back:hover {{ opacity: .85; }}
   .hero h1 {{ font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }}
   .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 4px; }}
   .hero-tag {{
@@ -3779,16 +3789,6 @@ def render_html(ctx: dict) -> str:
   .hero-risks .pill.bad {{
     background: #e8f5e9; color: #2e7d32;
   }}
-
-  .page-nav {{
-    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
-  }}
-  .page-nav a {{
-    font-size: 11px; font-weight: 600; color: var(--sub); text-decoration: none;
-    padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--border);
-    transition: background .15s, color .15s;
-  }}
-  .page-nav a:hover {{ background: var(--accent-bg); color: var(--accent); border-color: #0a84ff30; }}
 
   /* ── 区块 ── */
   .section {{
@@ -4709,7 +4709,9 @@ def render_html(ctx: dict) -> str:
       margin-bottom: 8px; padding: 12px 12px 10px;
       box-shadow: none;
     }}
-    .hero-top {{ flex-direction: column; gap: 10px; }}
+    .hero-top {{ flex-direction: column; gap: 8px; }}
+    .hero-mast {{ gap: 8px; }}
+    .hero-back {{ font-size: 14px; }}
     .hero h1 {{ font-size: 24px; }}
     .hero-meta {{ font-size: 14px; }}
     .hero-tag {{ font-size: 13px; }}
@@ -4719,16 +4721,6 @@ def render_html(ctx: dict) -> str:
     .hero-summary {{ font-size: 14px; font-weight: 400; }}
     .hero-risks {{ margin-top: 10px; gap: 6px; }}
     .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
-    .page-nav {{
-      flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
-      gap: 6px; padding-bottom: 2px; margin-top: 8px;
-      scrollbar-width: none;
-    }}
-    .page-nav::-webkit-scrollbar {{ display: none; }}
-    .page-nav a {{
-      flex-shrink: 0; padding: 8px 14px; font-size: 14px;
-      min-height: 38px; display: inline-flex; align-items: center;
-    }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
     .section-num {{ font-size: 14px; }}
@@ -4827,7 +4819,7 @@ def render_html(ctx: dict) -> str:
 
   @media print {{
     body {{ background: #fff; padding: 0; }}
-    .page-nav {{ display: none; }}
+    .hero-back {{ display: none; }}
     .section {{ box-shadow: none; break-inside: avoid; }}
   }}
 </style>
@@ -4837,7 +4829,8 @@ def render_html(ctx: dict) -> str:
 
   <header class="hero">
     <div class="hero-top">
-      <div>
+      <div class="hero-mast">
+        <a class="hero-back" href="https://mcxdcyy.github.io/market-report/">← 首页</a>
         <h1>复盘报告 · {ctx['title_date']}</h1>
         <div class="hero-meta">
           数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
@@ -4845,16 +4838,6 @@ def render_html(ctx: dict) -> str:
       </div>
     </div>
     {_hero_risks_html(ctx)}
-    <nav class="page-nav">
-      <a href="index.html">首页</a>
-      <a href="#sec-mkt">大盘环境</a>
-      <a href="#sec-chase">资金追高情绪</a>
-      <a href="#sec-ts">趋势强度</a>
-      <a href="#sec-sectors">涨停板块</a>
-      <a href="#sec-post">公告与政策</a>
-      <a href="#sec-event">事件方向</a>
-      <a href="#sec-fund">板块-资金认可度</a>
-    </nav>
   </header>
 
   <!-- 1 大盘环境 -->
