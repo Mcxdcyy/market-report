@@ -3513,11 +3513,11 @@ def render_html(ctx: dict) -> str:
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
     )
-    # 大盘环境：指数大局观 → 近30日成交金额（含标签）→ 周期总结（只看30日）
-    # 量能120日趋势已删（与近30日重复）
+    # 大盘环境：指数大局观 → 近30日成交金额（含标签）→ 百日新高120日趋势 → 周期总结（只看30日）
+    # 量能120日趋势已删（与近30日重复）；百日新高从图追高模块挪到本模块
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = (
-        f"{index_outlook_html}{vol30_html}"
+        f"{index_outlook_html}{vol30_html}{xh120_html}"
         f"{_vol_cycle_summary_html(vol20)}"
     )
 
@@ -4776,7 +4776,6 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['data_date']} · 近120日</div>
     </div>
     {chase_sentiment_html}
-    {xh120_html}
     <div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>
   </div>
 
@@ -6411,7 +6410,7 @@ def render_chase_sentiment_html(block: dict) -> str:
     )
 
     # 已删「昨追-赚钱效应」「今追-回落指数」「低吸赚钱效应」「低吸锁仓收益」
-    # 追高池脚注放在模块最后（百日新高图之后），不在这里拼
+    # 百日新高图已挪到大盘环境（近30日成交金额下方）；追高池脚注在模板模块末
     return "".join(parts)
 
 
