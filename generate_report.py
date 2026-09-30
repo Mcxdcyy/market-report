@@ -1002,7 +1002,7 @@ def _module_sum_html(text: str, tone: str | None = None) -> str:
 
 
 def _vol_cycle_summary_html(vol30: list[dict]) -> str:
-    """模块1末尾：只看近30日量能周期，两句固定文案（与120日无关）。"""
+    """模块1 · 近30日成交金额结论条：只看近30日量能周期，两句固定文案（紧挨该图，非模块末）。"""
     if not vol30:
         return ""
     if vol30[-1].get("tag") == "up":
@@ -3600,28 +3600,25 @@ def render_html(ctx: dict) -> str:
         f'<div class="chart-tags vol20-tags vol30-tags">{vol30_pills}</div>'
         if vol30_pills else ""
     )
-    after_30 = vol_tags_html
+    # 周期结论条属近30日成交金额（标签下），不是模块末/百日新高下
+    vol30_after = f"{vol_tags_html}{_vol_cycle_summary_html(vol20)}"
     vol30_html = _render_vol_bars_block(
         vol20,
         title="近30日成交金额",
         colored=True,
-        after_html=vol_tags_html,
+        after_html=vol30_after,
     )
-    if not vol30_html and after_30:
-        vol30_html = after_30
+    if not vol30_html and vol30_after:
+        vol30_html = vol30_after
     xh120 = ctx.get("xh120_series") or []
     xh120_html = _render_new_high_mean_zero_chart(
         xh120,
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高120日趋势",
     )
-    # 大盘环境：指数大局观 → 近30日成交金额（含标签）→ 百日新高120日趋势 → 周期总结（只看30日）
-    # 量能120日趋势已删（与近30日重复）；百日新高从图追高模块挪到本模块
+    # 大盘环境：指数大局观 → 近30日成交金额（标签+周期结论）→ 百日新高120日趋势
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = (
-        f"{index_outlook_html}{vol30_html}{xh120_html}"
-        f"{_vol_cycle_summary_html(vol20)}"
-    )
+    vol20_html = f"{index_outlook_html}{vol30_html}{xh120_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
