@@ -3739,21 +3739,34 @@ def render_html(ctx: dict) -> str:
     box-shadow: var(--shadow);
   }}
   .hero-top {{
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
+    display: block;
   }}
   .hero-mast {{
-    display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
-    min-width: 0;
+    display: flex; flex-direction: column; align-items: stretch; gap: 4px;
+    min-width: 0; width: 100%;
   }}
-  .hero-back {{
-    display: inline-flex; align-items: center;
-    font-size: 13px; font-weight: 600; color: var(--accent);
-    text-decoration: none; line-height: 1.2;
+  .hero-title-row {{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; width: 100%;
   }}
-  .hero-back:hover {{ opacity: .85; }}
-  .hero h1 {{ font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }}
-  .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 4px; }}
+  .hero h1 {{
+    font-size: 22px; font-weight: 800; letter-spacing: -0.4px;
+    min-width: 0; flex: 1 1 auto;
+  }}
+  .hero-home {{
+    flex: 0 0 auto;
+    margin-left: auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    color: var(--accent);
+    background: var(--accent-bg);
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }}
+  .hero-home:hover {{ background: #0a84ff18; color: #0070e0; }}
+  .hero-home svg {{ width: 18px; height: 18px; display: block; }}
+  .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 2px; }}
   .hero-tag {{
     display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 600;
     color: var(--accent); background: var(--accent-bg); padding: 4px 10px; border-radius: 6px;
@@ -4709,9 +4722,9 @@ def render_html(ctx: dict) -> str:
       margin-bottom: 8px; padding: 12px 12px 10px;
       box-shadow: none;
     }}
-    .hero-top {{ flex-direction: column; gap: 8px; }}
-    .hero-mast {{ gap: 8px; }}
-    .hero-back {{ font-size: 14px; }}
+    .hero-mast {{ gap: 6px; }}
+    .hero-home {{ width: 38px; height: 38px; border-radius: 11px; }}
+    .hero-home svg {{ width: 20px; height: 20px; }}
     .hero h1 {{ font-size: 24px; }}
     .hero-meta {{ font-size: 14px; }}
     .hero-tag {{ font-size: 13px; }}
@@ -4820,6 +4833,7 @@ def render_html(ctx: dict) -> str:
   @media print {{
     body {{ background: #fff; padding: 0; }}
     .hero-back {{ display: none; }}
+    .hero-home {{ display: none; }}
     .section {{ box-shadow: none; break-inside: avoid; }}
   }}
 </style>
@@ -4830,8 +4844,16 @@ def render_html(ctx: dict) -> str:
   <header class="hero">
     <div class="hero-top">
       <div class="hero-mast">
-        <a class="hero-back" href="https://mcxdcyy.github.io/market-report/">← 首页</a>
-        <h1>复盘报告 · {ctx['title_date']}</h1>
+        <div class="hero-title-row">
+          <h1>复盘报告 · {ctx['title_date']}</h1>
+          <a class="hero-home" href="https://mcxdcyy.github.io/market-report/" aria-label="返回首页" title="首页">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10.5 12 3l9 7.5"/>
+              <path d="M5.5 9.5V21h13V9.5"/>
+              <path d="M9.5 21v-6.5h5V21"/>
+            </svg>
+          </a>
+        </div>
         <div class="hero-meta">
           数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
         </div>
