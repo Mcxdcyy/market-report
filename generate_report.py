@@ -3600,7 +3600,7 @@ def render_html(ctx: dict) -> str:
         f'<div class="chart-tags vol20-tags vol30-tags">{vol30_pills}</div>'
         if vol30_pills else ""
     )
-    # 周期结论条属近30日成交金额（标签下），不是模块末/百日新高下
+    # 周期结论条属近30日成交金额（标签下）
     vol30_after = f"{vol_tags_html}{_vol_cycle_summary_html(vol20)}"
     vol30_html = _render_vol_bars_block(
         vol20,
@@ -3616,9 +3616,9 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高120日趋势",
     )
-    # 大盘环境：指数大局观 → 近30日成交金额（标签+周期结论）→ 百日新高120日趋势
+    # 大盘环境：指数大局观 → 近30日成交金额（标签+周期结论）；百日新高在趋势强度模块末
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = f"{index_outlook_html}{vol30_html}{xh120_html}"
+    vol20_html = f"{index_outlook_html}{vol30_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4886,6 +4886,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
+    {xh120_html}
   </div>
 
   <!-- 4 涨停板块 -->
@@ -6509,7 +6510,7 @@ def render_chase_sentiment_html(block: dict) -> str:
     )
 
     # 已删「昨追-赚钱效应」「今追-回落指数」「低吸赚钱效应」「低吸锁仓收益」
-    # 百日新高图已挪到大盘环境（近30日成交金额下方）；追高池脚注在模板模块末
+    # 百日新高图在趋势强度模块末；追高池脚注在模板模块末
     return "".join(parts)
 
 
