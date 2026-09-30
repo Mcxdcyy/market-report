@@ -797,7 +797,7 @@ def build_vol20_bars(df: pd.DataFrame, n: int = 30) -> list[dict]:
 
 
 def _ma_amount_rows(rows: list[dict], days: int) -> list[dict]:
-    """整段序列的近 days 日成交额均值，供5日图按柱高本身判断周期。"""
+    """整段序列的近 days 日成交额均值，供量能均值图按柱高本身判断周期。"""
     amts = [float(r.get("amount_yi") or 0) for r in rows]
     out: list[dict] = []
     for i, row in enumerate(rows):
@@ -811,7 +811,7 @@ def _ma_amount_rows(rows: list[dict], days: int) -> list[dict]:
     return out
 
 
-def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[dict]:
+def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 2) -> list[dict]:
     """近 n 日量能柱：柱高为近 days 个交易日成交额均值（含当日）；不足则天数内有多少算多少。"""
     if not rows or days < 1:
         return []
@@ -851,19 +851,17 @@ def _slice_vol_bars_avg_nd(rows: list[dict], n: int, *, days: int = 5) -> list[d
             vals0.append(float(chunk[j].get("amount_yi") or 0))
         if vals0:
             prior = sum(vals0) / len(vals0)
-    # 柱高是5日均值；颜色也按这列均值判断，不拿单日成交额套过来
+    # 柱高是近 days 日均值；颜色也按这列均值判断，不拿单日成交额套过来
     bars = build_vol_bars_from_amounts(
         smoothed, prior_amount=prior, color_mode="vs_prev"
     )
     ma_rows = _ma_amount_rows(rows, days)
-    if days == 5:
-        _apply_held_cycle_tags(
-            bars, smoothed, ma_rows,
-            expand_label="大周期·增量",
-            shrink_label="大周期·缩量",
-        )
-    else:
-        _apply_held_cycle_tags(bars, smoothed, ma_rows)
+    # 量能120日趋势均值图：图下固定「大周期·增量 / 大周期·缩量」
+    _apply_held_cycle_tags(
+        bars, smoothed, ma_rows,
+        expand_label="大周期·增量",
+        shrink_label="大周期·缩量",
+    )
     return bars
 
 
@@ -957,7 +955,7 @@ def _vol_cycle_tag_html(
     shrink_label: str = "缩量周期",
     wrap: bool = True,
 ) -> str:
-    """图下标签：末日持有色。默认「增量周期 / 缩量周期」；5日均值图用「大周期·增量 / 大周期·缩量」。"""
+    """图下标签：末日持有色 →「增量周期 / 缩量周期」（近30日成交金额用）。"""
     if not bars:
         return ""
     if bars[-1].get("tag") == "up":
@@ -972,9 +970,7 @@ def _vol_cycle_tag_html(
 # 图表/模块结论条语气（展示色）：ok=好(红) / bad=不好(绿) / warn=谨慎(橙)
 _SUM_TONE_BY_TEXT: dict[str, str] = {
     "增量周期：主观做多。": "ok",
-    "缩量周期：资金撤退。——别大亏就行，后面增量周期会给机会。": "bad",
-    "谨慎做多：小周期增量，大周期仍缩量。": "warn",
-    "缩量周期：卖出持仓。——卖出后别开新仓。（等次日看）": "bad",
+    "缩量周期：卖出持仓。——资金撤退，别大亏。": "bad",
     "指数正常，市场正常。": "ok",
     '指数风险：全场极弱，等指数走出"下跌"。': "bad",
     "指数风险：可能全盘走弱。": "bad",
@@ -1004,20 +1000,14 @@ def _module_sum_html(text: str, tone: str | None = None) -> str:
     )
 
 
-def _vol_cycle_summary_html(vol30: list[dict], vol120: list[dict]) -> str:
-    """模块1末尾：近30日周期 × 量能120日5日均值周期，四句固定文案。"""
-    if not vol30 or not vol120:
+def _vol_cycle_summary_html(vol30: list[dict]) -> str:
+    """模块1末尾：只看近30日量能周期，两句固定文案（与120日无关）。"""
+    if not vol30:
         return ""
-    d30 = vol30[-1].get("tag") == "up"
-    d120 = vol120[-1].get("tag") == "up"
-    if d30 and d120:
+    if vol30[-1].get("tag") == "up":
         text = "增量周期：主观做多。"
-    elif (not d30) and (not d120):
-        text = "缩量周期：资金撤退。——别大亏就行，后面增量周期会给机会。"
-    elif d30 and (not d120):
-        text = "谨慎做多：小周期增量，大周期仍缩量。"
     else:
-        text = "缩量周期：卖出持仓。——卖出后别开新仓。（等次日看）"
+        text = "缩量周期：卖出持仓。——资金撤退，别大亏。"
     return _module_sum_html(text)
 
 
@@ -3518,27 +3508,22 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and after_30:
         vol30_html = after_30
-    vol120_avg5d = ctx.get("vol120_avg5d_bars") or []
-    vol120_avg5d_html = _render_vol_bars_block(
-        vol120_avg5d,
-        title="量能120日趋势-5日均值",
+    vol120 = ctx.get("vol120_bars") or []
+    vol120_html = _render_vol_bars_block(
+        vol120,
+        title="量能120日趋势",
         dense=True,
         colored=True,
-        after_html=_vol_cycle_tag_html(
-            vol120_avg5d,
-            expand_label="大周期·增量",
-            shrink_label="大周期·缩量",
-        ),
     )
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
     )
-    # 大盘环境：指数大局观 → 近30日成交金额 → 量能120日-5日均值 → 周期组合总结
+    # 大盘环境：指数大局观 → 近30日成交金额 → 量能120日趋势 → 周期总结（只看30日）
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = (
-        f"{index_outlook_html}{vol30_html}{vol120_avg5d_html}"
-        f"{_vol_cycle_summary_html(vol20, vol120_avg5d)}"
+        f"{index_outlook_html}{vol30_html}{vol120_html}"
+        f"{_vol_cycle_summary_html(vol20)}"
     )
 
     def post_close_html(items: list) -> str:
@@ -6680,7 +6665,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     annotated = _annotate_vol_cycle(kpl_rows)
     vol120_amount_rows = annotated[-120:] if len(annotated) >= 120 else annotated
     vol120_mean_200d, vol120_mean_n = _vol_mean_lookback(kpl_rows, n=200)
-    vol120_avg5d_bars = _slice_vol_bars_avg_nd(kpl_rows, 120, days=5)
 
     xh120_bars: list[dict] = []
     try:
@@ -6780,7 +6764,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "vol120_amount_rows": vol120_amount_rows,
         "vol120_mean_200d": vol120_mean_200d,
         "vol120_mean_n": vol120_mean_n,
-        "vol120_avg5d_bars": vol120_avg5d_bars,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
