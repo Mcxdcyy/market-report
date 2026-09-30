@@ -24,5 +24,18 @@
     "importance": 4,
     "source": "wscn",
     "fetched_at": "2026-09-30"
+  },
+  {
+    "month": 10,
+    "day": 1,
+    "dot": "1",
+    "label": "10/1",
+    "title": "居民房贷贴息政策起实施",
+    "short": "居民房贷贴息政策…",
+    "brief": "相关规定自该日起施行，关注执行细则与行业影响。",
+    "hot": true,
+    "importance": 4,
+    "source": "wscn",
+    "fetched_at": "2026-09-30"
   }
 ]
