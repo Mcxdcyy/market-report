@@ -3733,7 +3733,7 @@ def render_html(ctx: dict) -> str:
   .hero {{
     background: var(--surface);
     border-radius: var(--radius);
-    padding: 14px 16px 12px;
+    padding: 14px 16px;
     margin-bottom: 10px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
@@ -4719,7 +4719,7 @@ def render_html(ctx: dict) -> str:
       position: static !important;
       top: auto !important;
       z-index: auto !important;
-      margin-bottom: 8px; padding: 12px 12px 10px;
+      margin-bottom: 8px; padding: 12px;
       box-shadow: none;
     }}
     .hero-mast {{ gap: 6px; }}
