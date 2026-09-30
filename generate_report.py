@@ -1530,6 +1530,106 @@ def _render_vol120_mean_zero_chart(
   </div>'''
 
 
+def _render_new_high_mean_zero_chart(
+    series: list[dict],
+    *,
+    baseline: float | None,
+    title: str = "百日新高120日趋势",
+) -> str:
+    """百日新高120日：柱高=当日家数；零轴=近200日均值（上红下绿）；与追高等图横轴口径统一。
+
+    meta：「横轴 M 家 · 今日 N 家」。纵轴按 |偏离| 约 90 分位定尺（同追高活跃度）。
+    """
+    vals = [float(x["value"]) for x in series if x.get("value") is not None]
+    if not vals:
+        return ""
+
+    base = float(baseline) if baseline is not None else 0.0
+    if baseline is not None:
+        abs_deltas = [abs(v - base) for v in vals]
+        scale = _chase_robust_scale(abs_deltas, pct=0.90)
+    else:
+        scale = _chase_robust_scale(vals, pct=0.90)
+        base = 0.0
+    if scale < 1e-9:
+        scale = 1.0
+    scale *= 1.08
+
+    n_bars = len(series)
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
+
+    axis_title = (
+        f' title="近200日均值 {base:.1f}家"'
+        if baseline is not None
+        else ""
+    )
+
+    cols: list[str] = []
+    ticks: list[str] = []
+    for i, row in enumerate(series):
+        raw = row.get("value")
+        ds = str(row.get("date") or "")
+        try:
+            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
+            lab = fmt_md(dt)
+            wd = WEEKDAY[dt.weekday()]
+        except ValueError:
+            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
+            wd = ""
+        is_latest = i == n_bars - 1
+        if raw is None:
+            cols.append(
+                f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{lab} 无样本">
+      <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div></div>
+    </div>'''
+            )
+        else:
+            v = float(raw)
+            if baseline is not None:
+                delta = v - base
+                h = min(50.0, abs(delta) / scale * 50.0)
+                side = "pos" if delta >= 0 else "neg"
+            else:
+                h = min(100.0, v / scale * 100.0)
+                side = "pos"
+            tip_mean = f" · 均值{base:.1f}家" if baseline is not None else ""
+            tip_clip = ""
+            if baseline is not None and abs(v - base) > scale:
+                tip_clip = " · 柱高已封顶"
+            cols.append(
+                f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {int(round(v))}家{tip_mean}{tip_clip}">
+      <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div><div class="vol120z-bar {side}" style="height:{h:.1f}%"></div></div>
+    </div>'''
+            )
+        ticks.append(
+            f'<div class="vol20-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'{"<span>" + lab + "</span>" if i in tick_idxs else ""}</div>'
+        )
+
+    last = next((x for x in reversed(series) if x.get("value") is not None), None)
+    today_n = int(round(float(last["value"]))) if last is not None else None
+    if baseline is not None:
+        meta = f"横轴 {int(round(base))} 家 · 今日 {today_n if today_n is not None else '—'} 家"
+    else:
+        meta = f"今日 {today_n if today_n is not None else '—'} 家"
+
+    return f'''<div class="vol20-wrap vol120 mean-zero">
+    <div class="vol20-head">
+      <span class="vol20-title">{title}</span>
+      <span class="vol20-meta">{meta}</span>
+    </div>
+    <div class="vol20-chart">
+      <div class="vol120z-bars">{"".join(cols)}</div>
+      <div class="vol20-axis">{"".join(ticks)}</div>
+    </div>
+  </div>'''
+
+
 def analyze_3d(df: pd.DataFrame, row: pd.Series) -> list[tuple[str, str]]:
     """近3日方向标签，仅用于环境结论（不展示在八维卡片）。"""
     prev = df.iloc[-2] if len(df) >= 2 else row
@@ -3509,9 +3609,11 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and after_30:
         vol30_html = after_30
-    xh120 = ctx.get("xh120_bars") or []
-    xh120_html = _render_vol_bars_block(
-        xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
+    xh120 = ctx.get("xh120_series") or []
+    xh120_html = _render_new_high_mean_zero_chart(
+        xh120,
+        baseline=ctx.get("xh_mean_200d"),
+        title="百日新高120日趋势",
     )
     # 大盘环境：指数大局观 → 近30日成交金额（含标签）→ 百日新高120日趋势 → 周期总结（只看30日）
     # 量能120日趋势已删（与近30日重复）；百日新高从图追高模块挪到本模块
@@ -6686,7 +6788,8 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         kpl_rows,
     )
 
-    xh120_bars: list[dict] = []
+    xh120_series: list[dict] = []
+    xh_mean_200d: float | None = None
     try:
         from new_high_count import compute_new_high_count
 
@@ -6696,21 +6799,21 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         )
         xh_daily = list(xh_payload.get("daily") or [])
 
-        def _slice_count_bars(rows: list[dict], n: int) -> list[dict]:
-            if not rows:
-                return []
-            if len(rows) > n:
-                start = len(rows) - n
-                prior = int(rows[start - 1].get("count") or 0)
-                prior_tag = _held_count_tag(rows, start - 1)
-                use = rows[-n:]
-            else:
-                prior = None
-                prior_tag = None
-                use = rows
-            return build_count_bars(use, prior_count=prior, prior_tag=prior_tag)
+        def _xh_row_to_point(row: dict) -> dict | None:
+            ds = str(row.get("date") or "")[:10]
+            if not ds:
+                return None
+            try:
+                v = float(row.get("count"))
+            except (TypeError, ValueError):
+                return None
+            return {"date": ds, "value": v}
 
-        xh120_bars = _slice_count_bars(xh_daily, 120)
+        points = [p for p in (_xh_row_to_point(r) for r in xh_daily) if p]
+        if points:
+            look = points[-200:] if len(points) >= 200 else points
+            xh_mean_200d = sum(float(p["value"]) for p in look) / len(look)
+            xh120_series = points[-120:] if len(points) >= 120 else points
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
 
@@ -6780,7 +6883,8 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_range": "",
         "trend_headline": "",
         "vol20_bars": vol20_bars,
-        "xh120_bars": xh120_bars,
+        "xh120_series": xh120_series,
+        "xh_mean_200d": xh_mean_200d,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
         "vol_regime": vol_regime,
