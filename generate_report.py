@@ -5582,7 +5582,7 @@ _HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
     ("index_down", "指数下跌通道"),
     ("vol30_shrink", "缩量周期-资金撤退"),
     ("chase_inactive", "追高-不活跃周期"),
-    ("chase_loss_bad", "昨日追高-次日承接不好"),
+    ("chase_loss_bad", "追高-次日承接不好"),
     ("trend_hold_bad", "强趋势-次日承接不好"),
 )
 
@@ -5623,7 +5623,7 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
             if len(last5) >= 5:
                 flags["chase_inactive"] = (sum(last5) / 5.0) < float(act_base)
 
-        # 4) 昨日追高-次日承接不好：近2日原始均 − 近200日均值 < −0.5%（与图下标签同口径）
+        # 4) 追高-次日承接不好：近2日原始均 − 近200日均值 < −0.5%（与图下标签同口径）
         loss_ser, loss_base = _merge_chase_effect_series(groups, "loss")
         loss_ser = _smooth_metric_series_nd(loss_ser, days=2)
         if loss_base is not None and loss_ser:
