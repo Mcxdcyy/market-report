@@ -448,19 +448,12 @@ def kpl_to_volume_df(kpl_rows: list[dict]) -> pd.DataFrame:
 
 
 def next_trading_day(d: datetime) -> datetime:
-    """下一交易日（交易日日历；不依赖大盘表，不再仅跳周末）。"""
-    try:
-        from trading_calendar import next_trading_day_after
+    """下一交易日（交易日日历 ∪ 法定休市推算；不依赖大盘表，禁止仅跳周末）。"""
+    from trading_calendar import next_trading_day_after
 
-        base = d.date() if hasattr(d, "date") else d
-        nd = next_trading_day_after(base, refresh=False)
-        return datetime(nd.year, nd.month, nd.day)
-    except Exception:
-        nd = d + timedelta(days=1)
-        while nd.weekday() >= 5:
-            nd += timedelta(days=1)
-        return nd
-
+    base = d.date() if hasattr(d, "date") else d
+    nd = next_trading_day_after(base, refresh=False)
+    return datetime(nd.year, nd.month, nd.day)
 
 def apply_kpl_volume_to_df(df: pd.DataFrame, kpl_rows: list[dict]) -> pd.DataFrame:
     """用开盘啦实际量能（亿元）覆盖/补全「成交额」，供量能标签/说明与八维大盘量能。"""
