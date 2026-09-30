@@ -3509,21 +3509,15 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and after_30:
         vol30_html = after_30
-    vol120 = ctx.get("vol120_bars") or []
-    vol120_html = _render_vol_bars_block(
-        vol120,
-        title="量能120日趋势",
-        dense=True,
-        colored=True,
-    )
     xh120 = ctx.get("xh120_bars") or []
     xh120_html = _render_vol_bars_block(
         xh120, title="百日新高120日趋势", dense=True, unit="家", show_latest=True, colored=True
     )
-    # 大盘环境：指数大局观 → 近30日成交金额 → 量能120日趋势 → 周期总结（只看30日）
+    # 大盘环境：指数大局观 → 近30日成交金额（含标签）→ 周期总结（只看30日）
+    # 量能120日趋势已删（与近30日重复）
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = (
-        f"{index_outlook_html}{vol30_html}{vol120_html}"
+        f"{index_outlook_html}{vol30_html}"
         f"{_vol_cycle_summary_html(vol20)}"
     )
 
@@ -6692,18 +6686,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         vol20_src,
         kpl_rows,
     )
-    if len(kpl_rows) > 120:
-        vol120_src = kpl_rows[-120:]
-    else:
-        vol120_src = list(kpl_rows)
-    vol120_bars = _apply_held_cycle_tags(
-        _slice_vol_bars(kpl_rows, 120),
-        vol120_src,
-        kpl_rows,
-    )
-    annotated = _annotate_vol_cycle(kpl_rows)
-    vol120_amount_rows = annotated[-120:] if len(annotated) >= 120 else annotated
-    vol120_mean_200d, vol120_mean_n = _vol_mean_lookback(kpl_rows, n=200)
 
     xh120_bars: list[dict] = []
     try:
@@ -6799,10 +6781,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_range": "",
         "trend_headline": "",
         "vol20_bars": vol20_bars,
-        "vol120_bars": vol120_bars,
-        "vol120_amount_rows": vol120_amount_rows,
-        "vol120_mean_200d": vol120_mean_200d,
-        "vol120_mean_n": vol120_mean_n,
         "xh120_bars": xh120_bars,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
