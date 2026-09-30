@@ -762,7 +762,7 @@
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 14px; line-height: 1.6; font-weight: 500; color: var(--text);
   }
-  /* 结论条好/不好/谨慎：A股惯例 好=红、不好=绿、谨慎=橙 */
+  /* 结论条好/不好/谨慎：A股惯例 好=红、不好=绿、谨慎=橙；提示条 tip=蓝（默认 accent） */
   .vol-mkt-sum.ok {
     background: #fff1f0;
     border-left-color: #E53935;
@@ -774,6 +774,10 @@
   .vol-mkt-sum.warn {
     background: #fff8eb;
     border-left-color: #FF9500;
+  }
+  .vol-mkt-sum.tip {
+    background: var(--accent-bg);
+    border-left-color: var(--accent);
   }
 
   /* ── 涨停板块 ── */
@@ -4042,7 +4046,7 @@
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">08/19–09/30 · 近30日占比</div>
     </div>
-    <div class="vol-mkt-sum-wrap"><div class="vol-mkt-sum warn">强势票占比高，也可能突然一下崩。——看核心票。</div></div>
+    <div class="vol-mkt-sum-wrap"><div class="vol-mkt-sum tip">强势票占比高，也可能突然一下崩。——看核心票。</div></div>
     <div class="fund-list"><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">疫苗概念</span>
@@ -4166,7 +4170,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近30个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。</div>
   </div>
 
-  <div class="footer">生成于 2026-09-30 21:12</div>
+  <div class="footer">生成于 2026-09-30 21:17</div>
 </div>
 </body>
 </html>

@@ -983,17 +983,16 @@ _SUM_TONE_BY_TEXT: dict[str, str] = {
     "强趋-承接较好：强趋有利润垫，可以多拿一下。": "ok",
     "强趋-承接不好：尽快卖出。——不锁仓。": "bad",
     "强趋承接-有好有差：有利润先减仓。——主动卖出。": "warn",
-    "强势票占比高，也可能突然一下崩。——看核心票。": "warn",
 }
 
 
 def _module_sum_html(text: str, tone: str | None = None) -> str:
-    """模块/图表结论条：`.vol-mkt-sum`；tone=ok 红 / bad 绿 / warn 橙。"""
+    """模块条：`.vol-mkt-sum`；结论条 tone=ok 红 / bad 绿 / warn 橙；提示条 tip=蓝。"""
     text = (text or "").strip()
     if not text:
         return ""
     t = (tone or _SUM_TONE_BY_TEXT.get(text) or "").strip().lower()
-    if t not in ("ok", "bad", "warn"):
+    if t not in ("ok", "bad", "warn", "tip"):
         t = "warn"
     return (
         f'<div class="vol-mkt-sum-wrap">'
@@ -4355,7 +4354,7 @@ def render_html(ctx: dict) -> str:
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 14px; line-height: 1.6; font-weight: 500; color: var(--text);
   }}
-  /* 结论条好/不好/谨慎：A股惯例 好=红、不好=绿、谨慎=橙 */
+  /* 结论条好/不好/谨慎：A股惯例 好=红、不好=绿、谨慎=橙；提示条 tip=蓝（默认 accent） */
   .vol-mkt-sum.ok {{
     background: #fff1f0;
     border-left-color: #E53935;
@@ -4367,6 +4366,10 @@ def render_html(ctx: dict) -> str:
   .vol-mkt-sum.warn {{
     background: #fff8eb;
     border-left-color: #FF9500;
+  }}
+  .vol-mkt-sum.tip {{
+    background: var(--accent-bg);
+    border-left-color: var(--accent);
   }}
 
   /* ── 涨停板块 ── */
@@ -4835,7 +4838,7 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
-    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。")}
+    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。", tone="tip")}
     {fund_recognition_html}
   </div>
 
