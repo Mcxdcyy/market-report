@@ -1716,10 +1716,57 @@ def _is_formal_disclosure(item: dict) -> bool:
     return not any(m in blob for m in _COMMENTARY_MARKERS)
 
 
-def _announce_edge_tag(item: dict) -> str:
-    """公告边框：ok 红=利好，warn 橙=中性，bad 绿=澄清/证伪。
+def _is_clarification_announce(blob: str) -> bool:
+    """是否澄清/证伪类披露（不等于自动绿边）。"""
+    return any(
+        k in blob
+        for k in (
+            "澄清", "不属实", "不实", "证伪", "撇清", "传闻",
+            "尚无", "无产品供货", "没有供货", "无相关",
+        )
+    )
 
-    正文已是否认、证伪时，禁止沿用写成的 ok。政策不按这句话改。
+
+def _clarification_denies_negative(blob: str) -> bool:
+    """澄清对象偏负面：辟谣丑闻/冲突/处罚等 → 利好或中性。"""
+    return any(
+        k in blob
+        for k in (
+            "冲突", "下跪", "涉事", "涉案", "丑闻", "造谣", "恶意捏造",
+            "侵害名誉", "报案", "留置", "调查", "处罚", "违规", "违纪",
+            "停职", "失联", "被抓", "行贿", "受贿", "走私", "欺诈",
+            "不实言论", "不实信息", "网络传闻", "网络不实",
+        )
+    )
+
+
+def _clarification_denies_bullish(blob: str) -> bool:
+    """澄清对象偏利好叙事：否认供货/合作/中标/主题关联等 → 利空。"""
+    return any(
+        k in blob
+        for k in (
+            "无产品供货", "没有供货", "尚无供货", "未供货",
+            "无合作", "尚无合作", "未签署", "未签订", "不存在合作",
+            "无订单", "尚无订单", "未中标", "未接到",
+            "业务占比", "收入占比", "不足1", "影响较小",
+            "无直接关系", "无业务往来", "未参与", "未生产",
+            "与上述", "与该", "无关", "不属实",
+        )
+    ) and any(
+        k in blob
+        for k in (
+            "供货", "合作", "订单", "中标", "合同", "协议",
+            "产品", "客户", "业务", "项目", "产线", "量产",
+            "华为", "苹果", "特斯拉", "宁德", "固态", "芯片",
+        )
+    )
+
+
+def _announce_edge_tag(item: dict) -> str:
+    """公告边框：ok 红=利好，warn 橙=中性，bad 绿=利空。
+
+    澄清类须辩证：不好的事澄清了 → ok/warn；炒作利好被澄清无关 → bad。
+    政策不按澄清句改写。
     """
     written = str(item.get("tag") or "warn")
     if written not in ("ok", "warn", "bad"):
@@ -1727,12 +1774,21 @@ def _announce_edge_tag(item: dict) -> str:
     if item.get("type") == "政策":
         return written
     blob = f"{item.get('title', '')}{item.get('content', '')}"
-    denial = (
-        "澄清", "不属实", "不实", "证伪", "撇清", "传闻",
-        "尚无", "无产品供货", "没有供货", "无相关",
-    )
-    if any(k in blob for k in denial):
+    if not _is_clarification_announce(blob):
+        return written
+    # 辟谣负面传闻：优先利好；若写了 warn 也保留 warn，勿压成 bad
+    if _clarification_denies_negative(blob):
+        if written == "ok":
+            return "ok"
+        if written == "warn":
+            return "warn"
+        return "ok"
+    # 否认供货/合作等利好叙事：强制利空绿边
+    if _clarification_denies_bullish(blob):
         return "bad"
+    # 其余澄清默认中性（勿再一律绿边）
+    if written == "bad":
+        return "warn"
     return written
 
 
