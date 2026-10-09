@@ -1,6 +1,23 @@
 [
   {
     "month": 10,
+    "day": 9,
+    "dot": "9",
+    "label": "10/9–13",
+    "title": "法国总统外事顾问博纳于来华，同中共中央政治局委员、中央外办主任王毅举行新一轮中法战略对话",
+    "short": "法国总统外事顾问…",
+    "brief": "暂无补充说明。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-10-09",
+    "span_end": [
+      10,
+      13
+    ]
+  },
+  {
+    "month": 10,
     "day": 14,
     "dot": "半",
     "label": "10/14–16",
@@ -10,10 +27,48 @@
     "hot": true,
     "importance": 4,
     "source": "seed",
-    "fetched_at": "2026-10-08",
+    "fetched_at": "2026-10-09",
     "span_end": [
       10,
       16
     ]
+  },
+  {
+    "month": 10,
+    "day": 20,
+    "dot": "20",
+    "label": "10/20",
+    "title": "第九届半导体大硅片论坛",
+    "short": "第九届半导体大硅…",
+    "brief": "围绕第九届半导体大硅片论坛相关议题展开交流，具体议程以主办方公布为准。",
+    "hot": false,
+    "importance": 2,
+    "source": "wscn",
+    "fetched_at": "2026-10-09"
+  },
+  {
+    "month": 10,
+    "day": 23,
+    "dot": "机",
+    "label": "10/23",
+    "title": "2026全球开发者先锋大会暨国际具身智能技能大赛",
+    "short": "具身",
+    "brief": "聚焦人形机器人与具身智能产业进展、应用落地及产业链协同相关议题。",
+    "hot": false,
+    "importance": 2,
+    "source": "wscn",
+    "fetched_at": "2026-10-09"
+  },
+  {
+    "month": 10,
+    "day": 23,
+    "dot": "影",
+    "label": "10/23",
+    "title": "《三星堆：未来往事》全国院线上映",
+    "short": "AI院线电影",
+    "brief": "国内首部人工智能超写实院线电影定档登陆全国院线，影片由人工智能技术参与制作并已取得国家电影局公映许可证，角色为原创数字形象；宣发与票房表现将检验人工智能内容商业化落地节奏。",
+    "hot": true,
+    "importance": 4,
+    "source": "seed"
   }
 ]
