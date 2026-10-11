@@ -10,7 +10,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-10-09",
+    "fetched_at": "2026-10-11",
     "span_end": [
       10,
       13
@@ -27,7 +27,7 @@
     "hot": true,
     "importance": 4,
     "source": "seed",
-    "fetched_at": "2026-10-09",
+    "fetched_at": "2026-10-11",
     "span_end": [
       10,
       16
@@ -44,7 +44,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-10-09"
+    "fetched_at": "2026-10-11"
   },
   {
     "month": 10,
@@ -57,7 +57,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-10-09"
+    "fetched_at": "2026-10-11"
   },
   {
     "month": 10,

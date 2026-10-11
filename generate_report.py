@@ -5724,8 +5724,7 @@ def _index_outlook_sum_text(block: dict) -> str:
     - 全下跌通道→「指数风险：全场极弱，等指数走出"下跌"。」
     - 全「-」转部分下跌通道→「指数风险：可能全盘走弱。」
     - 全下跌通道转部分「-」→「部分指数走出下跌：市场可能好转。」
-
-    部分↔部分等未定义情形不写结论条。
+    - 部分↔部分（与前一日同为部分）→ **沿用前一日结论条文案**
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
@@ -5740,7 +5739,7 @@ def _index_outlook_sum_text(block: dict) -> str:
         return "指数正常，市场正常。"
     if all_down:
         return '指数风险：全场极弱，等指数走出"下跌"。'
-    # 部分下跌：只认「由全- / 由全下跌」两种翻转
+    # 当日部分下跌
     if len(days) < 2:
         return ""
     prev = _index_day_down_flags(items, days[-2])
@@ -5750,7 +5749,8 @@ def _index_outlook_sum_text(block: dict) -> str:
         return "指数风险：可能全盘走弱。"
     if all(prev):
         return "部分指数走出下跌：市场可能好转。"
-    return ""
+    # 部分接部分：沿用截到前一日的结论条
+    return _index_outlook_sum_text({"indices": items, "days": days[:-1]})
 
 
 def render_index_outlook_html(block: dict) -> str:
