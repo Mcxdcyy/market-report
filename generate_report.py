@@ -34,14 +34,12 @@ try:
         compute_trend_strength,
         ensure_count_series_30d,
         ensure_means_200d,
-        ensure_trend_hold_series_120d,
         RESULT_DIR as TREND_RESULT_DIR,
     )
 except ImportError:  # pragma: no cover
     compute_trend_strength = None  # type: ignore
     ensure_means_200d = None  # type: ignore
     ensure_count_series_30d = None  # type: ignore
-    ensure_trend_hold_series_120d = None  # type: ignore
     TREND_RESULT_DIR = BASE / "trend_strength_results"
 
 try:
@@ -5084,42 +5082,7 @@ def load_trend_strength_block(
             except json.JSONDecodeError:
                 pass
 
-    # 今日趋势承接（近120日）：最新交易日重算；历史日从缓存截取
-    if is_latest and ensure_trend_hold_series_120d is not None:
-        try:
-            days_hold = _trading_days_ending(as_of_d, 201)
-            hold = ensure_trend_hold_series_120d(
-                as_of_d, days_hold, force=False, progress=True
-            ) or {}
-            block = dict(block)
-            block["hold_series"] = list(hold.get("daily") or [])
-            block["hold_mean_200d"] = hold.get("mean_200d")
-            block["hold_data_error"] = bool(hold.get("data_error"))
-        except Exception as exc:  # noqa: BLE001
-            print(f"[trend-hold] 更新失败: {exc}")
-    elif not block.get("hold_series"):
-        hpath = TREND_RESULT_DIR / "hold_series_120d.json"
-        if hpath.exists():
-            try:
-                hdata = json.loads(hpath.read_text(encoding="utf-8"))
-                daily = list(hdata.get("daily") or [])
-                as_of_s = as_of_d.isoformat()
-                if daily and (
-                    hdata.get("as_of") == as_of_s
-                    or any(str(r.get("date") or "")[:10] == as_of_s for r in daily)
-                ):
-                    clipped = [
-                        r for r in daily if str(r.get("date") or "")[:10] <= as_of_s
-                    ][-120:]
-                    if clipped:
-                        block = dict(block)
-                        block["hold_series"] = clipped
-                        if hdata.get("mean_200d") is not None:
-                            block["hold_mean_200d"] = hdata.get("mean_200d")
-                        last = clipped[-1] if clipped else {}
-                        block["hold_data_error"] = int(last.get("n_bad") or 0) > 0
-            except json.JSONDecodeError:
-                pass
+    # 强趋势-次日承接：页面已删除（2026-10-11）；后台 hold_series 不再写入报表
     return block
 
 
@@ -5224,132 +5187,6 @@ def _render_ts_count_bars_html(
       <div class="ts-cnt-bars">{mark_html}{"".join(cols)}</div>
       <div class="ts-cnt-axis">{"".join(ticks)}</div>
     </div>
-  </div>'''
-
-
-def _render_ts_hold_bars_html(
-    series: list[dict],
-    *,
-    mean_200d: float | None = None,
-    after_html: str = "",
-) -> str:
-    """强趋势-次日承接柱图（近120日）：柱高=近2日均值；零轴=近200日均值（上红下绿）。
-
-    meta「今日」用当日原始值（value_raw）；纵轴按窗口内 |偏离| 最大值定尺（不封顶）。
-    外壳与「近30日强趋势占比」、近30日成交金额同系（无边框底色）。
-    """
-    if not series:
-        return ""
-
-    vals: list[float] = []
-    for row in series:
-        try:
-            vals.append(float(row["value"]))
-        except (TypeError, ValueError, KeyError):
-            continue
-    if not vals:
-        return ""
-
-    base = float(mean_200d) if mean_200d is not None else 0.0
-    if mean_200d is not None:
-        scale = max(abs(v - base) for v in vals)
-    else:
-        scale = max(abs(v) for v in vals)
-    if scale < 1e-9:
-        scale = 1.0
-    scale *= 1.08
-
-    n_bars = len(series)
-    tick_idxs = {0, n_bars - 1}
-    if n_bars >= 8:
-        tick_idxs.add(n_bars // 3)
-        tick_idxs.add((2 * n_bars) // 3)
-    if n_bars >= 60:
-        tick_idxs.add(n_bars // 2)
-
-    axis_title = (
-        f' title="近200日均值 {base:+.2f}%"'
-        if mean_200d is not None
-        else ""
-    )
-
-    cols: list[str] = []
-    ticks: list[str] = []
-    for i, row in enumerate(series):
-        raw = row.get("value")
-        ds = str(row.get("date") or "")
-        try:
-            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
-            lab = f"{dt.month}/{dt.day}"
-            wd = WEEKDAY[dt.weekday()]
-        except ValueError:
-            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
-            wd = ""
-        is_latest = i == n_bars - 1
-        if raw is None:
-            cols.append(
-                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 无样本">
-      <div class="ts-hold-val">—</div>
-      <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div></div>
-    </div>'''
-            )
-        else:
-            v = float(raw)
-            delta = v - base
-            h = min(50.0, abs(delta) / scale * 50.0)
-            if delta >= 0:
-                bar = f'<div class="ts-hold-bar pos" style="height:{h:.1f}%"></div>'
-                tag = "pos"
-            else:
-                bar = f'<div class="ts-hold-bar neg" style="height:{h:.1f}%"></div>'
-                tag = "neg"
-            val_lab = f"{v:+.1f}%"
-            n = int(row.get("n") or 0)
-            tip_extra = f" · 均值{base:+.2f}%" if mean_200d is not None else ""
-            raw_v = row.get("value_raw")
-            tip_raw = ""
-            if raw_v is not None:
-                try:
-                    tip_raw = f" · 当日{float(raw_v):+.1f}%"
-                except (TypeError, ValueError):
-                    tip_raw = ""
-            cols.append(
-                f'''<div class="ts-hold-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近2日均{val_lab}{tip_raw} · {n}家{tip_extra}">
-      <div class="ts-hold-val {tag}">{val_lab}</div>
-      <div class="ts-hold-track"><div class="ts-hold-zero"{axis_title}></div>{bar}</div>
-    </div>'''
-            )
-        ticks.append(
-            f'<div class="ts-hold-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
-            f'<span>{lab}</span></div>'
-        )
-
-    last = next((x for x in reversed(series) if x.get("value") is not None), None)
-    try:
-        if last is not None and last.get("value_raw") is not None:
-            latest_lab = f"{float(last['value_raw']):+.1f}%"
-        elif last is not None:
-            latest_lab = f"{float(last['value']):+.1f}%"
-        else:
-            latest_lab = "—"
-    except (TypeError, ValueError, KeyError):
-        latest_lab = "—"
-
-    meta_txt = "2日均值"
-    if mean_200d is not None:
-        meta_txt += f" · 横轴 {base:+.1f}%"
-    meta_txt += f" · 今日 {latest_lab}"
-
-    return f'''<div class="ts-cnt-wrap">
-    <div class="ts-chart-head">
-      <span class="ts-chart-title">强趋势-次日承接</span>
-      <span class="ts-chart-meta">{meta_txt}</span>
-    </div>
-    <div class="ts-cnt-chart">
-      <div class="ts-hold-bars">{"".join(cols)}</div>
-      <div class="ts-hold-axis">{"".join(ticks)}</div>
-    </div>
-    {after_html}
   </div>'''
 
 
@@ -5503,73 +5340,15 @@ def render_trend_strength_html(block: dict) -> str:
     else:
         amt_chart = ""
 
-    hold_series_raw = block.get("hold_series") or []
-    hold_mean = block.get("hold_mean_200d")
-    try:
-        hold_mean_f = float(hold_mean) if hold_mean is not None else None
-    except (TypeError, ValueError):
-        hold_mean_f = None
-    hold_chart = ""
-    if hold_series_raw:
-        # 页面近120日；柱高=近2日均值；meta「今日」=当日原始
-        # 标签与柱同口径：近2日均值 vs 近200日均值，中性带 ±0.3%
-        hold_smoothed = _smooth_metric_series_nd(list(hold_series_raw), days=2)
-        hold_series_plot = hold_smoothed[-120:]
-        pills: list[str] = []
-        hold_sum_html = ""
-        hold_band = 0.3
-        if hold_mean_f is not None and hold_series_plot:
-            last_m2 = None
-            for row in reversed(hold_series_plot):
-                if row.get("value") is None:
-                    continue
-                try:
-                    last_m2 = float(row["value"])
-                except (TypeError, ValueError):
-                    continue
-                break
-            if last_m2 is not None:
-                delta = last_m2 - float(hold_mean_f)
-                if delta > hold_band:
-                    pills.append('<span class="pill ok">次日承接较好</span>')
-                    hold_sum_html = _module_sum_html(
-                        "强趋-承接较好：强趋有利润垫，可以多拿一下。"
-                    )
-                elif delta < -hold_band:
-                    pills.append('<span class="pill bad">次日承接不好</span>')
-                    hold_sum_html = _module_sum_html(
-                        "强趋-承接不好：尽快卖出。——不锁仓。"
-                    )
-                else:
-                    pills.append('<span class="pill warn">次日承接-有好有差</span>')
-                    hold_sum_html = _module_sum_html(
-                        "强趋承接-有好有差：有利润先减仓。——主动卖出。"
-                    )
-        data_err = bool(block.get("hold_data_error"))
-        if not data_err:
-            last = hold_series_raw[-1] if hold_series_raw else {}
-            data_err = int(last.get("n_bad") or 0) > 0
-        if data_err:
-            pills.append('<span class="pill bad">数据异常</span>')
-        tags_html = (
-            f'<div class="chart-tags vol20-tags">{"".join(pills)}</div>{hold_sum_html}'
-            if pills
-            else hold_sum_html
-        )
-        hold_chart = _render_ts_hold_bars_html(
-            hold_series_plot,
-            mean_200d=hold_mean_f,
-            after_html=tags_html,
-        )
-
     note_html = (
         '<div class="ts-note">'
         "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 「强趋势-次日承接」在上，「近30日强趋势占比」在下
-    return f"{hold_chart}{count_chart}{chart}{amt_chart}{note_html}"
+    # 页内：近30日强趋势占比 → 结构占比 → 成交额结构 → 脚注 → 百日新高（模块末另挂）
+    # 强趋势-次日承接已删除（2026-10-11）
+    return f"{count_chart}{chart}{amt_chart}{note_html}"
 
 
 def load_index_downtrend_block(
@@ -5617,17 +5396,17 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 
 
 # 表头风险提示：固定顺序 · 命中才展示（文案锁定）
+# 2026-10-11：已删「强趋势-次日承接不好」
 _HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
     ("index_down", "指数下跌通道"),
     ("vol30_shrink", "缩量周期-资金撤退"),
     ("chase_inactive", "追高-不活跃周期"),
     ("chase_loss_bad", "追高-次日承接不好"),
-    ("trend_hold_bad", "强趋势-次日承接不好"),
 )
 
 
 def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
-    """与页内图表结论同源，算表头 5 项风险是否命中。"""
+    """与页内图表结论同源，算表头 4 项风险是否命中。"""
     flags = {k: False for k, _ in _HERO_RISK_SPECS}
 
     # 1) 指数下跌通道：当日任一指数为下跌通道
@@ -5678,28 +5457,6 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
                 m = sum(float(v) for v in chunk) / float(window)
                 flags["chase_loss_bad"] = (m - float(loss_base)) < -band
                 break
-
-    # 5) 强趋势-次日承接不好：近2日均值 − 近200日均值 < −0.3%（与图下标签同口径）
-    ts = ctx.get("trend_strength") or {}
-    hold_series = ts.get("hold_series") or []
-    try:
-        hold_mean = float(ts["hold_mean_200d"]) if ts.get("hold_mean_200d") is not None else None
-    except (TypeError, ValueError):
-        hold_mean = None
-    if hold_mean is not None and hold_series:
-        last2h: list[float] = []
-        for row in reversed(hold_series):
-            if row.get("value") is None:
-                continue
-            try:
-                last2h.append(float(row["value"]))
-            except (TypeError, ValueError):
-                continue
-            if len(last2h) >= 2:
-                break
-        if last2h:
-            m2 = sum(last2h) / float(len(last2h))
-            flags["trend_hold_bad"] = (m2 - float(hold_mean)) < -0.3
 
     return flags
 
