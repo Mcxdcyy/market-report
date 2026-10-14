@@ -5791,7 +5791,11 @@ def _render_chase_metric_chart(
     avg2d: bool = False,
     mean_days: int | None = None,
 ) -> str:
-    """效应柱图：以 baseline（近200日均值）为零轴，均值上红 / 均值下绿；无 baseline 时退回绝对零轴。"""
+    """效应柱图（昨追-今日承接）：以 baseline（近200日均值）为零轴，均值上红 / 均值下绿。
+
+    纵轴与追高活跃度同口径：按窗口 |偏离| 约 90 分位定尺，极端日柱高封顶
+    （悬停仍显示真实值），避免少数大偏离把多数小柱压成一条线。
+    """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
         return f'''<div class="chase-chart">
@@ -5804,9 +5808,10 @@ def _render_chase_metric_chart(
 
     base = float(baseline) if baseline is not None else 0.0
     if baseline is not None:
-        scale = max(abs(v - base) for v in vals)
+        abs_deltas = [abs(v - base) for v in vals]
+        scale = _chase_robust_scale(abs_deltas, pct=0.90)
     else:
-        scale = max(abs(v) for v in vals)
+        scale = _chase_robust_scale([abs(v) for v in vals], pct=0.90)
     if scale < 1e-9:
         scale = 1.0
     # 略留顶，避免贴边
@@ -5859,8 +5864,9 @@ def _render_chase_metric_chart(
             val_lab = f"{v:+.1f}%"
             n = int(row.get("n") or 0)
             tip_extra = f" · 均值{base:+.2f}%" if baseline is not None else ""
+            tip_clip = " · 柱高已封顶" if abs(delta) > scale else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab} · {n}家{tip_extra}{tip_clip}">
       <div class="chase-val {tag}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
