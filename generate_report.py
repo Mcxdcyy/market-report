@@ -966,6 +966,7 @@ _SUM_TONE_BY_TEXT: dict[str, str] = {
     '指数风险：全场极弱，等指数走出"下跌"。': "bad",
     "指数风险：可能全盘走弱。": "warn",
     "部分指数走出下跌：市场可能好转。": "warn",
+    "部分指数走出下跌：市场可能转好，也可能再转差。": "warn",
     "追高活跃：积极做多。——多锁仓。": "ok",
     "追高不活跃：冲高容易回落。——主动卖出。": "bad",
     "多参与趋势票，向上拿。——低吸很难赚钱。": "ok",
@@ -5475,13 +5476,14 @@ def _hero_risks_html(ctx: dict) -> str:
 
 
 def _index_outlook_sum_text(block: dict) -> str:
-    """指数大局观表下结论条（固定四句，命中一条）：
+    """指数大局观表下结论条（固定文案，命中一条）：
 
     - 全「-」→「指数正常，市场正常。」
     - 全下跌通道→「指数风险：全场极弱，等指数走出"下跌"。」
     - 全「-」转部分下跌通道→「指数风险：可能全盘走弱。」
     - 全下跌通道转部分「-」→「部分指数走出下跌：市场可能好转。」
-    - 部分↔部分（与前一日同为部分）→ **沿用前一日结论条文案**
+    - 连续部分（当日与前一日均为部分）→
+      「部分指数走出下跌：市场可能转好，也可能再转差。」
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
@@ -5506,8 +5508,8 @@ def _index_outlook_sum_text(block: dict) -> str:
         return "指数风险：可能全盘走弱。"
     if all(prev):
         return "部分指数走出下跌：市场可能好转。"
-    # 部分接部分：沿用截到前一日的结论条
-    return _index_outlook_sum_text({"indices": items, "days": days[:-1]})
+    # 连续部分（有「-」亦有「下跌通道」接续）：固定一句，不再沿用前一日
+    return "部分指数走出下跌：市场可能转好，也可能再转差。"
 
 
 def render_index_outlook_html(block: dict) -> str:
