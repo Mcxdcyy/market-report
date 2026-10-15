@@ -4169,7 +4169,7 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
-  .fund-chart {{ width: 100%; }}
+  .fund-chart {{ width: 100%; display: flex; flex-direction: column; gap: 6px; }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
     width: 100%;
@@ -4196,8 +4196,24 @@ def render_html(ctx: dict) -> str:
   .fund-bar.strong {{ background: #E53935; }}
   .fund-bar.weak {{ background: #34C759; }}
   .fund-bar.empty {{ background: transparent; min-height: 0; box-shadow: none; }}
+  /* 下轨：3亿以上家数（与上轨占比分离；中性蓝灰，不抢红绿） */
+  .fund-amt-bars {{
+    display: flex; align-items: flex-end; gap: 2px; height: 26px;
+    width: 100%;
+    padding-top: 6px;
+    border-top: 1px solid rgba(60, 60, 67, 0.10);
+  }}
+  .fund-amt-col {{
+    flex: 1; min-width: 0; height: 100%;
+    display: flex; align-items: flex-end; justify-content: center;
+  }}
+  .fund-amt-bar {{
+    width: 72%; max-width: 18px; min-height: 0; border-radius: 1px;
+    background: rgba(90, 140, 200, 0.42);
+  }}
+  .fund-amt-bar.empty {{ background: transparent; }}
   .fund-axis {{
-    display: flex; margin-top: 4px; min-height: 16px; position: relative;
+    display: flex; margin-top: 0; min-height: 16px; position: relative;
   }}
   .fund-tick {{
     flex: 1; min-width: 0; position: relative; font-size: 10px; color: var(--muted);
@@ -6428,25 +6444,43 @@ def render_fund_recognition_html(block: dict) -> str:
         if n >= 4:
             tick_idx.add(n // 3)
             tick_idx.add((2 * n) // 3)
+        amt_max = max((int(pt.get("n_amt") or 0) for pt in series), default=0)
         cols = []
+        amt_cols = []
         ticks = []
         for i, pt in enumerate(series):
             pct = pt.get("pct")
+            n_amt = int(pt.get("n_amt") or 0)
+            n_ok = int(pt.get("n_ok") or 0)
             is_latest = i == n - 1
             if pct is None:
                 bar = '<div class="fund-bar empty" style="height:0"></div>'
-                title = f'{pt.get("date", "")} · 无样本'
+                title = f'{pt.get("date", "")} · 无样本（3亿以上0只）'
             else:
                 h = max(0.0, min(100.0, float(pct)))
                 level = "strong" if float(pct) > 50.0 else "weak"
                 bar = f'<div class="fund-bar {level}" style="height:{h:.1f}%"></div>'
                 title = (
-                    f'{pt.get("date", "")} · {pct}%'
-                    f'（{pt.get("n_ok", 0)}/{pt.get("n_amt", 0)}）'
+                    f'{pt.get("date", "")} · 占比{pct}%'
+                    f'（{n_ok}/{n_amt}）'
                 )
             cols.append(
                 f'<div class="fund-col{" latest" if is_latest else ""}" title="{title}">'
                 f'<div class="fund-bar-track">{bar}</div></div>'
+            )
+            if n_amt <= 0 or amt_max <= 0:
+                amt_bar = '<div class="fund-amt-bar empty" style="height:0"></div>'
+                amt_title = f'{pt.get("date", "")} · 3亿以上 0 只'
+            else:
+                ah = max(0.0, min(100.0, 100.0 * n_amt / amt_max))
+                amt_bar = f'<div class="fund-amt-bar" style="height:{ah:.1f}%"></div>'
+                amt_title = (
+                    f'{pt.get("date", "")} · 3亿以上 {n_amt} 只'
+                    f'（本图满格 {amt_max} 只）'
+                )
+            amt_cols.append(
+                f'<div class="fund-amt-col{" latest" if is_latest else ""}" '
+                f'title="{amt_title}">{amt_bar}</div>'
             )
             show = i in tick_idx
             lab = ""
@@ -6459,18 +6493,23 @@ def render_fund_recognition_html(block: dict) -> str:
             )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
+        today_amt = int(last_pt.get("n_amt") or 0)
         tags_html = ""
+        tag_parts = []
         if today is not None:
             today_f = float(today)
             cls = "ok" if today_f > 50.0 else "bad"
-            tags_html = (
-                f'<div class="chart-tags vol20-tags">'
-                f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
-                f"</div>"
-            )
+            tag_parts.append(f'<span class="pill {cls}">占比 {today_f:.1f}%</span>')
+        tag_parts.append(
+            f'<span class="pill weak">3亿以上 {today_amt} 只</span>'
+        )
+        tags_html = (
+            f'<div class="chart-tags vol20-tags">{"".join(tag_parts)}</div>'
+        )
         meta = (
             f'共 {it.get("pool_n", 0)} 只 · '
-            f'3亿以上 {int(last_pt.get("n_amt") or 0)} 只'
+            f'3亿以上 {today_amt} 只 · '
+            f'下轨满格 {amt_max} 只'
         )
         cards.append(
             f'''<div class="fund-card">
@@ -6480,6 +6519,7 @@ def render_fund_recognition_html(block: dict) -> str:
     </div>
     <div class="fund-chart">
       <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div>{"".join(cols)}</div>
+      <div class="fund-amt-bars" aria-label="3亿以上家数">{"".join(amt_cols)}</div>
       <div class="fund-axis">{"".join(ticks)}</div>
     </div>
     {tags_html}
@@ -6493,10 +6533,11 @@ def render_fund_recognition_html(block: dict) -> str:
         "自报表日起连续10个交易日占比均低于50%不展示）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
-        "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
+        "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本（分母为0）则上轨不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱色：占比&gt;50%为红、≤50%为绿；图下方「占比」标签为当日数值（样式同量能标签）。"
-        "柱图内 50%、100% 各一条浅灰实线刻度（与图表分隔线区分）。"
+        "双轨图：上轨为认可度占比（&gt;50%红 / ≤50%绿；内含50%、100%浅灰刻度）；"
+        "下轨为当日3亿以上家数（中性蓝灰；柱高相对该板块近20日最高家数，卡片「下轨满格」即该最高值）。"
+        "图下方标签为当日占比与3亿以上家数。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
