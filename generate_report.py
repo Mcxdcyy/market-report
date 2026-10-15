@@ -6488,10 +6488,10 @@ def render_fund_recognition_html(block: dict) -> str:
 
     note = (
         '<div class="fund-note">'
-        "板块-资金认可度：近30个交易日开盘啦涨停板块整合个股池"
+        "板块-资金认可度：近20个交易日开盘啦涨停板块整合个股池"
         "（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；"
         "自报表日起连续10个交易日占比均低于50%不展示）；"
-        "近30个交易日每日统计——"
+        "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本则该日不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
@@ -6669,7 +6669,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
         fund_range = (
             f"{fund_recognition['series_start'][5:].replace('-', '/')}–"
-            f"{fund_recognition['series_end'][5:].replace('-', '/')} · 近30日占比"
+            f"{fund_recognition['series_end'][5:].replace('-', '/')} · 近20日占比"
         )
 
     return {
