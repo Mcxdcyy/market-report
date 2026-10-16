@@ -1,0 +1,365 @@
+{
+  "schema": 2,
+  "as_of": "2026-10-16",
+  "series_days": 10,
+  "days": [
+    "2026-09-28",
+    "2026-09-29",
+    "2026-09-30",
+    "2026-10-08",
+    "2026-10-09",
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14",
+    "2026-10-15",
+    "2026-10-16"
+  ],
+  "note": "下跌通道（与自选池下跌预警同口径）：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。页面：近10个交易日对比，非下跌填「-」。",
+  "fetched": "2026-10-16 12:55:45",
+  "indices": [
+    {
+      "name": "上证指数",
+      "symbol": "sh000001",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": false,
+      "rule2_high_below_ma20": true,
+      "bars": 200,
+      "last_bar": "2026-10-16 11:30:00",
+      "last_close": 3742.656,
+      "series": [
+        {
+          "date": "2026-09-28",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3823.621
+        },
+        {
+          "date": "2026-09-29",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3830.451
+        },
+        {
+          "date": "2026-09-30",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3842.195
+        },
+        {
+          "date": "2026-10-08",
+          "status": "ok",
+          "label": "-",
+          "downtrend": false,
+          "last_close": 3811.904
+        },
+        {
+          "date": "2026-10-09",
+          "status": "ok",
+          "label": "-",
+          "downtrend": false,
+          "last_close": 3813.791
+        },
+        {
+          "date": "2026-10-12",
+          "status": "ok",
+          "label": "-",
+          "downtrend": false,
+          "last_close": 3797.242
+        },
+        {
+          "date": "2026-10-13",
+          "status": "ok",
+          "label": "-",
+          "downtrend": false,
+          "last_close": 3800.864
+        },
+        {
+          "date": "2026-10-14",
+          "status": "ok",
+          "label": "-",
+          "downtrend": false,
+          "last_close": 3767.227
+        },
+        {
+          "date": "2026-10-15",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3707.476
+        },
+        {
+          "date": "2026-10-16",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3742.656
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "深成指",
+      "symbol": "sz399001",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": true,
+      "rule2_high_below_ma20": true,
+      "bars": 200,
+      "last_bar": "2026-10-16 11:30:00",
+      "last_close": 11957.074,
+      "series": [
+        {
+          "date": "2026-09-28",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12858.753
+        },
+        {
+          "date": "2026-09-29",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12901.947
+        },
+        {
+          "date": "2026-09-30",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12887.62
+        },
+        {
+          "date": "2026-10-08",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12620.897
+        },
+        {
+          "date": "2026-10-09",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12641.858
+        },
+        {
+          "date": "2026-10-12",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12384.869
+        },
+        {
+          "date": "2026-10-13",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12353.699
+        },
+        {
+          "date": "2026-10-14",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 12110.591
+        },
+        {
+          "date": "2026-10-15",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 11816.788
+        },
+        {
+          "date": "2026-10-16",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 11957.074
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "创业板指数",
+      "symbol": "sz399006",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": true,
+      "rule2_high_below_ma20": true,
+      "bars": 200,
+      "last_bar": "2026-10-16 11:30:00",
+      "last_close": 2809.899,
+      "series": [
+        {
+          "date": "2026-09-28",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3139.825
+        },
+        {
+          "date": "2026-09-29",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3142.563
+        },
+        {
+          "date": "2026-09-30",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3135.277
+        },
+        {
+          "date": "2026-10-08",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3036.657
+        },
+        {
+          "date": "2026-10-09",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 3043.335
+        },
+        {
+          "date": "2026-10-12",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 2963.824
+        },
+        {
+          "date": "2026-10-13",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 2958.345
+        },
+        {
+          "date": "2026-10-14",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 2866.763
+        },
+        {
+          "date": "2026-10-15",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 2783.175
+        },
+        {
+          "date": "2026-10-16",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 2809.899
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "科创板指数",
+      "symbol": "sh000688",
+      "label": "下跌通道",
+      "pill": "bad",
+      "downtrend": true,
+      "status": "down",
+      "rule1_close_below_ma10": false,
+      "rule2_high_below_ma20": true,
+      "bars": 200,
+      "last_bar": "2026-10-16 11:30:00",
+      "last_close": 1381.85,
+      "series": [
+        {
+          "date": "2026-09-28",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1555.98
+        },
+        {
+          "date": "2026-09-29",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1569.338
+        },
+        {
+          "date": "2026-09-30",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1530.006
+        },
+        {
+          "date": "2026-10-08",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1456.324
+        },
+        {
+          "date": "2026-10-09",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1457.267
+        },
+        {
+          "date": "2026-10-12",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1426.722
+        },
+        {
+          "date": "2026-10-13",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1427.178
+        },
+        {
+          "date": "2026-10-14",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1380.258
+        },
+        {
+          "date": "2026-10-15",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1359.521
+        },
+        {
+          "date": "2026-10-16",
+          "status": "down",
+          "label": "下跌通道",
+          "downtrend": true,
+          "last_close": 1381.85
+        }
+      ],
+      "error": null
+    }
+  ]
+}
