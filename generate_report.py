@@ -6482,17 +6482,15 @@ def render_fund_recognition_html(block: dict) -> str:
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
         today_amt = int(last_pt.get("n_amt") or 0)
-        tag_parts = []
+        tags_html = ""
         if today is not None:
             today_f = float(today)
             cls = "ok" if today_f > 50.0 else "bad"
-            tag_parts.append(f'<span class="pill {cls}">占比 {today_f:.1f}%</span>')
-        tag_parts.append(
-            f'<span class="pill weak">3亿以上 {today_amt} 只</span>'
-        )
-        tags_html = (
-            f'<div class="chart-tags vol20-tags">{"".join(tag_parts)}</div>'
-        )
+            tags_html = (
+                f'<div class="chart-tags vol20-tags">'
+                f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
+                f"</div>"
+            )
         meta = (
             f'共 {it.get("pool_n", 0)} 只 · '
             f'3亿以上 {today_amt} 只'
@@ -6522,8 +6520,8 @@ def render_fund_recognition_html(block: dict) -> str:
         "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本（分母为0）则不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
         "柱图为认可度占比（&gt;50%红 / ≤50%绿；50%、100%浅灰刻度）；"
-        "横轴日期下方数字为当日3亿以上家数。"
-        "图下方标签为当日占比与3亿以上家数。"
+        "横轴日期下方数字为当日3亿以上家数；"
+        "图下方「占比」标签为当日数值（当日3亿以上家数见卡片标题，不在标签重复）。"
         "</div>"
     )
     return f'<div class="fund-list">{"".join(cards)}</div>{note}'
