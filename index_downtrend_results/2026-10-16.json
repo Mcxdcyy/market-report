@@ -15,7 +15,7 @@
     "2026-10-16"
   ],
   "note": "下跌通道（与自选池下跌预警同口径）：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。页面：近10个交易日对比，非下跌填「-」。",
-  "fetched": "2026-10-16 13:49:29",
+  "fetched": "2026-10-16 15:45:21",
   "indices": [
     {
       "name": "上证指数",
@@ -27,8 +27,8 @@
       "rule1_close_below_ma10": false,
       "rule2_high_below_ma20": true,
       "bars": 200,
-      "last_bar": "2026-10-16 14:00:00",
-      "last_close": 3717.244,
+      "last_bar": "2026-10-16 15:00:00",
+      "last_close": 3716.284,
       "series": [
         {
           "date": "2026-09-28",
@@ -98,7 +98,7 @@
           "status": "down",
           "label": "下跌通道",
           "downtrend": true,
-          "last_close": 3717.244
+          "last_close": 3716.284
         }
       ],
       "error": null
@@ -113,8 +113,8 @@
       "rule1_close_below_ma10": true,
       "rule2_high_below_ma20": true,
       "bars": 200,
-      "last_bar": "2026-10-16 14:00:00",
-      "last_close": 11867.511,
+      "last_bar": "2026-10-16 15:00:00",
+      "last_close": 11802.459,
       "series": [
         {
           "date": "2026-09-28",
@@ -184,7 +184,7 @@
           "status": "down",
           "label": "下跌通道",
           "downtrend": true,
-          "last_close": 11867.511
+          "last_close": 11802.459
         }
       ],
       "error": null
@@ -199,8 +199,8 @@
       "rule1_close_below_ma10": true,
       "rule2_high_below_ma20": true,
       "bars": 200,
-      "last_bar": "2026-10-16 14:00:00",
-      "last_close": 2789.861,
+      "last_bar": "2026-10-16 15:00:00",
+      "last_close": 2772.384,
       "series": [
         {
           "date": "2026-09-28",
@@ -270,7 +270,7 @@
           "status": "down",
           "label": "下跌通道",
           "downtrend": true,
-          "last_close": 2789.861
+          "last_close": 2772.384
         }
       ],
       "error": null
@@ -285,8 +285,8 @@
       "rule1_close_below_ma10": false,
       "rule2_high_below_ma20": true,
       "bars": 200,
-      "last_bar": "2026-10-16 14:00:00",
-      "last_close": 1366.712,
+      "last_bar": "2026-10-16 15:00:00",
+      "last_close": 1358.647,
       "series": [
         {
           "date": "2026-09-28",
@@ -356,7 +356,7 @@
           "status": "down",
           "label": "下跌通道",
           "downtrend": true,
-          "last_close": 1366.712
+          "last_close": 1358.647
         }
       ],
       "error": null
