@@ -4180,6 +4180,7 @@ def render_html(ctx: dict) -> str:
     border-top: 1px solid rgba(60, 60, 67, 0.18);
     pointer-events: none; z-index: 1;
   }}
+  .fund-mark-0 {{ bottom: 0; }}
   .fund-mark-50 {{ bottom: 50%; }}
   .fund-mark-100 {{ bottom: 100%; }}
   .fund-col {{
@@ -6359,7 +6360,8 @@ def load_fund_recognition_block(
 
     if compute_fund_recognition is None:
         return {"as_of": as_of_d.isoformat(), "items": [], "note": "板块-资金认可度模块未安装"}
-    return compute_fund_recognition(as_of_d, force=False, progress=True)
+    # 最新交易日每次强制重算：成交额走 QQ 日 K 刷新，不沿用可能盘中/异源的旧 K 线缓存
+    return compute_fund_recognition(as_of_d, force=True, progress=True)
 
 
 def render_fund_recognition_html(block: dict) -> str:
@@ -6518,7 +6520,7 @@ def render_fund_recognition_html(block: dict) -> str:
       <span class="fund-card-meta">{meta}</span>
     </div>
     <div class="fund-chart">
-      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div>{"".join(cols)}</div>
+      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{"".join(cols)}</div>
       <div class="fund-axis">{"".join(ticks)}</div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数">{"".join(amt_nums)}</div>
     </div>
@@ -6537,7 +6539,7 @@ def render_fund_recognition_html(block: dict) -> str:
         "近20日窗口内该板块首次上榜之前不画柱、不标家数；首次上榜日起才显示；"
         "上榜后某日无样本（分母为0）则不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
-        "柱图为认可度占比（&gt;50%红 / ≤50%绿；50%、100%浅灰刻度）；"
+        "柱图为认可度占比（&gt;50%红 / ≤50%绿；0%、50%、100%浅灰刻度）；"
         "横轴日期下方数字为当日3亿以上家数；"
         "图下方「占比」标签为当日数值（当日3亿以上家数见卡片标题，不在标签重复）。"
         "</div>"
