@@ -90,15 +90,21 @@ def build_sector_pools(
     stocks_hist: dict[str, dict[str, list[str]]],
     pool_days: list[date],
 ) -> list[dict[str, Any]]:
-    """近 pool_days 合并板块池；按累计上榜家次（每日家数之和）降序。"""
+    """近 pool_days 合并板块池；按累计上榜家次（每日家数之和）降序。
+
+    first_appear：窗口内该板块首次出现在开盘啦涨停原因中的交易日（用于柱图从首日才起画）。
+    """
     pools: dict[str, set[str]] = {}
     hit_counts: dict[str, int] = {}
+    first_appear: dict[str, date] = {}
     for d in pool_days:
         day_map = stocks_hist.get(d.isoformat()) or {}
         for name, codes in day_map.items():
             if not name:
                 continue
             hit_counts[name] = hit_counts.get(name, 0) + len(codes)
+            if name not in first_appear:
+                first_appear[name] = d
             buckets = pools.setdefault(name, set())
             for c in codes:
                 code = str(c).zfill(6)
@@ -110,6 +116,7 @@ def build_sector_pools(
             "codes": sorted(codes),
             "pool_n": len(codes),
             "hit_count": hit_counts.get(name, 0),
+            "first_appear": first_appear[name].isoformat(),
         }
         for name, codes in pools.items()
         if codes
@@ -223,9 +230,23 @@ def compute_sector_series(
     codes: list[str],
     cache: dict[str, list[dict]],
     series_days: list[date],
+    *,
+    first_appear: date | None = None,
 ) -> list[dict]:
+    """按日序列。first_appear 之前（窗口内尚未上榜）标记 before_debut，不计入展示柱。"""
     out = []
     for d in series_days:
+        if first_appear is not None and d < first_appear:
+            out.append(
+                {
+                    "date": d.isoformat(),
+                    "pct": None,
+                    "n_ok": 0,
+                    "n_amt": 0,
+                    "before_debut": True,
+                }
+            )
+            continue
         n_ok = 0
         n_amt = 0
         for code in codes:
@@ -241,7 +262,15 @@ def compute_sector_series(
                 if ok:
                     n_ok += 1
         if n_amt <= 0:
-            out.append({"date": d.isoformat(), "pct": None, "n_ok": 0, "n_amt": 0})
+            out.append(
+                {
+                    "date": d.isoformat(),
+                    "pct": None,
+                    "n_ok": 0,
+                    "n_amt": 0,
+                    "before_debut": False,
+                }
+            )
         else:
             out.append(
                 {
@@ -249,6 +278,7 @@ def compute_sector_series(
                     "pct": round(100.0 * n_ok / n_amt, 1),
                     "n_ok": n_ok,
                     "n_amt": n_amt,
+                    "before_debut": False,
                 }
             )
     return out
@@ -268,7 +298,9 @@ def compute_fund_recognition(
             cached = json.loads(out_path.read_text(encoding="utf-8"))
             items = cached.get("items") or []
             n_ser = len((items[0].get("series") or [])) if items else 0
-            if items and n_ser >= SERIES_DAYS:
+            # 须带 first_appear / before_debut（2026-10-17 起柱图从首次上榜日起画）
+            has_debut = bool(items) and bool(items[0].get("first_appear"))
+            if items and n_ser >= SERIES_DAYS and has_debut:
                 return cached
         except json.JSONDecodeError:
             pass
@@ -298,16 +330,19 @@ def compute_fund_recognition(
 
     items = []
     for p in pools:
-        series = compute_sector_series(p["codes"], cache, series_days)
+        fa = _as_date(p["first_appear"]) if p.get("first_appear") else None
+        series = compute_sector_series(
+            p["codes"], cache, series_days, first_appear=fa
+        )
         items.append(
             {
                 "name": p["name"],
                 "pool_n": p["pool_n"],
                 "hit_count": p["hit_count"],
+                "first_appear": p.get("first_appear"),
                 "series": series,
             }
         )
-
     result = {
         "as_of": as_of_d.isoformat(),
         "pool_start": pool_days[0].isoformat(),

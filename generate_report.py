@@ -4220,6 +4220,7 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-amt-n.latest {{ color: var(--text); font-weight: 600; }}
   .fund-amt-n.zero {{ opacity: 0.4; }}
+  .fund-amt-n.before {{ opacity: 0; }}
 
 
   /* ── 近30日成交金额柱状图 ── */
@@ -6390,9 +6391,14 @@ def render_fund_recognition_html(block: dict) -> str:
         return sum(vals) / len(vals)
 
     def _below_50_streak_from_end(series: list) -> int:
-        """自报表日起往前，连续「占比<50%」天数（无样本日视为未达50%）。"""
+        """自报表日起往前，连续「占比<50%」天数（无样本日视为未达50%）。
+
+        首次上榜前的 before_debut 日不计入（板块尚未出现，不是「占比偏低」）。
+        """
         streak = 0
         for pt in reversed(series):
+            if pt.get("before_debut"):
+                break
             pct = pt.get("pct")
             if pct is not None and float(pct) >= 50.0:
                 break
@@ -6449,7 +6455,11 @@ def render_fund_recognition_html(block: dict) -> str:
             n_amt = int(pt.get("n_amt") or 0)
             n_ok = int(pt.get("n_ok") or 0)
             is_latest = i == n - 1
-            if pct is None:
+            before_debut = bool(pt.get("before_debut"))
+            if before_debut:
+                bar = '<div class="fund-bar empty" style="height:0"></div>'
+                title = f'{pt.get("date", "")} · 尚未上榜'
+            elif pct is None:
                 bar = '<div class="fund-bar empty" style="height:0"></div>'
                 title = f'{pt.get("date", "")} · 无样本 · 3亿以上 {n_amt} 只'
             else:
@@ -6473,12 +6483,18 @@ def render_fund_recognition_html(block: dict) -> str:
                 f'<div class="fund-tick{" show" if show else ""}{" latest" if is_latest else ""}">'
                 f'{f"<span>{lab}</span>" if show else ""}</div>'
             )
-            zero_cls = " zero" if n_amt <= 0 else ""
-            latest_cls = " latest" if is_latest else ""
-            amt_nums.append(
-                f'<div class="fund-amt-n{latest_cls}{zero_cls}" '
-                f'title="{pt.get("date", "")} · 3亿以上 {n_amt} 只">{n_amt}</div>'
-            )
+            if before_debut:
+                amt_nums.append(
+                    f'<div class="fund-amt-n before" '
+                    f'title="{pt.get("date", "")} · 尚未上榜"></div>'
+                )
+            else:
+                zero_cls = " zero" if n_amt <= 0 else ""
+                latest_cls = " latest" if is_latest else ""
+                amt_nums.append(
+                    f'<div class="fund-amt-n{latest_cls}{zero_cls}" '
+                    f'title="{pt.get("date", "")} · 3亿以上 {n_amt} 只">{n_amt}</div>'
+                )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
         today_amt = int(last_pt.get("n_amt") or 0)
@@ -6517,7 +6533,9 @@ def render_fund_recognition_html(block: dict) -> str:
         "自报表日起连续10个交易日占比均低于50%不展示）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
-        "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；历史某日无样本（分母为0）则不画柱。"
+        "报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；"
+        "近20日窗口内该板块首次上榜之前不画柱、不标家数；首次上榜日起才显示；"
+        "上榜后某日无样本（分母为0）则不画柱。"
         "排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。"
         "柱图为认可度占比（&gt;50%红 / ≤50%绿；50%、100%浅灰刻度）；"
         "横轴日期下方数字为当日3亿以上家数；"
