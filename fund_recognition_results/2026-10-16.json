@@ -5,7 +5,8 @@
   "series_start": "2026-09-11",
   "series_end": "2026-10-16",
   "amount_min_yi": 3,
-  "generated": "2026-10-17 09:33:46",
+  "amount_via": "qq_refresh",
+  "generated": "2026-10-17 09:49:38",
   "items": [
     {
       "name": "AI应用",
@@ -148,9 +149,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 33.3,
-          "n_ok": 8,
-          "n_amt": 24,
+          "pct": 25.0,
+          "n_ok": 7,
+          "n_amt": 28,
           "before_debut": false
         }
       ]
@@ -296,9 +297,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 20.7,
+          "pct": 18.2,
           "n_ok": 6,
-          "n_amt": 29,
+          "n_amt": 33,
           "before_debut": false
         }
       ]
@@ -444,9 +445,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 8.3,
+          "pct": 5.6,
           "n_ok": 1,
-          "n_amt": 12,
+          "n_amt": 18,
           "before_debut": false
         }
       ]
@@ -592,9 +593,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 31.6,
-          "n_ok": 6,
-          "n_amt": 19,
+          "pct": 16.0,
+          "n_ok": 4,
+          "n_amt": 25,
           "before_debut": false
         }
       ]
@@ -740,9 +741,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 40.0,
-          "n_ok": 2,
-          "n_amt": 5,
+          "pct": 16.7,
+          "n_ok": 1,
+          "n_amt": 6,
           "before_debut": false
         }
       ]
@@ -888,9 +889,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 22.2,
+          "pct": 16.7,
           "n_ok": 2,
-          "n_amt": 9,
+          "n_amt": 12,
           "before_debut": false
         }
       ]
@@ -1036,9 +1037,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 25.0,
-          "n_ok": 2,
-          "n_amt": 8,
+          "pct": 9.1,
+          "n_ok": 1,
+          "n_amt": 11,
           "before_debut": false
         }
       ]
@@ -1184,9 +1185,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 50.0,
-          "n_ok": 1,
-          "n_amt": 2,
+          "pct": 28.6,
+          "n_ok": 2,
+          "n_amt": 7,
           "before_debut": false
         }
       ]
@@ -1332,9 +1333,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 37.5,
-          "n_ok": 3,
-          "n_amt": 8,
+          "pct": 36.4,
+          "n_ok": 4,
+          "n_amt": 11,
           "before_debut": false
         }
       ]
@@ -1630,7 +1631,7 @@
           "date": "2026-10-16",
           "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 4,
+          "n_amt": 5,
           "before_debut": false
         }
       ]
@@ -1776,9 +1777,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 42.9,
-          "n_ok": 3,
-          "n_amt": 7,
+          "pct": 40.0,
+          "n_ok": 4,
+          "n_amt": 10,
           "before_debut": false
         }
       ]
@@ -1925,8 +1926,8 @@
         {
           "date": "2026-10-16",
           "pct": 100.0,
-          "n_ok": 8,
-          "n_amt": 8,
+          "n_ok": 10,
+          "n_amt": 10,
           "before_debut": false
         }
       ]
@@ -2074,7 +2075,7 @@
           "date": "2026-10-16",
           "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 1,
+          "n_amt": 3,
           "before_debut": false
         }
       ]
@@ -2220,9 +2221,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 40.0,
+          "pct": 28.6,
           "n_ok": 2,
-          "n_amt": 5,
+          "n_amt": 7,
           "before_debut": false
         }
       ]
@@ -2368,8 +2369,8 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 75.0,
-          "n_ok": 3,
+          "pct": 25.0,
+          "n_ok": 1,
           "n_amt": 4,
           "before_debut": false
         }
@@ -2664,9 +2665,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 2,
           "before_debut": false
         }
       ]
@@ -2962,7 +2963,7 @@
           "date": "2026-10-16",
           "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 1,
+          "n_amt": 3,
           "before_debut": false
         }
       ]
@@ -3109,8 +3110,8 @@
         {
           "date": "2026-10-16",
           "pct": 100.0,
-          "n_ok": 5,
-          "n_amt": 5,
+          "n_ok": 8,
+          "n_amt": 8,
           "before_debut": false
         }
       ]
@@ -3256,9 +3257,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 0.0,
-          "n_ok": 0,
-          "n_amt": 1,
+          "pct": 50.0,
+          "n_ok": 1,
+          "n_amt": 2,
           "before_debut": false
         }
       ]
@@ -3404,9 +3405,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 50.0,
-          "n_ok": 3,
-          "n_amt": 6,
+          "pct": 57.1,
+          "n_ok": 4,
+          "n_amt": 7,
           "before_debut": false
         }
       ]
@@ -3700,8 +3701,8 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 25.0,
-          "n_ok": 1,
+          "pct": 0.0,
+          "n_ok": 0,
           "n_amt": 4,
           "before_debut": false
         }
@@ -3848,9 +3849,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 66.7,
-          "n_ok": 2,
-          "n_amt": 3,
+          "pct": 60.0,
+          "n_ok": 3,
+          "n_amt": 5,
           "before_debut": false
         }
       ]
@@ -3996,9 +3997,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 66.7,
-          "n_ok": 4,
-          "n_amt": 6,
+          "pct": 62.5,
+          "n_ok": 5,
+          "n_amt": 8,
           "before_debut": false
         }
       ]
@@ -4146,7 +4147,7 @@
           "date": "2026-10-16",
           "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 2,
+          "n_amt": 3,
           "before_debut": false
         }
       ]
@@ -4294,7 +4295,7 @@
           "date": "2026-10-16",
           "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 2,
+          "n_amt": 3,
           "before_debut": false
         }
       ]
@@ -4440,9 +4441,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -4736,9 +4737,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
+          "pct": 33.3,
+          "n_ok": 1,
+          "n_amt": 3,
           "before_debut": false
         }
       ]
@@ -4884,9 +4885,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 0.0,
-          "n_ok": 0,
-          "n_amt": 1,
+          "pct": 50.0,
+          "n_ok": 1,
+          "n_amt": 2,
           "before_debut": false
         }
       ]
@@ -5180,9 +5181,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 50.0,
+          "pct": 33.3,
           "n_ok": 1,
-          "n_amt": 2,
+          "n_amt": 3,
           "before_debut": false
         }
       ]
@@ -5328,9 +5329,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 66.7,
+          "pct": 40.0,
           "n_ok": 2,
-          "n_amt": 3,
+          "n_amt": 5,
           "before_debut": false
         }
       ]
@@ -5476,8 +5477,8 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": 0.0,
+          "n_ok": 0,
           "n_amt": 1,
           "before_debut": false
         }
@@ -5624,9 +5625,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -6216,9 +6217,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 0.0,
-          "n_ok": 0,
-          "n_amt": 1,
+          "pct": 50.0,
+          "n_ok": 1,
+          "n_amt": 2,
           "before_debut": false
         }
       ]
@@ -7400,9 +7401,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 100.0,
+          "pct": 50.0,
           "n_ok": 1,
-          "n_amt": 1,
+          "n_amt": 2,
           "before_debut": false
         }
       ]
@@ -7548,8 +7549,8 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 100.0,
-          "n_ok": 3,
+          "pct": 66.7,
+          "n_ok": 2,
           "n_amt": 3,
           "before_debut": false
         }
@@ -7696,9 +7697,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 100.0,
+          "pct": 50.0,
           "n_ok": 1,
-          "n_amt": 1,
+          "n_amt": 2,
           "before_debut": false
         }
       ]
@@ -8732,9 +8733,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
+          "pct": 100.0,
+          "n_ok": 1,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -9028,9 +9029,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -9324,9 +9325,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
+          "pct": 100.0,
+          "n_ok": 1,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -9620,8 +9621,8 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 50.0,
-          "n_ok": 1,
+          "pct": 0.0,
+          "n_ok": 0,
           "n_amt": 2,
           "before_debut": false
         }
@@ -9768,9 +9769,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
+          "pct": 100.0,
+          "n_ok": 1,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -10508,9 +10509,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -10804,8 +10805,8 @@
         },
         {
           "date": "2026-10-16",
-          "pct": 100.0,
-          "n_ok": 1,
+          "pct": 0.0,
+          "n_ok": 0,
           "n_amt": 1,
           "before_debut": false
         }
@@ -11544,9 +11545,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
+          "pct": 100.0,
+          "n_ok": 1,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -12284,9 +12285,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
+          "pct": 100.0,
+          "n_ok": 1,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -13468,9 +13469,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 1,
           "before_debut": false
         }
       ]
@@ -14800,9 +14801,9 @@
         },
         {
           "date": "2026-10-16",
-          "pct": null,
+          "pct": 0.0,
           "n_ok": 0,
-          "n_amt": 0,
+          "n_amt": 1,
           "before_debut": false
         }
       ]

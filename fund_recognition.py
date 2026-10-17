@@ -166,7 +166,17 @@ def fetch_klines_long(code: str, as_of: date) -> list[dict]:
     return rows
 
 
-def ensure_klines(codes: list[str], as_of: date, *, progress: bool = True) -> dict[str, list[dict]]:
+def ensure_klines(
+    codes: list[str],
+    as_of: date,
+    *,
+    progress: bool = True,
+    refresh: bool = True,
+) -> dict[str, list[dict]]:
+    """资金认可度依赖成交额分母，默认 refresh=True：一律走 QQ 日 K 刷新金额（万元→元）。
+
+    旧共享 K 线缓存里的 amount 可能来自其它源或盘中未完成值，会导致 >3 亿家数少算。
+    """
     cache = ts.load_kline_cache()
     long_cache: dict[str, list[dict]] = {}
     if getattr(ts, "LONG_CACHE_FILE", None) and ts.LONG_CACHE_FILE.exists():
@@ -178,14 +188,19 @@ def ensure_klines(codes: list[str], as_of: date, *, progress: bool = True) -> di
     need: list[str] = []
     for code in codes:
         rows = cache.get(code) or long_cache.get(code) or []
-        if rows and ts.cache_covers(rows, as_of) and len(rows) >= 15:
+        if (
+            not refresh
+            and rows
+            and ts.cache_covers(rows, as_of)
+            and len(rows) >= 15
+        ):
             if code not in cache:
                 cache[code] = rows
             continue
         need.append(code)
 
     if need and progress:
-        print(f"[fund] 补拉 K 线 {len(need)} 只…")
+        print(f"[fund] {'刷新' if refresh else '补拉'} K 线 {len(need)} 只…")
     if need:
         t0 = time.time()
         done = 0
@@ -298,9 +313,10 @@ def compute_fund_recognition(
             cached = json.loads(out_path.read_text(encoding="utf-8"))
             items = cached.get("items") or []
             n_ser = len((items[0].get("series") or [])) if items else 0
-            # 须带 first_appear / before_debut（2026-10-17 起柱图从首次上榜日起画）
+            # 须带 first_appear（柱图起点）+ amount_via=qq_refresh（成交额口径）
             has_debut = bool(items) and bool(items[0].get("first_appear"))
-            if items and n_ser >= SERIES_DAYS and has_debut:
+            amount_ok = cached.get("amount_via") == "qq_refresh"
+            if items and n_ser >= SERIES_DAYS and has_debut and amount_ok:
                 return cached
         except json.JSONDecodeError:
             pass
@@ -326,7 +342,7 @@ def compute_fund_recognition(
         print(f"[fund] 板块 {len(pools)} 个")
 
     all_codes: list[str] = sorted({c for p in pools for c in p["codes"]})
-    cache = ensure_klines(all_codes, as_of_d, progress=progress)
+    cache = ensure_klines(all_codes, as_of_d, progress=progress, refresh=True)
 
     items = []
     for p in pools:
@@ -350,6 +366,7 @@ def compute_fund_recognition(
         "series_start": series_days[0].isoformat(),
         "series_end": series_days[-1].isoformat(),
         "amount_min_yi": 3,
+        "amount_via": "qq_refresh",
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "items": items,
     }
