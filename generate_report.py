@@ -1522,15 +1522,34 @@ def _render_vol120_mean_zero_chart(
   </div>'''
 
 
+def _meta_today_vs_mean_span(
+    today: float | None,
+    mean: float | None,
+    today_text: str,
+    *,
+    round_digits: int | None = None,
+) -> str:
+    """meta「今日 …」相对横轴均值着色：大于红、小于绿、等于不变色。"""
+    cls = ""
+    if today is not None and mean is not None:
+        t = round(today, round_digits) if round_digits is not None else today
+        m = round(mean, round_digits) if round_digits is not None else mean
+        if t > m:
+            cls = ' class="meta-today up"'
+        elif t < m:
+            cls = ' class="meta-today down"'
+    return f"<span{cls}>{today_text}</span>"
+
+
 def _render_new_high_mean_zero_chart(
     series: list[dict],
     *,
     baseline: float | None,
     title: str = "百日新高",
 ) -> str:
-    """百日新高120日：柱高=当日家数；零轴=近200日均值（上红下绿）；与追高等图横轴口径统一。
+    """百日新高：柱高=当日家数；零轴=近200日均值（上红下绿）；与追高等图横轴口径统一。
 
-    meta：「横轴 M 家 · 今日 N 家」。纵轴按 |偏离| 约 90 分位定尺（同追高活跃度）。
+    meta：「横轴 M 家 · 今日 N 家」（今日相对横轴均值上红下绿）。纵轴按 |偏离| 约 90 分位定尺。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
     if not vals:
@@ -1605,10 +1624,18 @@ def _render_new_high_mean_zero_chart(
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
     today_n = int(round(float(last["value"]))) if last is not None else None
+    today_txt = f"今日 {today_n if today_n is not None else '—'} 家"
     if baseline is not None:
-        meta = f"横轴 {int(round(base))} 家 · 今日 {today_n if today_n is not None else '—'} 家"
+        mean_n = int(round(base))
+        today_span = _meta_today_vs_mean_span(
+            float(today_n) if today_n is not None else None,
+            float(mean_n),
+            today_txt,
+            round_digits=0,
+        )
+        meta = f"横轴 {mean_n} 家 · {today_span}"
     else:
-        meta = f"今日 {today_n if today_n is not None else '—'} 家"
+        meta = today_txt
 
     return f'''<div class="vol20-wrap vol120 mean-zero">
     <div class="vol20-head">
@@ -4316,6 +4343,10 @@ def render_html(ctx: dict) -> str:
   }}
   .chase-chart-title {{ font-size: 13px; font-weight: 700; color: var(--text); }}
   .chase-chart-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
+  .chase-chart-meta .meta-today.up,
+  .vol20-meta .meta-today.up {{ color: #E53935; }}
+  .chase-chart-meta .meta-today.down,
+  .vol20-meta .meta-today.down {{ color: #34C759; }}
   .chase-plot {{ width: 100%; overflow: hidden; }}
   .chase-bars {{
     display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
@@ -5892,13 +5923,15 @@ def _render_chase_metric_chart(
         )
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
-    # 若有 value_raw（今日趋势承接 / 回落指数）：meta「今日」用当日原始值；柱高仍用 value（近2日均）
+    # 若有 value_raw（昨追-今日承接）：meta「今日」用当日原始值；柱高仍用 value（近2日均）
+    today_raw: float | None = None
     if last is not None:
         meta_v = last.get("value_raw")
         if meta_v is None:
             meta_v = last.get("value")
         try:
-            latest_lab = f"{float(meta_v):+.1f}%"
+            today_raw = float(meta_v)
+            latest_lab = f"{today_raw:+.1f}%"
         except (TypeError, ValueError):
             latest_lab = "—"
     else:
@@ -5911,7 +5944,13 @@ def _render_chase_metric_chart(
         parts = []
     if baseline is not None:
         parts.append(f"横轴 {base:+.1f}%")
-    parts.append(f"今日 {latest_lab}")
+    today_span = _meta_today_vs_mean_span(
+        today_raw,
+        float(base) if baseline is not None else None,
+        f"今日 {latest_lab}",
+        round_digits=1,
+    )
+    parts.append(today_span)
     meta_txt = " · ".join(parts)
     return f'''<div class="chase-chart">
     <div class="chase-chart-head">
@@ -6047,15 +6086,23 @@ def _render_chase_count_chart(
         )
 
     last = next((x for x in reversed(series) if x.get("value") is not None), None)
+    today_n: float | None = None
     if last:
         lv = float(last.get("n_raw") if last.get("n_raw") is not None else last["value"])
-        latest_lab = f"{int(round(lv))} 家"
+        today_n = float(int(round(lv)))
+        latest_lab = f"{int(today_n)} 家"
     else:
         latest_lab = "—"
     meta_txt = "2日均值"
     if baseline is not None:
-        meta_txt += f" · 横轴 {int(round(base))} 家"
-    meta_txt += f" · 今日 {latest_lab}"
+        mean_n = float(int(round(base)))
+        meta_txt += f" · 横轴 {int(mean_n)} 家"
+        today_span = _meta_today_vs_mean_span(
+            today_n, mean_n, f"今日 {latest_lab}", round_digits=0
+        )
+        meta_txt += f" · {today_span}"
+    else:
+        meta_txt += f" · 今日 {latest_lab}"
 
     # 近5日**当日原始家数**均值 vs 近200日均值 → 活跃周期 / 不活跃周期
     # （标签仍用五日原始；柱高为近2日均值，二者口径分开）
