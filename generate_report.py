@@ -3965,33 +3965,41 @@ def render_html(ctx: dict) -> str:
     width: 100%; overflow: visible;
   }}
   .ts-cnt-bars {{
-    position: relative; display: flex; align-items: flex-end; gap: 2px; height: 120px;
-  }}
-  .ts-cnt-mark {{
-    position: absolute; left: 0; right: 0; height: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.12); pointer-events: none; z-index: 1;
+    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
   }}
   .ts-cnt-col {{
     flex: 1 1 0; min-width: 0; max-width: none;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    height: 100%; position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; height: 100%;
   }}
   .ts-cnt-val {{
     font-size: 9px; font-weight: 600; color: var(--muted);
     font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
     white-space: nowrap;
   }}
-  .ts-cnt-col.latest .ts-cnt-val {{ color: var(--accent); font-weight: 700; }}
+  .ts-cnt-val.pos {{ color: var(--bar-ok, #E53935); }}
+  .ts-cnt-val.neg {{ color: var(--bar-bad, #34C759); }}
+  .ts-cnt-col.latest .ts-cnt-val {{ font-weight: 700; }}
   .ts-cnt-track {{
-    width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center;
-    min-height: 0;
+    flex: 1; width: 100%; min-height: 0; position: relative;
+  }}
+  .ts-cnt-zero {{
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: rgba(60,60,67,.22); z-index: 1; pointer-events: none;
   }}
   .ts-cnt-bar {{
-    width: 70%; max-width: 14px; border-radius: 2px 2px 1px 1px; min-height: 2px;
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 70%; max-width: 14px; min-height: 2px; z-index: 2;
   }}
-  .ts-cnt-bar.up {{ background: var(--bar-ok); }}
-  .ts-cnt-bar.down {{ background: var(--bar-bad); }}
-  .ts-cnt-bar.flat {{ background: #8e8e93; }}
+  .ts-cnt-bar.pos {{
+    bottom: 50%; border-radius: 2px 2px 0 0;
+    background: var(--bar-ok, #E53935);
+  }}
+  .ts-cnt-bar.neg {{
+    top: 50%; border-radius: 0 0 2px 2px;
+    background: var(--bar-bad, #34C759);
+  }}
+  .ts-chart-meta .meta-today.up {{ color: #E53935; }}
+  .ts-chart-meta .meta-today.down {{ color: #34C759; }}
   .ts-cnt-axis {{
     display: flex; gap: 2px; margin-top: 6px; min-height: 18px; position: relative;
   }}
@@ -4873,7 +4881,7 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table tbody td {{ width: 98px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
-    .ts-cnt-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
+    .ts-cnt-bar {{ width: 85%; max-width: none; }}
     .ts-cnt-axis {{ gap: 1px; margin-top: 8px; min-height: 20px; }}
     .ts-cnt-tick {{ height: 20px; }}
     .ts-cnt-tick span {{ font-size: 10px; }}
@@ -5138,7 +5146,10 @@ def _render_ts_count_bars_html(
     *,
     mean_200d: float | None = None,
 ) -> str:
-    """近30日全场强趋势占比柱图；浅线=近200日均值；柱色相对均值上红下绿。"""
+    """近30日全场强趋势占比柱图；零轴=近200日均值（上红下绿）；纵轴按 |偏离| 约 90 分位定尺。
+
+    meta：「横轴 M% · 今日 N%」（今日相对横轴均值上红下绿）。
+    """
     if not series:
         return ""
 
@@ -5153,32 +5164,35 @@ def _render_ts_count_bars_html(
         return (100.0 * trend_n / total_n) if total_n else 0.0
 
     ratios = [_ratio(d) for d in series]
-    vmax = max(ratios) if ratios else 0.0
-    vmin = min(ratios) if ratios else 0.0
     mean_f: float | None = None
     if mean_200d is not None:
         try:
             mean_f = float(mean_200d)
         except (TypeError, ValueError):
             mean_f = None
+
+    base = float(mean_f) if mean_f is not None else 0.0
     if mean_f is not None:
-        vmax = max(vmax, mean_f)
-        vmin = min(vmin, mean_f)
-    y_min = vmin * 0.85
-    span = vmax - y_min
+        abs_deltas = [abs(r - base) for r in ratios]
+        scale = _chase_robust_scale(abs_deltas, pct=0.90)
+    else:
+        scale = _chase_robust_scale(ratios, pct=0.90)
+        base = 0.0
+    if scale < 1e-9:
+        scale = 1.0
+    scale *= 1.08
+
     n_bars = len(series)
     tick_idxs = {0, n_bars - 1}
     if n_bars >= 8:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
 
-    mark_html = ""
-    if mean_f is not None and span > 1e-9:
-        mark_bottom = max(0.0, min(100.0, (mean_f - y_min) / span * 100.0))
-        mark_html = (
-            f'<div class="ts-cnt-mark" style="bottom:{mark_bottom:.2f}%" '
-            f'title="近200日均值 {mean_f:.2f}%" aria-hidden="true"></div>'
-        )
+    axis_title = (
+        f' title="近200日均值 {base:.2f}%"'
+        if mean_f is not None
+        else ""
+    )
 
     cols = []
     ticks = []
@@ -5193,28 +5207,32 @@ def _render_ts_count_bars_html(
         except ValueError:
             lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
             wd = ""
-        if mean_f is None:
-            tag = "flat"
-        elif r > mean_f:
-            tag = "up"
-        elif r < mean_f:
-            tag = "down"
-        else:
-            tag = "flat"
-        if span > 0:
-            h_pct = (r - y_min) / span * 100.0
-        else:
-            h_pct = 50.0
-        height = round(max(h_pct, 2.0 if r > 0 else 0.0), 1)
         is_latest = i == n_bars - 1
         val_lab = f"{r:.1f}%"
-        tip_mean = f" · 均值{mean_f:.2f}%" if mean_f is not None else ""
+        if mean_f is not None:
+            delta = r - base
+            h = min(50.0, abs(delta) / scale * 50.0)
+            if delta >= 0:
+                side = "pos"
+            else:
+                side = "neg"
+            tip_mean = f" · 均值{base:.2f}%"
+            tip_clip = " · 柱高已封顶" if abs(delta) > scale else ""
+            bar = f'<div class="ts-cnt-bar {side}" style="height:{h:.1f}%"></div>'
+            val_cls = f" {side}"
+        else:
+            h = min(100.0, r / scale * 100.0) if scale > 0 else 0.0
+            tip_mean = ""
+            tip_clip = ""
+            bar = (
+                f'<div class="ts-cnt-bar pos" style="height:{h:.1f}%; '
+                f'bottom:0; top:auto"></div>'
+            )
+            val_cls = ""
         cols.append(
-            f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}（{n}家）{tip_mean}">
-      <div class="ts-cnt-val">{val_lab}</div>
-      <div class="ts-cnt-track">
-        <div class="ts-cnt-bar {tag}" style="height:{height}%"></div>
-      </div>
+            f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}（{n}家）{tip_mean}{tip_clip}">
+      <div class="ts-cnt-val{val_cls}">{val_lab}</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero"{axis_title}></div>{bar}</div>
     </div>'''
         )
         ticks.append(
@@ -5222,16 +5240,23 @@ def _render_ts_count_bars_html(
             f'<span>{lab}</span></div>'
         )
 
-    d0 = ""
     latest_r = ratios[-1] if ratios else 0.0
+    today_txt = f"今日 {latest_r:.1f}%"
+    if mean_f is not None:
+        today_span = _meta_today_vs_mean_span(
+            latest_r, base, today_txt, round_digits=1
+        )
+        meta = f"横轴 {base:.1f}% · {today_span}"
+    else:
+        meta = today_txt
 
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
       <span class="ts-chart-title">近30日强趋势占比</span>
-      <span class="ts-chart-meta">今日 {latest_r:.1f}%</span>
+      <span class="ts-chart-meta">{meta}</span>
     </div>
     <div class="ts-cnt-chart">
-      <div class="ts-cnt-bars">{mark_html}{"".join(cols)}</div>
+      <div class="ts-cnt-bars">{"".join(cols)}</div>
       <div class="ts-cnt-axis">{"".join(ticks)}</div>
     </div>
   </div>'''
