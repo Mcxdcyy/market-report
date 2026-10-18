@@ -1526,7 +1526,7 @@ def _render_new_high_mean_zero_chart(
     series: list[dict],
     *,
     baseline: float | None,
-    title: str = "百日新高120日趋势",
+    title: str = "百日新高",
 ) -> str:
     """百日新高120日：柱高=当日家数；零轴=近200日均值（上红下绿）；与追高等图横轴口径统一。
 
@@ -3647,7 +3647,7 @@ def render_html(ctx: dict) -> str:
     xh120_html = _render_new_high_mean_zero_chart(
         xh120,
         baseline=ctx.get("xh_mean_200d"),
-        title="百日新高120日趋势",
+        title="百日新高",
     )
     # 大盘环境：指数大局观 → 近30日成交金额（标签+周期结论）；百日新高在趋势强度模块末
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
