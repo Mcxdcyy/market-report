@@ -1,22 +1,6 @@
 [
   {
     "month": 10,
-    "day": 14,
-    "dot": "半",
-    "label": "10/14–16",
-    "title": "2026湾区半导体产业生态博览会",
-    "short": "湾芯展",
-    "brief": "于深圳会展中心（福田）举行，展览面积约7万平方米，覆盖集成电路设计、晶圆制造、先进封测等产业链环节，同期举办湾区半导体大会及数十场专题论坛，并新设人工智能基础设施产业生态展区。",
-    "hot": true,
-    "importance": 4,
-    "source": "seed",
-    "span_end": [
-      10,
-      16
-    ]
-  },
-  {
-    "month": 10,
     "day": 20,
     "dot": "20",
     "label": "10/20",
@@ -26,7 +10,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-10-18"
+    "fetched_at": "2026-10-19"
   },
   {
     "month": 10,
@@ -39,7 +23,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-10-18"
+    "fetched_at": "2026-10-19"
   },
   {
     "month": 10,
