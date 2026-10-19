@@ -4673,9 +4673,10 @@ def render_html(ctx: dict) -> str:
     height: 148px;
     display: flex;
     align-items: stretch;
-    gap: 0;
+    gap: 1px;
     margin-top: 8px;
   }}
+  .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
   .macro-bias-zero {{
     position: absolute; left: 0; right: 0; top: 50%;
     height: 1px; background: var(--border); pointer-events: none;
@@ -4684,10 +4685,15 @@ def render_html(ctx: dict) -> str:
     flex: 1 1 0; min-width: 0; position: relative;
   }}
   .macro-bias-bar {{
-    position: absolute; left: 0; right: 0;
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 6px; min-height: 1px;
   }}
-  .macro-bias-bar.pos {{ bottom: 50%; background: #E53935; }}
-  .macro-bias-bar.neg {{ top: 50%; background: #34C759; }}
+  .macro-bias-bar.pos {{
+    bottom: 50%; border-radius: 2px 2px 0 0; background: #E53935;
+  }}
+  .macro-bias-bar.neg {{
+    top: 50%; border-radius: 0 0 2px 2px; background: #34C759;
+  }}
 
   /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
   .idx-outlook-wrap {{
@@ -4909,6 +4915,9 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table tbody th {{ width: 58px; }}
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 98px; }}
+    .macro-bias-chart {{ gap: 1px; }}
+    .macro-bias-bar {{ width: 85%; max-width: none; }}
+    .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; }}
