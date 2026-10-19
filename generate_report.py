@@ -4688,14 +4688,6 @@ def render_html(ctx: dict) -> str:
   }}
   .macro-bias-bar.pos {{ bottom: 50%; background: #E53935; }}
   .macro-bias-bar.neg {{ top: 50%; background: #34C759; }}
-  .macro-bias-note {{
-    margin: 14px 0 0;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-    font-size: 11px;
-    line-height: 1.55;
-    color: var(--muted);
-  }}
 
   /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
   .idx-outlook-wrap {{
@@ -4908,7 +4900,6 @@ def render_html(ctx: dict) -> str:
     .ts-note,
     .fund-note,
     .idx-note,
-    .macro-bias-note,
     .module-summary {{ font-size: 13px; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
@@ -5649,7 +5640,7 @@ def _index_outlook_sum_text(block: dict) -> str:
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近300交易日。"""
+    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近200交易日。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
@@ -5686,22 +5677,16 @@ def render_macro_bias_html(block: dict) -> str:
     today_html = (
         f'<span class="{today_cls}">{today:+d}</span>' if today_cls else f"{today:+d}"
     )
-    note = block.get("note") or (
-        "连4日收盘&gt;60日线且60日线向上→+1；"
-        "连4日收盘&lt;60日线且60日线向下→−1；其余0。"
-        "上证、深成、创业板当日分数相加（−3～+3）。日线，近300个交易日。"
-    )
     return f'''<div class="macro-bias-wrap">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
-    <div class="vol20-meta">近300日 · 今日 {today_html}</div>
+    <div class="vol20-meta">近200日 · 今日 {today_html}</div>
   </div>
   <div class="macro-bias-chart" aria-label="宏观多空策略">
     <div class="macro-bias-zero"></div>
     {''.join(cols)}
   </div>
   <div class="vol20-axis">{''.join(ticks)}</div>
-  <p class="macro-bias-note">{note}</p>
 </div>'''
 
 

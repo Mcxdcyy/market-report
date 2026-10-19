@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""宏观·多空策略：上证 + 深成 + 创业板 · 连4日 MA60 状态叠加（近300交易日）。
+"""宏观·多空策略：上证 + 深成 + 创业板 · 连4日 MA60 状态叠加（近200交易日）。
 
 取数与判定与空窗任务一致（新浪日K scale=240，不足则东财日K）：
 
@@ -24,7 +24,7 @@ from typing import Any
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "index_ma60_macro_results"
 SCHEMA = 1
-WINDOW = 300
+WINDOW = 200
 MA = 60
 CHECK = 4
 FETCH_LEN = 800
@@ -35,11 +35,7 @@ INDICES: tuple[tuple[str, str, str], ...] = (
     ("创业板", "sz399006", "0.399006"),
 )
 
-NOTE = (
-    "连4日收盘>60日线且60日线向上→+1；"
-    "连4日收盘<60日线且60日线向下→−1；其余0。"
-    "上证、深成、创业板当日分数相加（−3～+3）。日线，近300个交易日。"
-)
+NOTE = ""
 
 _CTX = ssl.create_default_context()
 _CTX.check_hostname = False
