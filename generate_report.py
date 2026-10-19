@@ -58,6 +58,11 @@ try:
     from index_downtrend import load_index_downtrend
 except ImportError:  # pragma: no cover
     load_index_downtrend = None  # type: ignore
+
+try:
+    from index_ma60_macro import load_macro_bias
+except ImportError:  # pragma: no cover
+    load_macro_bias = None  # type: ignore
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
 WSCN_CAL_URL = "https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas"
@@ -3678,9 +3683,10 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    # 大盘环境：指数大局观 → 近30日成交金额（标签+周期结论）；百日新高在趋势强度模块末
+    # 大盘环境：宏观·多空策略 → 指数大局观 → 近30日成交金额（标签+周期结论）；百日新高在趋势强度模块末
+    macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = f"{index_outlook_html}{vol30_html}"
+    vol20_html = f"{macro_bias_html}{index_outlook_html}{vol30_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4657,7 +4663,41 @@ def render_html(ctx: dict) -> str:
     border-radius: 0;
   }}
 
-  /* ── 指数大局观（大盘环境顶部 · 近10日对比表） ── */
+  /* ── 宏观·多空策略（大盘环境最上方 · 连4日 MA60 叠加） ── */
+  .macro-bias-wrap {{
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
+    border-top: 1px solid var(--border);
+  }}
+  .macro-bias-chart {{
+    position: relative;
+    height: 148px;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 8px;
+  }}
+  .macro-bias-zero {{
+    position: absolute; left: 0; right: 0; top: 50%;
+    height: 1px; background: var(--border); pointer-events: none;
+  }}
+  .macro-bias-col {{
+    flex: 1 1 0; min-width: 0; position: relative;
+  }}
+  .macro-bias-bar {{
+    position: absolute; left: 0; right: 0;
+  }}
+  .macro-bias-bar.pos {{ bottom: 50%; background: #E53935; }}
+  .macro-bias-bar.neg {{ top: 50%; background: #34C759; }}
+  .macro-bias-note {{
+    margin: 14px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--muted);
+  }}
+
+  /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
   .idx-outlook-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
@@ -4868,6 +4908,7 @@ def render_html(ctx: dict) -> str:
     .ts-note,
     .fund-note,
     .idx-note,
+    .macro-bias-note,
     .module-summary {{ font-size: 13px; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
@@ -5424,6 +5465,29 @@ def render_trend_strength_html(block: dict) -> str:
     return f"{count_chart}{chart}{amt_chart}{note_html}"
 
 
+def load_macro_bias_block(
+    as_of: datetime,
+    latest_dt: datetime | None = None,
+) -> dict:
+    """大盘环境「宏观·多空策略」：最新交易日重算；历史日读缓存。"""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    latest_d = None
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+    if load_macro_bias is None:
+        return {"as_of": as_of_d.isoformat(), "series": []}
+    try:
+        return load_macro_bias(
+            as_of_d,
+            latest=latest_d or as_of_d,
+            force=False,
+            progress=True,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"[macro-bias] 加载失败: {exc}")
+        return {"as_of": as_of_d.isoformat(), "series": [], "error": str(exc)}
+
+
 def load_index_downtrend_block(
     as_of: datetime,
     latest_dt: datetime | None = None,
@@ -5582,6 +5646,63 @@ def _index_outlook_sum_text(block: dict) -> str:
         return "部分指数走出下跌：市场可能好转。"
     # 连续部分（有「-」亦有「下跌通道」接续）：固定一句，不再沿用前一日
     return "部分指数走出下跌：市场可能转好，也可能再转差。"
+
+
+def render_macro_bias_html(block: dict) -> str:
+    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近300交易日。"""
+    series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
+    if not series:
+        return ""
+    n = len(series)
+    tick_idxs = {0, n - 1}
+    if n > 2:
+        tick_idxs.add(n // 3)
+        tick_idxs.add((2 * n) // 3)
+    cols: list[str] = []
+    ticks: list[str] = []
+    for i, row in enumerate(series):
+        d = str(row.get("date") or "")
+        score = int(row.get("sum") or 0)
+        is_latest = i == n - 1
+        h = min(50.0, abs(score) / 3.0 * 50.0)
+        bar = ""
+        if score > 0:
+            bar = f'<div class="macro-bias-bar pos" style="height:{h:.1f}%"></div>'
+        elif score < 0:
+            bar = f'<div class="macro-bias-bar neg" style="height:{h:.1f}%"></div>'
+        md = d[5:].replace("-", "/") if len(d) >= 10 else d
+        sh, sz, cy = int(row.get("sh") or 0), int(row.get("sz") or 0), int(row.get("cy") or 0)
+        tip = f"{md} · 叠加 {score:+d}（上证{sh:+d} 深成{sz:+d} 创业板{cy:+d}）"
+        cols.append(
+            f'<div class="macro-bias-col{" latest" if is_latest else ""}" title="{tip}">{bar}</div>'
+        )
+        ticks.append(
+            f'<div class="vol20-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f"<span>{md if i in tick_idxs else ''}</span></div>"
+        )
+    last = series[-1]
+    today = int(last.get("sum") or 0)
+    today_cls = "meta-today up" if today > 0 else ("meta-today down" if today < 0 else "")
+    today_html = (
+        f'<span class="{today_cls}">{today:+d}</span>' if today_cls else f"{today:+d}"
+    )
+    note = block.get("note") or (
+        "连4日收盘&gt;60日线且60日线向上→+1；"
+        "连4日收盘&lt;60日线且60日线向下→−1；其余0。"
+        "上证、深成、创业板当日分数相加（−3～+3）。日线，近300个交易日。"
+    )
+    return f'''<div class="macro-bias-wrap">
+  <div class="vol20-head">
+    <div class="vol20-title">宏观·多空策略</div>
+    <div class="vol20-meta">近300日 · 今日 {today_html}</div>
+  </div>
+  <div class="macro-bias-chart" aria-label="宏观多空策略">
+    <div class="macro-bias-zero"></div>
+    {''.join(cols)}
+  </div>
+  <div class="vol20-axis">{''.join(ticks)}</div>
+  <p class="macro-bias-note">{note}</p>
+</div>'''
 
 
 def render_index_outlook_html(block: dict) -> str:
@@ -6782,6 +6903,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
     chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
     index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
+    macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
     fund_range = ""
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
@@ -6824,6 +6946,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_strength": trend_strength,
         "chase_sentiment": chase_sentiment,
         "index_downtrend": index_downtrend,
+        "macro_bias": macro_bias,
         "fund_recognition": fund_recognition,
         "fund_range": fund_range,
     }
