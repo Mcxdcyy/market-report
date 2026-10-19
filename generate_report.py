@@ -5649,7 +5649,7 @@ def _index_outlook_sum_text(block: dict) -> str:
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近200交易日。"""
+    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近120交易日。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
@@ -5689,7 +5689,7 @@ def render_macro_bias_html(block: dict) -> str:
     return f'''<div class="macro-bias-wrap">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
-    <div class="vol20-meta">近200日 · 今日 {today_html}</div>
+    <div class="vol20-meta">近120日 · 今日 {today_html}</div>
   </div>
   <div class="macro-bias-chart" aria-label="宏观多空策略">
     <div class="macro-bias-zero"></div>
