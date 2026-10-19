@@ -32,6 +32,8 @@ RESULT_DIR = BASE / "trend_strength_results"
 CACHE_FILE = BASE / "trend_klines_cache.json"
 LONG_CACHE_FILE = BASE / "trend_klines_cache_long.json"
 MEANS_200D_FILE = RESULT_DIR / "means_200d.json"
+COUNT_SERIES_120D_FILE = RESULT_DIR / "count_series_120d.json"
+# 兼容旧文件名（读时可回退；写只写 120d）
 COUNT_SERIES_30D_FILE = RESULT_DIR / "count_series_30d.json"
 HOLD_SERIES_120D_FILE = RESULT_DIR / "hold_series_120d.json"
 HOLD_SCHEMA = 2  # 昨均价仅成交额/成交量；异常标「数据异常」，无 HL2 兜底
@@ -39,7 +41,7 @@ WORKERS = 48
 KLINE_LEN = 40
 LONG_KLINE_LEN = 340  # 百日新高(200) + 120日图 + 余量；追高/均值亦够用
 MEANS_DAYS = 200
-COUNT_SERIES_DAYS = 30
+COUNT_SERIES_DAYS = 120
 HOLD_SERIES_DAYS = 120
 HOLD_MEAN_DAYS = 200
 MIN_BARS = 20
@@ -1275,40 +1277,41 @@ def _overlay_daily_result(daily: list[dict], as_of_d: date) -> None:
         return
 
 
-def ensure_count_series_30d(
+def ensure_count_series_120d(
     as_of: date | datetime | str,
     trading_days: list[date] | None = None,
     *,
     force: bool = False,
     progress: bool = True,
 ) -> list[dict]:
-    """近 COUNT_SERIES_DAYS 个交易日全场强趋势家数序列（缓存 count_series_30d.json）。"""
+    """近 COUNT_SERIES_DAYS（120）个交易日全场强趋势占比序列（缓存 count_series_120d.json）。"""
     as_of_d = _as_date(as_of)
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
-    if COUNT_SERIES_30D_FILE.exists() and not force:
+    cache_path = COUNT_SERIES_120D_FILE
+    if cache_path.exists() and not force:
         try:
-            cached = json.loads(COUNT_SERIES_30D_FILE.read_text(encoding="utf-8"))
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             cached = None
         if (
             cached
             and cached.get("as_of") == as_of_d.isoformat()
             and isinstance(cached.get("daily"), list)
-            and len(cached["daily"]) >= min(10, COUNT_SERIES_DAYS)
+            and len(cached["daily"]) >= min(60, COUNT_SERIES_DAYS)
         ):
             daily = list(cached["daily"])
             _overlay_daily_result(daily, as_of_d)
             return daily
 
     if trading_days is None:
-        raise ValueError("ensure_count_series_30d 需要 trading_days")
+        raise ValueError("ensure_count_series_120d 需要 trading_days")
     days = [d for d in trading_days if d <= as_of_d]
     days = sorted(set(days))[-COUNT_SERIES_DAYS:]
     if not days:
         return []
 
     if progress:
-        print(f"[trend-count] 近{len(days)}日强趋势家数 → {days[0]}…{days[-1]}")
+        print(f"[trend-count] 近{len(days)}日强趋势占比 → {days[0]}…{days[-1]}")
 
     series = _prepare_long_series(as_of_d, days, progress=progress, log_tag="trend-count")
     daily: list[dict] = []
@@ -1333,16 +1336,20 @@ def ensure_count_series_30d(
         "daily": daily,
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
-    COUNT_SERIES_30D_FILE.write_text(
+    cache_path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     if progress:
         last = daily[-1]
         print(
             f"[trend-count] 完成 · 末日 {last['trend']} 家 "
-            f"用时{time.time()-t0:.0f}s → {COUNT_SERIES_30D_FILE.name}"
+            f"用时{time.time()-t0:.0f}s → {cache_path.name}"
         )
     return daily
+
+
+# 兼容旧调用名
+ensure_count_series_30d = ensure_count_series_120d
 
 
 def ensure_means_200d(
@@ -1445,18 +1452,18 @@ def ensure_means_200d(
     }
     MEANS_200D_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # 顺带写出近30日家数序列，供柱图复用（避免再扫一遍）
-    tail30 = daily_all[-COUNT_SERIES_DAYS:]
-    if tail30:
-        _overlay_daily_result(tail30, as_of_d)
-        COUNT_SERIES_30D_FILE.write_text(
+    # 顺带写出近120日占比序列，供柱图复用（避免再扫一遍）
+    tail = daily_all[-COUNT_SERIES_DAYS:]
+    if tail:
+        _overlay_daily_result(tail, as_of_d)
+        COUNT_SERIES_120D_FILE.write_text(
             json.dumps(
                 {
                     "as_of": as_of_d.isoformat(),
-                    "start": tail30[0]["date"],
-                    "end": tail30[-1]["date"],
-                    "n_days": len(tail30),
-                    "daily": tail30,
+                    "start": tail[0]["date"],
+                    "end": tail[-1]["date"],
+                    "n_days": len(tail),
+                    "daily": tail,
                     "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 },
                 ensure_ascii=False,

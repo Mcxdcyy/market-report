@@ -209,7 +209,7 @@
   #sec-env .callout.bad { background: #e8f5e9; border-color: #34C759; }
 
   /* ── 趋势强度（个股五条件占比）── */
-  /* 强趋势-次日承接 / 近30日强趋势占比：与近30日成交金额同系（顶部分隔线，无边框底色） */
+  /* 强趋势占比（近120日）：与近30日成交金额同系（顶部分隔线，无边框底色） */
   .ts-cnt-wrap {
     margin-top: 14px; padding-top: 14px; padding-bottom: 0; margin-bottom: 0;
     border-top: 1px solid var(--border);
@@ -220,20 +220,16 @@
     width: 100%; overflow: visible;
   }
   .ts-cnt-bars {
-    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
   }
   .ts-cnt-col {
     flex: 1 1 0; min-width: 0; max-width: none;
     display: flex; flex-direction: column; align-items: center; height: 100%;
   }
+  /* 近120柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
   .ts-cnt-val {
-    font-size: 9px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
-    white-space: nowrap;
+    display: none !important;
   }
-  .ts-cnt-val.pos { color: var(--bar-ok, #E53935); }
-  .ts-cnt-val.neg { color: var(--bar-bad, #34C759); }
-  .ts-cnt-col.latest .ts-cnt-val { font-weight: 700; }
   .ts-cnt-track {
     flex: 1; width: 100%; min-height: 0; position: relative;
   }
@@ -243,7 +239,7 @@
   }
   .ts-cnt-bar {
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 70%; max-width: 14px; min-height: 2px; z-index: 2;
+    width: 90%; max-width: 6px; min-height: 1px; z-index: 2;
   }
   .ts-cnt-bar.pos {
     bottom: 50%; border-radius: 2px 2px 0 0;
@@ -2137,102 +2133,372 @@
     </div>
     <div class="ts-cnt-wrap">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">近30日强趋势占比</span>
+      <span class="ts-chart-title">强趋势占比</span>
       <span class="ts-chart-meta">横轴 4.7% · <span class="meta-today down">今日 1.1%</span></span>
     </div>
     <div class="ts-cnt-chart">
-      <div class="ts-cnt-bars"><div class="ts-cnt-col" title="8/31 周一 · 2.1%（114家） · 均值4.69%">
-      <div class="ts-cnt-val neg">2.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:33.0%"></div></div>
+      <div class="ts-cnt-bars"><div class="ts-cnt-col" title="4/21 周二 · 16.1%（881家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">16.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="4/22 周三 · 14.0%（766家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">14.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="4/23 周四 · 8.1%（440家） · 均值4.69%">
+      <div class="ts-cnt-val">8.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:23.9%"></div></div>
+    </div><div class="ts-cnt-col" title="4/24 周五 · 5.2%（283家） · 均值4.69%">
+      <div class="ts-cnt-val">5.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:3.5%"></div></div>
+    </div><div class="ts-cnt-col" title="4/27 周一 · 4.3%（233家） · 均值4.69%">
+      <div class="ts-cnt-val">4.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:3.0%"></div></div>
+    </div><div class="ts-cnt-col" title="4/28 周二 · 3.8%（206家） · 均值4.69%">
+      <div class="ts-cnt-val">3.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:6.5%"></div></div>
+    </div><div class="ts-cnt-col" title="4/29 周三 · 4.1%（223家） · 均值4.69%">
+      <div class="ts-cnt-val">4.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:4.1%"></div></div>
+    </div><div class="ts-cnt-col" title="4/30 周四 · 3.9%（214家） · 均值4.69%">
+      <div class="ts-cnt-val">3.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:5.3%"></div></div>
+    </div><div class="ts-cnt-col" title="5/6 周三 · 5.2%（284家） · 均值4.69%">
+      <div class="ts-cnt-val">5.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:3.5%"></div></div>
+    </div><div class="ts-cnt-col" title="5/7 周四 · 8.6%（468家） · 均值4.69%">
+      <div class="ts-cnt-val">8.6%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:27.4%"></div></div>
+    </div><div class="ts-cnt-col" title="5/8 周五 · 10.1%（554家） · 均值4.69%">
+      <div class="ts-cnt-val">10.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:38.6%"></div></div>
+    </div><div class="ts-cnt-col" title="5/11 周一 · 15.8%（865家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">15.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="5/12 周二 · 14.5%（791家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">14.5%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="5/13 周三 · 14.7%（802家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">14.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="5/14 周四 · 9.0%（493家） · 均值4.69%">
+      <div class="ts-cnt-val">9.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:30.6%"></div></div>
+    </div><div class="ts-cnt-col" title="5/15 周五 · 6.7%（365家） · 均值4.69%">
+      <div class="ts-cnt-val">6.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:14.0%"></div></div>
+    </div><div class="ts-cnt-col" title="5/18 周一 · 5.0%（272家） · 均值4.69%">
+      <div class="ts-cnt-val">5.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:1.9%"></div></div>
+    </div><div class="ts-cnt-col" title="5/19 周二 · 4.8%（260家） · 均值4.69%">
+      <div class="ts-cnt-val">4.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:0.4%"></div></div>
+    </div><div class="ts-cnt-col" title="5/20 周三 · 4.7%（256家） · 均值4.69%">
+      <div class="ts-cnt-val">4.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:0.1%"></div></div>
+    </div><div class="ts-cnt-col" title="5/21 周四 · 2.3%（126家） · 均值4.69%">
+      <div class="ts-cnt-val">2.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:16.9%"></div></div>
+    </div><div class="ts-cnt-col" title="5/22 周五 · 2.6%（142家） · 均值4.69%">
+      <div class="ts-cnt-val">2.6%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:14.9%"></div></div>
+    </div><div class="ts-cnt-col" title="5/25 周一 · 2.7%（150家） · 均值4.69%">
+      <div class="ts-cnt-val">2.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:13.8%"></div></div>
+    </div><div class="ts-cnt-col" title="5/26 周二 · 2.6%（145家） · 均值4.69%">
+      <div class="ts-cnt-val">2.6%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:14.5%"></div></div>
+    </div><div class="ts-cnt-col" title="5/27 周三 · 2.3%（125家） · 均值4.69%">
+      <div class="ts-cnt-val">2.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:17.1%"></div></div>
+    </div><div class="ts-cnt-col" title="5/28 周四 · 2.0%（109家） · 均值4.69%">
+      <div class="ts-cnt-val">2.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:19.1%"></div></div>
+    </div><div class="ts-cnt-col" title="5/29 周五 · 1.8%（97家） · 均值4.69%">
+      <div class="ts-cnt-val">1.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:20.7%"></div></div>
+    </div><div class="ts-cnt-col" title="6/1 周一 · 1.1%（63家） · 均值4.69%">
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.1%"></div></div>
+    </div><div class="ts-cnt-col" title="6/2 周二 · 1.3%（70家） · 均值4.69%">
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.2%"></div></div>
+    </div><div class="ts-cnt-col" title="6/3 周三 · 1.3%（69家） · 均值4.69%">
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.3%"></div></div>
+    </div><div class="ts-cnt-col" title="6/4 周四 · 1.4%（76家） · 均值4.69%">
+      <div class="ts-cnt-val">1.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:23.5%"></div></div>
+    </div><div class="ts-cnt-col" title="6/5 周五 · 1.2%（65家） · 均值4.69%">
+      <div class="ts-cnt-val">1.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.9%"></div></div>
+    </div><div class="ts-cnt-col" title="6/8 周一 · 0.7%（40家） · 均值4.69%">
+      <div class="ts-cnt-val">0.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:28.1%"></div></div>
+    </div><div class="ts-cnt-col" title="6/9 周二 · 0.9%（49家） · 均值4.69%">
+      <div class="ts-cnt-val">0.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.9%"></div></div>
+    </div><div class="ts-cnt-col" title="6/10 周三 · 0.8%（42家） · 均值4.69%">
+      <div class="ts-cnt-val">0.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:27.8%"></div></div>
+    </div><div class="ts-cnt-col" title="6/11 周四 · 0.9%（51家） · 均值4.69%">
+      <div class="ts-cnt-val">0.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.7%"></div></div>
+    </div><div class="ts-cnt-col" title="6/12 周五 · 0.9%（47家） · 均值4.69%">
+      <div class="ts-cnt-val">0.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:27.2%"></div></div>
+    </div><div class="ts-cnt-col" title="6/15 周一 · 1.3%（70家） · 均值4.69%">
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.2%"></div></div>
+    </div><div class="ts-cnt-col" title="6/16 周二 · 2.1%（115家） · 均值4.69%">
+      <div class="ts-cnt-val">2.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:18.4%"></div></div>
+    </div><div class="ts-cnt-col" title="6/17 周三 · 2.8%（153家） · 均值4.69%">
+      <div class="ts-cnt-val">2.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:13.5%"></div></div>
+    </div><div class="ts-cnt-col" title="6/18 周四 · 3.9%（215家） · 均值4.69%">
+      <div class="ts-cnt-val">3.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:5.5%"></div></div>
+    </div><div class="ts-cnt-col" title="6/22 周一 · 4.3%（238家） · 均值4.69%">
+      <div class="ts-cnt-val">4.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:2.5%"></div></div>
+    </div><div class="ts-cnt-col" title="6/23 周二 · 4.7%（259家） · 均值4.69%">
+      <div class="ts-cnt-val">4.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:0.1%"></div></div>
+    </div><div class="ts-cnt-col" title="6/24 周三 · 5.2%（284家） · 均值4.69%">
+      <div class="ts-cnt-val">5.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:3.4%"></div></div>
+    </div><div class="ts-cnt-col" title="6/25 周四 · 4.9%（270家） · 均值4.69%">
+      <div class="ts-cnt-val">4.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:1.6%"></div></div>
+    </div><div class="ts-cnt-col" title="6/26 周五 · 3.7%（202家） · 均值4.69%">
+      <div class="ts-cnt-val">3.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:7.2%"></div></div>
+    </div><div class="ts-cnt-col" title="6/29 周一 · 2.9%（161家） · 均值4.69%">
+      <div class="ts-cnt-val">2.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:12.5%"></div></div>
+    </div><div class="ts-cnt-col" title="6/30 周二 · 2.8%（155家） · 均值4.69%">
+      <div class="ts-cnt-val">2.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:13.3%"></div></div>
+    </div><div class="ts-cnt-col" title="7/1 周三 · 3.2%（175家） · 均值4.69%">
+      <div class="ts-cnt-val">3.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:10.6%"></div></div>
+    </div><div class="ts-cnt-col" title="7/2 周四 · 1.6%（90家） · 均值4.69%">
+      <div class="ts-cnt-val">1.6%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:21.6%"></div></div>
+    </div><div class="ts-cnt-col" title="7/3 周五 · 1.1%（62家） · 均值4.69%">
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.2%"></div></div>
+    </div><div class="ts-cnt-col" title="7/6 周一 · 1.8%（98家） · 均值4.69%">
+      <div class="ts-cnt-val">1.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:20.6%"></div></div>
+    </div><div class="ts-cnt-col" title="7/7 周二 · 1.3%（70家） · 均值4.69%">
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.2%"></div></div>
+    </div><div class="ts-cnt-col" title="7/8 周三 · 1.1%（60家） · 均值4.69%">
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.5%"></div></div>
+    </div><div class="ts-cnt-col" title="7/9 周四 · 0.8%（47家） · 均值4.69%">
+      <div class="ts-cnt-val">0.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:27.2%"></div></div>
+    </div><div class="ts-cnt-col" title="7/10 周五 · 1.0%（54家） · 均值4.69%">
+      <div class="ts-cnt-val">1.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.3%"></div></div>
+    </div><div class="ts-cnt-col" title="7/13 周一 · 0.7%（40家） · 均值4.69%">
+      <div class="ts-cnt-val">0.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:28.1%"></div></div>
+    </div><div class="ts-cnt-col" title="7/14 周二 · 0.9%（48家） · 均值4.69%">
+      <div class="ts-cnt-val">0.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:27.1%"></div></div>
+    </div><div class="ts-cnt-col" title="7/15 周三 · 1.2%（65家） · 均值4.69%">
+      <div class="ts-cnt-val">1.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.9%"></div></div>
+    </div><div class="ts-cnt-col" title="7/16 周四 · 1.2%（67家） · 均值4.69%">
+      <div class="ts-cnt-val">1.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.6%"></div></div>
+    </div><div class="ts-cnt-col" title="7/17 周五 · 1.9%（107家） · 均值4.69%">
+      <div class="ts-cnt-val">1.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:19.5%"></div></div>
+    </div><div class="ts-cnt-col" title="7/20 周一 · 2.3%（127家） · 均值4.69%">
+      <div class="ts-cnt-val">2.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:16.9%"></div></div>
+    </div><div class="ts-cnt-col" title="7/21 周二 · 2.0%（113家） · 均值4.69%">
+      <div class="ts-cnt-val">2.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:18.7%"></div></div>
+    </div><div class="ts-cnt-col" title="7/22 周三 · 2.9%（157家） · 均值4.69%">
+      <div class="ts-cnt-val">2.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:13.0%"></div></div>
+    </div><div class="ts-cnt-col" title="7/23 周四 · 2.5%（138家） · 均值4.69%">
+      <div class="ts-cnt-val">2.5%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:15.5%"></div></div>
+    </div><div class="ts-cnt-col" title="7/24 周五 · 0.8%（45家） · 均值4.69%">
+      <div class="ts-cnt-val">0.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:27.4%"></div></div>
+    </div><div class="ts-cnt-col" title="7/27 周一 · 0.7%（38家） · 均值4.69%">
+      <div class="ts-cnt-val">0.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:28.4%"></div></div>
+    </div><div class="ts-cnt-col" title="7/28 周二 · 0.6%（33家） · 均值4.69%">
+      <div class="ts-cnt-val">0.6%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:29.0%"></div></div>
+    </div><div class="ts-cnt-col" title="7/29 周三 · 1.4%（77家） · 均值4.69%">
+      <div class="ts-cnt-val">1.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:23.3%"></div></div>
+    </div><div class="ts-cnt-col" title="7/30 周四 · 1.9%（106家） · 均值4.69%">
+      <div class="ts-cnt-val">1.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:19.6%"></div></div>
+    </div><div class="ts-cnt-col" title="7/31 周五 · 1.8%（99家） · 均值4.69%">
+      <div class="ts-cnt-val">1.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:20.5%"></div></div>
+    </div><div class="ts-cnt-col" title="8/3 周一 · 4.9%（272家） · 均值4.69%">
+      <div class="ts-cnt-val">4.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:1.7%"></div></div>
+    </div><div class="ts-cnt-col" title="8/4 周二 · 12.4%（686家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">12.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/5 周三 · 18.1%（996家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">18.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/6 周四 · 15.8%（870家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">15.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/7 周五 · 11.8%（649家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">11.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/10 周一 · 17.2%（949家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">17.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/11 周二 · 14.8%（816家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">14.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/12 周三 · 19.2%（1060家） · 均值4.69% · 柱高已封顶">
+      <div class="ts-cnt-val">19.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:50.0%"></div></div>
+    </div><div class="ts-cnt-col" title="8/13 周四 · 10.5%（580家） · 均值4.69%">
+      <div class="ts-cnt-val">10.5%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:41.3%"></div></div>
+    </div><div class="ts-cnt-col" title="8/14 周五 · 10.5%（580家） · 均值4.69%">
+      <div class="ts-cnt-val">10.5%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:41.3%"></div></div>
+    </div><div class="ts-cnt-col" title="8/17 周一 · 9.7%（535家） · 均值4.69%">
+      <div class="ts-cnt-val">9.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:35.4%"></div></div>
+    </div><div class="ts-cnt-col" title="8/18 周二 · 11.2%（616家） · 均值4.69%">
+      <div class="ts-cnt-val">11.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:45.9%"></div></div>
+    </div><div class="ts-cnt-col" title="8/19 周三 · 2.1%（116家） · 均值4.69%">
+      <div class="ts-cnt-val">2.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:18.4%"></div></div>
+    </div><div class="ts-cnt-col" title="8/20 周四 · 1.4%（77家） · 均值4.69%">
+      <div class="ts-cnt-val">1.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:23.3%"></div></div>
+    </div><div class="ts-cnt-col" title="8/21 周五 · 1.1%（58家） · 均值4.69%">
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.8%"></div></div>
+    </div><div class="ts-cnt-col" title="8/24 周一 · 1.2%（69家） · 均值4.69%">
+      <div class="ts-cnt-val">1.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.4%"></div></div>
+    </div><div class="ts-cnt-col" title="8/25 周二 · 1.0%（56家） · 均值4.69%">
+      <div class="ts-cnt-val">1.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.1%"></div></div>
+    </div><div class="ts-cnt-col" title="8/26 周三 · 1.0%（55家） · 均值4.69%">
+      <div class="ts-cnt-val">1.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.2%"></div></div>
+    </div><div class="ts-cnt-col" title="8/27 周四 · 1.1%（59家） · 均值4.69%">
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.7%"></div></div>
+    </div><div class="ts-cnt-col" title="8/28 周五 · 1.8%（101家） · 均值4.69%">
+      <div class="ts-cnt-val">1.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:20.3%"></div></div>
+    </div><div class="ts-cnt-col" title="8/31 周一 · 2.1%（114家） · 均值4.69%">
+      <div class="ts-cnt-val">2.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:18.6%"></div></div>
     </div><div class="ts-cnt-col" title="9/1 周二 · 8.1%（446家） · 均值4.69%">
-      <div class="ts-cnt-val pos">8.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:42.4%"></div></div>
+      <div class="ts-cnt-val">8.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:24.0%"></div></div>
     </div><div class="ts-cnt-col" title="9/2 周三 · 7.2%（401家） · 均值4.69%">
-      <div class="ts-cnt-val pos">7.2%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:32.1%"></div></div>
+      <div class="ts-cnt-val">7.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:18.1%"></div></div>
     </div><div class="ts-cnt-col" title="9/3 周四 · 4.8%（267家） · 均值4.69%">
-      <div class="ts-cnt-val pos">4.8%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:1.8%"></div></div>
+      <div class="ts-cnt-val">4.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:1.0%"></div></div>
     </div><div class="ts-cnt-col" title="9/4 周五 · 4.4%（243家） · 均值4.69%">
-      <div class="ts-cnt-val neg">4.4%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:3.6%"></div></div>
+      <div class="ts-cnt-val">4.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:2.1%"></div></div>
     </div><div class="ts-cnt-col" title="9/7 周一 · 3.7%（203家） · 均值4.69%">
-      <div class="ts-cnt-val neg">3.7%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:12.8%"></div></div>
+      <div class="ts-cnt-val">3.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:7.2%"></div></div>
     </div><div class="ts-cnt-col" title="9/8 周二 · 4.4%（245家） · 均值4.69%">
-      <div class="ts-cnt-val neg">4.4%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:3.3%"></div></div>
+      <div class="ts-cnt-val">4.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:1.8%"></div></div>
     </div><div class="ts-cnt-col" title="9/9 周三 · 4.4%（243家） · 均值4.69%">
-      <div class="ts-cnt-val neg">4.4%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:3.8%"></div></div>
+      <div class="ts-cnt-val">4.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:2.1%"></div></div>
     </div><div class="ts-cnt-col" title="9/10 周四 · 3.1%（172家） · 均值4.69%">
-      <div class="ts-cnt-val neg">3.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:19.8%"></div></div>
+      <div class="ts-cnt-val">3.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:11.2%"></div></div>
     </div><div class="ts-cnt-col" title="9/11 周五 · 1.6%（88家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.6%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:38.9%"></div></div>
+      <div class="ts-cnt-val">1.6%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:22.0%"></div></div>
     </div><div class="ts-cnt-col" title="9/14 周一 · 1.3%（71家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.3%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:42.8%"></div></div>
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.2%"></div></div>
     </div><div class="ts-cnt-col" title="9/15 周二 · 0.8%（46家） · 均值4.69%">
-      <div class="ts-cnt-val neg">0.8%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:48.4%"></div></div>
+      <div class="ts-cnt-val">0.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:27.4%"></div></div>
     </div><div class="ts-cnt-col" title="9/16 周三 · 0.9%（51家） · 均值4.69%">
-      <div class="ts-cnt-val neg">0.9%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:47.3%"></div></div>
+      <div class="ts-cnt-val">0.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.7%"></div></div>
     </div><div class="ts-cnt-col" title="9/17 周四 · 0.9%（49家） · 均值4.69%">
-      <div class="ts-cnt-val neg">0.9%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:47.7%"></div></div>
+      <div class="ts-cnt-val">0.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.9%"></div></div>
     </div><div class="ts-cnt-col" title="9/18 周五 · 1.3%（74家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.3%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:42.0%"></div></div>
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:23.8%"></div></div>
     </div><div class="ts-cnt-col" title="9/21 周一 · 2.7%（150家） · 均值4.69%">
-      <div class="ts-cnt-val neg">2.7%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.8%"></div></div>
+      <div class="ts-cnt-val">2.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:14.0%"></div></div>
     </div><div class="ts-cnt-col" title="9/22 周二 · 3.2%（175家） · 均值4.69%">
-      <div class="ts-cnt-val neg">3.2%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:19.2%"></div></div>
+      <div class="ts-cnt-val">3.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:10.8%"></div></div>
     </div><div class="ts-cnt-col" title="9/23 周三 · 6.1%（338家） · 均值4.69%">
-      <div class="ts-cnt-val pos">6.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:17.7%"></div></div>
+      <div class="ts-cnt-val">6.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar pos" style="height:10.0%"></div></div>
     </div><div class="ts-cnt-col" title="9/24 周四 · 4.4%（246家） · 均值4.69%">
-      <div class="ts-cnt-val neg">4.4%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:3.1%"></div></div>
+      <div class="ts-cnt-val">4.4%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:1.8%"></div></div>
     </div><div class="ts-cnt-col" title="9/28 周一 · 2.1%（116家） · 均值4.69%">
-      <div class="ts-cnt-val neg">2.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:32.6%"></div></div>
+      <div class="ts-cnt-val">2.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:18.4%"></div></div>
     </div><div class="ts-cnt-col" title="9/29 周二 · 1.9%（107家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.9%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:34.6%"></div></div>
+      <div class="ts-cnt-val">1.9%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:19.6%"></div></div>
     </div><div class="ts-cnt-col" title="9/30 周三 · 1.7%（96家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.7%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:37.1%"></div></div>
+      <div class="ts-cnt-val">1.7%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:21.0%"></div></div>
     </div><div class="ts-cnt-col" title="10/8 周四 · 1.5%（85家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.5%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:39.7%"></div></div>
+      <div class="ts-cnt-val">1.5%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:22.4%"></div></div>
     </div><div class="ts-cnt-col" title="10/9 周五 · 1.1%（63家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:44.6%"></div></div>
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.2%"></div></div>
     </div><div class="ts-cnt-col" title="10/12 周一 · 1.0%（57家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.0%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:45.9%"></div></div>
+      <div class="ts-cnt-val">1.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.9%"></div></div>
     </div><div class="ts-cnt-col" title="10/13 周二 · 1.0%（56家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.0%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:46.2%"></div></div>
+      <div class="ts-cnt-val">1.0%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:26.1%"></div></div>
     </div><div class="ts-cnt-col" title="10/14 周三 · 1.8%（100家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.8%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:36.3%"></div></div>
+      <div class="ts-cnt-val">1.8%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:20.5%"></div></div>
     </div><div class="ts-cnt-col" title="10/15 周四 · 1.2%（68家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.2%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:43.4%"></div></div>
+      <div class="ts-cnt-val">1.2%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.5%"></div></div>
     </div><div class="ts-cnt-col" title="10/16 周五 · 1.3%（72家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.3%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:42.5%"></div></div>
+      <div class="ts-cnt-val">1.3%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:24.0%"></div></div>
     </div><div class="ts-cnt-col latest" title="10/19 周一 · 1.1%（61家） · 均值4.69%">
-      <div class="ts-cnt-val neg">1.1%</div>
-      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:45.1%"></div></div>
+      <div class="ts-cnt-val">1.1%</div>
+      <div class="ts-cnt-track"><div class="ts-cnt-zero" title="近200日均值 4.69%"></div><div class="ts-cnt-bar neg" style="height:25.5%"></div></div>
     </div></div>
-      <div class="ts-cnt-axis"><div class="ts-cnt-tick show"><span>8/31</span></div><div class="ts-cnt-tick"><span>9/1</span></div><div class="ts-cnt-tick"><span>9/2</span></div><div class="ts-cnt-tick"><span>9/3</span></div><div class="ts-cnt-tick"><span>9/4</span></div><div class="ts-cnt-tick"><span>9/7</span></div><div class="ts-cnt-tick"><span>9/8</span></div><div class="ts-cnt-tick"><span>9/9</span></div><div class="ts-cnt-tick"><span>9/10</span></div><div class="ts-cnt-tick"><span>9/11</span></div><div class="ts-cnt-tick show"><span>9/14</span></div><div class="ts-cnt-tick"><span>9/15</span></div><div class="ts-cnt-tick"><span>9/16</span></div><div class="ts-cnt-tick"><span>9/17</span></div><div class="ts-cnt-tick"><span>9/18</span></div><div class="ts-cnt-tick"><span>9/21</span></div><div class="ts-cnt-tick"><span>9/22</span></div><div class="ts-cnt-tick"><span>9/23</span></div><div class="ts-cnt-tick"><span>9/24</span></div><div class="ts-cnt-tick"><span>9/28</span></div><div class="ts-cnt-tick show"><span>9/29</span></div><div class="ts-cnt-tick"><span>9/30</span></div><div class="ts-cnt-tick"><span>10/8</span></div><div class="ts-cnt-tick"><span>10/9</span></div><div class="ts-cnt-tick"><span>10/12</span></div><div class="ts-cnt-tick"><span>10/13</span></div><div class="ts-cnt-tick"><span>10/14</span></div><div class="ts-cnt-tick"><span>10/15</span></div><div class="ts-cnt-tick"><span>10/16</span></div><div class="ts-cnt-tick show latest"><span>10/19</span></div></div>
+      <div class="ts-cnt-axis"><div class="ts-cnt-tick show"><span>4/21</span></div><div class="ts-cnt-tick"><span>4/22</span></div><div class="ts-cnt-tick"><span>4/23</span></div><div class="ts-cnt-tick"><span>4/24</span></div><div class="ts-cnt-tick"><span>4/27</span></div><div class="ts-cnt-tick"><span>4/28</span></div><div class="ts-cnt-tick"><span>4/29</span></div><div class="ts-cnt-tick"><span>4/30</span></div><div class="ts-cnt-tick"><span>5/6</span></div><div class="ts-cnt-tick"><span>5/7</span></div><div class="ts-cnt-tick"><span>5/8</span></div><div class="ts-cnt-tick"><span>5/11</span></div><div class="ts-cnt-tick"><span>5/12</span></div><div class="ts-cnt-tick"><span>5/13</span></div><div class="ts-cnt-tick"><span>5/14</span></div><div class="ts-cnt-tick"><span>5/15</span></div><div class="ts-cnt-tick"><span>5/18</span></div><div class="ts-cnt-tick"><span>5/19</span></div><div class="ts-cnt-tick"><span>5/20</span></div><div class="ts-cnt-tick"><span>5/21</span></div><div class="ts-cnt-tick"><span>5/22</span></div><div class="ts-cnt-tick"><span>5/25</span></div><div class="ts-cnt-tick"><span>5/26</span></div><div class="ts-cnt-tick"><span>5/27</span></div><div class="ts-cnt-tick"><span>5/28</span></div><div class="ts-cnt-tick"><span>5/29</span></div><div class="ts-cnt-tick"><span>6/1</span></div><div class="ts-cnt-tick"><span>6/2</span></div><div class="ts-cnt-tick"><span>6/3</span></div><div class="ts-cnt-tick"><span>6/4</span></div><div class="ts-cnt-tick"><span>6/5</span></div><div class="ts-cnt-tick"><span>6/8</span></div><div class="ts-cnt-tick"><span>6/9</span></div><div class="ts-cnt-tick"><span>6/10</span></div><div class="ts-cnt-tick"><span>6/11</span></div><div class="ts-cnt-tick"><span>6/12</span></div><div class="ts-cnt-tick"><span>6/15</span></div><div class="ts-cnt-tick"><span>6/16</span></div><div class="ts-cnt-tick"><span>6/17</span></div><div class="ts-cnt-tick"><span>6/18</span></div><div class="ts-cnt-tick show"><span>6/22</span></div><div class="ts-cnt-tick"><span>6/23</span></div><div class="ts-cnt-tick"><span>6/24</span></div><div class="ts-cnt-tick"><span>6/25</span></div><div class="ts-cnt-tick"><span>6/26</span></div><div class="ts-cnt-tick"><span>6/29</span></div><div class="ts-cnt-tick"><span>6/30</span></div><div class="ts-cnt-tick"><span>7/1</span></div><div class="ts-cnt-tick"><span>7/2</span></div><div class="ts-cnt-tick"><span>7/3</span></div><div class="ts-cnt-tick"><span>7/6</span></div><div class="ts-cnt-tick"><span>7/7</span></div><div class="ts-cnt-tick"><span>7/8</span></div><div class="ts-cnt-tick"><span>7/9</span></div><div class="ts-cnt-tick"><span>7/10</span></div><div class="ts-cnt-tick"><span>7/13</span></div><div class="ts-cnt-tick"><span>7/14</span></div><div class="ts-cnt-tick"><span>7/15</span></div><div class="ts-cnt-tick"><span>7/16</span></div><div class="ts-cnt-tick"><span>7/17</span></div><div class="ts-cnt-tick show"><span>7/20</span></div><div class="ts-cnt-tick"><span>7/21</span></div><div class="ts-cnt-tick"><span>7/22</span></div><div class="ts-cnt-tick"><span>7/23</span></div><div class="ts-cnt-tick"><span>7/24</span></div><div class="ts-cnt-tick"><span>7/27</span></div><div class="ts-cnt-tick"><span>7/28</span></div><div class="ts-cnt-tick"><span>7/29</span></div><div class="ts-cnt-tick"><span>7/30</span></div><div class="ts-cnt-tick"><span>7/31</span></div><div class="ts-cnt-tick"><span>8/3</span></div><div class="ts-cnt-tick"><span>8/4</span></div><div class="ts-cnt-tick"><span>8/5</span></div><div class="ts-cnt-tick"><span>8/6</span></div><div class="ts-cnt-tick"><span>8/7</span></div><div class="ts-cnt-tick"><span>8/10</span></div><div class="ts-cnt-tick"><span>8/11</span></div><div class="ts-cnt-tick"><span>8/12</span></div><div class="ts-cnt-tick"><span>8/13</span></div><div class="ts-cnt-tick"><span>8/14</span></div><div class="ts-cnt-tick show"><span>8/17</span></div><div class="ts-cnt-tick"><span>8/18</span></div><div class="ts-cnt-tick"><span>8/19</span></div><div class="ts-cnt-tick"><span>8/20</span></div><div class="ts-cnt-tick"><span>8/21</span></div><div class="ts-cnt-tick"><span>8/24</span></div><div class="ts-cnt-tick"><span>8/25</span></div><div class="ts-cnt-tick"><span>8/26</span></div><div class="ts-cnt-tick"><span>8/27</span></div><div class="ts-cnt-tick"><span>8/28</span></div><div class="ts-cnt-tick"><span>8/31</span></div><div class="ts-cnt-tick"><span>9/1</span></div><div class="ts-cnt-tick"><span>9/2</span></div><div class="ts-cnt-tick"><span>9/3</span></div><div class="ts-cnt-tick"><span>9/4</span></div><div class="ts-cnt-tick"><span>9/7</span></div><div class="ts-cnt-tick"><span>9/8</span></div><div class="ts-cnt-tick"><span>9/9</span></div><div class="ts-cnt-tick"><span>9/10</span></div><div class="ts-cnt-tick"><span>9/11</span></div><div class="ts-cnt-tick"><span>9/14</span></div><div class="ts-cnt-tick"><span>9/15</span></div><div class="ts-cnt-tick"><span>9/16</span></div><div class="ts-cnt-tick"><span>9/17</span></div><div class="ts-cnt-tick"><span>9/18</span></div><div class="ts-cnt-tick"><span>9/21</span></div><div class="ts-cnt-tick"><span>9/22</span></div><div class="ts-cnt-tick"><span>9/23</span></div><div class="ts-cnt-tick"><span>9/24</span></div><div class="ts-cnt-tick"><span>9/28</span></div><div class="ts-cnt-tick"><span>9/29</span></div><div class="ts-cnt-tick"><span>9/30</span></div><div class="ts-cnt-tick"><span>10/8</span></div><div class="ts-cnt-tick"><span>10/9</span></div><div class="ts-cnt-tick"><span>10/12</span></div><div class="ts-cnt-tick"><span>10/13</span></div><div class="ts-cnt-tick"><span>10/14</span></div><div class="ts-cnt-tick"><span>10/15</span></div><div class="ts-cnt-tick"><span>10/16</span></div><div class="ts-cnt-tick show latest"><span>10/19</span></div></div>
     </div>
   </div><div class="ts-chart">
     <div class="ts-chart-head">
@@ -2735,7 +3001,7 @@
   </div></div><div class="fund-note">板块-资金认可度：近20个交易日开盘啦涨停板块整合个股池（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；自报表日起连续10个交易日占比均低于50%不展示）；近20个交易日每日统计——成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。报表当日3亿以上家数严格小于10时，不展示该板块整张柱图；近20日窗口内该板块首次上榜之前不画柱、不标家数；首次上榜日起才显示；上榜后某日无样本（分母为0）则不画柱。排序：当日占比&gt;50%优先并按当日占比降序；其余按近5个交易日占比均值降序。柱图为认可度占比（&gt;50%红 / ≤50%绿；0%、50%、100%浅灰刻度）；横轴日期下方数字为当日3亿以上家数；图下方「占比」标签为当日数值（当日3亿以上家数见卡片标题，不在标签重复）。</div>
   </div>
 
-  <div class="footer">生成于 2026-10-19 17:23</div>
+  <div class="footer">生成于 2026-10-19 18:59</div>
 </div>
 </body>
 </html>

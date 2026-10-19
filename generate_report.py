@@ -32,13 +32,15 @@ EVENT_CATALOG_FILE = BASE / "event_catalog.json"
 try:
     from trend_strength import (
         compute_trend_strength,
-        ensure_count_series_30d,
+        ensure_count_series_120d,
+        ensure_count_series_30d,  # 兼容别名
         ensure_means_200d,
         RESULT_DIR as TREND_RESULT_DIR,
     )
 except ImportError:  # pragma: no cover
     compute_trend_strength = None  # type: ignore
     ensure_means_200d = None  # type: ignore
+    ensure_count_series_120d = None  # type: ignore
     ensure_count_series_30d = None  # type: ignore
     TREND_RESULT_DIR = BASE / "trend_strength_results"
 
@@ -3954,7 +3956,7 @@ def render_html(ctx: dict) -> str:
   #sec-env .callout.bad {{ background: #e8f5e9; border-color: #34C759; }}
 
   /* ── 趋势强度（个股五条件占比）── */
-  /* 强趋势-次日承接 / 近30日强趋势占比：与近30日成交金额同系（顶部分隔线，无边框底色） */
+  /* 强趋势占比（近120日）：与近30日成交金额同系（顶部分隔线，无边框底色） */
   .ts-cnt-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0; margin-bottom: 0;
     border-top: 1px solid var(--border);
@@ -3965,20 +3967,16 @@ def render_html(ctx: dict) -> str:
     width: 100%; overflow: visible;
   }}
   .ts-cnt-bars {{
-    display: flex; align-items: stretch; gap: 2px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
   }}
   .ts-cnt-col {{
     flex: 1 1 0; min-width: 0; max-width: none;
     display: flex; flex-direction: column; align-items: center; height: 100%;
   }}
+  /* 近120柱过密：柱顶数字一律隐藏，最新值只看标题 meta */
   .ts-cnt-val {{
-    font-size: 9px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px;
-    white-space: nowrap;
+    display: none !important;
   }}
-  .ts-cnt-val.pos {{ color: var(--bar-ok, #E53935); }}
-  .ts-cnt-val.neg {{ color: var(--bar-bad, #34C759); }}
-  .ts-cnt-col.latest .ts-cnt-val {{ font-weight: 700; }}
   .ts-cnt-track {{
     flex: 1; width: 100%; min-height: 0; position: relative;
   }}
@@ -3988,7 +3986,7 @@ def render_html(ctx: dict) -> str:
   }}
   .ts-cnt-bar {{
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 70%; max-width: 14px; min-height: 2px; z-index: 2;
+    width: 90%; max-width: 6px; min-height: 1px; z-index: 2;
   }}
   .ts-cnt-bar.pos {{
     bottom: 50%; border-radius: 2px 2px 0 0;
@@ -5107,30 +5105,33 @@ def load_trend_strength_block(
         block = dict(block)
         block["means_200d"] = means
 
-    # 近30日全场强趋势占比：最新交易日刷新缓存；历史日从缓存截取至报表日
-    if is_latest and ensure_count_series_30d is not None:
+    # 近120日全场强趋势占比：最新交易日刷新缓存；历史日从缓存截取至报表日
+    _ensure_cnt = ensure_count_series_120d or ensure_count_series_30d
+    if is_latest and _ensure_cnt is not None:
         try:
-            days30 = _trading_days_ending(as_of_d, 30)
-            count_series = ensure_count_series_30d(as_of_d, days30, force=False, progress=True) or []
+            days120 = _trading_days_ending(as_of_d, 120)
+            count_series = _ensure_cnt(as_of_d, days120, force=False, progress=True) or []
             block = dict(block)
             block["count_series"] = count_series
         except Exception as exc:  # noqa: BLE001
             print(f"[trend-count] 更新失败: {exc}")
     elif not block.get("count_series"):
-        cpath = TREND_RESULT_DIR / "count_series_30d.json"
+        cpath = TREND_RESULT_DIR / "count_series_120d.json"
+        if not cpath.exists():
+            cpath = TREND_RESULT_DIR / "count_series_30d.json"
         if cpath.exists():
             try:
                 cdata = json.loads(cpath.read_text(encoding="utf-8"))
                 daily = list(cdata.get("daily") or [])
                 as_of_s = as_of_d.isoformat()
-                # 缓存对齐当日，或覆盖至更晚日期时，截取 ≤ 报表日的近 30 条
+                # 缓存对齐当日，或覆盖至更晚日期时，截取 ≤ 报表日的近 120 条
                 if daily and (
                     cdata.get("as_of") == as_of_s
                     or any(str(r.get("date") or "")[:10] == as_of_s for r in daily)
                 ):
                     clipped = [
                         r for r in daily if str(r.get("date") or "")[:10] <= as_of_s
-                    ][-30:]
+                    ][-120:]
                     if clipped:
                         block = dict(block)
                         block["count_series"] = clipped
@@ -5146,7 +5147,7 @@ def _render_ts_count_bars_html(
     *,
     mean_200d: float | None = None,
 ) -> str:
-    """近30日全场强趋势占比柱图；零轴=近200日均值（上红下绿）；纵轴按 |偏离| 约 90 分位定尺。
+    """强趋势占比柱图（近120交易日）；零轴=近200日均值（上红下绿）；纵轴按 |偏离| 约 90 分位定尺。
 
     meta：「横轴 M% · 今日 N%」（今日相对横轴均值上红下绿）。
     """
@@ -5187,6 +5188,8 @@ def _render_ts_count_bars_html(
     if n_bars >= 8:
         tick_idxs.add(n_bars // 3)
         tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
 
     axis_title = (
         f' title="近200日均值 {base:.2f}%"'
@@ -5219,7 +5222,6 @@ def _render_ts_count_bars_html(
             tip_mean = f" · 均值{base:.2f}%"
             tip_clip = " · 柱高已封顶" if abs(delta) > scale else ""
             bar = f'<div class="ts-cnt-bar {side}" style="height:{h:.1f}%"></div>'
-            val_cls = f" {side}"
         else:
             h = min(100.0, r / scale * 100.0) if scale > 0 else 0.0
             tip_mean = ""
@@ -5228,10 +5230,9 @@ def _render_ts_count_bars_html(
                 f'<div class="ts-cnt-bar pos" style="height:{h:.1f}%; '
                 f'bottom:0; top:auto"></div>'
             )
-            val_cls = ""
         cols.append(
             f'''<div class="ts-cnt-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}（{n}家）{tip_mean}{tip_clip}">
-      <div class="ts-cnt-val{val_cls}">{val_lab}</div>
+      <div class="ts-cnt-val">{val_lab}</div>
       <div class="ts-cnt-track"><div class="ts-cnt-zero"{axis_title}></div>{bar}</div>
     </div>'''
         )
@@ -5252,7 +5253,7 @@ def _render_ts_count_bars_html(
 
     return f'''<div class="ts-cnt-wrap">
     <div class="ts-chart-head">
-      <span class="ts-chart-title">近30日强趋势占比</span>
+      <span class="ts-chart-title">强趋势占比</span>
       <span class="ts-chart-meta">{meta}</span>
     </div>
     <div class="ts-cnt-chart">
@@ -5418,7 +5419,7 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 页内：近30日强趋势占比 → 结构占比 → 成交额结构 → 脚注 → 百日新高（模块末另挂）
+    # 页内：强趋势占比（近120日）→ 结构占比 → 成交额结构 → 脚注 → 百日新高（模块末另挂）
     # 强趋势-次日承接已删除（2026-10-11）
     return f"{count_chart}{chart}{amt_chart}{note_html}"
 
