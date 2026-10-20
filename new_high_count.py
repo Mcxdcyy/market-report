@@ -8,7 +8,7 @@
 缓存：
   - `new_high_count_results/series.json`：按日累积家数
   - `new_high_count_results/days/YYYY-MM-DD.json`：单日明细（可选 codes）
-  - 定义回看近 200 日；柱图与零轴均值近 120 日；`compute_new_high_count` 对齐 as_of 重算缺口日
+  - 定义回看近 200 日；柱图近 120 日；零轴均值近 200 日；`compute_new_high_count` 对齐 as_of 重算缺口日
 """
 
 from __future__ import annotations
@@ -24,9 +24,9 @@ RESULT_DIR = BASE / "new_high_count_results"
 DAY_DIR = RESULT_DIR / "days"
 SERIES_FILE = RESULT_DIR / "series.json"
 CHART_DAYS = 120  # 页面柱图横轴近 120 个交易日
-MEAN_DAYS = 120  # 零轴 / 均值用近 120 个交易日
+MEAN_DAYS = 200  # 零轴 / 均值用近 200 个交易日（与追高/强趋势统一）
 LOOKBACK = 200  # 近 200 个交易日最高价（定义口径）
-SERIES_DAYS = max(CHART_DAYS, MEAN_DAYS)  # 页面/均值窗；回看由 LOOKBACK 单独保证
+SERIES_DAYS = max(CHART_DAYS, MEAN_DAYS)  # 至少覆盖均值窗；回看由 LOOKBACK 单独保证
 SCHEMA = 6
 SOURCE = "local_200d_high"
 NOTE = (

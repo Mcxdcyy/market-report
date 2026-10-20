@@ -1554,7 +1554,7 @@ def _render_new_high_mean_zero_chart(
     baseline: float | None,
     title: str = "百日新高",
 ) -> str:
-    """百日新高：柱高=当日家数；页面横轴近120交易日；零轴=近120日均值（上红下绿）。
+    """百日新高：柱高=当日家数；页面横轴近120交易日；零轴=近200日均值（上红下绿）。
 
     meta：「横轴 M 家 · 今日 N 家」（今日相对横轴均值上红下绿）。纵轴按 |偏离| 约 90 分位定尺。
     """
@@ -1582,7 +1582,7 @@ def _render_new_high_mean_zero_chart(
         tick_idxs.add(n_bars // 2)
 
     axis_title = (
-        f' title="近120日均值 {base:.1f}家"'
+        f' title="近200日均值 {base:.1f}家"'
         if baseline is not None
         else ""
     )
@@ -6854,7 +6854,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     try:
         from new_high_count import CHART_DAYS, MEAN_DAYS, compute_new_high_count
 
-        # 本地日K：当日最高=近200日；柱图与零轴均值近120日。
+        # 本地日K：当日最高=近200日；柱图近120日；零轴均值近200日（与追高/强趋势统一）。
         xh_payload = compute_new_high_count(
             report_d, force=False, progress=True
         )
