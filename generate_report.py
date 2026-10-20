@@ -4684,10 +4684,10 @@ def render_html(ctx: dict) -> str:
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
-  /* 近250柱：柱宽约 75%，日间缝 ≤ 单柱粗细（缝来自列内余白 + 1px gap） */
+  /* 近250柱：固定整像素柱宽，避免百分比半像素导致手机上粗细不一 */
   .macro-bias-bar {{
-    position: absolute; left: 50%; transform: translateX(-50%);
-    width: 75%; max-width: none; min-height: 1px;
+    position: absolute; left: 0; right: 0; margin: 0 auto;
+    width: 2px; min-height: 1px;
   }}
   .macro-bias-bar.pos {{
     bottom: 50%; border-radius: 1px 1px 0 0; background: #E53935;
@@ -4915,9 +4915,10 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table tbody th {{ width: 14%; padding-left: 8px; }}
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 21.5%; }}
-    .macro-bias-chart {{ gap: 1px; }}
-    .macro-bias-bar {{ width: 75%; max-width: none; }}
-    .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
+    .macro-bias-chart {{ gap: 0; }}
+    /* 手机列宽约 1.5px：柱固定 1px，避免半像素四舍五入导致有的 1px 有的 2px */
+    .macro-bias-bar {{ width: 1px; }}
+    .macro-bias-wrap .vol20-axis {{ gap: 0; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; }}
