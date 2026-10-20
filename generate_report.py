@@ -4698,7 +4698,7 @@ def render_html(ctx: dict) -> str:
     left: 0; right: 0; margin: 0 auto; width: 3px;
   }}
 
-  /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
+  /* ── 指数趋势（大盘环境 · 近10日对比表；原名指数大局观） ── */
   .idx-outlook-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
@@ -5724,7 +5724,7 @@ def render_macro_bias_html(block: dict) -> str:
 
 
 def render_index_outlook_html(block: dict) -> str:
-    """大盘环境顶部：指数大局观 · 近10个交易日下跌通道对比表。
+    """大盘环境：指数趋势（原名指数大局观）· 近10个交易日下跌通道对比表。
 
     竖轴=日期（上旧下新），横轴=指数；下跌通道绿底，非下跌填「-」。
     表下结论条样式同 `.vol-mkt-sum`。
@@ -5773,7 +5773,7 @@ def render_index_outlook_html(block: dict) -> str:
     return (
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
-        '<span class="vol20-title">指数大局观</span>'
+        '<span class="vol20-title">指数趋势</span>'
         f'<span class="vol20-meta">近10日 · {d0}–{d1}</span>'
         "</div>"
         '<div class="idx-outlook-scroll">'
