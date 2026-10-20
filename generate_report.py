@@ -3973,7 +3973,7 @@ def render_html(ctx: dict) -> str:
     width: 100%; overflow: visible;
   }}
   .ts-cnt-bars {{
-    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 132px; width: 100%;
   }}
   .ts-cnt-col {{
     flex: 1 1 0; min-width: 0; max-width: none;
@@ -4027,7 +4027,7 @@ def render_html(ctx: dict) -> str:
     margin-top: 0;
   }}
   .ts-hold-bars {{
-    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 132px; width: 100%;
   }}
   .ts-hold-col {{
     flex: 1 1 0; min-width: 0; max-width: none;
@@ -4270,7 +4270,7 @@ def render_html(ctx: dict) -> str:
     display: flex; flex-direction: column; gap: 10px;
   }}
   .vol20-wrap.vol120 .vol20-val {{ display: none !important; }}
-  .vol20-wrap.vol120 .vol20-bars {{ height: 118px; gap: 1px; }}
+  .vol20-wrap.vol120 .vol20-bars {{ height: 132px; gap: 1px; }}
   .vol20-wrap.vol120 .vol20-bar {{
     width: 90%; max-width: 6px; border-radius: 1px 1px 0 0;
     background: #8e8e93;
@@ -4283,7 +4283,7 @@ def render_html(ctx: dict) -> str:
   .vol20-wrap.vol120 .vol20-axis {{ gap: 1px; }}
   /* 量能120日密柱：默认灰；带 up/down 的量能周期图覆盖为红/绿 */
   .vol20-wrap.vol120.mean-zero .vol120z-bars {{
-    display: flex; align-items: stretch; gap: 1px; height: 118px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 132px; width: 100%;
   }}
   .vol20-wrap.vol120.mean-zero .vol120z-col {{
     flex: 1 1 0; min-width: 0;
@@ -4361,7 +4361,7 @@ def render_html(ctx: dict) -> str:
   .vol20-meta .meta-today.down {{ color: #34C759; }}
   .chase-plot {{ width: 100%; overflow: hidden; }}
   .chase-bars {{
-    display: flex; align-items: stretch; gap: 1px; height: 120px; width: 100%;
+    display: flex; align-items: stretch; gap: 1px; height: 132px; width: 100%;
   }}
   .chase-col {{
     flex: 1 1 0; min-width: 0;
@@ -4670,7 +4670,7 @@ def render_html(ctx: dict) -> str:
   }}
   .macro-bias-chart {{
     position: relative;
-    height: 148px; /* 近200 / 近120 同高，便于对比 */
+    height: 132px; /* 与近30日成交金额等同高 */
     display: flex;
     align-items: stretch;
     gap: 1px;
@@ -4881,6 +4881,10 @@ def render_html(ctx: dict) -> str:
     .vol20-bars {{
       height: 118px; gap: 1px;
     }}
+    .vol20-wrap.vol120 .vol20-bars,
+    .vol20-wrap.vol120.mean-zero .vol120z-bars {{
+      height: 118px;
+    }}
     .vol20-col {{
       flex: 1 1 0; min-width: 0; max-width: none;
     }}
@@ -4904,7 +4908,7 @@ def render_html(ctx: dict) -> str:
     .section > .vol-mkt-sum-wrap:last-child {{ margin-bottom: -12px; }} /* 手机 section pad 12 */
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
     .vol20-bar {{ width: 85%; max-width: none; border-radius: 2px 2px 1px 1px; }}
-    .chase-bars {{ height: 110px; gap: 1px; }}
+    .chase-bars {{ height: 118px; gap: 1px; }}
     .chase-bar {{ width: 85%; max-width: none; }}
     .chase-chart-title {{ font-size: 14px; }}
     .chase-chart-meta {{ font-size: 12px; }}
@@ -4922,19 +4926,20 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table tbody th {{ width: 14%; padding-left: 8px; }}
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 21.5%; }}
+    .macro-bias-chart {{ height: 118px; }}
     .macro-bias-chart.is-200 {{ gap: 0; }}
     .macro-bias-chart.is-200 .macro-bias-bar {{ width: 1px; }}
     .macro-bias-wrap:has(.is-200) .vol20-axis {{ gap: 0; }}
     .macro-bias-chart.is-120 {{ gap: 1px; }}
     .macro-bias-chart.is-120 .macro-bias-bar {{ width: 85%; max-width: none; }}
     .macro-bias-wrap:has(.is-120) .vol20-axis {{ gap: 1px; }}
-    .ts-cnt-bars {{ height: 110px; gap: 1px; }}
+    .ts-cnt-bars {{ height: 118px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; }}
     .ts-cnt-axis {{ gap: 1px; margin-top: 8px; min-height: 20px; }}
     .ts-cnt-tick {{ height: 20px; }}
     .ts-cnt-tick span {{ font-size: 10px; }}
-    .ts-hold-bars {{ height: 110px; gap: 1px; }}
+    .ts-hold-bars {{ height: 118px; gap: 1px; }}
     .ts-hold-val {{ display: none !important; }}
     .ts-hold-bar {{ width: 85%; max-width: none; }}
     .ts-hold-axis {{ gap: 1px; margin-top: 8px; min-height: 20px; }}
