@@ -323,7 +323,7 @@ def compute_new_high_count(
     daily_all = ensure_series_window(
         as_of_d, n_days=SERIES_DAYS, force=force, progress=progress
     )
-    # 截到 as_of，并取近 SERIES_DAYS
+    # 截到 as_of，并取近 SERIES_DAYS（页面柱图窗口）
     daily = [r for r in daily_all if r["date"] <= as_of_d.isoformat()]
     series_days = daily[-SERIES_DAYS:] if len(daily) >= SERIES_DAYS else daily
 
@@ -333,7 +333,8 @@ def compute_new_high_count(
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("schema") == SCHEMA
-                and int(cached.get("n_days") or 0) >= min(SERIES_DAYS, 1)
+                and int(cached.get("n_days") or 0) >= SERIES_DAYS
+                and len(cached.get("daily") or []) >= SERIES_DAYS
                 and cached.get("daily")
                 and int(cached.get("latest_count") or -1)
                 == int((series_days[-1]["count"] if series_days else -2))
@@ -359,7 +360,7 @@ def compute_new_high_count(
         "start": series_days[0]["date"],
         "end": series_days[-1]["date"],
         "n_days": len(series_days),
-        "daily": daily,
+        "daily": series_days,
         "latest_count": int(series_days[-1]["count"]),
         "latest_source": SOURCE,
         "lookback": LOOKBACK,
