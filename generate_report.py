@@ -4703,12 +4703,11 @@ def render_html(ctx: dict) -> str:
     display: flex; flex-direction: column; gap: 12px;
   }}
   .idx-outlook-scroll {{
-    width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    width: 100%; overflow-x: visible;
   }}
   .idx-outlook-table {{
-    width: auto;
+    width: 100%;
     max-width: 100%;
-    min-width: 0;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
@@ -4727,18 +4726,18 @@ def render_html(ctx: dict) -> str:
   }}
   .idx-outlook-table thead th.idx-corner {{
     text-align: left; padding-left: 10px; padding-right: 6px;
-    width: 56px; color: var(--sub); font-weight: 700;
+    width: 12%; color: var(--sub); font-weight: 700;
   }}
   .idx-outlook-table thead th:not(.idx-corner) {{
-    width: 100px;
+    width: 22%;
   }}
   .idx-outlook-table tbody th {{
     text-align: left; padding-left: 10px; padding-right: 6px;
-    width: 56px; font-weight: 650; color: var(--muted);
+    width: 12%; font-weight: 650; color: var(--muted);
     white-space: nowrap; background: #fff;
   }}
   .idx-outlook-table tbody td {{
-    width: 100px;
+    width: 22%;
   }}
   .idx-outlook-table tbody tr.latest th {{
     color: var(--text); font-weight: 800;
@@ -4913,9 +4912,9 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table thead th {{ font-size: 12px; }}
     .idx-outlook-table tbody th {{ font-size: 13px; padding-left: 10px; }}
     .idx-outlook-table thead th.idx-corner,
-    .idx-outlook-table tbody th {{ width: 58px; }}
+    .idx-outlook-table tbody th {{ width: 14%; padding-left: 8px; }}
     .idx-outlook-table thead th:not(.idx-corner),
-    .idx-outlook-table tbody td {{ width: 98px; }}
+    .idx-outlook-table tbody td {{ width: 21.5%; }}
     .macro-bias-chart {{ gap: 1px; }}
     .macro-bias-bar {{ width: 55%; max-width: 3px; }}
     .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
