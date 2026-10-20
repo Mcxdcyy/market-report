@@ -4697,11 +4697,6 @@ def render_html(ctx: dict) -> str:
   .macro-bias-chart.is-200 .macro-bias-bar {{
     left: 0; right: 0; margin: 0 auto; width: 3px;
   }}
-  /* 近120日：与追高/强趋势占比同系（gap 1px · 柱宽 90% · max 6px） */
-  .macro-bias-chart.is-120 .macro-bias-bar {{
-    left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 6px;
-  }}
 
   /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
   .idx-outlook-wrap {{
@@ -4930,9 +4925,6 @@ def render_html(ctx: dict) -> str:
     .macro-bias-chart.is-200 {{ gap: 0; }}
     .macro-bias-chart.is-200 .macro-bias-bar {{ width: 1px; }}
     .macro-bias-wrap:has(.is-200) .vol20-axis {{ gap: 0; }}
-    .macro-bias-chart.is-120 {{ gap: 1px; }}
-    .macro-bias-chart.is-120 .macro-bias-bar {{ width: 85%; max-width: none; }}
-    .macro-bias-wrap:has(.is-120) .vol20-axis {{ gap: 1px; }}
     .ts-cnt-bars {{ height: 118px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; }}
@@ -5669,7 +5661,7 @@ def _render_macro_bias_one(
     window_label: str,
     chart_mod: str,
 ) -> str:
-    """单张宏观·多空策略柱图。chart_mod: is-200 | is-120。"""
+    """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。"""
     if not series:
         return ""
     n = len(series)
@@ -5721,21 +5713,15 @@ def _render_macro_bias_one(
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：近200日主图 + 其下近120日对比图（柱距同追高等120日图）。"""
+    """大盘环境最上方：仅近200日宏观·多空策略（已删近120日对比图）。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
-    html_200 = _render_macro_bias_one(
+    return _render_macro_bias_one(
         series[-200:] if len(series) > 200 else series,
         window_label="近200日",
         chart_mod="is-200",
     )
-    html_120 = _render_macro_bias_one(
-        series[-120:] if len(series) > 120 else series,
-        window_label="近120日",
-        chart_mod="is-120",
-    )
-    return f"{html_200}{html_120}"
 
 
 def render_index_outlook_html(block: dict) -> str:
