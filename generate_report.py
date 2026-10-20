@@ -4670,7 +4670,7 @@ def render_html(ctx: dict) -> str:
   }}
   .macro-bias-chart {{
     position: relative;
-    height: 148px;
+    height: 148px; /* 近200 / 近120 同高，便于对比 */
     display: flex;
     align-items: stretch;
     gap: 1px;
@@ -4925,7 +4925,7 @@ def render_html(ctx: dict) -> str:
     .macro-bias-chart.is-200 {{ gap: 0; }}
     .macro-bias-chart.is-200 .macro-bias-bar {{ width: 1px; }}
     .macro-bias-wrap:has(.is-200) .vol20-axis {{ gap: 0; }}
-    .macro-bias-chart.is-120 {{ gap: 1px; height: 110px; }}
+    .macro-bias-chart.is-120 {{ gap: 1px; }}
     .macro-bias-chart.is-120 .macro-bias-bar {{ width: 85%; max-width: none; }}
     .macro-bias-wrap:has(.is-120) .vol20-axis {{ gap: 1px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
