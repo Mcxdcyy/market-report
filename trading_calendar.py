@@ -121,7 +121,7 @@ def _project_next_trading_day(day: date, *, horizon: int = 40) -> date:
 def _dates_from_long_kline_cache() -> set[str]:
     """从长K线缓存抽交易日（与趋势强度近200日均值同源覆盖）。
 
-    开盘啦量能日线目前约百余日，不足200；长K（约260根）可补齐交易日轴。
+    开盘啦量能日线目前约百余日，不足200；长K（约450根）可补齐交易日轴。
     只取覆盖最长的一只样本股日期，避免全市场解析。
     """
     path = BASE / "trend_klines_cache_long.json"
@@ -137,7 +137,7 @@ def _dates_from_long_kline_cache() -> set[str]:
             continue
         if len(rows) > len(best):
             best = rows
-            if len(best) >= 260:
+            if len(best) >= 400:
                 break
     out: set[str] = set()
     for line in best:

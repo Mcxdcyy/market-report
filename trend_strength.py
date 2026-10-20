@@ -39,7 +39,7 @@ HOLD_SERIES_120D_FILE = RESULT_DIR / "hold_series_120d.json"
 HOLD_SCHEMA = 2  # 昨均价仅成交额/成交量；异常标「数据异常」，无 HL2 兜底
 WORKERS = 48
 KLINE_LEN = 40
-LONG_KLINE_LEN = 340  # 百日新高(200) + 120日图 + 余量；追高/均值亦够用
+LONG_KLINE_LEN = 450  # 百日新高柱窗(200)+回看(200)+余量；窗口首日也须凑满 200 根
 MEANS_DAYS = 200
 COUNT_SERIES_DAYS = 120
 HOLD_SERIES_DAYS = 120
@@ -886,8 +886,8 @@ def fetch_long_klines_qq(code: str, market: int | None, n: int | None = None) ->
 def fetch_long_klines_for_stock(code: str, market: int | None, as_of: date) -> list[dict]:
     rows = fetch_long_klines_qq(code, market)
     if len(rows) < MIN_BARS:
-        # 拉长搜狐窗口
-        start = as_of - timedelta(days=560)
+        # 拉长搜狐窗口（约 1.8× 交易日根数换日历日）
+        start = as_of - timedelta(days=max(560, int(LONG_KLINE_LEN * 1.8)))
         url = (
             "https://q.stock.sohu.com/hisHq?"
             + urllib.parse.urlencode(
