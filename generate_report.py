@@ -1554,7 +1554,7 @@ def _render_new_high_mean_zero_chart(
     baseline: float | None,
     title: str = "百日新高",
 ) -> str:
-    """百日新高：柱高=当日家数；页面横轴近120交易日；零轴=近200日均值（上红下绿）。
+    """百日新高：柱高=当日家数；页面横轴近120交易日；零轴=近120日均值（上红下绿）。
 
     meta：「横轴 M 家 · 今日 N 家」（今日相对横轴均值上红下绿）。纵轴按 |偏离| 约 90 分位定尺。
     """
@@ -1582,7 +1582,7 @@ def _render_new_high_mean_zero_chart(
         tick_idxs.add(n_bars // 2)
 
     axis_title = (
-        f' title="近200日均值 {base:.1f}家"'
+        f' title="近120日均值 {base:.1f}家"'
         if baseline is not None
         else ""
     )
@@ -3683,7 +3683,7 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    # 大盘环境：宏观·多空策略 → 百日新高（近200日）→ 指数趋势 → 近30日成交金额（标签+周期结论）
+    # 大盘环境：宏观·多空策略 → 百日新高（近120日）→ 指数趋势 → 近30日成交金额（标签+周期结论）
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = f"{macro_bias_html}{xh200_html}{index_outlook_html}{vol30_html}"
@@ -6852,7 +6852,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     try:
         from new_high_count import CHART_DAYS, MEAN_DAYS, compute_new_high_count
 
-        # 本地日K：当日最高=近200交易日最高；柱图横轴近120日；零轴=近200日均值。
+        # 本地日K：当日最高 / 柱图 / 零轴均值 均为近120交易日。
         xh_payload = compute_new_high_count(
             report_d, force=False, progress=True
         )

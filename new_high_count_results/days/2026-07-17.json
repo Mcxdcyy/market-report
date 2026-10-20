@@ -1,8 +1,8 @@
 {
   "date": "2026-07-17",
   "count": 16,
-  "source": "local_200d_high",
-  "lookback": 200,
+  "source": "local_120d_high",
+  "lookback": 120,
   "codes": [
     "600012",
     "600285",
@@ -39,5 +39,5 @@
     "龙源技术",
     "万邦医药"
   ],
-  "fetched": "2026-10-20 19:07:33"
+  "fetched": "2026-10-20 19:40:29"
 }
