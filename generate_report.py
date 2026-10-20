@@ -3683,10 +3683,10 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    # 大盘环境：宏观·多空策略 → 指数大局观 → 近30日成交金额（标签+周期结论）；百日新高在趋势强度模块末
+    # 大盘环境：宏观·多空策略 → 百日新高 → 指数大局观 → 近30日成交金额（标签+周期结论）
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = f"{macro_bias_html}{index_outlook_html}{vol30_html}"
+    vol20_html = f"{macro_bias_html}{xh120_html}{index_outlook_html}{vol30_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -5024,7 +5024,6 @@ def render_html(ctx: dict) -> str:
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
-    {xh120_html}
   </div>
 
   <!-- 4 涨停板块 -->
@@ -5467,8 +5466,8 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 页内：强趋势占比（近120日）→ 结构占比 → 成交额结构 → 脚注 → 百日新高（模块末另挂）
-    # 强趋势-次日承接已删除（2026-10-11）
+    # 页内：强趋势占比（近120日）→ 结构占比 → 成交额结构 → 脚注
+    # 强趋势-次日承接已删除（2026-10-11）；百日新高已挪至大盘环境宏观图下（2026-10-20）
     return f"{count_chart}{chart}{amt_chart}{note_html}"
 
 
@@ -6542,7 +6541,7 @@ def render_chase_sentiment_html(block: dict) -> str:
     )
 
     # 已删「昨追-赚钱效应」「今追-回落指数」「低吸赚钱效应」「低吸锁仓收益」
-    # 百日新高图在趋势强度模块末；追高池脚注在模板模块末
+    # 百日新高图在大盘环境宏观·多空策略下；追高池脚注在模板模块末
     return "".join(parts)
 
 
