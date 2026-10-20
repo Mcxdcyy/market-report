@@ -4684,10 +4684,10 @@ def render_html(ctx: dict) -> str:
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
-  /* 近250柱：柱宽收至约 55%，保证相邻日之间能看出缝隙（不必死守 1px 观感） */
+  /* 近250柱：柱宽约 75%，日间缝 ≤ 单柱粗细（缝来自列内余白 + 1px gap） */
   .macro-bias-bar {{
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 55%; max-width: 4px; min-height: 1px;
+    width: 75%; max-width: none; min-height: 1px;
   }}
   .macro-bias-bar.pos {{
     bottom: 50%; border-radius: 1px 1px 0 0; background: #E53935;
@@ -4916,7 +4916,7 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 21.5%; }}
     .macro-bias-chart {{ gap: 1px; }}
-    .macro-bias-bar {{ width: 55%; max-width: 3px; }}
+    .macro-bias-bar {{ width: 75%; max-width: none; }}
     .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
