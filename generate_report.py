@@ -4684,16 +4684,23 @@ def render_html(ctx: dict) -> str:
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
-  /* 近200柱：固定整像素柱宽；桌面 3px 使日间缝 ≤ 柱粗（约 1086/200 列宽下） */
   .macro-bias-bar {{
-    position: absolute; left: 0; right: 0; margin: 0 auto;
-    width: 3px; min-height: 1px;
+    position: absolute; min-height: 1px;
   }}
   .macro-bias-bar.pos {{
-    bottom: 50%; border-radius: 1px 1px 0 0; background: #E53935;
+    bottom: 50%; border-radius: 2px 2px 0 0; background: #E53935;
   }}
   .macro-bias-bar.neg {{
-    top: 50%; border-radius: 0 0 1px 1px; background: #34C759;
+    top: 50%; border-radius: 0 0 2px 2px; background: #34C759;
+  }}
+  /* 近200日：固定整像素柱宽，日间缝 ≤ 柱粗 */
+  .macro-bias-chart.is-200 .macro-bias-bar {{
+    left: 0; right: 0; margin: 0 auto; width: 3px;
+  }}
+  /* 近120日：与追高/强趋势占比同系（gap 1px · 柱宽 90% · max 6px） */
+  .macro-bias-chart.is-120 .macro-bias-bar {{
+    left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 6px;
   }}
 
   /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
@@ -4915,10 +4922,12 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table tbody th {{ width: 14%; padding-left: 8px; }}
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 21.5%; }}
-    .macro-bias-chart {{ gap: 0; }}
-    /* 手机近200柱：柱固定 1px，避免半像素四舍五入导致粗细不一 */
-    .macro-bias-bar {{ width: 1px; }}
-    .macro-bias-wrap .vol20-axis {{ gap: 0; }}
+    .macro-bias-chart.is-200 {{ gap: 0; }}
+    .macro-bias-chart.is-200 .macro-bias-bar {{ width: 1px; }}
+    .macro-bias-wrap:has(.is-200) .vol20-axis {{ gap: 0; }}
+    .macro-bias-chart.is-120 {{ gap: 1px; height: 110px; }}
+    .macro-bias-chart.is-120 .macro-bias-bar {{ width: 85%; max-width: none; }}
+    .macro-bias-wrap:has(.is-120) .vol20-axis {{ gap: 1px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
     .ts-cnt-bar {{ width: 85%; max-width: none; }}
@@ -5649,9 +5658,13 @@ def _index_outlook_sum_text(block: dict) -> str:
     return "部分指数走出下跌：市场可能转好，也可能再转差。"
 
 
-def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近200交易日。"""
-    series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
+def _render_macro_bias_one(
+    series: list[dict],
+    *,
+    window_label: str,
+    chart_mod: str,
+) -> str:
+    """单张宏观·多空策略柱图。chart_mod: is-200 | is-120。"""
     if not series:
         return ""
     n = len(series)
@@ -5672,7 +5685,9 @@ def render_macro_bias_html(block: dict) -> str:
         elif score < 0:
             bar = f'<div class="macro-bias-bar neg" style="height:{h:.1f}%"></div>'
         md = d[5:].replace("-", "/") if len(d) >= 10 else d
-        sh, sz, cy = int(row.get("sh") or 0), int(row.get("sz") or 0), int(row.get("cy") or 0)
+        sh = int(row.get("sh") or 0)
+        sz = int(row.get("sz") or 0)
+        cy = int(row.get("cy") or 0)
         tip = f"{md} · 叠加 {score:+d}（上证{sh:+d} 深成{sz:+d} 创业板{cy:+d}）"
         cols.append(
             f'<div class="macro-bias-col{" latest" if is_latest else ""}" title="{tip}">{bar}</div>'
@@ -5690,14 +5705,32 @@ def render_macro_bias_html(block: dict) -> str:
     return f'''<div class="macro-bias-wrap">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
-    <div class="vol20-meta">近200日 · 今日 {today_html}</div>
+    <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
   </div>
-  <div class="macro-bias-chart" aria-label="宏观多空策略">
+  <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
     <div class="macro-bias-zero"></div>
     {''.join(cols)}
   </div>
   <div class="vol20-axis">{''.join(ticks)}</div>
 </div>'''
+
+
+def render_macro_bias_html(block: dict) -> str:
+    """大盘环境最上方：近200日主图 + 其下近120日对比图（柱距同追高等120日图）。"""
+    series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
+    if not series:
+        return ""
+    html_200 = _render_macro_bias_one(
+        series[-200:] if len(series) > 200 else series,
+        window_label="近200日",
+        chart_mod="is-200",
+    )
+    html_120 = _render_macro_bias_one(
+        series[-120:] if len(series) > 120 else series,
+        window_label="近120日",
+        chart_mod="is-120",
+    )
+    return f"{html_200}{html_120}"
 
 
 def render_index_outlook_html(block: dict) -> str:
