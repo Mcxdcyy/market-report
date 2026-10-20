@@ -8,7 +8,7 @@
 缓存：
   - `new_high_count_results/series.json`：按日累积家数
   - `new_high_count_results/days/YYYY-MM-DD.json`：单日明细（可选 codes）
-  - 报表近 200 日柱图读 series，由 `compute_new_high_count` 对齐 as_of 重算缺口日
+  - 报表柱图近 120 日、零轴近 200 日均值；`compute_new_high_count` 对齐 as_of 重算缺口日
 """
 
 from __future__ import annotations
@@ -23,7 +23,9 @@ BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "new_high_count_results"
 DAY_DIR = RESULT_DIR / "days"
 SERIES_FILE = RESULT_DIR / "series.json"
-SERIES_DAYS = 200  # 页面柱图横轴近 200 个交易日
+CHART_DAYS = 120  # 页面柱图横轴近 120 个交易日
+MEAN_DAYS = 200  # 零轴 / 均值用近 200 个交易日
+SERIES_DAYS = MEAN_DAYS  # 缓存对齐：至少覆盖均值窗（≥柱图窗）
 LOOKBACK = 200  # 近 200 个交易日最高价（定义口径）
 SCHEMA = 4
 SOURCE = "local_200d_high"
@@ -381,7 +383,7 @@ def _cli() -> None:
     sub = p.add_subparsers(dest="cmd")
 
     p_status = sub.add_parser("status", help="查看本地序列覆盖")
-    p_comp = sub.add_parser("compute", help="重算 as_of 近120日序列")
+    p_comp = sub.add_parser("compute", help="重算 as_of 近 MEAN_DAYS 日序列（柱图取近 CHART_DAYS）")
     p_comp.add_argument("--date", default=date.today().isoformat())
     p_comp.add_argument("--force", action="store_true")
 

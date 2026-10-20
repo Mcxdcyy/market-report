@@ -1554,7 +1554,7 @@ def _render_new_high_mean_zero_chart(
     baseline: float | None,
     title: str = "百日新高",
 ) -> str:
-    """百日新高：柱高=当日家数；页面横轴近200交易日；零轴=近200日均值（上红下绿）。
+    """百日新高：柱高=当日家数；页面横轴近120交易日；零轴=近200日均值（上红下绿）。
 
     meta：「横轴 M 家 · 今日 N 家」（今日相对横轴均值上红下绿）。纵轴按 |偏离| 约 90 分位定尺。
     """
@@ -6850,9 +6850,9 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     xh200_series: list[dict] = []
     xh_mean_200d: float | None = None
     try:
-        from new_high_count import compute_new_high_count
+        from new_high_count import CHART_DAYS, MEAN_DAYS, compute_new_high_count
 
-        # 本地日K：当日最高=近200交易日最高；柱图横轴近200交易日；生成时对齐 as_of 自动补算。
+        # 本地日K：当日最高=近200交易日最高；柱图横轴近120日；零轴=近200日均值。
         xh_payload = compute_new_high_count(
             report_d, force=False, progress=True
         )
@@ -6870,9 +6870,11 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
 
         points = [p for p in (_xh_row_to_point(r) for r in xh_daily) if p]
         if points:
-            look = points[-200:] if len(points) >= 200 else points
-            xh_mean_200d = sum(float(p["value"]) for p in look) / len(look)
-            xh200_series = look
+            look_mean = points[-MEAN_DAYS:] if len(points) >= MEAN_DAYS else points
+            xh_mean_200d = sum(float(p["value"]) for p in look_mean) / len(look_mean)
+            xh200_series = (
+                points[-CHART_DAYS:] if len(points) >= CHART_DAYS else points
+            )
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
 
