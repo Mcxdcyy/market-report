@@ -6854,7 +6854,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     try:
         from new_high_count import CHART_DAYS, MEAN_DAYS, compute_new_high_count
 
-        # 本地日K：当日最高 / 柱图 / 零轴均值 均为近120交易日。
+        # 本地日K：当日最高=近200日；柱图与零轴均值近120日。
         xh_payload = compute_new_high_count(
             report_d, force=False, progress=True
         )

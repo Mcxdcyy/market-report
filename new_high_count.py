@@ -2,13 +2,13 @@
 """百日新高数量：本地日K统计（不依赖问财 / 大盘数据.numbers）。
 
 口径（固定）：
-  当日最高价 = 近 120 个交易日最高价（含当日）；
+  当日最高价 = 近 200 个交易日最高价（含当日）；
   上市日历天数严格 >10；排除 ST、北交所。
 
 缓存：
   - `new_high_count_results/series.json`：按日累积家数
   - `new_high_count_results/days/YYYY-MM-DD.json`：单日明细（可选 codes）
-  - 报表柱图 / 零轴均值 / 定义回看均为近 120 日；`compute_new_high_count` 对齐 as_of 重算缺口日
+  - 定义回看近 200 日；柱图与零轴均值近 120 日；`compute_new_high_count` 对齐 as_of 重算缺口日
 """
 
 from __future__ import annotations
@@ -25,12 +25,12 @@ DAY_DIR = RESULT_DIR / "days"
 SERIES_FILE = RESULT_DIR / "series.json"
 CHART_DAYS = 120  # 页面柱图横轴近 120 个交易日
 MEAN_DAYS = 120  # 零轴 / 均值用近 120 个交易日
-LOOKBACK = 120  # 近 120 个交易日最高价（定义口径）
-SERIES_DAYS = max(CHART_DAYS, MEAN_DAYS, LOOKBACK)
-SCHEMA = 5
-SOURCE = "local_120d_high"
+LOOKBACK = 200  # 近 200 个交易日最高价（定义口径）
+SERIES_DAYS = max(CHART_DAYS, MEAN_DAYS)  # 页面/均值窗；回看由 LOOKBACK 单独保证
+SCHEMA = 6
+SOURCE = "local_200d_high"
 NOTE = (
-    "百日新高：当日最高价=近120个交易日最高价；"
+    "百日新高：当日最高价=近200个交易日最高价；"
     "上市日历天数>10；排除ST、北交所。本地日K统计，不问财。"
 )
 
