@@ -5584,7 +5584,9 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 
 # 表头风险提示：固定顺序 · 命中才展示（文案锁定）
 # 2026-10-11：已删「强趋势-次日承接不好」
+# 2026-10-21：最前增加「做空周期」（同源宏观·多空策略周期结论）
 _HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
+    ("macro_short", "做空周期"),
     ("index_down", "指数下跌通道"),
     ("vol30_shrink", "缩量周期-资金撤退"),
     ("chase_inactive", "追高-不活跃周期"),
@@ -5593,8 +5595,15 @@ _HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
 
 
 def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
-    """与页内图表结论同源，算表头 4 项风险是否命中。"""
+    """与页内图表结论同源，算表头风险是否命中。"""
     flags = {k: False for k, _ in _HERO_RISK_SPECS}
+
+    # 0) 做空周期：与宏观·多空策略图下结论条同源（状态机切到做空）
+    macro = ctx.get("macro_bias") or {}
+    macro_ser = [s for s in (macro.get("series") or []) if isinstance(s, dict)]
+    if macro_ser:
+        win = macro_ser[-200:] if len(macro_ser) > 200 else macro_ser
+        flags["macro_short"] = _macro_bias_cycle_text(win) == MACRO_BIAS_SHORT_TEXT
 
     # 1) 指数下跌通道：当日任一指数为下跌通道
     idx = ctx.get("index_downtrend") or {}
