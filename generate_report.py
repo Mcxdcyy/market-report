@@ -4684,15 +4684,16 @@ def render_html(ctx: dict) -> str:
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
+  /* 近250柱：柱宽收至约 55%，保证相邻日之间能看出缝隙（不必死守 1px 观感） */
   .macro-bias-bar {{
     position: absolute; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 6px; min-height: 1px;
+    width: 55%; max-width: 4px; min-height: 1px;
   }}
   .macro-bias-bar.pos {{
-    bottom: 50%; border-radius: 2px 2px 0 0; background: #E53935;
+    bottom: 50%; border-radius: 1px 1px 0 0; background: #E53935;
   }}
   .macro-bias-bar.neg {{
-    top: 50%; border-radius: 0 0 2px 2px; background: #34C759;
+    top: 50%; border-radius: 0 0 1px 1px; background: #34C759;
   }}
 
   /* ── 指数大局观（大盘环境 · 近10日对比表） ── */
@@ -4916,7 +4917,7 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 98px; }}
     .macro-bias-chart {{ gap: 1px; }}
-    .macro-bias-bar {{ width: 85%; max-width: none; }}
+    .macro-bias-bar {{ width: 55%; max-width: 3px; }}
     .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
     .ts-cnt-val {{ display: none !important; }}
@@ -5649,7 +5650,7 @@ def _index_outlook_sum_text(block: dict) -> str:
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近120交易日。"""
+    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近250交易日。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
@@ -5689,7 +5690,7 @@ def render_macro_bias_html(block: dict) -> str:
     return f'''<div class="macro-bias-wrap">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
-    <div class="vol20-meta">近120日 · 今日 {today_html}</div>
+    <div class="vol20-meta">近250日 · 今日 {today_html}</div>
   </div>
   <div class="macro-bias-chart" aria-label="宏观多空策略">
     <div class="macro-bias-zero"></div>
