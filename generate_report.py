@@ -1554,7 +1554,7 @@ def _render_new_high_mean_zero_chart(
     baseline: float | None,
     title: str = "百日新高",
 ) -> str:
-    """百日新高：柱高=当日家数；零轴=近200日均值（上红下绿）；与追高等图横轴口径统一。
+    """百日新高：柱高=当日家数；页面横轴近200交易日；零轴=近200日均值（上红下绿）。
 
     meta：「横轴 M 家 · 今日 N 家」（今日相对横轴均值上红下绿）。纵轴按 |偏离| 约 90 分位定尺。
     """
@@ -3677,16 +3677,16 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and vol30_after:
         vol30_html = vol30_after
-    xh120 = ctx.get("xh120_series") or []
-    xh120_html = _render_new_high_mean_zero_chart(
-        xh120,
+    xh200 = ctx.get("xh200_series") or ctx.get("xh120_series") or []
+    xh200_html = _render_new_high_mean_zero_chart(
+        xh200,
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    # 大盘环境：宏观·多空策略 → 百日新高 → 指数大局观 → 近30日成交金额（标签+周期结论）
+    # 大盘环境：宏观·多空策略 → 百日新高（近200日）→ 指数趋势 → 近30日成交金额（标签+周期结论）
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = f"{macro_bias_html}{xh120_html}{index_outlook_html}{vol30_html}"
+    vol20_html = f"{macro_bias_html}{xh200_html}{index_outlook_html}{vol30_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -6847,12 +6847,12 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         kpl_rows,
     )
 
-    xh120_series: list[dict] = []
+    xh200_series: list[dict] = []
     xh_mean_200d: float | None = None
     try:
         from new_high_count import compute_new_high_count
 
-        # 本地日K：当日最高=近200交易日最高；生成时对齐 as_of 自动补算。
+        # 本地日K：当日最高=近200交易日最高；柱图横轴近200交易日；生成时对齐 as_of 自动补算。
         xh_payload = compute_new_high_count(
             report_d, force=False, progress=True
         )
@@ -6872,7 +6872,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         if points:
             look = points[-200:] if len(points) >= 200 else points
             xh_mean_200d = sum(float(p["value"]) for p in look) / len(look)
-            xh120_series = points[-120:] if len(points) >= 120 else points
+            xh200_series = look
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
 
@@ -6943,7 +6943,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_range": "",
         "trend_headline": "",
         "vol20_bars": vol20_bars,
-        "xh120_series": xh120_series,
+        "xh200_series": xh200_series,
         "xh_mean_200d": xh_mean_200d,
         "vol_note": vol_note,
         "vol_tags": vol_tags,

@@ -8,7 +8,7 @@
 缓存：
   - `new_high_count_results/series.json`：按日累积家数
   - `new_high_count_results/days/YYYY-MM-DD.json`：单日明细（可选 codes）
-  - 报表近 120 日柱图读 series，由 `compute_new_high_count` 对齐 as_of 重算缺口日
+  - 报表近 200 日柱图读 series，由 `compute_new_high_count` 对齐 as_of 重算缺口日
 """
 
 from __future__ import annotations
@@ -23,8 +23,8 @@ BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "new_high_count_results"
 DAY_DIR = RESULT_DIR / "days"
 SERIES_FILE = RESULT_DIR / "series.json"
-SERIES_DAYS = 120
-LOOKBACK = 200  # 近 200 个交易日最高价
+SERIES_DAYS = 200  # 页面柱图横轴近 200 个交易日
+LOOKBACK = 200  # 近 200 个交易日最高价（定义口径）
 SCHEMA = 4
 SOURCE = "local_200d_high"
 NOTE = (
