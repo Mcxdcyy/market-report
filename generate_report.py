@@ -982,7 +982,45 @@ _SUM_TONE_BY_TEXT: dict[str, str] = {
     "强趋-承接较好：强趋有利润垫，可以多拿一下。": "ok",
     "强趋-承接不好：尽快卖出。——不锁仓。": "bad",
     "强趋承接-有好有差：有利润先减仓。——主动卖出。": "warn",
+    "做多周期：主观看多，趋势直接拿。——市场好，做空会找不到上车点。": "ok",
+    "做空周期：主观看空，等待，极限低吸。——市场差，做多买进去就跌穿。": "bad",
 }
+
+MACRO_BIAS_LONG_TEXT = (
+    "做多周期：主观看多，趋势直接拿。——市场好，做空会找不到上车点。"
+)
+MACRO_BIAS_SHORT_TEXT = (
+    "做空周期：主观看空，等待，极限低吸。——市场差，做多买进去就跌穿。"
+)
+
+
+def _macro_bias_cycle_text(series: list[dict]) -> str:
+    """宏观·多空策略周期结论：状态机，仅在连续 2 日达标时切换。
+
+    - 连续 2 日（含当日）叠加分 ≥ +2 → 切「做多周期」
+    - 连续 2 日（含当日）叠加分 ≤ −2 → 切「做空周期」
+    - 其余日维持前一日周期；序列内从未切换过 → 不写结论条
+    """
+    regime: str | None = None  # "long" | "short"
+    scores: list[int] = []
+    for row in series:
+        if not isinstance(row, dict):
+            continue
+        try:
+            scores.append(int(row.get("sum") or 0))
+        except (TypeError, ValueError):
+            continue
+    for i in range(1, len(scores)):
+        a, b = scores[i - 1], scores[i]
+        if a >= 2 and b >= 2:
+            regime = "long"
+        elif a <= -2 and b <= -2:
+            regime = "short"
+    if regime == "long":
+        return MACRO_BIAS_LONG_TEXT
+    if regime == "short":
+        return MACRO_BIAS_SHORT_TEXT
+    return ""
 
 
 def _module_sum_html(text: str, tone: str | None = None) -> str:
@@ -4528,6 +4566,9 @@ def render_html(ctx: dict) -> str:
   .chase-group:has(.vol-mkt-sum-wrap) {{
     margin-bottom: 0;
   }}
+  .macro-bias-wrap:has(> .vol-mkt-sum-wrap) {{
+    padding-bottom: 0;
+  }}
   /* 下一方图自带 margin-top 会叠出双倍，改为由本条 padding-bottom 独占 14px */
   .vol-mkt-sum-wrap + .vol20-wrap,
   .vol-mkt-sum-wrap + .ts-cnt-wrap,
@@ -4537,7 +4578,8 @@ def render_html(ctx: dict) -> str:
   .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-chart,
   .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart,
   .chase-group:has(.vol-mkt-sum-wrap) + .vol20-wrap,
-  .idx-outlook-wrap:has(> .vol-mkt-sum-wrap) + .vol20-wrap {{
+  .idx-outlook-wrap:has(> .vol-mkt-sum-wrap) + .vol20-wrap,
+  .macro-bias-wrap:has(> .vol-mkt-sum-wrap) + .idx-outlook-wrap {{
     margin-top: 0;
   }}
   /* 模块末条：吃掉 section 底 padding，避免 14+14；本条 padding-bottom 即底距 */
@@ -5700,6 +5742,7 @@ def _render_macro_bias_one(
     today_html = (
         f'<span class="{today_cls}">{today:+d}</span>' if today_cls else f"{today:+d}"
     )
+    cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
     return f'''<div class="macro-bias-wrap">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
@@ -5710,11 +5753,12 @@ def _render_macro_bias_one(
     {''.join(cols)}
   </div>
   <div class="vol20-axis">{''.join(ticks)}</div>
+  {cycle_html}
 </div>'''
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：仅近200日宏观·多空策略（已删近120日对比图）。"""
+    """大盘环境最上方：仅近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
