@@ -4684,10 +4684,10 @@ def render_html(ctx: dict) -> str:
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
-  /* 近200柱：固定整像素柱宽，避免百分比半像素导致手机上粗细不一 */
+  /* 近200柱：固定整像素柱宽；桌面 3px 使日间缝 ≤ 柱粗（约 1086/200 列宽下） */
   .macro-bias-bar {{
     position: absolute; left: 0; right: 0; margin: 0 auto;
-    width: 2px; min-height: 1px;
+    width: 3px; min-height: 1px;
   }}
   .macro-bias-bar.pos {{
     bottom: 50%; border-radius: 1px 1px 0 0; background: #E53935;
