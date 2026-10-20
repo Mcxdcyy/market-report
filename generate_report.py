@@ -4684,7 +4684,7 @@ def render_html(ctx: dict) -> str:
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
-  /* 近250柱：固定整像素柱宽，避免百分比半像素导致手机上粗细不一 */
+  /* 近200柱：固定整像素柱宽，避免百分比半像素导致手机上粗细不一 */
   .macro-bias-bar {{
     position: absolute; left: 0; right: 0; margin: 0 auto;
     width: 2px; min-height: 1px;
@@ -4916,7 +4916,7 @@ def render_html(ctx: dict) -> str:
     .idx-outlook-table thead th:not(.idx-corner),
     .idx-outlook-table tbody td {{ width: 21.5%; }}
     .macro-bias-chart {{ gap: 0; }}
-    /* 手机列宽约 1.5px：柱固定 1px，避免半像素四舍五入导致有的 1px 有的 2px */
+    /* 手机近200柱：柱固定 1px，避免半像素四舍五入导致粗细不一 */
     .macro-bias-bar {{ width: 1px; }}
     .macro-bias-wrap .vol20-axis {{ gap: 0; }}
     .ts-cnt-bars {{ height: 110px; gap: 1px; }}
@@ -5650,7 +5650,7 @@ def _index_outlook_sum_text(block: dict) -> str:
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近250交易日。"""
+    """大盘环境最上方：上证+深成+创业板连4日 MA60 状态叠加，近200交易日。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
@@ -5690,7 +5690,7 @@ def render_macro_bias_html(block: dict) -> str:
     return f'''<div class="macro-bias-wrap">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
-    <div class="vol20-meta">近250日 · 今日 {today_html}</div>
+    <div class="vol20-meta">近200日 · 今日 {today_html}</div>
   </div>
   <div class="macro-bias-chart" aria-label="宏观多空策略">
     <div class="macro-bias-zero"></div>
