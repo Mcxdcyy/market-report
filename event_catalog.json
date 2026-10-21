@@ -1,19 +1,6 @@
 [
   {
     "month": 10,
-    "day": 20,
-    "dot": "20",
-    "label": "10/20",
-    "title": "第九届半导体大硅片论坛",
-    "short": "第九届半导体大硅…",
-    "brief": "围绕第九届半导体大硅片论坛相关议题展开交流，具体议程以主办方公布为准。",
-    "hot": false,
-    "importance": 2,
-    "source": "wscn",
-    "fetched_at": "2026-10-20"
-  },
-  {
-    "month": 10,
     "day": 22,
     "dot": "22",
     "label": "10/22",
@@ -23,7 +10,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-10-20"
+    "fetched_at": "2026-10-21"
   },
   {
     "month": 10,
@@ -36,7 +23,7 @@
     "hot": false,
     "importance": 2,
     "source": "wscn",
-    "fetched_at": "2026-10-20"
+    "fetched_at": "2026-10-21"
   },
   {
     "month": 10,
@@ -49,5 +36,18 @@
     "hot": true,
     "importance": 4,
     "source": "seed"
+  },
+  {
+    "month": 10,
+    "day": 27,
+    "dot": "27",
+    "label": "10/27",
+    "title": "《上海市卫星互联网产业创新发展行动方案（2027—2030年）》即将发布",
+    "short": "《上海市卫星互联…",
+    "brief": "正式对外发布相关规划或文件，关注要点与产业映射。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-10-21"
   }
 ]
