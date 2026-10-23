@@ -3721,8 +3721,8 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    # 1 宏观大势·指数周期：宏观·多空策略（图+周期结论条）
-    # 2 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
+    # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
+    # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
     # 百日新高在趋势强度模块最下方（脚注之后）
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
@@ -3899,10 +3899,29 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }}
-  /* 表头风险提示：与图表「不好」pill 同系（绿） */
+  /* 表头 · 长期：宏观·多空策略（近200日） */
+  .hero-macro {{
+    margin-top: 12px;
+    padding-top: 0;
+  }}
+  .hero-macro .macro-bias-wrap {{
+    margin-top: 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }}
+  /* 表头 · 短期风险：与图表「不好」pill 同系（绿）；与上方长期宏观分区 */
+  .hero-short {{
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }}
+  .hero-short-label {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.02em; margin-bottom: 8px;
+  }}
   .hero-risks {{
     display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 10px;
+    margin-top: 0;
   }}
   .hero-risks .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
@@ -4584,9 +4603,11 @@ def render_html(ctx: dict) -> str:
     margin-top: 0;
   }}
   /* 模块末条：吃掉 section 底 padding，避免 14+14；本条 padding-bottom 即底距 */
-  .section > .vol-mkt-sum-wrap:last-child,
-  .section > .macro-bias-wrap:last-child {{
+  .section > .vol-mkt-sum-wrap:last-child {{
     margin-bottom: -14px;
+  }}
+  .hero-macro .macro-bias-wrap:has(> .vol-mkt-sum-wrap) {{
+    padding-bottom: 0;
   }}
   .vol-mkt-sum {{
     margin: 0;
@@ -4708,7 +4729,7 @@ def render_html(ctx: dict) -> str:
     border-radius: 0;
   }}
 
-  /* ── 宏观·多空策略（#sec-macro 宏观大势·指数周期 · 连4日 MA60 叠加） ── */
+  /* ── 宏观·多空策略（表头 · 长期 · 连4日 MA60 叠加） ── */
   .macro-bias-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
@@ -4902,7 +4923,10 @@ def render_html(ctx: dict) -> str:
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
     .hero-summary {{ font-size: 14px; font-weight: 400; }}
-    .hero-risks {{ margin-top: 10px; gap: 6px; }}
+    .hero-macro .macro-bias-wrap {{ padding-top: 12px; }}
+    .hero-short {{ margin-top: 12px; padding-top: 12px; }}
+    .hero-short-label {{ font-size: 12px; }}
+    .hero-risks {{ gap: 6px; }}
     .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
@@ -5037,33 +5061,24 @@ def render_html(ctx: dict) -> str:
         </div>
       </div>
     </div>
+    {f'<div class="hero-macro" aria-label="长期·宏观多空策略">{macro_bias_html}</div>' if macro_bias_html else ''}
     {_hero_risks_html(ctx)}
   </header>
 
-  <!-- 1 宏观大势·指数周期 -->
-  <div class="section" id="sec-macro">
-    <div class="section-head">
-      <div class="section-num">1</div>
-      <div class="section-title">宏观大势·指数周期</div>
-      <div class="section-sub">{ctx['data_date']} · 多空策略</div>
-    </div>
-    {macro_bias_html}
-  </div>
-
-  <!-- 2 大盘环境 -->
+  <!-- 1 大盘环境 -->
   <div class="section" id="sec-mkt">
     <div class="section-head">
-      <div class="section-num">2</div>
+      <div class="section-num">1</div>
       <div class="section-title">大盘环境</div>
       <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
     {vol20_html}
   </div>
 
-  <!-- 3 资金追高情绪 -->
+  <!-- 2 资金追高情绪 -->
   <div class="section" id="sec-chase">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">资金追高情绪</div>
       <div class="section-sub">{ctx['data_date']} · 近120日</div>
     </div>
@@ -5071,10 +5086,10 @@ def render_html(ctx: dict) -> str:
     <div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>
   </div>
 
-  <!-- 4 趋势强度 -->
+  <!-- 3 趋势强度 -->
   <div class="section" id="sec-ts">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">3</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
@@ -5082,10 +5097,10 @@ def render_html(ctx: dict) -> str:
     {xh200_html}
   </div>
 
-  <!-- 5 涨停板块 -->
+  <!-- 4 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -5093,10 +5108,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 6 公告与政策 -->
+  <!-- 5 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">5</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -5104,10 +5119,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 7 事件 -->
+  <!-- 6 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">7</div>
+      <div class="section-num">6</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5117,10 +5132,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 8 板块-资金认可度 -->
+  <!-- 7 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">8</div>
+      <div class="section-num">7</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -5531,7 +5546,7 @@ def load_macro_bias_block(
     as_of: datetime,
     latest_dt: datetime | None = None,
 ) -> dict:
-    """宏观大势·指数周期「宏观·多空策略」：最新交易日重算；历史日读缓存。"""
+    """表头「宏观·多空策略」：最新交易日重算；历史日读缓存。"""
     as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
     latest_d = None
     if latest_dt is not None:
@@ -5594,11 +5609,10 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
     return flags
 
 
-# 表头风险提示：固定顺序 · 命中才展示（文案锁定）
+# 表头短期风险：固定顺序 · 命中才展示（文案锁定）
 # 2026-10-11：已删「强趋势-次日承接不好」
-# 2026-10-21：最前增加「做空周期」（同源宏观·多空策略周期结论）
+# 2026-10-23：长期「做空/做多周期」改由表头宏观·多空策略结论条表达，短期 pill 不再挂「做空周期」
 _HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
-    ("macro_short", "做空周期"),
     ("index_down", "指数下跌通道"),
     ("vol30_shrink", "缩量周期-资金撤退"),
     ("chase_inactive", "追高-不活跃周期"),
@@ -5607,15 +5621,8 @@ _HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
 
 
 def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
-    """与页内图表结论同源，算表头风险是否命中。"""
+    """与页内图表结论同源，算表头短期风险是否命中。"""
     flags = {k: False for k, _ in _HERO_RISK_SPECS}
-
-    # 0) 做空周期：与宏观·多空策略图下结论条同源（状态机切到做空）
-    macro = ctx.get("macro_bias") or {}
-    macro_ser = [s for s in (macro.get("series") or []) if isinstance(s, dict)]
-    if macro_ser:
-        win = macro_ser[-200:] if len(macro_ser) > 200 else macro_ser
-        flags["macro_short"] = _macro_bias_cycle_text(win) == MACRO_BIAS_SHORT_TEXT
 
     # 1) 指数下跌通道：当日任一指数为下跌通道
     idx = ctx.get("index_downtrend") or {}
@@ -5670,7 +5677,7 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
 
 
 def _hero_risks_html(ctx: dict) -> str:
-    """表头风险提示标签行：命中才展示；全未命中返回空串。"""
+    """表头短期风险标签：命中才展示；全未命中返回空串。长期周期见宏观图结论条。"""
     flags = _hero_risk_flags(ctx)
     pills = [
         f'<span class="pill bad">{label}</span>'
@@ -5679,7 +5686,12 @@ def _hero_risks_html(ctx: dict) -> str:
     ]
     if not pills:
         return ""
-    return f'<div class="hero-risks" aria-label="风险提示">{"".join(pills)}</div>'
+    return (
+        '<div class="hero-short" aria-label="短期风险">'
+        '<div class="hero-short-label">短期</div>'
+        f'<div class="hero-risks">{"".join(pills)}</div>'
+        "</div>"
+    )
 
 
 def _index_outlook_sum_text(block: dict) -> str:
@@ -5779,7 +5791,7 @@ def _render_macro_bias_one(
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """#sec-macro 宏观大势·指数周期：仅近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
+    """表头长期区：仅近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
