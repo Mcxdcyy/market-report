@@ -3721,11 +3721,12 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    # 大盘环境：宏观·多空策略 → 指数趋势 → 近30日成交金额（标签+周期结论）
+    # 1 宏观大势·指数周期：宏观·多空策略（图+周期结论条）
+    # 2 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
     # 百日新高在趋势强度模块最下方（脚注之后）
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = f"{macro_bias_html}{index_outlook_html}{vol30_html}"
+    vol20_html = f"{index_outlook_html}{vol30_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -4583,7 +4584,8 @@ def render_html(ctx: dict) -> str:
     margin-top: 0;
   }}
   /* 模块末条：吃掉 section 底 padding，避免 14+14；本条 padding-bottom 即底距 */
-  .section > .vol-mkt-sum-wrap:last-child {{
+  .section > .vol-mkt-sum-wrap:last-child,
+  .section > .macro-bias-wrap:last-child {{
     margin-bottom: -14px;
   }}
   .vol-mkt-sum {{
@@ -4706,7 +4708,7 @@ def render_html(ctx: dict) -> str:
     border-radius: 0;
   }}
 
-  /* ── 宏观·多空策略（大盘环境最上方 · 连4日 MA60 叠加） ── */
+  /* ── 宏观·多空策略（#sec-macro 宏观大势·指数周期 · 连4日 MA60 叠加） ── */
   .macro-bias-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
@@ -5038,20 +5040,30 @@ def render_html(ctx: dict) -> str:
     {_hero_risks_html(ctx)}
   </header>
 
-  <!-- 1 大盘环境 -->
-  <div class="section" id="sec-mkt">
+  <!-- 1 宏观大势·指数周期 -->
+  <div class="section" id="sec-macro">
     <div class="section-head">
       <div class="section-num">1</div>
+      <div class="section-title">宏观大势·指数周期</div>
+      <div class="section-sub">{ctx['data_date']} · 多空策略</div>
+    </div>
+    {macro_bias_html}
+  </div>
+
+  <!-- 2 大盘环境 -->
+  <div class="section" id="sec-mkt">
+    <div class="section-head">
+      <div class="section-num">2</div>
       <div class="section-title">大盘环境</div>
       <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
     {vol20_html}
   </div>
 
-  <!-- 2 资金追高情绪 -->
+  <!-- 3 资金追高情绪 -->
   <div class="section" id="sec-chase">
     <div class="section-head">
-      <div class="section-num">2</div>
+      <div class="section-num">3</div>
       <div class="section-title">资金追高情绪</div>
       <div class="section-sub">{ctx['data_date']} · 近120日</div>
     </div>
@@ -5059,10 +5071,10 @@ def render_html(ctx: dict) -> str:
     <div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>
   </div>
 
-  <!-- 3 趋势强度 -->
+  <!-- 4 趋势强度 -->
   <div class="section" id="sec-ts">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">4</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
@@ -5070,10 +5082,10 @@ def render_html(ctx: dict) -> str:
     {xh200_html}
   </div>
 
-  <!-- 4 涨停板块 -->
+  <!-- 5 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">5</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -5081,10 +5093,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 5 公告与政策 -->
+  <!-- 6 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">6</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -5092,10 +5104,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 6 事件 -->
+  <!-- 7 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">7</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5105,10 +5117,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 7 板块-资金认可度 -->
+  <!-- 8 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">7</div>
+      <div class="section-num">8</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -5519,7 +5531,7 @@ def load_macro_bias_block(
     as_of: datetime,
     latest_dt: datetime | None = None,
 ) -> dict:
-    """大盘环境「宏观·多空策略」：最新交易日重算；历史日读缓存。"""
+    """宏观大势·指数周期「宏观·多空策略」：最新交易日重算；历史日读缓存。"""
     as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
     latest_d = None
     if latest_dt is not None:
@@ -5767,7 +5779,7 @@ def _render_macro_bias_one(
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """大盘环境最上方：仅近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
+    """#sec-macro 宏观大势·指数周期：仅近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
