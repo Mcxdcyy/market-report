@@ -3898,19 +3898,63 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; line-height: 1.55; font-weight: 400;
     color: var(--sub);
   }}
-  /* 表头 · 长期：宏观·多空策略（近200日） */
+  /* 表头 · 长期：宏观·多空策略（近200日 · 分层卡片） */
   .hero-macro {{
-    margin-top: 12px;
-    padding-top: 0;
+    margin-top: 14px;
+    padding: 0;
   }}
   .hero-macro .macro-bias-wrap {{
     margin-top: 0;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
+    padding: 14px 14px 12px;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 12px;
+    background:
+      linear-gradient(180deg, #fafbfd 0%, #f4f6f9 100%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 4px 14px rgba(28,28,30,.04);
+  }}
+  .hero-macro .macro-bias-kicker {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.02em; margin-bottom: 8px;
+  }}
+  .hero-macro .macro-bias-wrap > .vol20-head {{
+    margin-bottom: 10px;
+  }}
+  .hero-macro .macro-bias-wrap > .vol20-head .vol20-title {{
+    font-size: 15px; font-weight: 750; letter-spacing: -0.01em;
+  }}
+  /* 结论条在图上方：独立一层，压过通用 .vol-mkt-sum-wrap 分隔线样式 */
+  .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap {{
+    margin: 0 0 12px;
+    padding: 0;
+    border-top: none;
+  }}
+  .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
+    padding: 12px 14px;
+    border-radius: 8px;
+    border-left-width: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.03);
+    font-weight: 600;
+  }}
+  .hero-macro .macro-bias-panel {{
+    margin-top: 0;
+    padding: 10px 10px 8px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 1px 2px rgba(0,0,0,.02);
+  }}
+  .hero-macro .macro-bias-panel .macro-bias-chart {{
+    margin-top: 2px;
+  }}
+  .hero-macro .macro-bias-panel .vol20-axis {{
+    margin-top: 6px;
+  }}
+  .hero-macro .macro-bias-zero {{
+    background: rgba(0,0,0,.10);
   }}
   /* 表头 · 短期风险：与图表「不好」pill 同系（绿）；与上方长期宏观分区 */
   .hero-short {{
-    margin-top: 12px;
+    margin-top: 14px;
     padding-top: 12px;
     border-top: 1px solid var(--border);
   }}
@@ -4585,9 +4629,6 @@ def render_html(ctx: dict) -> str:
   .chase-group:has(.vol-mkt-sum-wrap) {{
     margin-bottom: 0;
   }}
-  .macro-bias-wrap:has(> .vol-mkt-sum-wrap) {{
-    padding-bottom: 0;
-  }}
   /* 下一方图自带 margin-top 会叠出双倍，改为由本条 padding-bottom 独占 14px */
   .vol-mkt-sum-wrap + .vol20-wrap,
   .vol-mkt-sum-wrap + .ts-cnt-wrap,
@@ -4597,8 +4638,7 @@ def render_html(ctx: dict) -> str:
   .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-chart,
   .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart,
   .chase-group:has(.vol-mkt-sum-wrap) + .vol20-wrap,
-  .idx-outlook-wrap:has(> .vol-mkt-sum-wrap) + .vol20-wrap,
-  .macro-bias-wrap:has(> .vol-mkt-sum-wrap) + .idx-outlook-wrap {{
+  .idx-outlook-wrap:has(> .vol-mkt-sum-wrap) + .vol20-wrap {{
     margin-top: 0;
   }}
   /* 模块末条：吃掉 section 底 padding，避免 14+14；本条 padding-bottom 即底距 */
@@ -4606,7 +4646,7 @@ def render_html(ctx: dict) -> str:
     margin-bottom: -14px;
   }}
   .hero-macro .macro-bias-wrap:has(> .vol-mkt-sum-wrap) {{
-    padding-bottom: 0;
+    padding-bottom: 12px; /* 表头结论在图上方，底距由卡片 padding 承担 */
   }}
   .vol-mkt-sum {{
     margin: 0;
@@ -4730,8 +4770,7 @@ def render_html(ctx: dict) -> str:
 
   /* ── 宏观·多空策略（表头 · 长期 · 连4日 MA60 叠加） ── */
   .macro-bias-wrap {{
-    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
-    border-top: 1px solid var(--border);
+    margin-top: 0; padding-top: 0; padding-bottom: 0;
   }}
   .macro-bias-chart {{
     position: relative;
@@ -4739,18 +4778,18 @@ def render_html(ctx: dict) -> str:
     display: flex;
     align-items: stretch;
     gap: 1px;
-    margin-top: 8px;
+    margin-top: 0;
   }}
   .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
   .macro-bias-zero {{
     position: absolute; left: 0; right: 0; top: 50%;
-    height: 1px; background: var(--border); pointer-events: none;
+    height: 1px; background: var(--border); pointer-events: none; z-index: 1;
   }}
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
   }}
   .macro-bias-bar {{
-    position: absolute; min-height: 1px;
+    position: absolute; min-height: 1px; z-index: 2;
   }}
   .macro-bias-bar.pos {{
     bottom: 50%; border-radius: 2px 2px 0 0; background: #E53935;
@@ -4762,6 +4801,8 @@ def render_html(ctx: dict) -> str:
   .macro-bias-chart.is-200 .macro-bias-bar {{
     left: 0; right: 0; margin: 0 auto; width: 3px;
   }}
+  .macro-bias-chart.is-200 {{ gap: 0; }}
+  .macro-bias-wrap:has(.is-200) .vol20-axis {{ gap: 0; }}
 
   /* ── 指数趋势（大盘环境 · 近10日对比表；原名指数大局观） ── */
   .idx-outlook-wrap {{
@@ -4922,7 +4963,17 @@ def render_html(ctx: dict) -> str:
     .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
     .hero-mode {{ font-size: 22px; }}
     .hero-summary {{ font-size: 14px; font-weight: 400; }}
-    .hero-macro .macro-bias-wrap {{ padding-top: 12px; }}
+    .hero-macro .macro-bias-wrap {{
+      padding: 12px 12px 10px;
+      border-radius: 11px;
+    }}
+    .hero-macro .macro-bias-kicker {{ font-size: 12px; }}
+    .hero-macro .macro-bias-wrap > .vol20-head .vol20-title {{ font-size: 16px; }}
+    .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap {{ margin-bottom: 10px; }}
+    .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
+      padding: 12px 12px; font-size: 15px; border-radius: 8px;
+    }}
+    .hero-macro .macro-bias-panel {{ padding: 8px 8px 6px; border-radius: 9px; }}
     .hero-short {{ margin-top: 12px; padding-top: 12px; }}
     .hero-short-label {{ font-size: 12px; }}
     .hero-risks {{ gap: 6px; }}
@@ -5736,7 +5787,10 @@ def _render_macro_bias_one(
     window_label: str,
     chart_mod: str,
 ) -> str:
-    """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。"""
+    """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。
+
+    表头分层：长期标签 → 标题 → 周期结论条（图上方）→ 图表面板。
+    """
     if not series:
         return ""
     n = len(series)
@@ -5776,21 +5830,24 @@ def _render_macro_bias_one(
     )
     cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
     return f'''<div class="macro-bias-wrap">
+  <div class="macro-bias-kicker">长期</div>
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
   </div>
-  <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
-    <div class="macro-bias-zero"></div>
-    {''.join(cols)}
-  </div>
-  <div class="vol20-axis">{''.join(ticks)}</div>
   {cycle_html}
+  <div class="macro-bias-panel">
+    <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
+      <div class="macro-bias-zero"></div>
+      {''.join(cols)}
+    </div>
+    <div class="vol20-axis">{''.join(ticks)}</div>
+  </div>
 </div>'''
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """表头长期区：仅近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
+    """表头长期区：仅近200日宏观·多空策略（已删近120日对比图）+ 图上周期结论条。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
