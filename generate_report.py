@@ -6712,12 +6712,16 @@ def load_fund_recognition_block(
 
 
 def render_fund_recognition_html(block: dict) -> str:
-    # 永久排除（勿改）：名称含 ST 的板块、并购重组、中报增长、实控人变更
-    FUND_EXCLUDE_NAMES = frozenset({"并购重组", "中报增长", "实控人变更"})
+    # 永久排除（勿改）：名称含 ST；并购重组 / 实控人变更；
+    # 季报 / 中报 / 半年报 / 年报类（如三季报增长、中报增长、年报增长）
+    FUND_EXCLUDE_NAMES = frozenset({"并购重组", "实控人变更"})
+    FUND_EXCLUDE_REPORT_KW = ("季报", "中报", "半年报", "年报")
 
     def _is_excluded_sector(name: str) -> bool:
         n = (name or "").strip()
         if n in FUND_EXCLUDE_NAMES:
+            return True
+        if any(k in n for k in FUND_EXCLUDE_REPORT_KW):
             return True
         return "ST" in n.upper()
 
@@ -6754,8 +6758,8 @@ def render_fund_recognition_html(block: dict) -> str:
             streak += 1
         return streak
 
-    # 展示过滤：池内个股数 < 10 不展示；永久排除 ST / 并购重组 / 中报增长 / 实控人变更；
-    # 报表当日（序列末日）3亿以上家数严格 < 10 不展示整张板块柱图；
+    # 展示过滤：池内个股数 < 10 不展示；永久排除 ST / 并购重组 / 实控人变更 /
+    # 季报·中报·半年报·年报类；报表当日（序列末日）3亿以上家数严格 < 10 不展示整张板块柱图；
     # 自报表日起连续 10 个交易日占比均 <50% 不展示
     items = []
     for it in block.get("items") or []:
@@ -6878,7 +6882,7 @@ def render_fund_recognition_html(block: dict) -> str:
     note = (
         '<div class="fund-note">'
         "板块-资金认可度：近20个交易日开盘啦涨停板块整合个股池"
-        "（池内个股数≥10才展示；永久排除ST板块、并购重组、中报增长、实控人变更；"
+        "（池内个股数≥10才展示；永久排除ST板块、并购重组、实控人变更、季报/中报/半年报/年报类；"
         "自报表日起连续10个交易日占比均低于50%不展示）；"
         "近20个交易日每日统计——"
         "成交额大于3亿元的个股为分母，其中收盘价同时在五日线与十日线上方的为分子（分子亦须当日成交额大于3亿元）。"
