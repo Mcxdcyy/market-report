@@ -3952,11 +3952,15 @@ def render_html(ctx: dict) -> str:
   .hero-macro .macro-bias-zero {{
     background: rgba(0,0,0,.10);
   }}
-  /* 表头 · 短期风险：与图表「不好」pill 同系（绿）；与上方长期宏观分区 */
+  /* 表头 · 短期：与长期 macro-bias-wrap 同系分层卡片；pill 好红/中橙/不好绿 */
   .hero-short {{
     margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
+    padding: 14px 14px 12px;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 12px;
+    background:
+      linear-gradient(180deg, #fafbfd 0%, #f4f6f9 100%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 4px 14px rgba(28,28,30,.04);
   }}
   .hero-short-label {{
     font-size: 11px; font-weight: 600; color: var(--muted);
@@ -3968,6 +3972,12 @@ def render_html(ctx: dict) -> str:
   }}
   .hero-risks .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
+  }}
+  .hero-risks .pill.ok {{
+    background: #ffebee; color: #c62828;
+  }}
+  .hero-risks .pill.warn {{
+    background: var(--warn-bg); color: #b25000;
   }}
   .hero-risks .pill.bad {{
     background: #e8f5e9; color: #2e7d32;
@@ -4972,7 +4982,11 @@ def render_html(ctx: dict) -> str:
       padding: 12px 12px; font-size: 15px; border-radius: 8px;
     }}
     .hero-macro .macro-bias-panel {{ padding: 8px 8px 6px; border-radius: 9px; }}
-    .hero-short {{ margin-top: 12px; padding-top: 12px; }}
+    .hero-short {{
+      margin-top: 12px;
+      padding: 12px 12px 10px;
+      border-radius: 11px;
+    }}
     .hero-short-label {{ font-size: 12px; }}
     .hero-risks {{ gap: 6px; }}
     .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
@@ -5657,37 +5671,42 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
     return flags
 
 
-# 表头短期风险：固定顺序 · 命中才展示（文案锁定）
-# 2026-10-11：已删「强趋势-次日承接不好」
-# 2026-10-23：长期「做空/做多周期」改由表头宏观·多空策略结论条表达，短期 pill 不再挂「做空周期」
-_HERO_RISK_SPECS: tuple[tuple[str, str], ...] = (
-    ("index_down", "指数下跌通道"),
-    ("vol30_shrink", "缩量周期-资金撤退"),
-    ("chase_inactive", "追高-不活跃周期"),
-    ("chase_loss_bad", "追高-次日承接不好"),
-)
+# 表头短期 pill：固定四项顺序 · 好/中/不好都展示（与页内图表结论同源）
+# 顺序：指数趋势 → 近30日成交金额 → 追高活跃度 → 昨追-今日承接
+# 2026-10-11：已删「强趋势-次日承接」
+# 2026-10-23：做多/做空周期只写宏观结论条，不上短期 pill
+# 2026-10-27：短期与长期同系卡片；好标签也展示
 
 
-def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
-    """与页内图表结论同源，算表头短期风险是否命中。"""
-    flags = {k: False for k, _ in _HERO_RISK_SPECS}
+def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
+    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad。缺数据的项跳过。"""
+    pills: list[tuple[str, str]] = []
 
-    # 1) 指数下跌通道：当日任一指数为下跌通道
-    idx = ctx.get("index_downtrend") or {}
-    items = idx.get("indices") or []
-    days = [str(d) for d in (idx.get("days") or [])]
-    if items and days:
-        flags["index_down"] = any(_index_day_down_flags(items, days[-1]))
+    # 1) 指数趋势
+    idx_sum = _index_outlook_sum_text(ctx.get("index_downtrend") or {})
+    if idx_sum == "指数正常，市场正常。":
+        pills.append(("ok", "指数正常"))
+    elif "全场极弱" in idx_sum:
+        pills.append(("bad", "指数下跌通道"))
+    elif idx_sum == "指数风险：可能全盘走弱。":
+        pills.append(("warn", "指数风险-可能走弱"))
+    elif idx_sum == "部分指数走出下跌：市场可能好转。":
+        pills.append(("warn", "指数-部分走出下跌"))
+    elif idx_sum.startswith("部分指数走出下跌"):
+        pills.append(("warn", "指数-部分接部分"))
 
-    # 2) 缩量周期-资金撤退：只看近30日成交金额末日是否缩量
+    # 2) 近30日成交金额（只看末日柱色）
     vol30 = ctx.get("vol20_bars") or []
     if vol30:
-        flags["vol30_shrink"] = vol30[-1].get("tag") != "up"
+        if vol30[-1].get("tag") == "up":
+            pills.append(("ok", "增量周期"))
+        else:
+            pills.append(("bad", "缩量周期-资金撤退"))
 
     chase = ctx.get("chase_sentiment") or {}
     groups = chase.get("groups") or {}
     if groups:
-        # 3) 追高-不活跃周期：近5日原始家数均值 < 近200日均值（与图下标签同口径；柱高仍为2日均）
+        # 3) 追高活跃度：近5日原始家数均值 vs 近200日均值
         act_ser, act_base = _merge_chase_count_series(groups)
         if act_base is not None and act_ser:
             last5: list[float] = []
@@ -5702,11 +5721,14 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
                 if len(last5) >= 5:
                     break
             if len(last5) >= 5:
-                flags["chase_inactive"] = (sum(last5) / 5.0) < float(act_base)
+                if (sum(last5) / 5.0) >= float(act_base):
+                    pills.append(("ok", "追高-活跃周期"))
+                else:
+                    pills.append(("bad", "追高-不活跃周期"))
 
-        # 4) 追高-次日承接不好：近2日原始均 − 近200日均值 < −0.5%（与图下标签同口径）
+        # 4) 昨追-今日承接：近2日原始均相对近200日均值，中性带 ±0.5%
         loss_ser, loss_base = _merge_chase_effect_series(groups, "loss")
-        loss_ser = _smooth_metric_series_nd(loss_ser, days=2)
+        # 标签用原始序列，不要用柱高平滑后的序列
         if loss_base is not None and loss_ser:
             vals = _chase_raw_series_values(loss_ser)
             window = 2
@@ -5718,24 +5740,28 @@ def _hero_risk_flags(ctx: dict) -> dict[str, bool]:
                 if any(v is None for v in chunk):
                     continue
                 m = sum(float(v) for v in chunk) / float(window)
-                flags["chase_loss_bad"] = (m - float(loss_base)) < -band
+                delta = m - float(loss_base)
+                if delta > band:
+                    pills.append(("ok", "追高-次日承接较好"))
+                elif delta < -band:
+                    pills.append(("bad", "追高-次日承接不好"))
+                else:
+                    pills.append(("warn", "追高-次日承接有好有差"))
                 break
 
-    return flags
+    return pills
 
 
 def _hero_risks_html(ctx: dict) -> str:
-    """表头短期风险标签：命中才展示；全未命中返回空串。长期周期见宏观图结论条。"""
-    flags = _hero_risk_flags(ctx)
+    """表头短期标签：四项固定顺序，好/中/不好均展示；无数据返回空串。"""
     pills = [
-        f'<span class="pill bad">{label}</span>'
-        for key, label in _HERO_RISK_SPECS
-        if flags.get(key)
+        f'<span class="pill {tone}">{label}</span>'
+        for tone, label in _hero_short_pills(ctx)
     ]
     if not pills:
         return ""
     return (
-        '<div class="hero-short" aria-label="短期风险">'
+        '<div class="hero-short" aria-label="短期">'
         '<div class="hero-short-label">短期</div>'
         f'<div class="hero-risks">{"".join(pills)}</div>'
         "</div>"
