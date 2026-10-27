@@ -4859,11 +4859,9 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-table td.flat {{
     color: var(--muted); font-weight: 500;
   }}
-  .idx-outlook-table tr.latest td {{
-    box-shadow: inset 0 0 0 1px rgba(10,132,255,.14);
-  }}
-  .idx-outlook-table tr.latest td.down {{
-    box-shadow: none;
+  /* 当日「-」与当日日期同色同粗（日期 tr.latest th = 800） */
+  .idx-outlook-table tr.latest td.flat {{
+    color: var(--text); font-weight: 800;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -5895,11 +5893,10 @@ def render_index_outlook_html(block: dict) -> str:
             label = cell.get("label")
             if label is None:
                 label = "下跌通道" if status == "down" else "-"
-            latest_cls = " latest" if latest else ""
             if status == "down" or label == "下跌通道":
-                tds.append(f'<td class="down{latest_cls}">下跌通道</td>')
+                tds.append('<td class="down">下跌通道</td>')
             else:
-                tds.append(f'<td class="flat{latest_cls}">-</td>')
+                tds.append('<td class="flat">-</td>')
         body_rows.append(f"<tr{row_cls}>{''.join(tds)}</tr>")
 
     d0 = days[0][5:].replace("-", "/") if days else ""
