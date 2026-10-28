@@ -16,19 +16,6 @@
     ]
   },
   {
-    "month": 10,
-    "day": 27,
-    "dot": "27",
-    "label": "10/27",
-    "title": "《上海市卫星互联网产业创新发展行动方案（2027—2030年）》即将发布",
-    "short": "《上海市卫星互联…",
-    "brief": "正式对外发布相关规划或文件，关注要点与产业映射。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-10-27"
-  },
-  {
     "month": 11,
     "day": 1,
     "dot": "标",
@@ -39,5 +26,18 @@
     "hot": true,
     "importance": 4,
     "source": "seed"
+  },
+  {
+    "month": 11,
+    "day": 4,
+    "dot": "4",
+    "label": "11/4",
+    "title": "半导体封测年会将举行，多家上市公司参会",
+    "short": "半导体封测年会将…",
+    "brief": "产业链级定价、申购或上市节点，上市前常分流场内流动性。",
+    "hot": true,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-10-28"
   }
 ]
