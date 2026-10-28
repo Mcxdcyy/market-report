@@ -4860,8 +4860,7 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-table tbody tr.latest th {{
     color: var(--text); font-weight: 800;
   }}
-  .idx-outlook-table tbody tr:last-child th,
-  .idx-outlook-table tbody tr:last-child td {{ border-bottom: none; }}
+  /* 末日行保留底部分隔线，与上行间距对称（勿去掉 border-bottom，否则上近下远） */
   .idx-outlook-table td.down {{
     background: #e8f5e9; color: #2e7d32; font-weight: 700;
     border-radius: 6px;
