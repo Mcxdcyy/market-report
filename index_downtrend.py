@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""指数大局观：近 10 个交易日 · 上证 / 深成指 / 创业板 / 科创50 下跌通道对比。
+"""指数趋势：近 10 个交易日 · 上证 / 深成指 / 创业板 / 科创综指 下跌通道对比。
 
 口径与自选池「下跌预警」一致（60 分钟 K，收盘价 SMA）：
 
@@ -26,7 +26,7 @@ from typing import Any
 
 BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "index_downtrend_results"
-SCHEMA = 2
+SCHEMA = 3  # 2026-10-28：科创50(sh000688) → 科创综指(sh000680)
 SERIES_DAYS = 10
 NOTE = (
     "下跌通道（与自选池下跌预警同口径）：60分钟K线；"
@@ -39,7 +39,7 @@ INDICES: tuple[tuple[str, str], ...] = (
     ("上证指数", "sh000001"),
     ("深成指", "sz399001"),
     ("创业板指数", "sz399006"),
-    ("科创板指数", "sh000688"),  # 科创50
+    ("科创综指", "sh000680"),  # 上证科创板综合指数（宽基，非科创50）
 )
 
 CHECK_BARS = 5
