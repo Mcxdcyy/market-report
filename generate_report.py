@@ -3900,12 +3900,15 @@ def render_html(ctx: dict) -> str:
   .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
     font-weight: 600;
   }}
-  /* 大盘环境顶 · 指数/量能 pill（2026-10-29 由表头短期迁入；好红/中橙/不好绿） */
+  /* 大盘环境顶 · 指数/量能 pill（2026-10-29 由表头短期迁入；好红/中橙/不好绿）
+     字体样式与宏观·多空策略 / 近30日成交金额图下标签统一 */
   .mkt-env-pills {{
     display: flex; flex-wrap: wrap; gap: 6px;
     margin: 0 0 14px;
   }}
-  .mkt-env-pills .pill {{
+  .mkt-env-pills .pill,
+  .macro-bias-wrap .chart-tags .pill,
+  .vol30-tags .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }}
   .mkt-env-pills .pill.ok {{
@@ -4852,7 +4855,9 @@ def render_html(ctx: dict) -> str:
       padding: 12px 12px; font-size: 15px;
     }}
     .mkt-env-pills {{ margin-bottom: 12px; gap: 6px; }}
-    .mkt-env-pills .pill {{ font-size: 13px; padding: 5px 11px; }}
+    .mkt-env-pills .pill,
+    .macro-bias-wrap .chart-tags .pill,
+    .vol30-tags .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
     .section-num {{ font-size: 14px; }}
