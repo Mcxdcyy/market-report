@@ -990,12 +990,12 @@ MACRO_BIAS_SHORT_TEXT = (
 )
 
 
-def _macro_bias_cycle_text(series: list[dict]) -> str:
-    """宏观·多空策略周期结论：状态机，仅在连续 2 日达标时切换。
+def _macro_bias_regime(series: list[dict]) -> str | None:
+    """宏观·多空策略周期状态：仅在连续 2 日达标时切换。
 
-    - 连续 2 日（含当日）叠加分 ≥ +2 → 切「做多周期」
-    - 连续 2 日（含当日）叠加分 ≤ −2 → 切「做空周期」
-    - 其余日维持前一日周期；序列内从未切换过 → 不写结论条
+    - 连续 2 日（含当日）叠加分 ≥ +2 → 「long」（做多）
+    - 连续 2 日（含当日）叠加分 ≤ −2 → 「short」（做空）
+    - 其余日维持前一日周期；序列内从未切换过 → None
     """
     regime: str | None = None  # "long" | "short"
     scores: list[int] = []
@@ -1012,10 +1012,26 @@ def _macro_bias_cycle_text(series: list[dict]) -> str:
             regime = "long"
         elif a <= -2 and b <= -2:
             regime = "short"
+    return regime
+
+
+def _macro_bias_cycle_text(series: list[dict]) -> str:
+    """宏观·多空策略周期结论条文案（与标签同口径）。"""
+    regime = _macro_bias_regime(series)
     if regime == "long":
         return MACRO_BIAS_LONG_TEXT
     if regime == "short":
         return MACRO_BIAS_SHORT_TEXT
+    return ""
+
+
+def _macro_bias_cycle_tags_html(series: list[dict]) -> str:
+    """宏观图下标签：做多周期（红）/ 做空周期（绿）；未进入任一周期则不写。"""
+    regime = _macro_bias_regime(series)
+    if regime == "long":
+        return '<div class="chart-tags"><span class="pill ok">做多周期</span></div>'
+    if regime == "short":
+        return '<div class="chart-tags"><span class="pill bad">做空周期</span></div>'
     return ""
 
 
@@ -3871,7 +3887,10 @@ def render_html(ctx: dict) -> str:
   .macro-bias-wrap > .vol20-head {{
     margin-bottom: 10px;
   }}
-  /* 结论条在图下方（2026-10-29） */
+  /* 图下：做多/做空周期标签 → 周期结论条（2026-10-29） */
+  .macro-bias-wrap > .chart-tags {{
+    margin-top: 10px;
+  }}
   .macro-bias-wrap > .vol-mkt-sum-wrap {{
     margin-top: 0;
   }}
@@ -5548,7 +5567,7 @@ def _render_macro_bias_one(
 ) -> str:
     """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。
 
-    表头扁平：标题 → 柱图 → 周期结论条（图下方；2026-10-29）。
+    表头扁平：标题 → 柱图 → 做多/做空周期标签 → 周期结论条（图下方；2026-10-29）。
     """
     if not series:
         return ""
@@ -5587,6 +5606,7 @@ def _render_macro_bias_one(
     today_html = (
         f'<span class="{today_cls}">{today:+d}</span>' if today_cls else f"{today:+d}"
     )
+    tags_html = _macro_bias_cycle_tags_html(series)
     cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
     return f'''<div class="macro-bias-wrap" aria-label="宏观·多空策略">
   <div class="vol20-head">
@@ -5598,6 +5618,7 @@ def _render_macro_bias_one(
     {''.join(cols)}
   </div>
   <div class="vol20-axis">{''.join(ticks)}</div>
+  {tags_html}
   {cycle_html}
 </div>'''
 
