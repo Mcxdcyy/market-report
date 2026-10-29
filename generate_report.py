@@ -5670,11 +5670,12 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
     return flags
 
 
-# 表头短期 pill：固定四项顺序 · 好/中/不好都展示（与页内图表结论同源）
-# 顺序：指数趋势 → 近30日成交金额 → 追高活跃度 → 昨追-今日承接
+# 表头短期 pill：固定三项顺序 · 好/中/不好都展示（与页内图表结论同源）
+# 顺序：指数趋势 → 近30日成交金额 → 追高活跃度
 # 2026-10-11：已删「强趋势-次日承接」
 # 2026-10-23：做多/做空周期只写宏观结论条，不上短期 pill
 # 2026-10-27：短期与长期同系卡片；好标签也展示
+# 2026-10-29：已删「昨追-今日承接」图与表头 pill
 
 
 def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
@@ -5725,28 +5726,11 @@ def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
                 else:
                     pills.append(("bad", "追高-不活跃周期"))
 
-        # 4) 昨追-今日承接：当日原始值相对近200日均值，中性带 ±0.5%
-        loss_ser, loss_base = _merge_chase_effect_series(groups, "loss")
-        if loss_base is not None and loss_ser:
-            vals = _chase_raw_series_values(loss_ser)
-            band = 0.5
-            for i in range(len(vals) - 1, -1, -1):
-                if vals[i] is None:
-                    continue
-                delta = float(vals[i]) - float(loss_base)
-                if delta > band:
-                    pills.append(("ok", "追高-次日承接较好"))
-                elif delta < -band:
-                    pills.append(("bad", "追高-次日承接不好"))
-                else:
-                    pills.append(("warn", "追高-次日承接有好有差"))
-                break
-
     return pills
 
 
 def _hero_risks_html(ctx: dict) -> str:
-    """表头短期标签：四项固定顺序，好/中/不好均展示；无数据返回空串。"""
+    """表头短期标签：三项固定顺序，好/中/不好均展示；无数据返回空串。"""
     pills = [
         f'<span class="pill {tone}">{label}</span>'
         for tone, label in _hero_short_pills(ctx)
@@ -6674,26 +6658,8 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 效应仅「昨追-今日承接」：主板+创板按家数加权合并
-    # （已删「昨追-赚钱效应」「今追-回落指数」；后台 pullback 仍可算）
-    # 柱高=当日原始；页面横轴近30日（零轴仍近200日均值）；meta「横轴 ±Y% · 今日 ±X%」
-    # 图下标签 = 当日原始 vs 近200日均值、中性带 ±0.5%
-    # →「追高承接较好」/「有好有差」/「不好」；连续≥2日状态翻转首日追加「需次日验证」
-    ser, baseline = _merge_chase_effect_series(groups, "loss")
-    # 标签「需次日验证」看状态序列，先用全长算标签，再截近30日画柱
-    tag_html = _chase_loss_hold_tag_html(ser, baseline, window=1)
-    chart_ser = ser[-30:] if len(ser) > 30 else ser
-    chart_html = _render_chase_metric_chart(
-        "昨追-今日承接", chart_ser, baseline=baseline
-    )
-    chart_html += tag_html
-    parts.append(
-        f'''<div class="chase-group">
-    <div class="chase-grid single">{chart_html}</div>
-  </div>'''
-    )
-
-    # 已删「昨追-赚钱效应」「今追-回落指数」「低吸赚钱效应」「低吸锁仓收益」
+    # 2026-10-29：已删「昨追-今日承接」页面图（含标签/结论/表头 pill）
+    # 后台 chase_sentiment.loss 仍可算；已删「昨追-赚钱效应」「今追-回落指数」等展示
     # 百日新高图在趋势强度模块末；追高池脚注在模板模块末
     return "".join(parts)
 
