@@ -1026,18 +1026,18 @@ def _macro_bias_cycle_text(series: list[dict]) -> str:
 
 
 def _macro_bias_cycle_tags_html(series: list[dict]) -> str:
-    """宏观图下标签：长期指数趋势向上-做多周期（红）/ 向下-做空周期（绿）；未进入任一周期则不写。"""
+    """宏观图下标签：长期指数趋势-做多周期（红）/ 做空周期（绿）；未进入任一周期则不写。"""
     regime = _macro_bias_regime(series)
     if regime == "long":
         return (
             '<div class="chart-tags">'
-            '<span class="pill ok">长期指数趋势向上-做多周期</span>'
+            '<span class="pill ok">长期指数趋势-做多周期</span>'
             "</div>"
         )
     if regime == "short":
         return (
             '<div class="chart-tags">'
-            '<span class="pill bad">长期指数趋势向下-做空周期</span>'
+            '<span class="pill bad">长期指数趋势-做空周期</span>'
             "</div>"
         )
     return ""
