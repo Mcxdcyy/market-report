@@ -4274,6 +4274,13 @@ def render_html(ctx: dict) -> str:
     display: flex; height: 24px; border-radius: 4px; overflow: hidden;
     background: #eef2f5; min-width: 0;
   }}
+  .ts-amt-stack.empty {{
+    overflow: visible; align-items: center; justify-content: center;
+  }}
+  .ts-amt-empty-bar {{
+    width: 36px; height: 3px; border-radius: 2px;
+    background: #8b96a3; flex-shrink: 0;
+  }}
   .ts-amt-seg {{
     height: 100%; min-width: 0;
     display: flex; align-items: center; justify-content: center;
@@ -5562,11 +5569,16 @@ def render_trend_strength_html(block: dict) -> str:
                     f'{f"<span>{label}</span>" if label else ""}</div>'
                 )
             if not segs:
-                segs.append('<div class="ts-amt-seg lo" style="width:100%;opacity:.35"></div>')
+                # 0 家强趋势：进度条内居中横杆，标出「无样本」
+                stack_inner = '<div class="ts-amt-empty-bar" title="无强趋势样本"></div>'
+                stack_cls = "ts-amt-stack empty"
+            else:
+                stack_inner = "".join(segs)
+                stack_cls = "ts-amt-stack"
             amt_rows.append(
                 f'''<div class="{row_cls}">
       <div class="ts-amt-name">{it.get("name", "")}</div>
-      <div class="ts-amt-stack">{"".join(segs)}</div>
+      <div class="{stack_cls}">{stack_inner}</div>
       <div class="ts-amt-cnt"><span class="hi">{n_hi}</span>/<span class="lo">{n_lo}</span></div>
     </div>'''
             )
