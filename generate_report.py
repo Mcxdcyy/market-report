@@ -3870,11 +3870,9 @@ def render_html(ctx: dict) -> str:
   .macro-bias-wrap > .vol20-head {{
     margin-bottom: 10px;
   }}
-  /* 结论条在图上方 */
+  /* 结论条在图下方（2026-10-29） */
   .macro-bias-wrap > .vol-mkt-sum-wrap {{
-    margin: 0 0 12px;
-    padding: 0;
-    border-top: none;
+    margin-top: 0;
   }}
   .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
     font-weight: 600;
@@ -4880,7 +4878,6 @@ def render_html(ctx: dict) -> str:
     .hero h1 {{ font-size: 24px; }}
     .hero-meta {{ font-size: 14px; }}
     .macro-bias-wrap > .vol20-head .vol20-title {{ font-size: 16px; }}
-    .macro-bias-wrap > .vol-mkt-sum-wrap {{ margin-bottom: 10px; }}
     .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
       padding: 12px 12px; font-size: 15px;
     }}
@@ -5647,7 +5644,7 @@ def _render_macro_bias_one(
 ) -> str:
     """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。
 
-    表头扁平：标题 → 周期结论条（图上方）→ 柱图（无「长期」kicker、无内层卡片外框）。
+    表头扁平：标题 → 柱图 → 周期结论条（图下方；2026-10-29）。
     """
     if not series:
         return ""
@@ -5692,17 +5689,17 @@ def _render_macro_bias_one(
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
   </div>
-  {cycle_html}
   <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
     <div class="macro-bias-zero"></div>
     {''.join(cols)}
   </div>
   <div class="vol20-axis">{''.join(ticks)}</div>
+  {cycle_html}
 </div>'''
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """表头：近200日宏观·多空策略（已删近120日对比图）+ 图上周期结论条；无分层外框。"""
+    """表头：近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条；无分层外框。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
