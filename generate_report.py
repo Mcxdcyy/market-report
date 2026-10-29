@@ -3716,11 +3716,19 @@ def render_html(ctx: dict) -> str:
         title="百日新高",
     )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
-    # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
+    # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）→ 追高活跃度（标签+结论）+ 池定义脚注
     # 百日新高在趋势强度模块最下方（脚注之后）
+    # 2026-10-29：已删独立模块「资金追高情绪」；追高活跃度并入大盘环境末
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    vol20_html = f"{index_outlook_html}{vol30_html}"
+    chase_sentiment_html = render_chase_sentiment_html(ctx.get("chase_sentiment") or {})
+    chase_tail = ""
+    if chase_sentiment_html:
+        chase_tail = (
+            f"{chase_sentiment_html}"
+            '<div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>'
+        )
+    vol20_html = f"{index_outlook_html}{vol30_html}{chase_tail}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -3782,7 +3790,6 @@ def render_html(ctx: dict) -> str:
     )
 
     trend_strength_html = render_trend_strength_html(ctx.get("trend_strength") or {})
-    chase_sentiment_html = render_chase_sentiment_html(ctx.get("chase_sentiment") or {})
     fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
 
     return f"""<!DOCTYPE html>
@@ -5121,31 +5128,20 @@ def render_html(ctx: dict) -> str:
     {_hero_risks_html(ctx)}
   </header>
 
-  <!-- 1 大盘环境 -->
+  <!-- 1 大盘环境（含追高活跃度；2026-10-29 已删独立「资金追高情绪」模块） -->
   <div class="section" id="sec-mkt">
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">大盘环境</div>
-      <div class="section-sub">{ctx['data_date']} · 量能</div>
+      <div class="section-sub">{ctx['data_date']} · 量能 / 追高</div>
     </div>
     {vol20_html}
   </div>
 
-  <!-- 2 资金追高情绪 -->
-  <div class="section" id="sec-chase">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">资金追高情绪</div>
-      <div class="section-sub">{ctx['data_date']} · 近120日</div>
-    </div>
-    {chase_sentiment_html}
-    <div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>
-  </div>
-
-  <!-- 3 趋势强度 -->
+  <!-- 2 趋势强度 -->
   <div class="section" id="sec-ts">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
@@ -5153,10 +5149,10 @@ def render_html(ctx: dict) -> str:
     {xh200_html}
   </div>
 
-  <!-- 4 涨停板块 -->
+  <!-- 3 涨停板块 -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">3</div>
       <div class="section-title">涨停板块</div>
       <div class="section-sub">{ctx['data_date']}</div>
     </div>
@@ -5164,10 +5160,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 5 公告与政策 -->
+  <!-- 4 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">公告与政策</div>
       <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
@@ -5175,10 +5171,10 @@ def render_html(ctx: dict) -> str:
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 6 事件 -->
+  <!-- 5 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5188,10 +5184,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 7 板块-资金认可度 -->
+  <!-- 6 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">7</div>
+      <div class="section-num">6</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -6273,9 +6269,8 @@ def render_chase_sentiment_html(block: dict) -> str:
   </div>'''
         )
 
-    # 2026-10-29：已删「昨追-今日承接」页面图（含标签/结论/表头 pill）
+    # 2026-10-29：已删「昨追-今日承接」；图并入大盘环境末；池脚注由 write_report 拼在图后
     # 后台 chase_sentiment.loss 仍可算；已删「昨追-赚钱效应」「今追-回落指数」等展示
-    # 百日新高图在趋势强度模块末；追高池脚注在模板模块末
     return "".join(parts)
 
 
