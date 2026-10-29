@@ -3716,19 +3716,12 @@ def render_html(ctx: dict) -> str:
         title="百日新高",
     )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
-    # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）→ 追高活跃度（标签+结论）+ 池定义脚注
-    # 百日新高在趋势强度模块最前面（2026-10-29 由模块末改到最前）
-    # 2026-10-29：已删独立模块「资金追高情绪」；追高活跃度并入大盘环境末
+    # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
+    # 百日新高在趋势强度模块最前面
+    # 2026-10-29：已删「资金追高情绪」模块、追高活跃度图/标签/结论/表头 pill
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
-    chase_sentiment_html = render_chase_sentiment_html(ctx.get("chase_sentiment") or {})
-    chase_tail = ""
-    if chase_sentiment_html:
-        chase_tail = (
-            f"{chase_sentiment_html}"
-            '<div class="chase-note">追高池：日内最高价相对昨收涨幅≥7%；不含ST、北交所，不含一字涨停（当日最低价=当日涨停价），上市天数大于10天。</div>'
-        )
-    vol20_html = f"{index_outlook_html}{vol30_html}{chase_tail}"
+    vol20_html = f"{index_outlook_html}{vol30_html}"
 
     def post_close_html(items: list) -> str:
         if not items:
@@ -5135,12 +5128,12 @@ def render_html(ctx: dict) -> str:
     {_hero_risks_html(ctx)}
   </header>
 
-  <!-- 1 大盘环境（含追高活跃度；2026-10-29 已删独立「资金追高情绪」模块） -->
+  <!-- 1 大盘环境（2026-10-29 已删追高活跃度与独立「资金追高情绪」） -->
   <div class="section" id="sec-mkt">
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">大盘环境</div>
-      <div class="section-sub">{ctx['data_date']} · 量能 / 追高</div>
+      <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
     {vol20_html}
   </div>
@@ -5674,7 +5667,7 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 
 
 # 表头短期 pill：固定三项顺序 · 好/中/不好都展示（与页内图表结论同源）
-# 顺序：指数趋势 → 近30日成交金额 → 追高活跃度
+# 顺序：指数趋势 → 近30日成交金额（2026-10-29 已删追高活跃度）
 # 2026-10-11：已删「强趋势-次日承接」
 # 2026-10-23：做多/做空周期只写宏观结论条，不上短期 pill
 # 2026-10-27：短期与长期同系卡片；好标签也展示
@@ -5706,33 +5699,11 @@ def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
         else:
             pills.append(("bad", "缩量周期-资金撤退"))
 
-    chase = ctx.get("chase_sentiment") or {}
-    groups = chase.get("groups") or {}
-    if groups:
-        # 3) 追高活跃度：试看单日原始家数 vs 近200日均值（原近5日均）
-        act_ser, act_base = _merge_chase_count_series(groups)
-        if act_base is not None and act_ser:
-            last_n: float | None = None
-            for row in reversed(act_ser):
-                raw_n = row.get("n_raw")
-                if raw_n is None:
-                    continue
-                try:
-                    last_n = float(raw_n)
-                except (TypeError, ValueError):
-                    continue
-                break
-            if last_n is not None:
-                if last_n >= float(act_base):
-                    pills.append(("ok", "追高-活跃周期"))
-                else:
-                    pills.append(("bad", "追高-不活跃周期"))
-
     return pills
 
 
 def _hero_risks_html(ctx: dict) -> str:
-    """表头短期标签：三项固定顺序，好/中/不好均展示；无数据返回空串。"""
+    """表头短期标签：两项固定顺序，好/中/不好均展示；无数据返回空串。"""
     pills = [
         f'<span class="pill {tone}">{label}</span>'
         for tone, label in _hero_short_pills(ctx)
@@ -6262,24 +6233,9 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
 
 
 def render_chase_sentiment_html(block: dict) -> str:
-    groups = block.get("groups") or {}
-    if not groups:
-        note = block.get("note") or "暂无资金追高情绪数据"
-        return f'<div class="news-empty">{note}</div>'
-
-    parts = []
-    # 追高活跃度：主板+创板数量合计（单图）
-    act_ser, act_base = _merge_chase_count_series(groups)
-    if act_ser:
-        parts.append(
-            f'''<div class="chase-group">
-    <div class="chase-grid single">{_render_chase_count_chart("追高活跃度", act_ser, baseline=act_base)}</div>
-  </div>'''
-        )
-
-    # 2026-10-29：已删「昨追-今日承接」；图并入大盘环境末；池脚注由 write_report 拼在图后
-    # 后台 chase_sentiment.loss 仍可算；已删「昨追-赚钱效应」「今追-回落指数」等展示
-    return "".join(parts)
+    # 2026-10-29：页面已删追高活跃度（图/标签/结论/表头 pill）与昨追承接等；
+    # 后台 chase_sentiment 仍可算，本函数固定不渲染。
+    return ""
 
 
 def load_fund_recognition_block(
