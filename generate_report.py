@@ -4991,11 +4991,11 @@ def render_html(ctx: dict) -> str:
     {macro_bias_html}
   </header>
 
-  <!-- 1 大盘环境（顶栏指数/量能 pill；2026-10-29 已删追高） -->
+  <!-- 1 大盘·风险指针（顶栏指数/量能 pill；2026-10-29 已删追高；原名大盘环境） -->
   <div class="section" id="sec-mkt">
     <div class="section-head">
       <div class="section-num">1</div>
-      <div class="section-title">大盘环境</div>
+      <div class="section-title">大盘·风险指针</div>
       <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
     {_mkt_env_pills_html(ctx)}
@@ -5530,7 +5530,7 @@ def _mkt_env_pills_html(ctx: dict) -> str:
     ]
     if not pills:
         return ""
-    return f'<div class="mkt-env-pills" aria-label="大盘环境标签">{"".join(pills)}</div>'
+    return f'<div class="mkt-env-pills" aria-label="大盘·风险指针标签">{"".join(pills)}</div>'
 
 
 def _index_outlook_sum_text(block: dict) -> str:
