@@ -3947,34 +3947,21 @@ def render_html(ctx: dict) -> str:
   .hero-macro .macro-bias-zero {{
     background: rgba(0,0,0,.10);
   }}
-  /* 表头 · 短期：与长期 macro-bias-wrap 同系分层卡片；pill 好红/中橙/不好绿 */
-  .hero-short {{
-    margin-top: 14px;
-    padding: 14px 14px 12px;
-    border: 1px solid rgba(0,0,0,.07);
-    border-radius: 12px;
-    background:
-      linear-gradient(180deg, #fafbfd 0%, #f4f6f9 100%);
-    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 4px 14px rgba(28,28,30,.04);
-  }}
-  .hero-short-label {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    letter-spacing: 0.02em; margin-bottom: 8px;
-  }}
-  .hero-risks {{
+  /* 大盘环境顶 · 指数/量能 pill（2026-10-29 由表头短期迁入；好红/中橙/不好绿） */
+  .mkt-env-pills {{
     display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 0;
+    margin: 0 0 14px;
   }}
-  .hero-risks .pill {{
+  .mkt-env-pills .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }}
-  .hero-risks .pill.ok {{
+  .mkt-env-pills .pill.ok {{
     background: #ffebee; color: #c62828;
   }}
-  .hero-risks .pill.warn {{
+  .mkt-env-pills .pill.warn {{
     background: var(--warn-bg); color: #b25000;
   }}
-  .hero-risks .pill.bad {{
+  .mkt-env-pills .pill.bad {{
     background: #e8f5e9; color: #2e7d32;
   }}
 
@@ -4983,14 +4970,8 @@ def render_html(ctx: dict) -> str:
       padding: 12px 12px; font-size: 15px; border-radius: 8px;
     }}
     .hero-macro .macro-bias-panel {{ padding: 8px 8px 6px; border-radius: 9px; }}
-    .hero-short {{
-      margin-top: 12px;
-      padding: 12px 12px 10px;
-      border-radius: 11px;
-    }}
-    .hero-short-label {{ font-size: 12px; }}
-    .hero-risks {{ gap: 6px; }}
-    .hero-risks .pill {{ font-size: 13px; padding: 5px 11px; }}
+    .mkt-env-pills {{ margin-bottom: 12px; gap: 6px; }}
+    .mkt-env-pills .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
     .section-num {{ font-size: 14px; }}
@@ -5125,16 +5106,16 @@ def render_html(ctx: dict) -> str:
       </div>
     </div>
     {f'<div class="hero-macro" aria-label="长期·宏观多空策略">{macro_bias_html}</div>' if macro_bias_html else ''}
-    {_hero_risks_html(ctx)}
   </header>
 
-  <!-- 1 大盘环境（2026-10-29 已删追高活跃度与独立「资金追高情绪」） -->
+  <!-- 1 大盘环境（顶栏指数/量能 pill；2026-10-29 已删追高） -->
   <div class="section" id="sec-mkt">
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">大盘环境</div>
       <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
+    {_mkt_env_pills_html(ctx)}
     {vol20_html}
   </div>
 
@@ -5666,15 +5647,13 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
     return flags
 
 
-# 表头短期 pill：固定三项顺序 · 好/中/不好都展示（与页内图表结论同源）
-# 顺序：指数趋势 → 近30日成交金额（2026-10-29 已删追高活跃度）
-# 2026-10-11：已删「强趋势-次日承接」
-# 2026-10-23：做多/做空周期只写宏观结论条，不上短期 pill
-# 2026-10-27：短期与长期同系卡片；好标签也展示
-# 2026-10-29：已删「昨追-今日承接」图与表头 pill
+# 大盘环境顶 pill：固定两项 · 好/中/不好都展示（与页内图表结论同源）
+# 顺序：指数趋势 → 近30日成交金额
+# 2026-10-29：由表头「短期」迁入大盘环境模块最上方；已删追高/昨追承接/强趋势承接 pill
+# 表头只留长期宏观·多空策略
 
 
-def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
+def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     """返回 [(tone, label), ...]，tone ∈ ok/warn/bad。缺数据的项跳过。"""
     pills: list[tuple[str, str]] = []
 
@@ -5702,20 +5681,15 @@ def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
     return pills
 
 
-def _hero_risks_html(ctx: dict) -> str:
-    """表头短期标签：两项固定顺序，好/中/不好均展示；无数据返回空串。"""
+def _mkt_env_pills_html(ctx: dict) -> str:
+    """大盘环境模块标题下、图表上：两项 pill；无数据返回空串。"""
     pills = [
         f'<span class="pill {tone}">{label}</span>'
-        for tone, label in _hero_short_pills(ctx)
+        for tone, label in _mkt_env_pills(ctx)
     ]
     if not pills:
         return ""
-    return (
-        '<div class="hero-short" aria-label="短期">'
-        '<div class="hero-short-label">短期</div>'
-        f'<div class="hero-risks">{"".join(pills)}</div>'
-        "</div>"
-    )
+    return f'<div class="mkt-env-pills" aria-label="大盘环境标签">{"".join(pills)}</div>'
 
 
 def _index_outlook_sum_text(block: dict) -> str:
