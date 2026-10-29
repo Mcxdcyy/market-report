@@ -5725,15 +5725,20 @@ def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
                 else:
                     pills.append(("bad", "追高-不活跃周期"))
 
-        # 4) 昨追-今日承接：当日原始值相对近200日均值，中性带 ±0.5%
+        # 4) 昨追-今日承接：近2日原始均相对近200日均值，中性带 ±0.5%
         loss_ser, loss_base = _merge_chase_effect_series(groups, "loss")
         if loss_base is not None and loss_ser:
             vals = _chase_raw_series_values(loss_ser)
+            window = 2
             band = 0.5
             for i in range(len(vals) - 1, -1, -1):
-                if vals[i] is None:
+                if i + 1 < window:
+                    break
+                chunk = vals[i - window + 1 : i + 1]
+                if any(v is None for v in chunk):
                     continue
-                delta = float(vals[i]) - float(loss_base)
+                m = sum(float(v) for v in chunk) / float(window)
+                delta = m - float(loss_base)
                 if delta > band:
                     pills.append(("ok", "追高-次日承接较好"))
                 elif delta < -band:
@@ -6074,12 +6079,12 @@ def _chase_loss_hold_tag_html(
     series: list[dict],
     baseline: float | None,
     *,
-    window: int = 1,
+    window: int = 2,
     band: float = 0.5,
 ) -> str:
     """昨追-今日承接图下标签。
 
-    - 近 window 日原始值（window=1 即当日）相对近200日均值，中性带 ±band：
+    - 近 window 日原始均值相对近200日均值，中性带 ±band：
       >+band →「追高承接较好」；<-band →「追高承接不好」；其余 →「追高承接-有好有差」
     - 若末日是状态翻转首日，且翻转前旧状态已连续 ≥2 日 → 追加「需次日验证」
     """
@@ -6676,14 +6681,15 @@ def render_chase_sentiment_html(block: dict) -> str:
 
     # 效应仅「昨追-今日承接」：主板+创板按家数加权合并，近120日
     # （已删「昨追-赚钱效应」「今追-回落指数」；后台 pullback 仍可算）
-    # 柱高=当日原始值；meta「横轴 ±Y% · 今日 ±X%」
-    # 图下标签 = 当日原始 vs 近200日均值、中性带 ±0.5%
+    # 柱高=近2日原始均值；meta「2日均值 · 横轴 ±Y% · 今日 ±X%」（今日=当日原始）
+    # 图下标签 = 近2日原始均 vs 近200日均值、中性带 ±0.5%
     # →「追高承接较好」/「有好有差」/「不好」；连续≥2日状态翻转首日追加「需次日验证」
     ser, baseline = _merge_chase_effect_series(groups, "loss")
+    ser = _smooth_metric_series_nd(ser, days=2)
     chart_html = _render_chase_metric_chart(
-        "昨追-今日承接", ser, baseline=baseline
+        "昨追-今日承接", ser, baseline=baseline, mean_days=2
     )
-    chart_html += _chase_loss_hold_tag_html(ser, baseline, window=1)
+    chart_html += _chase_loss_hold_tag_html(ser, baseline, window=2)
     parts.append(
         f'''<div class="chase-group">
     <div class="chase-grid single">{chart_html}</div>
