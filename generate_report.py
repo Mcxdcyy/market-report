@@ -5663,7 +5663,7 @@ def render_index_outlook_html(block: dict) -> str:
     return (
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
-        '<span class="vol20-title">指数趋势</span>'
+        '<span class="vol20-title">短期指数趋势</span>'
         f'<span class="vol20-meta">近10日 · {d0}–{d1}</span>'
         "</div>"
         '<div class="idx-outlook-scroll">'
