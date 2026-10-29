@@ -4996,7 +4996,6 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">1</div>
       <div class="section-title">大盘·风险指针</div>
-      <div class="section-sub">{ctx['data_date']} · 量能</div>
     </div>
     {_mkt_env_pills_html(ctx)}
     {vol20_html}
@@ -5007,7 +5006,6 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">2</div>
       <div class="section-title">趋势强度</div>
-      <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
     {trend_strength_html}
     {xh200_html}
@@ -5018,7 +5016,6 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">3</div>
       <div class="section-title">涨停板块</div>
-      <div class="section-sub">{ctx['data_date']}</div>
     </div>
     {sector_block}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
@@ -5029,7 +5026,6 @@ def render_html(ctx: dict) -> str:
     <div class="section-head">
       <div class="section-num">4</div>
       <div class="section-title">公告与政策</div>
-      <div class="section-sub">上市公司盘后披露 + 当日重要国家政策 · 精选摘要</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
