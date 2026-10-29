@@ -4154,60 +4154,6 @@ def render_html(ctx: dict) -> str:
   }}
 
   /* 符合条件个股 · 成交额分档（100% 堆叠） */
-  .ts-amt-chart {{
-    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
-    border-top: 1px solid var(--border);
-  }}
-  .ts-amt-legend {{
-    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
-    margin-bottom: 12px; font-size: 11px; color: var(--sub);
-  }}
-  .ts-amt-leg {{
-    display: inline-flex; align-items: center; gap: 5px; font-weight: 600;
-  }}
-  .ts-amt-swatch {{
-    width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
-  }}
-  .ts-amt-swatch.lo {{ background: #E2C49A; }}
-  .ts-amt-swatch.hi {{ background: #9A7EAD; }}
-  .ts-amt-row {{
-    display: grid; grid-template-columns: 72px 1fr 78px;
-    align-items: center; gap: 10px; margin-bottom: 12px;
-  }}
-  .ts-amt-row:last-child {{ margin-bottom: 0; }}
-  .ts-amt-name {{
-    font-size: 12px; font-weight: 700; color: var(--sub);
-    text-align: right; white-space: nowrap;
-  }}
-  .ts-amt-row.all .ts-amt-name {{ color: var(--accent); }}
-  .ts-amt-stack {{
-    display: flex; height: 24px; border-radius: 4px; overflow: hidden;
-    background: #eef2f5; min-width: 0;
-  }}
-  .ts-amt-stack.empty {{
-    overflow: visible; align-items: center; justify-content: center;
-  }}
-  .ts-amt-empty-bar {{
-    width: 36px; height: 3px; border-radius: 2px;
-    background: #8b96a3; flex-shrink: 0;
-  }}
-  .ts-amt-seg {{
-    height: 100%; min-width: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700; color: #fff;
-    font-variant-numeric: tabular-nums; white-space: nowrap;
-  }}
-  .ts-amt-seg.lo {{ background: #E2C49A; color: #6a542e; }}
-  .ts-amt-seg.hi {{ background: #9A7EAD; }}
-  .ts-amt-seg span {{ padding: 0 4px; }}
-  .ts-amt-cnt {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    font-variant-numeric: tabular-nums; text-align: right;
-    white-space: nowrap;
-  }}
-  .ts-amt-cnt .hi {{ color: #9A7EAD; font-weight: 700; }}
-  .ts-amt-cnt .lo {{ color: #a6895c; font-weight: 700; }}
-
   /* ── 板块-资金认可度 ── */
   #sec-fund > .vol-mkt-sum-wrap {{
     margin: 0 0 0;
@@ -4562,7 +4508,6 @@ def render_html(ctx: dict) -> str:
   .vol-mkt-sum-wrap + .vol20-wrap,
   .vol-mkt-sum-wrap + .ts-cnt-wrap,
   .vol-mkt-sum-wrap + .ts-chart,
-  .vol-mkt-sum-wrap + .ts-amt-chart,
   .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-cnt-wrap,
   .ts-cnt-wrap:has(> .vol-mkt-sum-wrap) + .ts-chart,
   .chase-group:has(.vol-mkt-sum-wrap) + .chase-group .chase-chart,
@@ -5426,55 +5371,6 @@ def render_trend_strength_html(block: dict) -> str:
     </div>
     {"".join(hbars)}
   </div>'''
-    amt_rows = []
-    has_amt = any("amt_above_pct" in it for it in items)
-    if has_amt:
-        for it in items:
-            n_lo = int(it.get("n_below") or 0)
-            n_hi = int(it.get("n_above") or 0)
-            n_sum = n_lo + n_hi
-            hi = (100.0 * n_hi / n_sum) if n_sum else 0.0
-            lo = (100.0 * n_lo / n_sum) if n_sum else 0.0
-            row_cls = "ts-amt-row all" if it.get("key") == "all" else "ts-amt-row"
-            segs = []
-            if hi > 0:
-                label = f"{hi:.0f}%" if hi >= 12 else ""
-                segs.append(
-                    f'<div class="ts-amt-seg hi" style="width:{hi:.2f}%">'
-                    f'{f"<span>{label}</span>" if label else ""}</div>'
-                )
-            if lo > 0:
-                label = f"{lo:.0f}%" if lo >= 12 else ""
-                segs.append(
-                    f'<div class="ts-amt-seg lo" style="width:{lo:.2f}%">'
-                    f'{f"<span>{label}</span>" if label else ""}</div>'
-                )
-            if not segs:
-                # 0 家强趋势：进度条内居中横杆，标出「无样本」
-                stack_inner = '<div class="ts-amt-empty-bar" title="无强趋势样本"></div>'
-                stack_cls = "ts-amt-stack empty"
-            else:
-                stack_inner = "".join(segs)
-                stack_cls = "ts-amt-stack"
-            amt_rows.append(
-                f'''<div class="{row_cls}">
-      <div class="ts-amt-name">{it.get("name", "")}</div>
-      <div class="{stack_cls}">{stack_inner}</div>
-      <div class="ts-amt-cnt"><span class="hi">{n_hi}</span>/<span class="lo">{n_lo}</span></div>
-    </div>'''
-            )
-        amt_chart = f'''<div class="ts-amt-chart">
-    <div class="ts-chart-head">
-      <span class="ts-chart-title">强趋势-成交额结构</span>
-    </div>
-    <div class="ts-amt-legend">
-      <span class="ts-amt-leg"><span class="ts-amt-swatch hi"></span>5亿及以上</span>
-      <span class="ts-amt-leg"><span class="ts-amt-swatch lo"></span>5亿以下</span>
-    </div>
-    {"".join(amt_rows)}
-  </div>'''
-    else:
-        amt_chart = ""
 
     note_html = (
         '<div class="ts-note">'
@@ -5482,9 +5378,9 @@ def render_trend_strength_html(block: dict) -> str:
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 页内：强趋势占比（近120日）→ 结构占比 → 成交额结构 → 脚注
-    # 强趋势-次日承接已删除（2026-10-11）；百日新高挂在模板本模块最前（2026-10-29）
-    return f"{count_chart}{chart}{amt_chart}{note_html}"
+    # 页内：强趋势占比（近120日）→ 结构占比 → 脚注
+    # 2026-10-29：已删「强趋势-成交额结构」；百日新高在模板本模块最前
+    return f"{count_chart}{chart}{note_html}"
 
 
 def load_macro_bias_block(
