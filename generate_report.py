@@ -3840,13 +3840,6 @@ def render_html(ctx: dict) -> str:
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
   }}
-  .hero-top {{
-    display: block;
-  }}
-  .hero-mast {{
-    display: flex; flex-direction: column; align-items: stretch; gap: 4px;
-    min-width: 0; width: 100%;
-  }}
   .hero-title-row {{
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px; width: 100%;
@@ -3868,84 +3861,23 @@ def render_html(ctx: dict) -> str:
   }}
   .hero-home:hover {{ background: #0a84ff18; color: #0070e0; }}
   .hero-home svg {{ width: 18px; height: 18px; display: block; }}
-  .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 2px; }}
-  .hero-tag {{
-    display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 600;
-    color: var(--accent); background: var(--accent-bg); padding: 4px 10px; border-radius: 6px;
+  .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 4px; }}
+  /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框） */
+  .macro-bias-wrap {{
+    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
+    border-top: 1px solid var(--border);
   }}
-  .hero-decision {{
-    text-align: right; padding: 12px 18px; border-radius: var(--radius-sm);
-    border: 1px solid var(--border); min-width: 140px;
-  }}
-  .hero-decision.ok {{ background: linear-gradient(135deg, #f0fdf4, #fff); border-color: #30d15840; }}
-  .hero-decision.warn {{ background: linear-gradient(135deg, #fffbf0, #fff); border-color: #ff9f0a40; }}
-  .hero-decision.bad {{ background: linear-gradient(135deg, #fff5f5, #fff); border-color: #ff453a40; }}
-  .hero-status {{
-    display: block; font-size: 10px; font-weight: 700; letter-spacing: .6px;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
-  }}
-  .hero-mode {{ font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }}
-  .hero-decision.ok .hero-mode {{ color: #1a7a34; }}
-  .hero-decision.warn .hero-mode {{ color: #b25000; }}
-  .hero-decision.bad .hero-mode {{ color: #c41e16; }}
-  .hero-summary {{
-    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
-    font-size: 12px; line-height: 1.55; font-weight: 400;
-    color: var(--sub);
-  }}
-  /* 表头 · 长期：宏观·多空策略（近200日 · 分层卡片） */
-  .hero-macro {{
-    margin-top: 14px;
-    padding: 0;
-  }}
-  .hero-macro .macro-bias-wrap {{
-    margin-top: 0;
-    padding: 14px 14px 12px;
-    border: 1px solid rgba(0,0,0,.07);
-    border-radius: 12px;
-    background:
-      linear-gradient(180deg, #fafbfd 0%, #f4f6f9 100%);
-    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 4px 14px rgba(28,28,30,.04);
-  }}
-  .hero-macro .macro-bias-kicker {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    letter-spacing: 0.02em; margin-bottom: 8px;
-  }}
-  .hero-macro .macro-bias-wrap > .vol20-head {{
+  .macro-bias-wrap > .vol20-head {{
     margin-bottom: 10px;
   }}
-  .hero-macro .macro-bias-wrap > .vol20-head .vol20-title {{
-    font-size: 15px; font-weight: 750; letter-spacing: -0.01em;
-  }}
-  /* 结论条在图上方：独立一层，压过通用 .vol-mkt-sum-wrap 分隔线样式 */
-  .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap {{
+  /* 结论条在图上方 */
+  .macro-bias-wrap > .vol-mkt-sum-wrap {{
     margin: 0 0 12px;
     padding: 0;
     border-top: none;
   }}
-  .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
-    padding: 12px 14px;
-    border-radius: 8px;
-    border-left-width: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.03);
+  .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
     font-weight: 600;
-  }}
-  .hero-macro .macro-bias-panel {{
-    margin-top: 0;
-    padding: 10px 10px 8px;
-    border-radius: 10px;
-    background: #fff;
-    border: 1px solid rgba(0,0,0,.06);
-    box-shadow: 0 1px 2px rgba(0,0,0,.02);
-  }}
-  .hero-macro .macro-bias-panel .macro-bias-chart {{
-    margin-top: 2px;
-  }}
-  .hero-macro .macro-bias-panel .vol20-axis {{
-    margin-top: 6px;
-  }}
-  .hero-macro .macro-bias-zero {{
-    background: rgba(0,0,0,.10);
   }}
   /* 大盘环境顶 · 指数/量能 pill（2026-10-29 由表头短期迁入；好红/中橙/不好绿） */
   .mkt-env-pills {{
@@ -4644,9 +4576,6 @@ def render_html(ctx: dict) -> str:
   .section > .vol-mkt-sum-wrap:last-child {{
     margin-bottom: -14px;
   }}
-  .hero-macro .macro-bias-wrap:has(> .vol-mkt-sum-wrap) {{
-    padding-bottom: 12px; /* 表头结论在图上方，底距由卡片 padding 承担 */
-  }}
   .vol-mkt-sum {{
     margin: 0;
     padding: 14px 16px;
@@ -4767,10 +4696,7 @@ def render_html(ctx: dict) -> str:
     border-radius: 0;
   }}
 
-  /* ── 宏观·多空策略（表头 · 长期 · 连4日 MA60 叠加） ── */
-  .macro-bias-wrap {{
-    margin-top: 0; padding-top: 0; padding-bottom: 0;
-  }}
+  /* ── 宏观·多空策略（表头 · 连4日 MA60 叠加） ── */
   .macro-bias-chart {{
     position: relative;
     height: 132px; /* 与近30日成交金额等同高 */
@@ -4779,10 +4705,10 @@ def render_html(ctx: dict) -> str:
     gap: 1px;
     margin-top: 0;
   }}
-  .macro-bias-wrap .vol20-axis {{ gap: 1px; }}
+  .macro-bias-wrap .vol20-axis {{ gap: 1px; margin-top: 6px; }}
   .macro-bias-zero {{
     position: absolute; left: 0; right: 0; top: 50%;
-    height: 1px; background: var(--border); pointer-events: none; z-index: 1;
+    height: 1px; background: rgba(0,0,0,.10); pointer-events: none; z-index: 1;
   }}
   .macro-bias-col {{
     flex: 1 1 0; min-width: 0; position: relative;
@@ -4949,27 +4875,15 @@ def render_html(ctx: dict) -> str:
       margin-bottom: 8px; padding: 12px;
       box-shadow: none;
     }}
-    .hero-mast {{ gap: 6px; }}
     .hero-home {{ width: 38px; height: 38px; border-radius: 11px; }}
     .hero-home svg {{ width: 20px; height: 20px; }}
     .hero h1 {{ font-size: 24px; }}
     .hero-meta {{ font-size: 14px; }}
-    .hero-tag {{ font-size: 13px; }}
-    .hero-status {{ font-size: 12px; }}
-    .hero-decision {{ width: 100%; text-align: left; min-width: 0; }}
-    .hero-mode {{ font-size: 22px; }}
-    .hero-summary {{ font-size: 14px; font-weight: 400; }}
-    .hero-macro .macro-bias-wrap {{
-      padding: 12px 12px 10px;
-      border-radius: 11px;
+    .macro-bias-wrap > .vol20-head .vol20-title {{ font-size: 16px; }}
+    .macro-bias-wrap > .vol-mkt-sum-wrap {{ margin-bottom: 10px; }}
+    .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
+      padding: 12px 12px; font-size: 15px;
     }}
-    .hero-macro .macro-bias-kicker {{ font-size: 12px; }}
-    .hero-macro .macro-bias-wrap > .vol20-head .vol20-title {{ font-size: 16px; }}
-    .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap {{ margin-bottom: 10px; }}
-    .hero-macro .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
-      padding: 12px 12px; font-size: 15px; border-radius: 8px;
-    }}
-    .hero-macro .macro-bias-panel {{ padding: 8px 8px 6px; border-radius: 9px; }}
     .mkt-env-pills {{ margin-bottom: 12px; gap: 6px; }}
     .mkt-env-pills .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
@@ -5088,24 +5002,20 @@ def render_html(ctx: dict) -> str:
 <div class="page">
 
   <header class="hero">
-    <div class="hero-top">
-      <div class="hero-mast">
-        <div class="hero-title-row">
-          <h1>复盘报告 · {ctx['title_date']}</h1>
-          <a class="hero-home" href="https://mcxdcyy.github.io/market-report/" aria-label="返回首页" title="首页">
-            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 10.5 12 3l9 7.5"/>
-              <path d="M5.5 9.5V21h13V9.5"/>
-              <path d="M9.5 21v-6.5h5V21"/>
-            </svg>
-          </a>
-        </div>
-        <div class="hero-meta">
-          数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
-        </div>
-      </div>
+    <div class="hero-title-row">
+      <h1>复盘报告 · {ctx['title_date']}</h1>
+      <a class="hero-home" href="https://mcxdcyy.github.io/market-report/" aria-label="返回首页" title="首页">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10.5 12 3l9 7.5"/>
+          <path d="M5.5 9.5V21h13V9.5"/>
+          <path d="M9.5 21v-6.5h5V21"/>
+        </svg>
+      </a>
     </div>
-    {f'<div class="hero-macro" aria-label="长期·宏观多空策略">{macro_bias_html}</div>' if macro_bias_html else ''}
+    <div class="hero-meta">
+      数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
+    </div>
+    {macro_bias_html}
   </header>
 
   <!-- 1 大盘环境（顶栏指数/量能 pill；2026-10-29 已删追高） -->
@@ -5737,7 +5647,7 @@ def _render_macro_bias_one(
 ) -> str:
     """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。
 
-    表头分层：长期标签 → 标题 → 周期结论条（图上方）→ 图表面板。
+    表头扁平：标题 → 周期结论条（图上方）→ 柱图（无「长期」kicker、无内层卡片外框）。
     """
     if not series:
         return ""
@@ -5777,25 +5687,22 @@ def _render_macro_bias_one(
         f'<span class="{today_cls}">{today:+d}</span>' if today_cls else f"{today:+d}"
     )
     cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
-    return f'''<div class="macro-bias-wrap">
-  <div class="macro-bias-kicker">长期</div>
+    return f'''<div class="macro-bias-wrap" aria-label="宏观·多空策略">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
   </div>
   {cycle_html}
-  <div class="macro-bias-panel">
-    <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
-      <div class="macro-bias-zero"></div>
-      {''.join(cols)}
-    </div>
-    <div class="vol20-axis">{''.join(ticks)}</div>
+  <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
+    <div class="macro-bias-zero"></div>
+    {''.join(cols)}
   </div>
+  <div class="vol20-axis">{''.join(ticks)}</div>
 </div>'''
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """表头长期区：仅近200日宏观·多空策略（已删近120日对比图）+ 图上周期结论条。"""
+    """表头：近200日宏观·多空策略（已删近120日对比图）+ 图上周期结论条；无分层外框。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
