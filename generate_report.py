@@ -63,6 +63,11 @@ try:
     from index_ma60_macro import load_macro_bias
 except ImportError:  # pragma: no cover
     load_macro_bias = None  # type: ignore
+
+try:
+    from style_ls_spread import load_style_ls_spread
+except ImportError:  # pragma: no cover
+    load_style_ls_spread = None  # type: ignore
 WEEKDAY = "一二三四五六日"
 TZ_CN = timezone(timedelta(hours=8))
 WSCN_CAL_URL = "https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas"
@@ -5372,15 +5377,141 @@ def render_trend_strength_html(block: dict) -> str:
     {"".join(hbars)}
   </div>'''
 
+    style_html = _render_style_ls_chart(block.get("style_ls") or {})
+
     note_html = (
         '<div class="ts-note">'
         "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
         "3日内创20日新高，五日线向上，非跌停。"
         "</div>"
     )
-    # 页内：强趋势占比（近120日）→ 结构占比 → 脚注
+    # 页内：强趋势占比（近120日）→ 结构占比 → 大小盘相对强弱（试看）→ 脚注
     # 2026-10-29：已删「强趋势-成交额结构」；百日新高在模板本模块最前
-    return f"{count_chart}{chart}{note_html}"
+    return f"{count_chart}{chart}{style_html}{note_html}"
+
+
+def _render_style_ls_chart(block: dict) -> str:
+    """大小盘相对强弱（试看）：R=中证1000近5日%−沪深300近5日%；零轴=0；近120日。"""
+    series = block.get("series") or []
+    vals = [float(x["value"]) for x in series if x.get("value") is not None]
+    if not vals:
+        return ""
+
+    base = 0.0
+    abs_deltas = [abs(v - base) for v in vals]
+    scale = _chase_robust_scale(abs_deltas, pct=0.90)
+    if scale < 1e-9:
+        scale = 1.0
+    scale *= 1.08
+
+    n_bars = len(series)
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+    if n_bars >= 60:
+        tick_idxs.add(n_bars // 2)
+
+    cols: list[str] = []
+    ticks: list[str] = []
+    for i, row in enumerate(series):
+        raw = row.get("value")
+        ds = str(row.get("date") or "")
+        try:
+            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
+            lab = fmt_md(dt)
+            wd = WEEKDAY[dt.weekday()]
+        except ValueError:
+            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
+            wd = ""
+        is_latest = i == n_bars - 1
+        if raw is None:
+            cols.append(
+                f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{lab} 无样本">
+      <div class="vol120z-track"><div class="vol120z-zero" title="零轴 0"></div></div>
+    </div>'''
+            )
+        else:
+            v = float(raw)
+            delta = v - base
+            h = min(50.0, abs(delta) / scale * 50.0)
+            side = "pos" if delta >= 0 else "neg"
+            tip_clip = " · 柱高已封顶" if abs(delta) > scale else ""
+            r_l = row.get("large_ret")
+            r_s = row.get("small_ret")
+            tip_parts = f"{lab} 周{wd} · R {v:+.2f}%"
+            if r_s is not None and r_l is not None:
+                tip_parts += f"（小{float(r_s):+.2f}% − 大{float(r_l):+.2f}%）"
+            tip_parts += tip_clip
+            cols.append(
+                f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{tip_parts}">
+      <div class="vol120z-track"><div class="vol120z-zero" title="零轴 0"></div><div class="vol120z-bar {side}" style="height:{h:.1f}%"></div></div>
+    </div>'''
+            )
+        ticks.append(
+            f'<div class="vol20-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'{"<span>" + lab + "</span>" if i in tick_idxs else ""}</div>'
+        )
+
+    last = next((x for x in reversed(series) if x.get("value") is not None), None)
+    today_v = float(last["value"]) if last is not None else None
+    today_txt = f"今日 {today_v:+.1f}%" if today_v is not None else "今日 —"
+    today_span = _meta_today_vs_mean_span(
+        today_v, 0.0, today_txt, round_digits=1
+    )
+    meta = f"近5日 · 横轴 0 · {today_span}"
+
+    tags: list[str] = []
+    if today_v is not None:
+        if today_v > 0.05:
+            tags.append('<span class="pill ok">小盘相对强</span>')
+        elif today_v < -0.05:
+            tags.append('<span class="pill bad">大盘相对强</span>')
+        else:
+            tags.append('<span class="pill warn">大小盘接近</span>')
+    tags_html = (
+        f'<div class="chart-tags">{"".join(tags)}</div>' if tags else ""
+    )
+    note = (
+        '<div class="ts-note" style="margin-top:0">'
+        "大小盘相对强弱（试看）：R = 中证1000近5日涨跌% − 沪深300近5日涨跌%；"
+        "上红=小盘相对强，下绿=大盘相对强；零轴=0。"
+        "</div>"
+    )
+
+    return f'''<div class="vol20-wrap vol120 mean-zero">
+    <div class="vol20-head">
+      <span class="vol20-title">大小盘相对强弱</span>
+      <span class="vol20-meta">{meta}</span>
+    </div>
+    <div class="vol20-chart">
+      <div class="vol120z-bars">{"".join(cols)}</div>
+      <div class="vol20-axis">{"".join(ticks)}</div>
+    </div>
+    {tags_html}
+  </div>{note}'''
+
+
+def load_style_ls_block(
+    as_of: datetime,
+    latest_dt: datetime | None = None,
+) -> dict:
+    """趋势强度内「大小盘相对强弱」试看图：最新交易日重算；历史日读缓存。"""
+    as_of_d = as_of.date() if hasattr(as_of, "date") else as_of
+    latest_d = None
+    if latest_dt is not None:
+        latest_d = latest_dt.date() if hasattr(latest_dt, "date") else latest_dt
+    if load_style_ls_spread is None:
+        return {"as_of": as_of_d.isoformat(), "series": []}
+    try:
+        return load_style_ls_spread(
+            as_of_d,
+            latest=latest_d or as_of_d,
+            force=False,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"[style-ls] 加载失败: {exc}")
+        return {"as_of": as_of_d.isoformat(), "series": [], "error": str(exc)}
 
 
 def load_macro_bias_block(
@@ -6392,6 +6523,9 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     except Exception:  # noqa: BLE001
         latest_dt = dt
     trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
+    style_ls = load_style_ls_block(dt, latest_dt=latest_dt)
+    if isinstance(trend_strength, dict):
+        trend_strength["style_ls"] = style_ls
     chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
     index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
     macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
