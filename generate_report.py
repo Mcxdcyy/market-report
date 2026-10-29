@@ -5268,7 +5268,14 @@ def _render_ts_count_bars_html(
 
 
 def render_trend_strength_html(block: dict) -> str:
-    items = block.get("items") or []
+    items_all = block.get("items") or []
+    if not items_all:
+        note = block.get("note") or "暂无趋势强度数据"
+        return f'<div class="news-empty">{note}</div>'
+
+    # 结构占比页面只展示：全场 / 主板 / 创业板 / 科创板（已删北交所、ST）
+    _TS_STRUCT_HIDE = frozenset({"bj", "st"})
+    items = [it for it in items_all if (it.get("key") or "") not in _TS_STRUCT_HIDE]
     if not items:
         note = block.get("note") or "暂无趋势强度数据"
         return f'<div class="news-empty">{note}</div>'
