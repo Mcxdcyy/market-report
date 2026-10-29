@@ -4751,6 +4751,10 @@ def render_html(ctx: dict) -> str:
     background: #e8f5e9; color: #2e7d32; font-weight: 700;
     border-radius: 6px;
   }}
+  .idx-outlook-table td.pending {{
+    background: #fff3e0; color: #ef6c00; font-weight: 700;
+    border-radius: 6px;
+  }}
   .idx-outlook-table td.flat {{
     color: var(--muted); font-weight: 500;
   }}
@@ -5464,7 +5468,7 @@ def load_index_downtrend_block(
 
 
 def _index_day_down_flags(items: list, day: str) -> list[bool]:
-    """某日各指数是否处于下跌通道（与表内单元格同口径）。"""
+    """某日各指数是否处于风险态（与表内同口径：下跌 / 待确认 均算）。"""
     flags: list[bool] = []
     for it in items:
         series = {
@@ -5474,10 +5478,11 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
         }
         cell = series.get(day) or {}
         status = cell.get("status") or ""
-        label = cell.get("label")
+        label = str(cell.get("label") or "")
         down = (
-            status == "down"
-            or label == "下跌通道"
+            cell.get("risk_on") is True
+            or status in ("down", "pending")
+            or label in ("下跌", "待确认", "下跌通道")
             or cell.get("downtrend") is True
         )
         flags.append(bool(down))
@@ -5499,7 +5504,7 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     if idx_sum == "指数正常，市场正常。":
         pills.append(("ok", "指数正常"))
     elif "全场极弱" in idx_sum:
-        pills.append(("bad", "指数下跌通道"))
+        pills.append(("bad", "指数全下跌"))
     elif idx_sum == "指数风险：可能全盘走弱。":
         pills.append(("warn", "指数风险-可能走弱"))
     elif idx_sum == "部分指数走出下跌：市场可能好转。":
@@ -5530,14 +5535,13 @@ def _mkt_env_pills_html(ctx: dict) -> str:
 
 
 def _index_outlook_sum_text(block: dict) -> str:
-    """指数大局观表下结论条（固定文案，命中一条）：
+    """短期指数趋势表下结论条（按日线 B 合成；固定文案，命中一条）：
 
     - 全「-」→「指数正常，市场正常。」
-    - 全下跌通道→「指数风险：全场极弱，等指数走出"下跌"。」
-    - 全「-」转部分下跌通道→「指数风险：可能全盘走弱。」
-    - 全下跌通道转部分「-」→「部分指数走出下跌：市场可能好转。」
-    - 连续部分（当日与前一日均为部分）→
-      「部分指数走出下跌：市场可能转好，也可能再转差。」
+    - 全下跌（含待确认）→「指数风险：全场极弱，等指数走出"下跌"。」
+    - 全「-」转部分→「指数风险：可能全盘走弱。」
+    - 全下跌转部分「-」→「部分指数走出下跌：市场可能好转。」
+    - 连续部分→「部分指数走出下跌：市场可能转好，也可能再转差。」
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
@@ -5650,23 +5654,21 @@ def render_macro_bias_html(block: dict) -> str:
 
 
 def render_index_outlook_html(block: dict) -> str:
-    """大盘环境：指数趋势（原名指数大局观）· 近10个交易日下跌通道对比表。
+    """大盘·风险指针：短期指数趋势 · 近10日对比表。
 
-    竖轴=日期（上旧下新），横轴=指数；下跌通道绿底，非下跌填「-」。
-    表下结论条样式同 `.vol-mkt-sum`。
+    主口径=日线 B：下跌 / 待确认 / -；表下结论按 B 合成。
+    仅当 B 全- 且 60 分钟 A 已部分/全下跌时，结论条前加前置预警 tip。
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
     if not items or not days:
         return ""
 
-    # 表头：日期 | 上证 | 深成指 | …
     head_cells = ['<th class="idx-corner">日期</th>']
     for it in items:
         name = it.get("name") or "—"
         head_cells.append(f"<th>{name}</th>")
 
-    # 按指数建 date → cell
     series_maps: list[dict[str, dict]] = []
     for it in items:
         series = it.get("series") or []
@@ -5682,18 +5684,33 @@ def render_index_outlook_html(block: dict) -> str:
         tds = [f'<th scope="row"{row_cls}>{md}</th>']
         for smap in series_maps:
             cell = smap.get(d) or {}
-            status = cell.get("status") or ""
+            status = str(cell.get("status") or "")
             label = cell.get("label")
             if label is None:
-                label = "下跌通道" if status == "down" else "-"
-            if status == "down" or label == "下跌通道":
-                tds.append('<td class="down">下跌通道</td>')
+                if status == "pending":
+                    label = "待确认"
+                elif status == "down":
+                    label = "下跌"
+                else:
+                    label = "-"
+            label = str(label)
+            if status == "pending" or label == "待确认":
+                tds.append('<td class="pending">待确认</td>')
+            elif status == "down" or label in ("下跌", "下跌通道"):
+                tds.append('<td class="down">下跌</td>')
             else:
                 tds.append('<td class="flat">-</td>')
         body_rows.append(f"<tr{row_cls}>{''.join(tds)}</tr>")
 
     d0 = days[0][5:].replace("-", "/") if days else ""
     d1 = days[-1][5:].replace("-", "/") if days else ""
+    warn_html = ""
+    if block.get("early_warn"):
+        warn_txt = (
+            block.get("early_warn_text")
+            or "前置预警：60分钟已有指数转弱，日线下跌趋势尚未确认。"
+        )
+        warn_html = _module_sum_html(warn_txt, tone="tip")
     sum_html = _module_sum_html(_index_outlook_sum_text(block))
     return (
         '<div class="idx-outlook-wrap">'
@@ -5707,6 +5724,7 @@ def render_index_outlook_html(block: dict) -> str:
         f'<tbody>{"".join(body_rows)}</tbody>'
         "</table>"
         "</div>"
+        f"{warn_html}"
         f"{sum_html}"
         "</div>"
     )

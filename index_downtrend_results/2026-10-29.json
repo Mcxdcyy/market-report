@@ -1,5 +1,5 @@
 {
-  "schema": 3,
+  "schema": 4,
   "as_of": "2026-10-29",
   "series_days": 10,
   "days": [
@@ -14,91 +14,126 @@
     "2026-10-28",
     "2026-10-29"
   ],
-  "note": "下跌通道（与自选池下跌预警同口径）：60分钟K线；连续5根收盘价在MA10下方，或连续5根最高价在MA20下方（任一即下跌通道）；算不出MA20时只看第1条。页面：近10个交易日对比，非下跌填「-」。",
-  "fetched": "2026-10-29 17:53:18",
+  "primary": "daily_b",
+  "note": "主口径为日线下跌趋势（连续3日收盘<MA5且创3日低开灯；收盘>MA5为待确认，次日仍>MA5结束）。60分钟下跌通道仅在日线仍全非下跌时作前置预警。",
+  "b_regime": "全下跌",
+  "a_regime": "全-",
+  "early_warn": false,
+  "early_warn_text": "",
+  "fetched": "2026-10-30 00:47:17",
   "indices": [
     {
       "name": "上证指数",
       "symbol": "sh000001",
-      "label": "-",
-      "pill": "ok",
-      "downtrend": false,
-      "status": "ok",
-      "rule1_close_below_ma10": false,
-      "rule2_high_below_ma20": false,
-      "bars": 200,
+      "label": "下跌",
+      "status": "down",
+      "risk_on": true,
+      "downtrend": true,
+      "pill": "bad",
+      "a_downtrend": false,
+      "a_status": "ok",
       "last_bar": "2026-10-29 15:00:00",
       "last_close": 3651.434,
       "series": [
         {
           "date": "2026-10-16",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 3716.284
+          "close": 3716.28,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-19",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 3730.92
+          "close": 3730.92,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-20",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 3735.37
+          "status": "pending",
+          "label": "待确认",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 3735.37,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-21",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 3713.028
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 3713.03,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-22",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 3658.026
+          "close": 3658.03,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-23",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 3690.475
+          "close": 3690.48,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-26",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 3697.52
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 3697.52,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-27",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 3648.301
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 3648.3,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-28",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 3681.469
+          "status": "pending",
+          "label": "待确认",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 3681.47,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-29",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 3651.434
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 3651.43,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
@@ -106,85 +141,115 @@
     {
       "name": "深成指",
       "symbol": "sz399001",
-      "label": "-",
-      "pill": "ok",
-      "downtrend": false,
-      "status": "ok",
-      "rule1_close_below_ma10": false,
-      "rule2_high_below_ma20": false,
-      "bars": 200,
+      "label": "下跌",
+      "status": "down",
+      "risk_on": true,
+      "downtrend": true,
+      "pill": "bad",
+      "a_downtrend": false,
+      "a_status": "ok",
       "last_bar": "2026-10-29 15:00:00",
       "last_close": 11138.198,
       "series": [
         {
           "date": "2026-10-16",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 11802.459
+          "close": 11802.46,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-19",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 11817.423
+          "close": 11817.42,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-20",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 11801.29
+          "close": 11801.29,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-21",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 11704.353
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 11704.35,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-22",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 11357.32
+          "close": 11357.32,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-23",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 11673.826
+          "status": "pending",
+          "label": "待确认",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 11673.83,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-26",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 11534.378
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 11534.38,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-27",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 11245.732
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 11245.73,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-28",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 11473.18
+          "status": "pending",
+          "label": "待确认",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 11473.18,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-29",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 11138.198
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 11138.2,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
@@ -192,85 +257,115 @@
     {
       "name": "创业板指数",
       "symbol": "sz399006",
-      "label": "-",
-      "pill": "ok",
-      "downtrend": false,
-      "status": "ok",
-      "rule1_close_below_ma10": false,
-      "rule2_high_below_ma20": false,
-      "bars": 200,
+      "label": "下跌",
+      "status": "down",
+      "risk_on": true,
+      "downtrend": true,
+      "pill": "bad",
+      "a_downtrend": false,
+      "a_status": "ok",
       "last_bar": "2026-10-29 15:00:00",
       "last_close": 2517.588,
       "series": [
         {
           "date": "2026-10-16",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 2772.384
+          "close": 2772.38,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-19",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 2746.291
+          "close": 2746.29,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-20",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 2739.203
+          "close": 2739.2,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-21",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 2694.713
+          "close": 2694.71,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-22",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 2576.901
+          "close": 2576.9,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-23",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 2684.097
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 2684.1,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-26",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 2638.231
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 2638.23,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-27",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 2548.149
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 2548.15,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-28",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 2634.76
+          "status": "pending",
+          "label": "待确认",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 2634.76,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-29",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 2517.588
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 2517.59,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
@@ -278,85 +373,115 @@
     {
       "name": "科创综指",
       "symbol": "sh000680",
-      "label": "-",
-      "pill": "ok",
-      "downtrend": false,
-      "status": "ok",
-      "rule1_close_below_ma10": false,
-      "rule2_high_below_ma20": false,
-      "bars": 200,
+      "label": "下跌",
+      "status": "down",
+      "risk_on": true,
+      "downtrend": true,
+      "pill": "bad",
+      "a_downtrend": false,
+      "a_status": "ok",
       "last_bar": "2026-10-29 15:00:00",
       "last_close": 1490.788,
       "series": [
         {
           "date": "2026-10-16",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 1584.04
+          "close": 1584.04,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-19",
           "status": "down",
-          "label": "下跌通道",
+          "label": "下跌",
+          "risk_on": true,
           "downtrend": true,
-          "last_close": 1570.402
+          "close": 1570.4,
+          "a_downtrend": true,
+          "a_status": "down"
         },
         {
           "date": "2026-10-20",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 1603.89
+          "status": "pending",
+          "label": "待确认",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 1603.89,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-21",
           "status": "ok",
           "label": "-",
+          "risk_on": false,
           "downtrend": false,
-          "last_close": 1602.617
+          "close": 1602.62,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-22",
           "status": "ok",
           "label": "-",
+          "risk_on": false,
           "downtrend": false,
-          "last_close": 1549.488
+          "close": 1549.49,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-23",
           "status": "ok",
           "label": "-",
+          "risk_on": false,
           "downtrend": false,
-          "last_close": 1606.481
+          "close": 1606.48,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-26",
           "status": "ok",
           "label": "-",
+          "risk_on": false,
           "downtrend": false,
-          "last_close": 1573.833
+          "close": 1573.83,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-27",
           "status": "ok",
           "label": "-",
+          "risk_on": false,
           "downtrend": false,
-          "last_close": 1511.949
+          "close": 1511.95,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-28",
           "status": "ok",
           "label": "-",
+          "risk_on": false,
           "downtrend": false,
-          "last_close": 1560.376
+          "close": 1560.38,
+          "a_downtrend": false,
+          "a_status": "ok"
         },
         {
           "date": "2026-10-29",
-          "status": "ok",
-          "label": "-",
-          "downtrend": false,
-          "last_close": 1490.788
+          "status": "down",
+          "label": "下跌",
+          "risk_on": true,
+          "downtrend": true,
+          "close": 1490.79,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
