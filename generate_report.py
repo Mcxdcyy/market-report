@@ -5709,22 +5709,21 @@ def _hero_short_pills(ctx: dict) -> list[tuple[str, str]]:
     chase = ctx.get("chase_sentiment") or {}
     groups = chase.get("groups") or {}
     if groups:
-        # 3) 追高活跃度：近5日原始家数均值 vs 近200日均值
+        # 3) 追高活跃度：试看单日原始家数 vs 近200日均值（原近5日均）
         act_ser, act_base = _merge_chase_count_series(groups)
         if act_base is not None and act_ser:
-            last5: list[float] = []
+            last_n: float | None = None
             for row in reversed(act_ser):
                 raw_n = row.get("n_raw")
                 if raw_n is None:
                     continue
                 try:
-                    last5.append(float(raw_n))
+                    last_n = float(raw_n)
                 except (TypeError, ValueError):
                     continue
-                if len(last5) >= 5:
-                    break
-            if len(last5) >= 5:
-                if (sum(last5) / 5.0) >= float(act_base):
+                break
+            if last_n is not None:
+                if last_n >= float(act_base):
                     pills.append(("ok", "追高-活跃周期"))
                 else:
                     pills.append(("bad", "追高-不活跃周期"))
@@ -6025,10 +6024,9 @@ def _render_chase_count_chart(
     *,
     baseline: float | None = None,
 ) -> str:
-    """追高活跃度柱图：柱高为近5日合计家数均值；以近200日均值为零轴（均值上红 / 均值下绿）。
+    """追高活跃度柱图：柱高为**单日**合计原始家数（试看；原近5日均值）；零轴=近200日均值。
 
-    图下方标签与柱高同口径：近5日**当日原始家数**均值 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」
-    （用近五日原始日值，不是五个近5日均值柱高再平均）。
+    图下方标签与柱高同口径：当日原始家数 ≥ 近200日均值 →「活跃周期」；否则「不活跃周期」。
     纵轴按 |偏离均值| 的约 90 分位定尺，极端日柱高封顶，避免压扁其余交易日。
     """
     vals = [float(x["value"]) for x in series if x.get("value") is not None]
@@ -6110,10 +6108,8 @@ def _render_chase_count_chart(
             tip_clip = ""
             if baseline is not None and abs(v - base) > scale:
                 tip_clip = " · 柱高已封顶"
-            n_today = row.get("n_raw")
-            tip_today = f" · 当日{int(n_today)}家" if n_today is not None else ""
             cols.append(
-                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · 近5日均{val_lab}家{tip_today}{tip_mean}{tip_clip}">
+                f'''<div class="chase-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {val_lab}家{tip_mean}{tip_clip}">
       <div class="chase-val{" " + tag if tag else ""}">{val_lab}</div>
       <div class="chase-track"><div class="chase-zero"{axis_title}></div>{bar}</div>
     </div>'''
@@ -6131,35 +6127,30 @@ def _render_chase_count_chart(
         latest_lab = f"{int(today_n)} 家"
     else:
         latest_lab = "—"
-    meta_txt = "5日均值"
     if baseline is not None:
         mean_n = float(int(round(base)))
-        meta_txt += f" · 横轴 {int(mean_n)} 家"
         today_span = _meta_today_vs_mean_span(
             today_n, mean_n, f"今日 {latest_lab}", round_digits=0
         )
-        meta_txt += f" · {today_span}"
+        meta_txt = f"横轴 {int(mean_n)} 家 · {today_span}"
     else:
-        meta_txt += f" · 今日 {latest_lab}"
+        meta_txt = f"今日 {latest_lab}"
 
-    # 近5日**当日原始家数**均值 vs 近200日均值 → 活跃周期 / 不活跃周期
-    # （与柱高同口径：柱高亦为近5日原始均值；「今日」meta 仍为当日原始）
+    # 单日原始家数 vs 近200日均值 → 活跃周期 / 不活跃周期（与柱高同口径）
     act_tags_html = ""
     if baseline is not None:
-        last5: list[float] = []
+        last_n: float | None = None
         for row in reversed(series):
             raw_n = row.get("n_raw")
             if raw_n is None:
                 continue
             try:
-                last5.append(float(raw_n))
+                last_n = float(raw_n)
             except (TypeError, ValueError):
                 continue
-            if len(last5) >= 5:
-                break
-        if len(last5) >= 5:
-            m5 = sum(last5) / 5.0
-            if m5 >= float(baseline):
+            break
+        if last_n is not None:
+            if last_n >= float(baseline):
                 pill = '<span class="pill ok">活跃周期</span>'
                 sum_html = _module_sum_html(
                     "追高活跃：积极做多。——多锁仓。"
@@ -6187,11 +6178,11 @@ def _render_chase_count_chart(
 def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
     """主板+创板追高数量按日相加 → 追高活跃度序列与近200日均值。
 
-    柱高 value = 近**5**日合计原始家数均值（含当日，不足5日按已有日数平均）；
+    柱高 value = **单日**合计原始家数（试看；原近5日均值）；
     n_raw = 当日合计原始家数。
     近200日均值仍按**当日原始家数**（与活跃周期标签口径一致）。
     """
-    bar_days = 5
+    bar_days = 1
     main_m = ((groups.get("main") or {}).get("metrics") or {}).get("count") or {}
     cyb_m = ((groups.get("cyb") or {}).get("metrics") or {}).get("count") or {}
     main_ser = main_m.get("series") or []
@@ -6228,7 +6219,7 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
         n = int(row.get("n") or 0) + int(other.get("n") or 0)
         merged.append({"date": ds, "n": n, "n_raw": n_raw})
 
-    # 柱高：近5日原始家数均值（含当日，不足按已有日数平均）
+    # 柱高：单日原始家数（bar_days=1；改回多日均时改 bar_days）
     out: list[dict] = []
     for i, row in enumerate(merged):
         window: list[float] = []
@@ -6240,7 +6231,12 @@ def _merge_chase_count_series(groups: dict) -> tuple[list[dict], float | None]:
             if raw is None:
                 continue
             window.append(float(raw))
-        val = round(sum(window) / len(window), 1) if window else None
+        if not window:
+            val = None
+        elif bar_days == 1:
+            val = float(window[0])
+        else:
+            val = round(sum(window) / len(window), 1)
         out.append(
             {
                 "date": row["date"],
