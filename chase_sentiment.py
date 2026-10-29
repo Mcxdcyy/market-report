@@ -8,7 +8,7 @@
    柱色相对合计近 **200** 个交易日均值（均值上红 / 均值下绿）
 1. 昨追-赚钱效应（后台仍算，页面已不展示）：主板+创板池按家数加权合并；取**前一交易日**追高池，
    算当日 (今高−昨高)/昨收 均值；横轴近 **120** 日；近200日均值零轴
-2. 昨追-今日承接：同上加权合并；(今收−昨高)/昨高；近 **120** 日
+2. 昨追-今日承接：同上加权合并；(今收−昨开)/昨开；近 **120** 日
 3. 今追-回落指数：同上加权合并；取**当日**追高池 (今收−今高)/今高；近 **120** 日
 4. 低吸赚钱效应（后台仍算，页面已不展示）：全场池；取**前一交易日**同时满足振幅>8% 且 (最高−开盘)/开盘>5%；
    算当日 (今开−昨开)/昨开 池内均值；近 **120** 日；近200日均值零轴
@@ -37,7 +37,7 @@ MEAN_DAYS = 200  # 效应/数量着色基准：近200日均值
 SERIES_DAYS = max(COUNT_DAYS, EFFECT_DAYS, MEAN_DAYS)
 CHASE_PCT = 0.07  # 日内最高相对昨收冲高 ≥7%
 MIN_BARS = 3  # 至少需要 i>=2 才能判定昨追（需昨收相对前日）
-SCHEMA = 18  # 删除低吸锁仓收益T+2
+SCHEMA = 19  # 昨追-今日承接：(今收−昨开)/昨开（原昨高）
 DIP_AMP_PCT = 0.08  # 当日振幅 > 8%
 DIP_OPEN_HIGH_PCT = 0.05  # (最高−开盘)/开盘 > 5%
 
@@ -119,7 +119,7 @@ def _day_metric_means(
         "main": {"money": [], "loss": [], "pullback": []},
         "cyb": {"money": [], "loss": [], "pullback": []},
     }
-    for s, idx, closes, highs, lows, _opens in series:
+    for s, idx, closes, highs, lows, opens in series:
         g = _group_of(s["bucket"])
         if g is None:
             continue
@@ -139,10 +139,11 @@ def _day_metric_means(
         name = str(s.get("name") or "")
         prev_c = closes[i - 1]
         prev_h = highs[i - 1]
+        prev_o = opens[i - 1]
         cur_h = highs[i]
         cur_c = closes[i]
         cur_l = lows[i]
-        if prev_c <= 0 or prev_h <= 0 or cur_h <= 0:
+        if prev_c <= 0 or prev_h <= 0 or prev_o <= 0 or cur_h <= 0:
             continue
 
         # 昨追池：前一交易日追高且非一字涨停 → 今日赚钱 / 承接
@@ -151,7 +152,7 @@ def _day_metric_means(
             yday_low = lows[i - 1]
             if not _is_one_word_limit_up(code, name, yday_prev_c, yday_low):
                 money = (cur_h - prev_h) / prev_c
-                loss = (cur_c - prev_h) / prev_h
+                loss = (cur_c - prev_o) / prev_o
                 acc[g]["money"].append(money)
                 acc[g]["loss"].append(loss)
 

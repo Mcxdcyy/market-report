@@ -5988,7 +5988,7 @@ def load_chase_sentiment_block(
             if (
                 cached.get("as_of") == as_of_d.isoformat()
                 and cached.get("groups")
-                and int(cached.get("schema") or 0) >= 18
+                and int(cached.get("schema") or 0) >= 19
                 and int(cached.get("effect_days") or 0) >= 120
                 and pb.get("mean_200d") is not None
                 and money.get("mean_200d") is not None
