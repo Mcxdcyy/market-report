@@ -3880,19 +3880,14 @@ def render_html(ctx: dict) -> str:
   .hero-home svg {{ width: 18px; height: 18px; display: block; }}
   .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 4px; }}
   /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框） */
+  /* 与近30日成交金额 .vol20-wrap 同系：column + gap 10 */
   .macro-bias-wrap {{
     margin-top: 14px; padding-top: 14px; padding-bottom: 0;
     border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
   }}
   .macro-bias-wrap > .vol20-head {{
-    margin-bottom: 10px;
-  }}
-  /* 图下：做多/做空周期标签 → 周期结论条（2026-10-29） */
-  .macro-bias-wrap > .chart-tags {{
-    margin-top: 10px;
-  }}
-  .macro-bias-wrap > .vol-mkt-sum-wrap {{
-    margin-top: 0;
+    margin-bottom: 0;
   }}
   .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
     font-weight: 600;
@@ -4508,6 +4503,7 @@ def render_html(ctx: dict) -> str:
   }}
   /* 父级 flex/grid 的 gap 会叠在 margin 上，补齐到合计 14px（上文→上分隔线） */
   .vol20-wrap > .vol-mkt-sum-wrap,
+  .macro-bias-wrap > .vol-mkt-sum-wrap,
   .ts-cnt-wrap > .vol-mkt-sum-wrap,
   .chase-chart > .vol-mkt-sum-wrap {{
     margin-top: 4px; /* + gap 10 → 14 */
@@ -4668,7 +4664,8 @@ def render_html(ctx: dict) -> str:
     gap: 1px;
     margin-top: 0;
   }}
-  .macro-bias-wrap .vol20-axis {{ gap: 1px; margin-top: 6px; }}
+  /* 轴挂在柱图块内，与 .vol20-chart 内轴同尺；外层 gap 管标签间距 */
+  .macro-bias-plot .vol20-axis {{ gap: 1px; margin-top: 6px; }}
   .macro-bias-zero {{
     position: absolute; left: 0; right: 0; top: 50%;
     height: 1px; background: rgba(0,0,0,.10); pointer-events: none; z-index: 1;
@@ -4885,6 +4882,7 @@ def render_html(ctx: dict) -> str:
     .vol20-note {{ font-size: 14px; margin-top: 10px; }}
     .vol-mkt-sum-wrap {{ margin-top: 14px; padding-top: 14px; padding-bottom: 14px; }}
     .vol20-wrap > .vol-mkt-sum-wrap,
+    .macro-bias-wrap > .vol-mkt-sum-wrap,
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
     .idx-outlook-wrap > .vol-mkt-sum-wrap {{ margin-top: 2px; }}
@@ -5607,17 +5605,24 @@ def _render_macro_bias_one(
         f'<span class="{today_cls}">{today:+d}</span>' if today_cls else f"{today:+d}"
     )
     tags_html = _macro_bias_cycle_tags_html(series)
+    # 与近30日成交金额一致：用 vol20-tags 类名
+    if tags_html:
+        tags_html = tags_html.replace(
+            'class="chart-tags"', 'class="chart-tags vol20-tags"', 1
+        )
     cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
     return f'''<div class="macro-bias-wrap" aria-label="宏观·多空策略">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
   </div>
-  <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
-    <div class="macro-bias-zero"></div>
-    {''.join(cols)}
+  <div class="macro-bias-plot">
+    <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
+      <div class="macro-bias-zero"></div>
+      {''.join(cols)}
+    </div>
+    <div class="vol20-axis">{''.join(ticks)}</div>
   </div>
-  <div class="vol20-axis">{''.join(ticks)}</div>
   {tags_html}
   {cycle_html}
 </div>'''
