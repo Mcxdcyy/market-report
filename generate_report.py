@@ -3717,7 +3717,7 @@ def render_html(ctx: dict) -> str:
     )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
     # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）→ 追高活跃度（标签+结论）+ 池定义脚注
-    # 百日新高在趋势强度模块最下方（脚注之后）
+    # 百日新高在趋势强度模块最前面（2026-10-29 由模块末改到最前）
     # 2026-10-29：已删独立模块「资金追高情绪」；追高活跃度并入大盘环境末
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
@@ -5145,8 +5145,8 @@ def render_html(ctx: dict) -> str:
       <div class="section-title">趋势强度</div>
       <div class="section-sub">{ctx['data_date']} · 强趋势个股占比</div>
     </div>
-    {trend_strength_html}
     {xh200_html}
+    {trend_strength_html}
   </div>
 
   <!-- 3 涨停板块 -->
@@ -5590,7 +5590,7 @@ def render_trend_strength_html(block: dict) -> str:
         "</div>"
     )
     # 页内：强趋势占比（近120日）→ 结构占比 → 成交额结构 → 脚注
-    # 强趋势-次日承接已删除（2026-10-11）；百日新高挂在模板本模块末（脚注之后）
+    # 强趋势-次日承接已删除（2026-10-11）；百日新高挂在模板本模块最前（2026-10-29）
     return f"{count_chart}{chart}{amt_chart}{note_html}"
 
 
