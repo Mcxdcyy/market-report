@@ -1,729 +1,729 @@
 {
-  "as_of": "2026-10-29",
-  "start": "2026-05-06",
-  "end": "2026-10-29",
+  "as_of": "2026-10-30",
+  "start": "2026-05-07",
+  "end": "2026-10-30",
   "n_days": 120,
   "daily": [
     {
-      "date": "2026-05-06",
-      "trend": 284,
-      "total": 5467,
-      "ratio": 5.19
-    },
-    {
       "date": "2026-05-07",
-      "trend": 468,
-      "total": 5469,
-      "ratio": 8.56
+      "trend": 205,
+      "total": 2576,
+      "ratio": 7.96
     },
     {
       "date": "2026-05-08",
-      "trend": 553,
-      "total": 5469,
-      "ratio": 10.11
+      "trend": 228,
+      "total": 2577,
+      "ratio": 8.85
     },
     {
       "date": "2026-05-11",
-      "trend": 865,
-      "total": 5468,
-      "ratio": 15.82
+      "trend": 362,
+      "total": 2575,
+      "ratio": 14.06
     },
     {
       "date": "2026-05-12",
-      "trend": 791,
-      "total": 5469,
-      "ratio": 14.46
+      "trend": 376,
+      "total": 2578,
+      "ratio": 14.58
     },
     {
       "date": "2026-05-13",
-      "trend": 802,
-      "total": 5473,
-      "ratio": 14.65
+      "trend": 359,
+      "total": 2579,
+      "ratio": 13.92
     },
     {
       "date": "2026-05-14",
-      "trend": 493,
-      "total": 5473,
-      "ratio": 9.01
+      "trend": 216,
+      "total": 2579,
+      "ratio": 8.38
     },
     {
       "date": "2026-05-15",
-      "trend": 365,
-      "total": 5473,
-      "ratio": 6.67
+      "trend": 167,
+      "total": 2580,
+      "ratio": 6.47
     },
     {
       "date": "2026-05-18",
-      "trend": 272,
-      "total": 5478,
-      "ratio": 4.97
+      "trend": 122,
+      "total": 2583,
+      "ratio": 4.72
     },
     {
       "date": "2026-05-19",
-      "trend": 260,
-      "total": 5473,
-      "ratio": 4.75
+      "trend": 121,
+      "total": 2581,
+      "ratio": 4.69
     },
     {
       "date": "2026-05-20",
-      "trend": 256,
-      "total": 5478,
-      "ratio": 4.67
+      "trend": 127,
+      "total": 2584,
+      "ratio": 4.91
     },
     {
       "date": "2026-05-21",
-      "trend": 126,
-      "total": 5483,
-      "ratio": 2.3
+      "trend": 64,
+      "total": 2584,
+      "ratio": 2.48
     },
     {
       "date": "2026-05-22",
-      "trend": 142,
-      "total": 5483,
-      "ratio": 2.59
+      "trend": 71,
+      "total": 2584,
+      "ratio": 2.75
     },
     {
       "date": "2026-05-25",
-      "trend": 150,
-      "total": 5483,
-      "ratio": 2.74
+      "trend": 77,
+      "total": 2584,
+      "ratio": 2.98
     },
     {
       "date": "2026-05-26",
-      "trend": 144,
-      "total": 5485,
-      "ratio": 2.63
+      "trend": 69,
+      "total": 2585,
+      "ratio": 2.67
     },
     {
       "date": "2026-05-27",
-      "trend": 124,
-      "total": 5486,
-      "ratio": 2.26
+      "trend": 51,
+      "total": 2587,
+      "ratio": 1.97
     },
     {
       "date": "2026-05-28",
-      "trend": 109,
-      "total": 5486,
-      "ratio": 1.99
+      "trend": 51,
+      "total": 2587,
+      "ratio": 1.97
     },
     {
       "date": "2026-05-29",
-      "trend": 97,
-      "total": 5486,
-      "ratio": 1.77
+      "trend": 47,
+      "total": 2588,
+      "ratio": 1.82
     },
     {
       "date": "2026-06-01",
-      "trend": 63,
-      "total": 5485,
-      "ratio": 1.15
+      "trend": 31,
+      "total": 2587,
+      "ratio": 1.2
     },
     {
       "date": "2026-06-02",
-      "trend": 70,
-      "total": 5484,
-      "ratio": 1.28
+      "trend": 37,
+      "total": 2588,
+      "ratio": 1.43
     },
     {
       "date": "2026-06-03",
-      "trend": 69,
-      "total": 5489,
-      "ratio": 1.26
+      "trend": 38,
+      "total": 2589,
+      "ratio": 1.47
     },
     {
       "date": "2026-06-04",
-      "trend": 76,
-      "total": 5489,
-      "ratio": 1.38
+      "trend": 41,
+      "total": 2589,
+      "ratio": 1.58
     },
     {
       "date": "2026-06-05",
-      "trend": 65,
-      "total": 5493,
-      "ratio": 1.18
+      "trend": 32,
+      "total": 2590,
+      "ratio": 1.24
     },
     {
       "date": "2026-06-08",
-      "trend": 40,
-      "total": 5490,
-      "ratio": 0.73
-    },
-    {
-      "date": "2026-06-09",
-      "trend": 49,
-      "total": 5490,
-      "ratio": 0.89
-    },
-    {
-      "date": "2026-06-10",
-      "trend": 42,
-      "total": 5487,
-      "ratio": 0.77
-    },
-    {
-      "date": "2026-06-11",
-      "trend": 51,
-      "total": 5487,
+      "trend": 24,
+      "total": 2588,
       "ratio": 0.93
     },
     {
+      "date": "2026-06-09",
+      "trend": 28,
+      "total": 2588,
+      "ratio": 1.08
+    },
+    {
+      "date": "2026-06-10",
+      "trend": 26,
+      "total": 2587,
+      "ratio": 1.01
+    },
+    {
+      "date": "2026-06-11",
+      "trend": 31,
+      "total": 2589,
+      "ratio": 1.2
+    },
+    {
       "date": "2026-06-12",
-      "trend": 47,
-      "total": 5490,
-      "ratio": 0.86
+      "trend": 26,
+      "total": 2589,
+      "ratio": 1.0
     },
     {
       "date": "2026-06-15",
-      "trend": 70,
-      "total": 5485,
-      "ratio": 1.28
+      "trend": 37,
+      "total": 2585,
+      "ratio": 1.43
     },
     {
       "date": "2026-06-16",
-      "trend": 115,
-      "total": 5490,
-      "ratio": 2.09
+      "trend": 59,
+      "total": 2587,
+      "ratio": 2.28
     },
     {
       "date": "2026-06-17",
-      "trend": 153,
-      "total": 5486,
-      "ratio": 2.79
+      "trend": 86,
+      "total": 2584,
+      "ratio": 3.33
     },
     {
       "date": "2026-06-18",
-      "trend": 215,
-      "total": 5486,
-      "ratio": 3.92
+      "trend": 109,
+      "total": 2586,
+      "ratio": 4.22
     },
     {
       "date": "2026-06-22",
-      "trend": 238,
-      "total": 5489,
-      "ratio": 4.34
+      "trend": 111,
+      "total": 2585,
+      "ratio": 4.29
     },
     {
       "date": "2026-06-23",
-      "trend": 259,
-      "total": 5494,
+      "trend": 122,
+      "total": 2589,
       "ratio": 4.71
     },
     {
       "date": "2026-06-24",
-      "trend": 284,
-      "total": 5494,
-      "ratio": 5.17
+      "trend": 138,
+      "total": 2590,
+      "ratio": 5.33
     },
     {
       "date": "2026-06-25",
-      "trend": 270,
-      "total": 5493,
-      "ratio": 4.92
+      "trend": 133,
+      "total": 2591,
+      "ratio": 5.13
     },
     {
       "date": "2026-06-26",
-      "trend": 202,
-      "total": 5494,
-      "ratio": 3.68
+      "trend": 106,
+      "total": 2592,
+      "ratio": 4.09
     },
     {
       "date": "2026-06-29",
-      "trend": 161,
-      "total": 5490,
-      "ratio": 2.93
+      "trend": 88,
+      "total": 2590,
+      "ratio": 3.4
     },
     {
       "date": "2026-06-30",
-      "trend": 155,
-      "total": 5490,
-      "ratio": 2.82
+      "trend": 85,
+      "total": 2587,
+      "ratio": 3.29
     },
     {
       "date": "2026-07-01",
-      "trend": 175,
-      "total": 5493,
-      "ratio": 3.19
+      "trend": 93,
+      "total": 2592,
+      "ratio": 3.59
     },
     {
       "date": "2026-07-02",
-      "trend": 90,
-      "total": 5497,
-      "ratio": 1.64
+      "trend": 41,
+      "total": 2594,
+      "ratio": 1.58
     },
     {
       "date": "2026-07-03",
-      "trend": 62,
-      "total": 5497,
-      "ratio": 1.13
+      "trend": 27,
+      "total": 2594,
+      "ratio": 1.04
     },
     {
       "date": "2026-07-06",
-      "trend": 98,
-      "total": 5499,
-      "ratio": 1.78
+      "trend": 40,
+      "total": 2595,
+      "ratio": 1.54
     },
     {
       "date": "2026-07-07",
-      "trend": 70,
-      "total": 5499,
-      "ratio": 1.27
+      "trend": 27,
+      "total": 2595,
+      "ratio": 1.04
     },
     {
       "date": "2026-07-08",
-      "trend": 60,
-      "total": 5499,
-      "ratio": 1.09
+      "trend": 24,
+      "total": 2595,
+      "ratio": 0.92
     },
     {
       "date": "2026-07-09",
-      "trend": 47,
-      "total": 5500,
+      "trend": 22,
+      "total": 2596,
       "ratio": 0.85
     },
     {
       "date": "2026-07-10",
-      "trend": 54,
-      "total": 5500,
-      "ratio": 0.98
+      "trend": 27,
+      "total": 2597,
+      "ratio": 1.04
     },
     {
       "date": "2026-07-13",
-      "trend": 40,
-      "total": 5504,
+      "trend": 19,
+      "total": 2601,
       "ratio": 0.73
     },
     {
       "date": "2026-07-14",
-      "trend": 48,
-      "total": 5506,
-      "ratio": 0.87
+      "trend": 28,
+      "total": 2602,
+      "ratio": 1.08
     },
     {
       "date": "2026-07-15",
-      "trend": 64,
-      "total": 5507,
-      "ratio": 1.16
+      "trend": 40,
+      "total": 2602,
+      "ratio": 1.54
     },
     {
       "date": "2026-07-16",
-      "trend": 66,
-      "total": 5505,
-      "ratio": 1.2
+      "trend": 44,
+      "total": 2599,
+      "ratio": 1.69
     },
     {
       "date": "2026-07-17",
-      "trend": 107,
-      "total": 5504,
-      "ratio": 1.94
+      "trend": 75,
+      "total": 2599,
+      "ratio": 2.89
     },
     {
       "date": "2026-07-20",
-      "trend": 127,
-      "total": 5506,
-      "ratio": 2.31
+      "trend": 88,
+      "total": 2599,
+      "ratio": 3.39
     },
     {
       "date": "2026-07-21",
-      "trend": 113,
-      "total": 5507,
-      "ratio": 2.05
+      "trend": 76,
+      "total": 2599,
+      "ratio": 2.92
     },
     {
       "date": "2026-07-22",
-      "trend": 157,
-      "total": 5507,
-      "ratio": 2.85
+      "trend": 97,
+      "total": 2599,
+      "ratio": 3.73
     },
     {
       "date": "2026-07-23",
-      "trend": 138,
-      "total": 5508,
-      "ratio": 2.51
+      "trend": 88,
+      "total": 2600,
+      "ratio": 3.38
     },
     {
       "date": "2026-07-24",
-      "trend": 45,
-      "total": 5508,
-      "ratio": 0.82
+      "trend": 27,
+      "total": 2601,
+      "ratio": 1.04
     },
     {
       "date": "2026-07-27",
-      "trend": 38,
-      "total": 5504,
-      "ratio": 0.69
+      "trend": 19,
+      "total": 2601,
+      "ratio": 0.73
     },
     {
       "date": "2026-07-28",
-      "trend": 33,
-      "total": 5505,
-      "ratio": 0.6
+      "trend": 17,
+      "total": 2602,
+      "ratio": 0.65
     },
     {
       "date": "2026-07-29",
-      "trend": 77,
-      "total": 5506,
-      "ratio": 1.4
+      "trend": 41,
+      "total": 2603,
+      "ratio": 1.58
     },
     {
       "date": "2026-07-30",
-      "trend": 106,
-      "total": 5510,
-      "ratio": 1.92
+      "trend": 63,
+      "total": 2605,
+      "ratio": 2.42
     },
     {
       "date": "2026-07-31",
-      "trend": 99,
-      "total": 5510,
-      "ratio": 1.8
+      "trend": 63,
+      "total": 2603,
+      "ratio": 2.42
     },
     {
       "date": "2026-08-03",
-      "trend": 272,
-      "total": 5510,
-      "ratio": 4.94
+      "trend": 115,
+      "total": 2603,
+      "ratio": 4.42
     },
     {
       "date": "2026-08-04",
-      "trend": 686,
-      "total": 5510,
-      "ratio": 12.45
+      "trend": 269,
+      "total": 2605,
+      "ratio": 10.33
     },
     {
       "date": "2026-08-05",
-      "trend": 996,
-      "total": 5513,
-      "ratio": 18.07
+      "trend": 399,
+      "total": 2606,
+      "ratio": 15.31
     },
     {
       "date": "2026-08-06",
-      "trend": 870,
-      "total": 5515,
-      "ratio": 15.78
+      "trend": 335,
+      "total": 2608,
+      "ratio": 12.85
     },
     {
       "date": "2026-08-07",
-      "trend": 649,
-      "total": 5516,
-      "ratio": 11.77
+      "trend": 284,
+      "total": 2608,
+      "ratio": 10.89
     },
     {
       "date": "2026-08-10",
-      "trend": 949,
-      "total": 5519,
-      "ratio": 17.2
+      "trend": 424,
+      "total": 2608,
+      "ratio": 16.26
     },
     {
       "date": "2026-08-11",
-      "trend": 816,
-      "total": 5517,
-      "ratio": 14.79
+      "trend": 341,
+      "total": 2606,
+      "ratio": 13.09
     },
     {
       "date": "2026-08-12",
-      "trend": 1060,
-      "total": 5517,
-      "ratio": 19.21
+      "trend": 424,
+      "total": 2606,
+      "ratio": 16.27
     },
     {
       "date": "2026-08-13",
-      "trend": 580,
-      "total": 5518,
-      "ratio": 10.51
+      "trend": 257,
+      "total": 2607,
+      "ratio": 9.86
     },
     {
       "date": "2026-08-14",
-      "trend": 580,
-      "total": 5518,
-      "ratio": 10.51
+      "trend": 245,
+      "total": 2607,
+      "ratio": 9.4
     },
     {
       "date": "2026-08-17",
-      "trend": 535,
-      "total": 5517,
-      "ratio": 9.7
+      "trend": 232,
+      "total": 2607,
+      "ratio": 8.9
     },
     {
       "date": "2026-08-18",
-      "trend": 616,
-      "total": 5518,
-      "ratio": 11.16
+      "trend": 286,
+      "total": 2609,
+      "ratio": 10.96
     },
     {
       "date": "2026-08-19",
-      "trend": 116,
-      "total": 5517,
-      "ratio": 2.1
+      "trend": 60,
+      "total": 2609,
+      "ratio": 2.3
     },
     {
       "date": "2026-08-20",
-      "trend": 77,
-      "total": 5517,
-      "ratio": 1.4
-    },
-    {
-      "date": "2026-08-21",
-      "trend": 58,
-      "total": 5520,
-      "ratio": 1.05
-    },
-    {
-      "date": "2026-08-24",
-      "trend": 69,
-      "total": 5523,
-      "ratio": 1.25
-    },
-    {
-      "date": "2026-08-25",
-      "trend": 56,
-      "total": 5524,
-      "ratio": 1.01
-    },
-    {
-      "date": "2026-08-26",
-      "trend": 55,
-      "total": 5526,
-      "ratio": 1.0
-    },
-    {
-      "date": "2026-08-27",
-      "trend": 59,
-      "total": 5526,
-      "ratio": 1.07
-    },
-    {
-      "date": "2026-08-28",
-      "trend": 101,
-      "total": 5525,
-      "ratio": 1.83
-    },
-    {
-      "date": "2026-08-31",
-      "trend": 114,
-      "total": 5525,
-      "ratio": 2.06
-    },
-    {
-      "date": "2026-09-01",
-      "trend": 446,
-      "total": 5526,
-      "ratio": 8.07
-    },
-    {
-      "date": "2026-09-02",
-      "trend": 401,
-      "total": 5527,
-      "ratio": 7.26
-    },
-    {
-      "date": "2026-09-03",
-      "trend": 267,
-      "total": 5529,
-      "ratio": 4.83
-    },
-    {
-      "date": "2026-09-04",
-      "trend": 243,
-      "total": 5528,
-      "ratio": 4.4
-    },
-    {
-      "date": "2026-09-07",
-      "trend": 203,
-      "total": 5530,
-      "ratio": 3.67
-    },
-    {
-      "date": "2026-09-08",
-      "trend": 245,
-      "total": 5531,
-      "ratio": 4.43
-    },
-    {
-      "date": "2026-09-09",
-      "trend": 243,
-      "total": 5530,
-      "ratio": 4.39
-    },
-    {
-      "date": "2026-09-10",
-      "trend": 172,
-      "total": 5528,
-      "ratio": 3.11
-    },
-    {
-      "date": "2026-09-11",
-      "trend": 88,
-      "total": 5529,
-      "ratio": 1.59
-    },
-    {
-      "date": "2026-09-14",
-      "trend": 71,
-      "total": 5530,
-      "ratio": 1.28
-    },
-    {
-      "date": "2026-09-15",
-      "trend": 46,
-      "total": 5532,
-      "ratio": 0.83
-    },
-    {
-      "date": "2026-09-16",
-      "trend": 51,
-      "total": 5533,
-      "ratio": 0.92
-    },
-    {
-      "date": "2026-09-17",
-      "trend": 49,
-      "total": 5536,
-      "ratio": 0.89
-    },
-    {
-      "date": "2026-09-18",
-      "trend": 74,
-      "total": 5536,
-      "ratio": 1.34
-    },
-    {
-      "date": "2026-09-21",
-      "trend": 150,
-      "total": 5537,
-      "ratio": 2.71
-    },
-    {
-      "date": "2026-09-22",
-      "trend": 175,
-      "total": 5536,
-      "ratio": 3.16
-    },
-    {
-      "date": "2026-09-23",
-      "trend": 338,
-      "total": 5537,
-      "ratio": 6.1
-    },
-    {
-      "date": "2026-09-24",
-      "trend": 246,
-      "total": 5538,
-      "ratio": 4.44
-    },
-    {
-      "date": "2026-09-28",
-      "trend": 116,
-      "total": 5538,
-      "ratio": 2.09
-    },
-    {
-      "date": "2026-09-29",
-      "trend": 107,
-      "total": 5540,
-      "ratio": 1.93
-    },
-    {
-      "date": "2026-09-30",
-      "trend": 96,
-      "total": 5541,
-      "ratio": 1.73
-    },
-    {
-      "date": "2026-10-08",
-      "trend": 85,
-      "total": 5538,
+      "trend": 40,
+      "total": 2610,
       "ratio": 1.53
     },
     {
-      "date": "2026-10-09",
-      "trend": 63,
-      "total": 5540,
-      "ratio": 1.14
+      "date": "2026-08-21",
+      "trend": 33,
+      "total": 2611,
+      "ratio": 1.26
     },
     {
-      "date": "2026-10-12",
-      "trend": 57,
-      "total": 5544,
-      "ratio": 1.03
+      "date": "2026-08-24",
+      "trend": 39,
+      "total": 2611,
+      "ratio": 1.49
     },
     {
-      "date": "2026-10-13",
-      "trend": 56,
-      "total": 5543,
-      "ratio": 1.01
+      "date": "2026-08-25",
+      "trend": 33,
+      "total": 2611,
+      "ratio": 1.26
     },
     {
-      "date": "2026-10-14",
-      "trend": 100,
-      "total": 5547,
-      "ratio": 1.8
+      "date": "2026-08-26",
+      "trend": 30,
+      "total": 2613,
+      "ratio": 1.15
     },
     {
-      "date": "2026-10-15",
-      "trend": 68,
-      "total": 5548,
+      "date": "2026-08-27",
+      "trend": 32,
+      "total": 2612,
       "ratio": 1.23
     },
     {
-      "date": "2026-10-16",
-      "trend": 72,
-      "total": 5550,
-      "ratio": 1.3
+      "date": "2026-08-28",
+      "trend": 45,
+      "total": 2614,
+      "ratio": 1.72
     },
     {
-      "date": "2026-10-19",
-      "trend": 61,
-      "total": 5547,
-      "ratio": 1.1
+      "date": "2026-08-31",
+      "trend": 49,
+      "total": 2612,
+      "ratio": 1.88
     },
     {
-      "date": "2026-10-20",
-      "trend": 67,
-      "total": 5551,
-      "ratio": 1.21
+      "date": "2026-09-01",
+      "trend": 187,
+      "total": 2613,
+      "ratio": 7.16
     },
     {
-      "date": "2026-10-21",
-      "trend": 27,
-      "total": 5552,
-      "ratio": 0.49
+      "date": "2026-09-02",
+      "trend": 157,
+      "total": 2614,
+      "ratio": 6.01
     },
     {
-      "date": "2026-10-22",
-      "trend": 24,
-      "total": 5554,
-      "ratio": 0.43
+      "date": "2026-09-03",
+      "trend": 115,
+      "total": 2614,
+      "ratio": 4.4
     },
     {
-      "date": "2026-10-23",
-      "trend": 19,
-      "total": 5554,
-      "ratio": 0.34
+      "date": "2026-09-04",
+      "trend": 124,
+      "total": 2614,
+      "ratio": 4.74
     },
     {
-      "date": "2026-10-26",
-      "trend": 34,
-      "total": 5552,
-      "ratio": 0.61
+      "date": "2026-09-07",
+      "trend": 91,
+      "total": 2614,
+      "ratio": 3.48
     },
     {
-      "date": "2026-10-27",
-      "trend": 43,
-      "total": 5554,
+      "date": "2026-09-08",
+      "trend": 115,
+      "total": 2614,
+      "ratio": 4.4
+    },
+    {
+      "date": "2026-09-09",
+      "trend": 111,
+      "total": 2613,
+      "ratio": 4.25
+    },
+    {
+      "date": "2026-09-10",
+      "trend": 85,
+      "total": 2612,
+      "ratio": 3.25
+    },
+    {
+      "date": "2026-09-11",
+      "trend": 44,
+      "total": 2612,
+      "ratio": 1.68
+    },
+    {
+      "date": "2026-09-14",
+      "trend": 33,
+      "total": 2612,
+      "ratio": 1.26
+    },
+    {
+      "date": "2026-09-15",
+      "trend": 20,
+      "total": 2612,
       "ratio": 0.77
     },
     {
-      "date": "2026-10-28",
+      "date": "2026-09-16",
+      "trend": 21,
+      "total": 2612,
+      "ratio": 0.8
+    },
+    {
+      "date": "2026-09-17",
+      "trend": 21,
+      "total": 2614,
+      "ratio": 0.8
+    },
+    {
+      "date": "2026-09-18",
+      "trend": 33,
+      "total": 2614,
+      "ratio": 1.26
+    },
+    {
+      "date": "2026-09-21",
+      "trend": 59,
+      "total": 2616,
+      "ratio": 2.26
+    },
+    {
+      "date": "2026-09-22",
+      "trend": 74,
+      "total": 2616,
+      "ratio": 2.83
+    },
+    {
+      "date": "2026-09-23",
+      "trend": 151,
+      "total": 2617,
+      "ratio": 5.77
+    },
+    {
+      "date": "2026-09-24",
+      "trend": 127,
+      "total": 2618,
+      "ratio": 4.85
+    },
+    {
+      "date": "2026-09-28",
+      "trend": 61,
+      "total": 2618,
+      "ratio": 2.33
+    },
+    {
+      "date": "2026-09-29",
+      "trend": 50,
+      "total": 2619,
+      "ratio": 1.91
+    },
+    {
+      "date": "2026-09-30",
+      "trend": 45,
+      "total": 2620,
+      "ratio": 1.72
+    },
+    {
+      "date": "2026-10-08",
+      "trend": 39,
+      "total": 2621,
+      "ratio": 1.49
+    },
+    {
+      "date": "2026-10-09",
+      "trend": 33,
+      "total": 2623,
+      "ratio": 1.26
+    },
+    {
+      "date": "2026-10-12",
       "trend": 38,
-      "total": 5556,
-      "ratio": 0.68
+      "total": 2625,
+      "ratio": 1.45
+    },
+    {
+      "date": "2026-10-13",
+      "trend": 43,
+      "total": 2624,
+      "ratio": 1.64
+    },
+    {
+      "date": "2026-10-14",
+      "trend": 79,
+      "total": 2625,
+      "ratio": 3.01
+    },
+    {
+      "date": "2026-10-15",
+      "trend": 49,
+      "total": 2625,
+      "ratio": 1.87
+    },
+    {
+      "date": "2026-10-16",
+      "trend": 45,
+      "total": 2626,
+      "ratio": 1.71
+    },
+    {
+      "date": "2026-10-19",
+      "trend": 38,
+      "total": 2623,
+      "ratio": 1.45
+    },
+    {
+      "date": "2026-10-20",
+      "trend": 41,
+      "total": 2627,
+      "ratio": 1.56
+    },
+    {
+      "date": "2026-10-21",
+      "trend": 15,
+      "total": 2627,
+      "ratio": 0.57
+    },
+    {
+      "date": "2026-10-22",
+      "trend": 12,
+      "total": 2628,
+      "ratio": 0.46
+    },
+    {
+      "date": "2026-10-23",
+      "trend": 7,
+      "total": 2628,
+      "ratio": 0.27
+    },
+    {
+      "date": "2026-10-26",
+      "trend": 17,
+      "total": 2626,
+      "ratio": 0.65
+    },
+    {
+      "date": "2026-10-27",
+      "trend": 18,
+      "total": 2627,
+      "ratio": 0.69
+    },
+    {
+      "date": "2026-10-28",
+      "trend": 17,
+      "total": 2629,
+      "ratio": 0.65
     },
     {
       "date": "2026-10-29",
-      "trend": 28,
-      "total": 5556,
-      "ratio": 0.5
+      "trend": 13,
+      "total": 2629,
+      "ratio": 0.49
+    },
+    {
+      "date": "2026-10-30",
+      "trend": 51,
+      "total": 5557,
+      "ratio": 0.92
     }
   ],
-  "generated": "2026-10-29 12:11:42"
+  "generated": "2026-10-30 11:11:12"
 }

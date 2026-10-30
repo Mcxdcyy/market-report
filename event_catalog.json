@@ -1,21 +1,5 @@
 [
   {
-    "month": 10,
-    "day": 27,
-    "dot": "机",
-    "label": "10/27–29",
-    "title": "2026智能机器人博览会（ROBOTECH）",
-    "short": "ROBOTECH",
-    "brief": "于深圳国际会展中心（宝安）举行，打通具身智能全产业链展示，覆盖人形机器人、四足与复合机器人、核心零部件及工业/商用/特种场景，同期安排具身智能技术创新与供应链协同、工业智造升级及粤港澳大湾区机器人创新技术等论坛。",
-    "hot": true,
-    "importance": 4,
-    "source": "seed",
-    "span_end": [
-      10,
-      29
-    ]
-  },
-  {
     "month": 11,
     "day": 1,
     "dot": "标",
@@ -38,6 +22,6 @@
     "hot": true,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-10-29"
+    "fetched_at": "2026-10-30"
   }
 ]

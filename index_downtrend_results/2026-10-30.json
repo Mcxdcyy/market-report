@@ -15,12 +15,12 @@
     "2026-10-30"
   ],
   "primary": "daily_b",
-  "note": "主口径为日线下跌趋势（连续3日收盘<MA5且创3日低开灯；收盘>MA5为待确认，次日仍>MA5结束）。60分钟下跌通道仅在日线仍全非下跌时作前置预警。",
+  "note": "主口径为日线下跌趋势（连续3日收盘<MA5且创3日低开灯；收盘>MA5为=（待次日确认），次日仍>MA5结束为-）。60分钟下跌通道仅在日线仍全非下跌时作前置预警。",
   "b_regime": "全下跌",
   "a_regime": "全下跌",
   "early_warn": false,
   "early_warn_text": "",
-  "fetched": "2026-10-30 11:11:59",
+  "fetched": "2026-10-30 15:47:56",
   "indices": [
     {
       "name": "上证指数",
@@ -32,8 +32,8 @@
       "pill": "bad",
       "a_downtrend": true,
       "a_status": "down",
-      "last_bar": "2026-10-30 11:30:00",
-      "last_close": 3614.454,
+      "last_bar": "2026-10-30 15:00:00",
+      "last_close": 3599.017,
       "series": [
         {
           "date": "2026-10-19",
@@ -131,7 +131,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 3614.39,
+          "close": 3599.02,
           "a_downtrend": true,
           "a_status": "down"
         }
@@ -148,8 +148,8 @@
       "pill": "bad",
       "a_downtrend": true,
       "a_status": "down",
-      "last_bar": "2026-10-30 11:30:00",
-      "last_close": 10938.263,
+      "last_bar": "2026-10-30 15:00:00",
+      "last_close": 10833.784,
       "series": [
         {
           "date": "2026-10-19",
@@ -247,7 +247,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 10938.08,
+          "close": 10833.78,
           "a_downtrend": true,
           "a_status": "down"
         }
@@ -264,8 +264,8 @@
       "pill": "bad",
       "a_downtrend": true,
       "a_status": "down",
-      "last_bar": "2026-10-30 11:30:00",
-      "last_close": 2450.005,
+      "last_bar": "2026-10-30 15:00:00",
+      "last_close": 2413.629,
       "series": [
         {
           "date": "2026-10-19",
@@ -363,7 +363,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 2449.73,
+          "close": 2413.63,
           "a_downtrend": true,
           "a_status": "down"
         }
@@ -380,8 +380,8 @@
       "pill": "bad",
       "a_downtrend": true,
       "a_status": "down",
-      "last_bar": "2026-10-30 11:30:00",
-      "last_close": 1452.692,
+      "last_bar": "2026-10-30 15:00:00",
+      "last_close": 1421.305,
       "series": [
         {
           "date": "2026-10-19",
@@ -479,7 +479,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 1452.59,
+          "close": 1421.31,
           "a_downtrend": true,
           "a_status": "down"
         }
