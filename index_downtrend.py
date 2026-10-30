@@ -3,7 +3,7 @@
 
 主口径（B · 日线状态机，页面表格）：
   开灯：连续 3 个交易日收盘 < MA5，且当日最低 = 近 3 日最低 →「下跌」
-  收盘 > MA5 →「待确认」（等次日）
+  收盘 > MA5 →「=」（待次日确认）
   次日仍收盘 > MA5 → 结束为「-」；否则回到「下跌」
 
 前置预警（A · 60 分钟，不进格子）：
@@ -33,7 +33,7 @@ DAILY_LOOKBACK = 80  # 状态机预热（MA5 + 开灯条件）
 EARLY_WARN_TEXT = "前置预警：60分钟已有指数转弱，日线下跌趋势尚未确认。"
 NOTE = (
     "主口径为日线下跌趋势（连续3日收盘<MA5且创3日低开灯；"
-    "收盘>MA5为待确认，次日仍>MA5结束）。"
+    "收盘>MA5为=（待次日确认），次日仍>MA5结束为-）。"
     "60分钟下跌通道仅在日线仍全非下跌时作前置预警。"
 )
 
@@ -328,7 +328,7 @@ def _b_cell(status: str) -> dict[str, Any]:
     if status == "pending":
         return {
             "status": "pending",
-            "label": "待确认",
+            "label": "=",
             "risk_on": True,
             "downtrend": True,
         }
@@ -389,7 +389,7 @@ def _cell_label(status: str) -> str:
     if status == "down":
         return "下跌"
     if status == "pending":
-        return "待确认"
+        return "="
     return "-"
 
 

@@ -5471,7 +5471,7 @@ def _index_cell_kind(cell: dict) -> str:
     """表内单元格三态：down / pending / flat。"""
     status = str(cell.get("status") or "")
     label = str(cell.get("label") or "")
-    if status == "pending" or label == "待确认":
+    if status == "pending" or label in ("=", "待确认"):
         return "pending"
     if (
         status == "down"
@@ -5547,7 +5547,7 @@ def _index_outlook_sum_text(block: dict) -> str:
     """短期指数趋势表下结论条（按日线 B 当日状态四档，不用昨今切换）：
 
     1. 全「-」→ 指数趋势正常
-    2. 仅有「-」与「待确认」（无下跌）→ 指数趋势正常（待次日确认）
+    2. 仅有「-」与「=」（无下跌）→ 指数趋势正常（待次日确认）
     3. 至少一个「下跌」且非四个都是「下跌」→ 指数异常-部分下跌通道
     4. 四个都是「下跌」→ 指数风险-全下跌通道
     """
@@ -5656,7 +5656,7 @@ def render_macro_bias_html(block: dict) -> str:
 def render_index_outlook_html(block: dict) -> str:
     """大盘·风险指针：短期指数趋势 · 近10日对比表。
 
-    主口径=日线 B：下跌 / 待确认 / -；表下结论按 B 合成。
+    主口径=日线 B：下跌 / =（待次日确认）/ -；表下结论按 B 合成。
     仅当 B 全- 且 60 分钟 A 已部分/全下跌时，结论条前加前置预警 tip。
     """
     items = block.get("indices") or []
@@ -5688,14 +5688,14 @@ def render_index_outlook_html(block: dict) -> str:
             label = cell.get("label")
             if label is None:
                 if status == "pending":
-                    label = "待确认"
+                    label = "="
                 elif status == "down":
                     label = "下跌"
                 else:
                     label = "-"
             label = str(label)
-            if status == "pending" or label == "待确认":
-                tds.append('<td class="pending">待确认</td>')
+            if status == "pending" or label in ("=", "待确认"):
+                tds.append('<td class="pending">=</td>')
             elif status == "down" or label in ("下跌", "下跌通道"):
                 tds.append('<td class="down">下跌</td>')
             else:

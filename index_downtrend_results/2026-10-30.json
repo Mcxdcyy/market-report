@@ -48,7 +48,7 @@
         {
           "date": "2026-10-20",
           "status": "pending",
-          "label": "待确认",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
           "close": 3735.37,
@@ -108,7 +108,7 @@
         {
           "date": "2026-10-28",
           "status": "pending",
-          "label": "待确认",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
           "close": 3681.47,
@@ -194,7 +194,7 @@
         {
           "date": "2026-10-23",
           "status": "pending",
-          "label": "待确认",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
           "close": 11673.83,
@@ -224,7 +224,7 @@
         {
           "date": "2026-10-28",
           "status": "pending",
-          "label": "待确认",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
           "close": 11473.18,
@@ -340,7 +340,7 @@
         {
           "date": "2026-10-28",
           "status": "pending",
-          "label": "待确认",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
           "close": 2634.76,
@@ -396,7 +396,7 @@
         {
           "date": "2026-10-20",
           "status": "pending",
-          "label": "待确认",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
           "close": 1603.89,
