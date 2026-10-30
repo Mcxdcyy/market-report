@@ -970,11 +970,11 @@ def _vol_cycle_tag_html(
 _SUM_TONE_BY_TEXT: dict[str, str] = {
     "增量周期：市场量能正常。": "ok",
     "缩量周期：卖出持仓。——资金撤退，别大亏。": "bad",
-    "指数正常，市场正常。": "ok",
-    '指数风险：全场极弱，等指数走出"下跌"。': "bad",
-    "指数风险：可能全盘走弱。": "warn",
-    "部分指数走出下跌：市场可能好转。": "warn",
-    "部分指数走出下跌：市场可能转好，也可能再转差。": "warn",
+    # 短期指数趋势 · 四档（2026-10-30）
+    "指数趋势正常": "ok",
+    "指数趋势正常（待次日确认）": "warn",
+    "指数异常-部分下跌通道": "warn",
+    "指数风险-全下跌通道": "bad",
     "追高活跃：积极做多。——多锁仓。": "ok",
     "追高不活跃：冲高容易回落。——主动卖出。": "bad",
     # 昨追/强趋承接结论文案已随页面图删除（2026-10-11 / 2026-10-29），勿加回着色表
@@ -5467,26 +5467,37 @@ def load_index_downtrend_block(
         return {"as_of": as_of_d.isoformat(), "indices": [], "error": str(exc)}
 
 
-def _index_day_down_flags(items: list, day: str) -> list[bool]:
-    """某日各指数是否处于风险态（与表内同口径：下跌 / 待确认 均算）。"""
-    flags: list[bool] = []
+def _index_cell_kind(cell: dict) -> str:
+    """表内单元格三态：down / pending / flat。"""
+    status = str(cell.get("status") or "")
+    label = str(cell.get("label") or "")
+    if status == "pending" or label == "待确认":
+        return "pending"
+    if (
+        status == "down"
+        or label in ("下跌", "下跌通道")
+        or cell.get("downtrend") is True
+    ):
+        return "down"
+    return "flat"
+
+
+def _index_day_cell_kinds(items: list, day: str) -> list[str]:
+    """某日各指数单元格种类（与表内同口径）。"""
+    kinds: list[str] = []
     for it in items:
         series = {
             str(s.get("date")): s
             for s in (it.get("series") or [])
             if isinstance(s, dict)
         }
-        cell = series.get(day) or {}
-        status = cell.get("status") or ""
-        label = str(cell.get("label") or "")
-        down = (
-            cell.get("risk_on") is True
-            or status in ("down", "pending")
-            or label in ("下跌", "待确认", "下跌通道")
-            or cell.get("downtrend") is True
-        )
-        flags.append(bool(down))
-    return flags
+        kinds.append(_index_cell_kind(series.get(day) or {}))
+    return kinds
+
+
+def _index_day_down_flags(items: list, day: str) -> list[bool]:
+    """兼容旧调用：下跌或待确认均视为风险态。"""
+    return [k in ("down", "pending") for k in _index_day_cell_kinds(items, day)]
 
 
 # 大盘环境顶 pill：固定两项 · 好/中/不好都展示（与页内图表结论同源）
@@ -5499,18 +5510,16 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     """返回 [(tone, label), ...]，tone ∈ ok/warn/bad。缺数据的项跳过。"""
     pills: list[tuple[str, str]] = []
 
-    # 1) 指数趋势
+    # 1) 指数趋势（与表下结论四档同一套文案）
     idx_sum = _index_outlook_sum_text(ctx.get("index_downtrend") or {})
-    if idx_sum == "指数正常，市场正常。":
-        pills.append(("ok", "指数正常"))
-    elif "全场极弱" in idx_sum:
-        pills.append(("bad", "指数全下跌"))
-    elif idx_sum == "指数风险：可能全盘走弱。":
-        pills.append(("warn", "指数风险-可能走弱"))
-    elif idx_sum == "部分指数走出下跌：市场可能好转。":
-        pills.append(("warn", "指数-部分走出下跌"))
-    elif idx_sum.startswith("部分指数走出下跌"):
-        pills.append(("warn", "指数-部分接部分"))
+    if idx_sum == "指数趋势正常":
+        pills.append(("ok", "指数趋势正常"))
+    elif idx_sum == "指数趋势正常（待次日确认）":
+        pills.append(("warn", "指数趋势正常（待次日确认）"))
+    elif idx_sum == "指数异常-部分下跌通道":
+        pills.append(("warn", "指数异常-部分下跌通道"))
+    elif idx_sum == "指数风险-全下跌通道":
+        pills.append(("bad", "指数风险-全下跌通道"))
 
     # 2) 近30日成交金额（只看末日柱色）
     vol30 = ctx.get("vol20_bars") or []
@@ -5535,39 +5544,30 @@ def _mkt_env_pills_html(ctx: dict) -> str:
 
 
 def _index_outlook_sum_text(block: dict) -> str:
-    """短期指数趋势表下结论条（按日线 B 合成；固定文案，命中一条）：
+    """短期指数趋势表下结论条（按日线 B 当日状态四档，不用昨今切换）：
 
-    - 全「-」→「指数正常，市场正常。」
-    - 全下跌（含待确认）→「指数风险：全场极弱，等指数走出"下跌"。」
-    - 全「-」转部分→「指数风险：可能全盘走弱。」
-    - 全下跌转部分「-」→「部分指数走出下跌：市场可能好转。」
-    - 连续部分→「部分指数走出下跌：市场可能转好，也可能再转差。」
+    1. 全「-」→ 指数趋势正常
+    2. 仅有「-」与「待确认」（无下跌）→ 指数趋势正常（待次日确认）
+    3. 至少一个「下跌」且非四个都是「下跌」→ 指数异常-部分下跌通道
+    4. 四个都是「下跌」→ 指数风险-全下跌通道
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
     if not items or not days:
         return ""
-    cur = _index_day_down_flags(items, days[-1])
-    if not cur:
+    kinds = _index_day_cell_kinds(items, days[-1])
+    if not kinds:
         return ""
-    all_down = all(cur)
-    all_ok = not any(cur)
-    if all_ok:
-        return "指数正常，市场正常。"
-    if all_down:
-        return '指数风险：全场极弱，等指数走出"下跌"。'
-    # 当日部分下跌
-    if len(days) < 2:
-        return ""
-    prev = _index_day_down_flags(items, days[-2])
-    if len(prev) != len(cur):
-        return ""
-    if not any(prev):
-        return "指数风险：可能全盘走弱。"
-    if all(prev):
-        return "部分指数走出下跌：市场可能好转。"
-    # 连续部分（有「-」亦有「下跌通道」接续）：固定一句，不再沿用前一日
-    return "部分指数走出下跌：市场可能转好，也可能再转差。"
+    n_down = sum(1 for k in kinds if k == "down")
+    n_pending = sum(1 for k in kinds if k == "pending")
+    n = len(kinds)
+    if n_down == 0 and n_pending == 0:
+        return "指数趋势正常"
+    if n_down == 0 and n_pending > 0:
+        return "指数趋势正常（待次日确认）"
+    if n_down == n:
+        return "指数风险-全下跌通道"
+    return "指数异常-部分下跌通道"
 
 
 def _render_macro_bias_one(
