@@ -4752,7 +4752,7 @@ def render_html(ctx: dict) -> str:
     border-radius: 6px;
   }}
   .idx-outlook-table td.pending {{
-    background: #fff; color: #2e7d32; font-weight: 700;
+    background: #fff; color: #ef6c00; font-weight: 700;
     border-radius: 6px;
   }}
   .idx-outlook-table td.flat {{
