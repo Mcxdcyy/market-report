@@ -4752,14 +4752,14 @@ def render_html(ctx: dict) -> str:
     border-radius: 6px;
   }}
   .idx-outlook-table td.pending {{
-    background: #fff; color: var(--muted); font-weight: 500;
+    background: #fff; color: #2e7d32; font-weight: 700;
+    border-radius: 6px;
   }}
   .idx-outlook-table td.flat {{
     color: var(--muted); font-weight: 500;
   }}
-  /* 当日「-」/「=」与当日日期同色同粗（日期 tr.latest th = 800） */
-  .idx-outlook-table tr.latest td.flat,
-  .idx-outlook-table tr.latest td.pending {{
+  /* 当日「-」与当日日期同色同粗（日期 tr.latest th = 800） */
+  .idx-outlook-table tr.latest td.flat {{
     color: var(--text); font-weight: 800;
   }}
 
