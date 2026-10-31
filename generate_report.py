@@ -4758,17 +4758,16 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-table td.flat {{
     color: var(--muted); font-weight: 500;
   }}
-  /* 60 分钟转弱：替代「-」的展示态（非下跌 / 非=）；浅蓝系对齐 tip */
+  /* 60 分钟转弱：替代「-」的展示态（非下跌 / 非=）；绿字白底 */
   .idx-outlook-table td.a-weak {{
-    background: var(--accent-bg); color: var(--accent); font-weight: 700;
-    border-radius: 6px;
+    background: #fff; color: #2e7d32; font-weight: 700;
   }}
   /* 当日「-」与当日日期同色同粗（日期 tr.latest th = 800） */
   .idx-outlook-table tr.latest td.flat {{
     color: var(--text); font-weight: 800;
   }}
   .idx-outlook-table tr.latest td.a-weak {{
-    font-weight: 800;
+    background: #fff; color: #2e7d32; font-weight: 800;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
