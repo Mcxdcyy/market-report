@@ -946,9 +946,17 @@
   .idx-outlook-table td.flat {
     color: var(--muted); font-weight: 500;
   }
+  /* 60 分钟转弱：替代「-」的展示态（非下跌 / 非=）；浅蓝系对齐 tip */
+  .idx-outlook-table td.a-weak {
+    background: var(--accent-bg); color: var(--accent); font-weight: 700;
+    border-radius: 6px;
+  }
   /* 当日「-」与当日日期同色同粗（日期 tr.latest th = 800） */
   .idx-outlook-table tr.latest td.flat {
     color: var(--text); font-weight: 800;
+  }
+  .idx-outlook-table tr.latest td.a-weak {
+    font-weight: 800;
   }
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -2181,7 +2189,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-10-31 22:37</div>
+  <div class="footer">生成于 2026-10-31 22:40</div>
 </div>
 </body>
 </html>

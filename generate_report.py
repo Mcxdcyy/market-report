@@ -4758,9 +4758,17 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-table td.flat {{
     color: var(--muted); font-weight: 500;
   }}
+  /* 60 分钟转弱：替代「-」的展示态（非下跌 / 非=）；浅蓝系对齐 tip */
+  .idx-outlook-table td.a-weak {{
+    background: var(--accent-bg); color: var(--accent); font-weight: 700;
+    border-radius: 6px;
+  }}
   /* 当日「-」与当日日期同色同粗（日期 tr.latest th = 800） */
   .idx-outlook-table tr.latest td.flat {{
     color: var(--text); font-weight: 800;
+  }}
+  .idx-outlook-table tr.latest td.a-weak {{
+    font-weight: 800;
   }}
 
   /* ── 未来2周 · 事件与方向 ── */
@@ -5468,11 +5476,16 @@ def load_index_downtrend_block(
 
 
 def _index_cell_kind(cell: dict) -> str:
-    """表内单元格三态：down / pending / flat。"""
+    """表内单元格三态（日线 B）：down / pending / flat。
+
+    「走弱」仅为 60 分钟展示替换「-」，结论条仍按 flat。
+    """
     status = str(cell.get("status") or "")
     label = str(cell.get("label") or "")
     if status == "pending" or label in ("=", "待确认"):
         return "pending"
+    if label == "走弱":
+        return "flat"
     if (
         status == "down"
         or label in ("下跌", "下跌通道")
@@ -5686,11 +5699,16 @@ def render_index_outlook_html(block: dict) -> str:
             cell = smap.get(d) or {}
             status = str(cell.get("status") or "")
             label = cell.get("label")
+            a_weak = bool(cell.get("a_downtrend")) or str(
+                cell.get("a_status") or ""
+            ) == "down"
             if label is None:
                 if status == "pending":
                     label = "="
                 elif status == "down":
                     label = "下跌"
+                elif a_weak:
+                    label = "走弱"
                 else:
                     label = "-"
             label = str(label)
@@ -5698,6 +5716,11 @@ def render_index_outlook_html(block: dict) -> str:
                 tds.append('<td class="pending">=</td>')
             elif status == "down" or label in ("下跌", "下跌通道"):
                 tds.append('<td class="down">下跌</td>')
+            elif label == "走弱" or (
+                a_weak and label in ("-", "走弱") and status not in ("down", "pending")
+            ):
+                # 日线非下跌非=时，60 分钟转弱 → 展示「走弱」（替代「-」）
+                tds.append('<td class="a-weak">走弱</td>')
             else:
                 tds.append('<td class="flat">-</td>')
         body_rows.append(f"<tr{row_cls}>{''.join(tds)}</tr>")
