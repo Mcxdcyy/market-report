@@ -30,12 +30,19 @@ RESULT_DIR = BASE / "index_downtrend_results"
 SCHEMA = 4  # 2026-10-30：主口径改日线 B；60 分钟仅作前置预警
 SERIES_DAYS = 10
 DAILY_LOOKBACK = 80  # 状态机预热（MA5 + 开灯条件）
-EARLY_WARN_TEXT = "前置预警：60分钟已有指数转弱，日线下跌趋势尚未确认。"
 NOTE = (
     "主口径为日线下跌趋势（连续3日收盘<MA5且创3日低开灯；"
     "收盘>MA5为=（待次日确认），次日仍>MA5结束为-）。"
     "60分钟下跌通道仅在日线仍全非下跌时作前置预警。"
 )
+
+
+def format_early_warn_text(weak_names: list[str]) -> str:
+    """前置预警文案：列出 60 分钟已转弱的指数名。"""
+    names = [n for n in weak_names if n]
+    if not names:
+        return ""
+    return f"前置预警：{'、'.join(names)}60分钟已转弱，日线下跌趋势尚未确认。"
 
 INDICES: tuple[tuple[str, str], ...] = (
     ("上证指数", "sh000001"),
@@ -548,6 +555,8 @@ def compute_index_downtrend(
     b_regime = _regime_from_flags(latest_b_flags)
     a_regime = _regime_from_flags(latest_a_flags)
     early_warn = b_regime == "全-" and a_regime in ("部分", "全下跌")
+    weak_a_names = [it["name"] for it in indices if it.get("a_downtrend")]
+    early_warn_text = format_early_warn_text(weak_a_names) if early_warn else ""
 
     payload: dict[str, Any] = {
         "schema": SCHEMA,
@@ -559,7 +568,7 @@ def compute_index_downtrend(
         "b_regime": b_regime,
         "a_regime": a_regime,
         "early_warn": early_warn,
-        "early_warn_text": EARLY_WARN_TEXT if early_warn else "",
+        "early_warn_text": early_warn_text,
         "fetched": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "indices": indices,
     }

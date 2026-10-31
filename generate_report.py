@@ -5706,11 +5706,20 @@ def render_index_outlook_html(block: dict) -> str:
     d1 = days[-1][5:].replace("-", "/") if days else ""
     warn_html = ""
     if block.get("early_warn"):
-        warn_txt = (
-            block.get("early_warn_text")
-            or "前置预警：60分钟已有指数转弱，日线下跌趋势尚未确认。"
-        )
-        warn_html = _module_sum_html(warn_txt, tone="tip")
+        warn_txt = str(block.get("early_warn_text") or "").strip()
+        if not warn_txt:
+            weak = [
+                str(it.get("name") or "")
+                for it in items
+                if it.get("a_downtrend")
+            ]
+            weak = [n for n in weak if n]
+            if weak:
+                warn_txt = (
+                    f"前置预警：{'、'.join(weak)}60分钟已转弱，日线下跌趋势尚未确认。"
+                )
+        if warn_txt:
+            warn_html = _module_sum_html(warn_txt, tone="tip")
     sum_html = _module_sum_html(_index_outlook_sum_text(block))
     return (
         '<div class="idx-outlook-wrap">'
