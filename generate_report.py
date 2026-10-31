@@ -929,8 +929,8 @@ def _apply_held_cycle_tags(
     src_rows: list[dict],
     full_rows: list[dict],
     *,
-    expand_label: str = "增量周期",
-    shrink_label: str = "缩量周期",
+    expand_label: str = "量能-增量周期",
+    shrink_label: str = "量能-缩量周期",
 ) -> list[dict]:
     """按持有周期给柱上色：增量红、缩量绿，无灰。比较序列就是传入的 full_rows。"""
     held = _hold_vol_cycle_colors(full_rows)
@@ -950,11 +950,11 @@ def _apply_held_cycle_tags(
 def _vol_cycle_tag_html(
     bars: list[dict],
     *,
-    expand_label: str = "增量周期",
-    shrink_label: str = "缩量周期",
+    expand_label: str = "量能-增量周期",
+    shrink_label: str = "量能-缩量周期",
     wrap: bool = True,
 ) -> str:
-    """图下标签：末日持有色 →「增量周期 / 缩量周期」（近30日成交金额用）。"""
+    """图下标签：末日持有色 →「量能-增量周期 / 量能-缩量周期」（近30日成交金额用）。"""
     if not bars:
         return ""
     if bars[-1].get("tag") == "up":
@@ -5521,13 +5521,13 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     elif idx_sum == "指数风险-全下跌通道":
         pills.append(("bad", "指数风险-全下跌通道"))
 
-    # 2) 近30日成交金额（只看末日柱色）
+    # 2) 近30日成交金额（只看末日柱色；与图下量能标签同文案）
     vol30 = ctx.get("vol20_bars") or []
     if vol30:
         if vol30[-1].get("tag") == "up":
-            pills.append(("ok", "增量周期"))
+            pills.append(("ok", "量能-增量周期"))
         else:
-            pills.append(("bad", "缩量周期-资金撤退"))
+            pills.append(("bad", "量能-缩量周期"))
 
     return pills
 
