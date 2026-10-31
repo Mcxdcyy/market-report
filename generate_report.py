@@ -3908,7 +3908,8 @@ def render_html(ctx: dict) -> str:
   }}
   .mkt-env-pills .pill,
   .macro-bias-wrap .chart-tags .pill,
-  .vol30-tags .pill {{
+  .vol30-tags .pill,
+  .idx-outlook-wrap .chart-tags .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }}
   .mkt-env-pills .pill.ok {{
@@ -4868,7 +4869,8 @@ def render_html(ctx: dict) -> str:
     .mkt-env-pills {{ margin-bottom: 12px; gap: 6px; }}
     .mkt-env-pills .pill,
     .macro-bias-wrap .chart-tags .pill,
-    .vol30-tags .pill {{ font-size: 13px; padding: 5px 11px; }}
+    .vol30-tags .pill,
+    .idx-outlook-wrap .chart-tags .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
     .section-num {{ font-size: 14px; }}
@@ -5556,10 +5558,10 @@ def _mkt_env_pills_html(ctx: dict) -> str:
 
 
 def _index_outlook_sum_text(block: dict) -> str:
-    """短期指数趋势表下结论条（按日线 B 当日状态四档，不用昨今切换）：
+    """短期指数趋势图下标签文案（按日线 B 当日状态四档，不用昨今切换）：
 
-    1. 全「-」→ 指数趋势正常
-    2. 仅有「-」与「=」（无下跌）→ 指数趋势正常（待次日确认）
+    1. 全「-」/「走弱」→ 指数趋势正常
+    2. 仅有「-」/「走弱」与「=」（无下跌）→ 指数趋势正常（待次日确认）
     3. 至少一个「下跌」且非四个都是「下跌」→ 指数异常-部分下跌通道
     4. 四个都是「下跌」→ 指数风险-全下跌通道
     """
@@ -5580,6 +5582,21 @@ def _index_outlook_sum_text(block: dict) -> str:
     if n_down == n:
         return "指数风险-全下跌通道"
     return "指数异常-部分下跌通道"
+
+
+def _index_outlook_tag_html(block: dict) -> str:
+    """短期指数趋势图下标签：与近30日成交金额 `.chart-tags.vol20-tags.vol30-tags` 同系。"""
+    text = _index_outlook_sum_text(block)
+    if not text:
+        return ""
+    tone = (_SUM_TONE_BY_TEXT.get(text) or "warn").strip().lower()
+    if tone not in ("ok", "bad", "warn"):
+        tone = "warn"
+    return (
+        f'<div class="chart-tags vol20-tags vol30-tags">'
+        f'<span class="pill {tone}">{text}</span>'
+        f"</div>"
+    )
 
 
 def _render_macro_bias_one(
@@ -5668,8 +5685,8 @@ def render_macro_bias_html(block: dict) -> str:
 def render_index_outlook_html(block: dict) -> str:
     """大盘·风险指针：短期指数趋势 · 近10日对比表。
 
-    主口径=日线 B：下跌 / =（待次日确认）/ -；表下结论按 B 合成。
-    仅当 B 全- 且 60 分钟 A 已部分/全下跌时，结论条前加前置预警 tip。
+    主口径=日线 B：下跌 / =（待次日确认）/ - / 走弱；表下标签按 B 合成（同近30日量能标签样式）。
+    仅当 B 全- 且 60 分钟 A 已部分/全下跌时，标签前加前置预警 tip（结论条形态暂保留）。
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
@@ -5742,7 +5759,7 @@ def render_index_outlook_html(block: dict) -> str:
                 )
         if warn_txt:
             warn_html = _module_sum_html(warn_txt, tone="tip")
-    sum_html = _module_sum_html(_index_outlook_sum_text(block))
+    tags_html = _index_outlook_tag_html(block)
     return (
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
@@ -5756,7 +5773,7 @@ def render_index_outlook_html(block: dict) -> str:
         "</table>"
         "</div>"
         f"{warn_html}"
-        f"{sum_html}"
+        f"{tags_html}"
         "</div>"
     )
 
