@@ -1365,14 +1365,39 @@ def ensure_means_200d(
     """
     as_of_d = _as_date(as_of)
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
+    def _means_complete(means_obj: dict | None) -> bool:
+        """页面展示桶（全场/主板/创业板/科创板）均值须齐全；缺任一则强制重算，避免灰条。"""
+        if not isinstance(means_obj, dict) or not means_obj:
+            return False
+        for key in ("all", "main", "cyb", "kcb"):
+            row = means_obj.get(key) or {}
+            if row.get("mean_ratio_pct") is None:
+                return False
+            try:
+                if int(row.get("n_days") or 0) <= 0:
+                    return False
+            except (TypeError, ValueError):
+                return False
+        return True
+
     cached: dict | None = None
     if MEANS_200D_FILE.exists() and not force:
         try:
             cached = json.loads(MEANS_200D_FILE.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             cached = None
-        if cached and cached.get("as_of") == as_of_d.isoformat() and cached.get("means"):
+        if (
+            cached
+            and cached.get("as_of") == as_of_d.isoformat()
+            and _means_complete(cached.get("means"))
+        ):
             return cached["means"]
+        if cached and cached.get("as_of") == as_of_d.isoformat() and not _means_complete(
+            cached.get("means")
+        ):
+            if progress:
+                print("[trend-means] 缓存缺创业板/科创等均值，强制重算")
+            force = True
 
     if trading_days is None:
         raise ValueError("ensure_means_200d 需要 trading_days（近200个交易日）")
