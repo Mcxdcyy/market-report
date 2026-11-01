@@ -6165,12 +6165,10 @@ def render_fund_recognition_html(block: dict) -> str:
     FUND_EXCLUDE_NAMES = frozenset({"并购重组", "实控人变更"})
     FUND_EXCLUDE_REPORT_KW = ("季报", "中报", "半年报", "年报")
     try:
-        from ths_hot_list import core_stocks_from_pool
+        from em_stock_rank import core_stocks_from_pool, fetch_and_cache_ranks
     except ImportError:  # noqa: BLE001
         core_stocks_from_pool = None  # type: ignore
-    ths_hour = block.get("ths_hot_hour") or []
-    if not isinstance(ths_hour, list):
-        ths_hour = []
+        fetch_and_cache_ranks = None  # type: ignore
 
     def _is_excluded_sector(name: str) -> bool:
         n = (name or "").strip()
@@ -6244,6 +6242,20 @@ def render_fund_recognition_html(block: dict) -> str:
     if not items:
         note = block.get("note") or "暂无板块-资金认可度数据"
         return f'<div class="news-empty">{note}</div>'
+
+    # 展示板块池内全部 codes → 东财个股人气名次（全市场），供「核心个股」取前 5
+    em_ranks: dict = {}
+    if core_stocks_from_pool is not None and fetch_and_cache_ranks is not None:
+        pool_all: set[str] = set()
+        for it in items:
+            pool_all.update(_fund_pool_codes(it))
+        as_of_s = str(block.get("as_of") or "")[:10] or None
+        try:
+            em_ranks = fetch_and_cache_ranks(pool_all, as_of=as_of_s, progress=True)
+        except Exception as exc:  # noqa: BLE001
+            raise RuntimeError(
+                f"东财个股人气名次未就绪，板块核心个股无法生成: {exc}"
+            ) from exc
 
     cards = []
     for it in items:
@@ -6319,11 +6331,11 @@ def render_fund_recognition_html(block: dict) -> str:
             f'共 {it.get("pool_n", 0)} 只 · '
             f'3亿以上 {today_amt} 只'
         )
-        # 核心个股：池内全部 codes（含 3 亿以下）按同花顺小时榜名次取前 5
+        # 核心个股：池内全部 codes（含 3 亿以下）按东财个股人气名次取前 5
         core_html = ""
         if core_stocks_from_pool is not None:
             pool_codes = _fund_pool_codes(it)
-            core = core_stocks_from_pool(pool_codes, ths_hour, top_n=5)
+            core = core_stocks_from_pool(pool_codes, em_ranks, top_n=5)
             if core:
                 names = "、".join(
                     str(c.get("name") or c.get("code") or "") for c in core
@@ -6338,7 +6350,7 @@ def render_fund_recognition_html(block: dict) -> str:
                 core_html = (
                     f'<div class="fund-core">'
                     f'<span class="fund-core-k">核心个股</span>'
-                    f'<span class="fund-core-v empty">小时榜暂无命中</span>'
+                    f'<span class="fund-core-v empty">暂无人气名次</span>'
                     f"</div>"
                 )
         cards.append(
@@ -6527,16 +6539,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
     macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
-    # 每次更新报表：拉最新同花顺小时榜，供板块「核心个股」按池内小时榜前 5 展示
-    try:
-        from ths_hot_list import fetch_and_cache_hour
-
-        fund_recognition["ths_hot_hour"] = fetch_and_cache_hour(
-            as_of=dt.date() if hasattr(dt, "date") else dt,
-            progress=True,
-        )
-    except Exception as exc:  # noqa: BLE001
-        raise RuntimeError(f"同花顺小时榜未就绪，板块核心个股无法生成: {exc}") from exc
     fund_range = ""
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
         fund_range = (
