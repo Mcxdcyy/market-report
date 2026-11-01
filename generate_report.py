@@ -3926,6 +3926,12 @@ def render_html(ctx: dict) -> str:
   .mkt-env-pills .pill.bad {{
     background: #e8f5e9; color: #2e7d32;
   }}
+  /* 系统杠杆风险：全下跌 + 增量周期；紫强调（非红非绿） */
+  .mkt-env-pills .pill.sys {{
+    background: #7c3aed; color: #fff;
+    font-weight: 700; letter-spacing: 0.02em;
+    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
+  }}
 
   /* ── 区块 ── */
   .section {{
@@ -5535,7 +5541,10 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 
 
 def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
-    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad。缺数据的项跳过。"""
+    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys。缺数据的项跳过。
+
+    若「指数风险-全下跌通道」且「量能-增量周期」同时成立 → 最前追加「系统杠杆风险」(sys，紫强调)。
+    """
     pills: list[tuple[str, str]] = []
 
     # 1) 指数趋势（与表下结论四档同一套文案）
@@ -5551,17 +5560,22 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
 
     # 2) 近30日成交金额（只看末日柱色；与图下量能标签同文案）
     vol30 = ctx.get("vol20_bars") or []
+    vol_expand = bool(vol30) and vol30[-1].get("tag") == "up"
     if vol30:
-        if vol30[-1].get("tag") == "up":
+        if vol_expand:
             pills.append(("ok", "量能-增量周期"))
         else:
             pills.append(("bad", "量能-缩量周期"))
+
+    # 3) 全下跌 + 增量 → 系统杠杆风险（置顶，紫强调）
+    if idx_sum == "指数风险-全下跌通道" and vol_expand:
+        pills.insert(0, ("sys", "系统杠杆风险"))
 
     return pills
 
 
 def _mkt_env_pills_html(ctx: dict) -> str:
-    """大盘环境模块标题下、图表上：两项 pill；无数据返回空串。"""
+    """大盘环境模块标题下、图表上：指数/量能 pill（条件命中时含系统杠杆风险）。"""
     pills = [
         f'<span class="pill {tone}">{label}</span>'
         for tone, label in _mkt_env_pills(ctx)
