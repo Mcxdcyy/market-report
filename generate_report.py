@@ -3742,8 +3742,14 @@ def render_html(ctx: dict) -> str:
     )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
     # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
-    # 百日新高在趋势强度模块最后（脚注之后）
+    # 百日新高在趋势强度模块图表区最后；强趋势定义脚注再跟在百日新高之后（模块最末）
     # 2026-10-29：已删「资金追高情绪」模块、追高活跃度图/标签/结论/表头 pill
+    ts_def_note_html = (
+        '<div class="ts-note">'
+        "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
+        "3日内创20日新高，五日线向上，非跌停。"
+        "</div>"
+    )
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = f"{index_outlook_html}{vol30_html}"
@@ -5020,6 +5026,7 @@ def render_html(ctx: dict) -> str:
     </div>
     {trend_strength_html}
     {xh200_html}
+    {ts_def_note_html}
   </div>
 
   <!-- 3 涨停板块 -->
@@ -5417,15 +5424,9 @@ def render_trend_strength_html(block: dict) -> str:
     {"".join(hbars)}
   </div>'''
 
-    note_html = (
-        '<div class="ts-note">'
-        "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
-        "3日内创20日新高，五日线向上，非跌停。"
-        "</div>"
-    )
-    # 页内：强趋势占比（近120日）→ 结构占比 → 脚注；百日新高在模板本模块最后
+    # 页内：强趋势占比（近120日）→ 结构占比；脚注改在模块最末（百日新高之后，见模板）
     # 2026-10-29：已删「强趋势-成交额结构」
-    return f"{count_chart}{chart}{note_html}"
+    return f"{count_chart}{chart}"
 
 
 def load_macro_bias_block(
