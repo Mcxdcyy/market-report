@@ -4217,6 +4217,17 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
+  .fund-core {{
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    margin: 0; font-size: 12px; line-height: 1.45;
+  }}
+  .fund-core-k {{
+    flex: 0 0 auto; font-size: 11px; font-weight: 600; color: var(--muted);
+  }}
+  .fund-core-v {{
+    flex: 1 1 12em; min-width: 0; color: var(--text); font-weight: 500;
+  }}
+  .fund-core-v.empty {{ color: var(--muted); font-weight: 400; }}
   .fund-chart {{ width: 100%; display: flex; flex-direction: column; gap: 2px; }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
@@ -4930,6 +4941,10 @@ def render_html(ctx: dict) -> str:
     .fund-note,
     .idx-note,
     .module-summary {{ font-size: 13px; }}
+    .fund-card-title {{ font-size: 16px; }}
+    .fund-card-meta {{ font-size: 13px; }}
+    .fund-core {{ font-size: 14px; }}
+    .fund-core-k {{ font-size: 13px; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
     .idx-outlook-table thead th {{ font-size: 12px; }}
@@ -6136,11 +6151,26 @@ def load_fund_recognition_block(
     return compute_fund_recognition(as_of_d, force=True, progress=True)
 
 
+def _fund_pool_codes(it: dict) -> list[str]:
+    """板块池代码（含 3 亿以下）；来自 fund 结果里的 codes。"""
+    raw = it.get("codes")
+    if isinstance(raw, list) and raw:
+        return [str(c).zfill(6) for c in raw if c]
+    return []
+
+
 def render_fund_recognition_html(block: dict) -> str:
     # 永久排除（勿改）：名称含 ST；并购重组 / 实控人变更；
     # 季报 / 中报 / 半年报 / 年报类（如三季报增长、中报增长、年报增长）
     FUND_EXCLUDE_NAMES = frozenset({"并购重组", "实控人变更"})
     FUND_EXCLUDE_REPORT_KW = ("季报", "中报", "半年报", "年报")
+    try:
+        from ths_hot_list import core_stocks_from_pool
+    except ImportError:  # noqa: BLE001
+        core_stocks_from_pool = None  # type: ignore
+    ths_hour = block.get("ths_hot_hour") or []
+    if not isinstance(ths_hour, list):
+        ths_hour = []
 
     def _is_excluded_sector(name: str) -> bool:
         n = (name or "").strip()
@@ -6289,12 +6319,35 @@ def render_fund_recognition_html(block: dict) -> str:
             f'共 {it.get("pool_n", 0)} 只 · '
             f'3亿以上 {today_amt} 只'
         )
+        # 核心个股：池内全部 codes（含 3 亿以下）按同花顺小时榜名次取前 5
+        core_html = ""
+        if core_stocks_from_pool is not None:
+            pool_codes = _fund_pool_codes(it)
+            core = core_stocks_from_pool(pool_codes, ths_hour, top_n=5)
+            if core:
+                names = "、".join(
+                    str(c.get("name") or c.get("code") or "") for c in core
+                )
+                core_html = (
+                    f'<div class="fund-core">'
+                    f'<span class="fund-core-k">核心个股</span>'
+                    f'<span class="fund-core-v">{names}</span>'
+                    f"</div>"
+                )
+            else:
+                core_html = (
+                    f'<div class="fund-core">'
+                    f'<span class="fund-core-k">核心个股</span>'
+                    f'<span class="fund-core-v empty">小时榜暂无命中</span>'
+                    f"</div>"
+                )
         cards.append(
             f'''<div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">{it.get("name", "")}</span>
       <span class="fund-card-meta">{meta}</span>
     </div>
+    {core_html}
     <div class="fund-chart">
       <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{"".join(cols)}</div>
       <div class="fund-axis">{"".join(ticks)}</div>
@@ -6474,6 +6527,16 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
     macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
     fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
+    # 每次更新报表：拉最新同花顺小时榜，供板块「核心个股」按池内小时榜前 5 展示
+    try:
+        from ths_hot_list import fetch_and_cache_hour
+
+        fund_recognition["ths_hot_hour"] = fetch_and_cache_hour(
+            as_of=dt.date() if hasattr(dt, "date") else dt,
+            progress=True,
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise RuntimeError(f"同花顺小时榜未就绪，板块核心个股无法生成: {exc}") from exc
     fund_range = ""
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
         fund_range = (

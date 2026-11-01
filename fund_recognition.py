@@ -356,6 +356,7 @@ def compute_fund_recognition(
             {
                 "name": p["name"],
                 "pool_n": p["pool_n"],
+                "codes": list(p.get("codes") or []),
                 "hit_count": p["hit_count"],
                 "first_appear": p.get("first_appear"),
                 "series": series,
