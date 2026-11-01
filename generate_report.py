@@ -5029,30 +5029,10 @@ def render_html(ctx: dict) -> str:
     {ts_def_note_html}
   </div>
 
-  <!-- 3 涨停板块 -->
-  <div class="section" id="sec-sectors">
-    <div class="section-head">
-      <div class="section-num">3</div>
-      <div class="section-title">涨停板块</div>
-    </div>
-    {sector_block}
-    {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
-  </div>
-
-  <!-- 4 公告与政策 -->
-  <div class="section" id="sec-post">
-    <div class="section-head">
-      <div class="section-num">4</div>
-      <div class="section-title">公告与政策</div>
-    </div>
-    {post_block}
-    {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
-  </div>
-
-  <!-- 5 事件 -->
+  <!-- 3 事件（原第5；2026-11-01 前移） -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">3</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5062,15 +5042,35 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 6 板块-资金认可度 -->
+  <!-- 4 板块-资金认可度（原第6；2026-11-01 前移） -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">4</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
     {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。", tone="tip")}
     {fund_recognition_html}
+  </div>
+
+  <!-- 5 涨停板块（原第3） -->
+  <div class="section" id="sec-sectors">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div class="section-title">涨停板块</div>
+    </div>
+    {sector_block}
+    {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
+  </div>
+
+  <!-- 6 公告与政策（原第4） -->
+  <div class="section" id="sec-post">
+    <div class="section-head">
+      <div class="section-num">6</div>
+      <div class="section-title">公告与政策</div>
+    </div>
+    {post_block}
+    {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
   <div class="footer">生成于 {ctx['generated']}</div>
