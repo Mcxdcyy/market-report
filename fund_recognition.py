@@ -7,6 +7,7 @@
   · 窗口内首次上榜日：池 = 当日该板块涨停代码
   · 之后每一天：把当日新上榜代码并入池（只增不减）；当日未上榜则池不变
 - 按日：截至当日累计池内，成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
+- 起画门槛：自首个「3亿以上家数 ≥10」的交易日起才画柱（之前留空，含已上榜但样本不足）
 - 题材缩圈 CR3：同当日累计池；上涨票权重=涨幅×成交额；CR3=前3/合计；附 n_up
 - 结果：每板块近 20 个交易日序列
 - 成交额：重算时一律 QQ 日 K（万元→元）刷新；最新交易日生成报表时 force 重算
@@ -37,7 +38,8 @@ AMOUNT_MIN = 3e8  # 3 亿元
 KLINE_NEED = 40  # MA10 + 20 日余量
 WORKERS = 48
 # 个股池按日累计（首日=当日涨停；之后只新增）。旧缓存用末日总池回算，须强制重算。
-POOL_VIA = "cumulative_daily"
+# SCHEMA 含起画门槛：自首个 n_amt≥10 日起画柱。
+POOL_VIA = "cumulative_daily_amt10"
 
 
 def _as_date(v: date | datetime | str) -> date:
@@ -305,6 +307,7 @@ def compute_sector_series(
                     "cr3": None,
                     "n_up": 0,
                     "before_debut": True,
+                    "before_amt10": True,
                 }
             )
             continue
@@ -348,6 +351,7 @@ def compute_sector_series(
                     "cr3": cr3,
                     "n_up": n_up,
                     "before_debut": False,
+                    "before_amt10": True,
                 }
             )
         else:
@@ -361,8 +365,25 @@ def compute_sector_series(
                     "cr3": cr3,
                     "n_up": n_up,
                     "before_debut": False,
+                    "before_amt10": True,
                 }
             )
+    # 起画门槛：自首个「3亿以上家数 ≥10」的交易日起才画柱；之前留空（含已上榜但样本不足日）
+    ready = False
+    for row in out:
+        if row.get("before_debut"):
+            row["before_amt10"] = True
+            row["pct"] = None
+            continue
+        if not ready:
+            if int(row.get("n_amt") or 0) >= 10:
+                ready = True
+                row["before_amt10"] = False
+            else:
+                row["before_amt10"] = True
+                row["pct"] = None
+        else:
+            row["before_amt10"] = False
     return out
 
 

@@ -1271,7 +1271,17 @@ def _render_vol_bars_block(
     if dense and not show_latest:
         meta = f"{d0}–{d1}"
     else:
-        meta = f"{d0}–{d1} · 今日 {bars[-1]['label']} {unit}"
+        # 「今日」数值与末日柱色同步：放量红 / 缩量绿（flat 不着色）
+        last = bars[-1]
+        today_lab = f"{last['label']} {unit}"
+        tag = last.get("tag") if use_tags else None
+        if tag == "up":
+            today_html = f'<span class="meta-today up">{today_lab}</span>'
+        elif tag == "down":
+            today_html = f'<span class="meta-today down">{today_lab}</span>'
+        else:
+            today_html = today_lab
+        meta = f"{d0}–{d1} · 今日 {today_html}"
     wrap_cls = "vol20-wrap vol120" if dense else "vol20-wrap"
     return f'''<div class="{wrap_cls}">
     <div class="vol20-head">
@@ -5849,8 +5859,6 @@ def render_index_outlook_html(block: dict) -> str:
                 tds.append('<td class="flat">-</td>')
         body_rows.append(f"<tr{row_cls}>{''.join(tds)}</tr>")
 
-    d0 = days[0][5:].replace("-", "/") if days else ""
-    d1 = days[-1][5:].replace("-", "/") if days else ""
     warn_html = ""
     if block.get("early_warn"):
         warn_txt = str(block.get("early_warn_text") or "").strip()
@@ -5872,7 +5880,7 @@ def render_index_outlook_html(block: dict) -> str:
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
         '<span class="vol20-title">短期指数趋势</span>'
-        f'<span class="vol20-meta">近10日 · {d0}–{d1}</span>'
+        '<span class="vol20-meta">近10日</span>'
         "</div>"
         '<div class="idx-outlook-scroll">'
         '<table class="idx-outlook-table">'
@@ -6308,11 +6316,11 @@ def render_fund_recognition_html(block: dict) -> str:
     def _below_50_streak_from_end(series: list) -> int:
         """自报表日起往前，连续「占比<50%」天数（无样本日视为未达50%）。
 
-        首次上榜前的 before_debut 日不计入（板块尚未出现，不是「占比偏低」）。
+        首次上榜前、以及尚未达到「3亿以上≥10」起画门槛的日子不计入。
         """
         streak = 0
         for pt in reversed(series):
-            if pt.get("before_debut"):
+            if pt.get("before_debut") or pt.get("before_amt10"):
                 break
             pct = pt.get("pct")
             if pct is not None and float(pct) >= 50.0:
@@ -6389,9 +6397,16 @@ def render_fund_recognition_html(block: dict) -> str:
             cnt = int(pt.get(count_key) or 0)
             is_latest = i == n - 1
             before_debut = bool(pt.get("before_debut"))
+            before_amt10 = bool(pt.get("before_amt10"))
             if before_debut:
                 bar = '<div class="fund-bar empty" style="height:0"></div>'
                 title = f'{pt.get("date", "")} · 尚未上榜'
+            elif before_amt10:
+                bar = '<div class="fund-bar empty" style="height:0"></div>'
+                title = (
+                    f'{pt.get("date", "")} · 3亿以上未满10'
+                    f'（{cnt}）· 起画前'
+                )
             elif val is None:
                 bar = '<div class="fund-bar empty" style="height:0"></div>'
                 title = f'{pt.get("date", "")} · {empty_no_sample}'
@@ -6417,6 +6432,11 @@ def render_fund_recognition_html(block: dict) -> str:
                 count_nums.append(
                     f'<div class="fund-amt-n before" '
                     f'title="{pt.get("date", "")} · 尚未上榜"></div>'
+                )
+            elif before_amt10:
+                count_nums.append(
+                    f'<div class="fund-amt-n before" '
+                    f'title="{pt.get("date", "")} · 3亿以上未满10（{cnt}）"></div>'
                 )
             else:
                 zero_cls = " zero" if cnt <= 0 else ""
