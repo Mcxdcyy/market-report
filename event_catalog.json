@@ -18,19 +18,6 @@
   {
     "month": 11,
     "day": 4,
-    "dot": "4",
-    "label": "11/4",
-    "title": "半导体封测年会将举行，多家上市公司参会",
-    "short": "半导体封测年会将…",
-    "brief": "暂无补充说明。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-11-04"
-  },
-  {
-    "month": 11,
-    "day": 4,
     "dot": "半",
     "label": "11/4–6",
     "title": "第二十四届中国半导体封装测试技术与市场年会",
@@ -39,6 +26,7 @@
     "hot": true,
     "importance": 4,
     "source": "seed",
+    "fetched_at": "2026-11-04",
     "span_end": [
       11,
       6

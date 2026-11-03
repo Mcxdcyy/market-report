@@ -3061,9 +3061,16 @@ def _seed_covers_event(seed: dict, ev: dict) -> bool:
         "WAIC", "人工智能大会", "中报", "预告", "CPIC", "医药创新",
         "低空", "政治局", "具身", "机器人", "宇树", "世界机器人大会",
         "医学人工智能", "MAIC", "吹风会", "五年规划",
-        "封测", "半导体封装", "乌镇", "进博会", "百度世界", "光伏与储能",
+        "乌镇", "进博会", "百度世界", "光伏与储能",
     )
-    return any(k in st and k in et for k in keys) or st in et or et in st
+    if any(k in st and k in et for k in keys) or st in et or et in st:
+        return True
+    # 封测年会：标题用词可能是「封测」或「封装测试」
+    if "半导体" in st and "半导体" in et and (
+        ("封测" in st or "封装" in st) and ("封测" in et or "封装" in et)
+    ):
+        return True
+    return False
 
 
 def sync_event_catalog(as_of: datetime) -> tuple[list[dict], str]:
