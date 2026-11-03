@@ -2469,6 +2469,86 @@ SEED_EVENT_CATALOG: list[dict] = [
         "importance": 4,
         "source": "seed",
     },
+    {
+        "month": 11,
+        "day": 2,
+        "dot": "网",
+        "label": "11/2–5",
+        "title": "2026世界互联网大会乌镇峰会",
+        "short": "乌镇峰会",
+        "brief": (
+            "于浙江乌镇举行，主题为“开源开放 共建共享”；"
+            "分论坛覆盖智能体互联、机器人与具身智能、时空智能等议题，"
+            "同期“互联网之光”博览会汇聚多家企业与技术成果展示。"
+        ),
+        "hot": True,
+        "importance": 4,
+        "source": "seed",
+        "span_end": (11, 5),
+    },
+    {
+        "month": 11,
+        "day": 4,
+        "dot": "半",
+        "label": "11/4–6",
+        "title": "第二十四届中国半导体封装测试技术与市场年会",
+        "short": "半导体封测年会",
+        "brief": (
+            "于南京举行，围绕先进封装、玻璃基板、硅通孔等方向展开研讨，"
+            "参会企业包括封测龙头及相关设计、制造与材料环节公司。"
+        ),
+        "hot": True,
+        "importance": 4,
+        "source": "seed",
+        "span_end": (11, 6),
+    },
+    {
+        "month": 11,
+        "day": 5,
+        "dot": "进",
+        "label": "11/5–10",
+        "title": "第九届中国国际进口博览会",
+        "short": "进博会",
+        "brief": (
+            "于上海国家会展中心举行，设置汽车及智慧出行、医疗器械及医药保健、"
+            "技术装备等展区，观察进口替代、消费与高端装备相关订单与合作线索。"
+        ),
+        "hot": True,
+        "importance": 4,
+        "source": "seed",
+        "span_end": (11, 10),
+    },
+    {
+        "month": 11,
+        "day": 12,
+        "dot": "百",
+        "label": "11/12",
+        "title": "百度世界2026",
+        "short": "百度世界",
+        "brief": (
+            "于北京国家会议中心二期举行，主题围绕智能组织与企业级人工智能应用，"
+            "关注大模型产品、智能云与行业落地进展。"
+        ),
+        "hot": True,
+        "importance": 4,
+        "source": "seed",
+    },
+    {
+        "month": 11,
+        "day": 17,
+        "dot": "光",
+        "label": "11/17–20",
+        "title": "第九届中国国际光伏与储能产业大会",
+        "short": "光储大会",
+        "brief": (
+            "于四川成都举行，主题围绕光伏与储能融合及产业链协同，"
+            "观察光伏产能出清节奏与储能装机、订单验证。"
+        ),
+        "hot": True,
+        "importance": 4,
+        "source": "seed",
+        "span_end": (11, 20),
+    },
 ]
 
 # 事件库：板块级炒作节点（会议/政策/财报/产业链级IPO）；普通单股解禁/无链条 IPO 排除
@@ -2540,6 +2620,11 @@ def _event_is_supply_only(title: str) -> bool:
 
 def _event_is_chain_ipo(title: str) -> bool:
     """影响整条产业链的强主题 IPO/申购（如长鑫、宇树），须提前纳入时间轴。"""
+    # 年会/峰会等「上市公司参会」不是 IPO 节点
+    if any(k in title for k in ("年会", "大会", "峰会", "论坛", "展会", "博览会", "参会")):
+        return False
+    if "上市公司" in title and not any(k in title for k in ("IPO", "申购", "发行")):
+        return False
     if not any(k in title for k in ("IPO", "申购", "上市", "发行")):
         return False
     return _event_has_strong_theme(title)
