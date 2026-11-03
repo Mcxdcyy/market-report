@@ -1723,7 +1723,7 @@ def _render_pct_mean_zero_chart(
 ) -> str:
     """百分比序列均值零轴柱图（上红下绿）；纵轴按 |偏离| 约 90 分位定尺。
 
-    meta：「横轴 M% · 今日 N%」。用于 10cm缩圈 CR5 等。
+    meta：「横轴 M% · 今日 N%」。
     """
     vals = [
         float(x[value_key])
@@ -3853,16 +3853,10 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
-    cr5_series = ctx.get("cr5_10cm_series") or []
-    cr5_html = _render_pct_mean_zero_chart(
-        cr5_series,
-        baseline=ctx.get("cr5_10cm_mean_200d"),
-        title="10cm缩圈",
-        value_key="cr5",
-    )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
     # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
-    # 趋势强度图表：强趋势占比 → 结构占比 → 百日新高 → 10cm缩圈；脚注模块最末
+    # 趋势强度图表：强趋势占比 → 结构占比 → 百日新高；脚注模块最末
+    # 2026-11-03：已删「10cm缩圈」；板块-资金认可度已删「题材缩圈」
     # 2026-10-29：已删「资金追高情绪」模块、追高活跃度图/标签/结论/表头 pill
     ts_def_note_html = (
         '<div class="ts-note">'
@@ -5172,7 +5166,6 @@ def render_html(ctx: dict) -> str:
     </div>
     {trend_strength_html}
     {xh200_html}
-    {cr5_html}
     {ts_def_note_html}
   </div>
 
@@ -6474,20 +6467,9 @@ def render_fund_recognition_html(block: dict) -> str:
                 f'（{int(pt.get("n_ok") or 0)}/{cnt}）· 3亿以上 {cnt} 只'
             ),
         )
-        cr_cols, cr_ticks, cr_nums = _fund_bar_chart(
-            series,
-            value_key="cr3",
-            count_key="n_up",
-            count_label="上涨",
-            empty_no_sample="无上涨样本",
-            value_title_fmt=lambda pt, val, cnt: (
-                f'{pt.get("date", "")} · 缩圈CR3 {val:.1f}% · 上涨 {cnt} 只'
-            ),
-        )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
         today_amt = int(last_pt.get("n_amt") or 0)
-        today_cr3 = last_pt.get("cr3")
         tags_html = ""
         if today is not None:
             today_f = float(today)
@@ -6495,15 +6477,6 @@ def render_fund_recognition_html(block: dict) -> str:
             tags_html = (
                 f'<div class="chart-tags vol20-tags">'
                 f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
-                f"</div>"
-            )
-        cr_tags_html = ""
-        if today_cr3 is not None:
-            cr_f = float(today_cr3)
-            cr_cls = "ok" if cr_f > 50.0 else "bad"
-            cr_tags_html = (
-                f'<div class="chart-tags vol20-tags">'
-                f'<span class="pill {cr_cls}">缩圈 CR3 {cr_f:.1f}%</span>'
                 f"</div>"
             )
         meta = (
@@ -6546,13 +6519,6 @@ def render_fund_recognition_html(block: dict) -> str:
       <div class="fund-amt-row" aria-label="每日3亿以上家数">{amt_nums}</div>
     </div>
     {tags_html}
-    <div class="fund-chart">
-      <div class="fund-chart-label">题材缩圈</div>
-      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{cr_cols}</div>
-      <div class="fund-axis">{cr_ticks}</div>
-      <div class="fund-amt-row" aria-label="每日上涨家数">{cr_nums}</div>
-    </div>
-    {cr_tags_html}
   </div>'''
         )
 
@@ -6679,18 +6645,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
 
-    cr5_10cm_series: list[dict] = []
-    cr5_10cm_mean_200d: float | None = None
-    try:
-        from market_cr5 import compute_market_cr5
-
-        # 10cm缩圈：主板≥7% 池 CR5；柱图近200日；零轴近200日均值
-        cr5_payload = compute_market_cr5(report_d, force=False, progress=True)
-        cr5_10cm_mean_200d = cr5_payload.get("mean_200d")
-        cr5_10cm_series = list(cr5_payload.get("daily") or [])
-    except Exception as exc:  # noqa: BLE001
-        print(f"[cr5-10cm] 10cm缩圈统计失败: {exc}")
-
     market_news = load_market_news(dt, env_weak=env_weak)
     news_raw = {}
     if NEWS_FILE.exists():
@@ -6760,8 +6714,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "vol20_bars": vol20_bars,
         "xh200_series": xh200_series,
         "xh_mean_200d": xh_mean_200d,
-        "cr5_10cm_series": cr5_10cm_series,
-        "cr5_10cm_mean_200d": cr5_10cm_mean_200d,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
         "vol_regime": vol_regime,

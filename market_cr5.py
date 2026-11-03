@@ -3,8 +3,8 @@
 
 口径（固定）：
 - 样本：沪深主板（10cm），排除 ST / 北交所 / 创业板 / 科创板
-- 池：当日涨幅 ≥7%，有成交额
-- 权重 w = 涨幅(%) × 成交额
+- 池：两日累计涨幅 >11%（今收/两日前收 − 1），且当日成交额 >3 亿元
+- 权重 w = 当日涨幅(%) × 当日成交额
 - CR5 = 前 5 名权重 / 池内权重合计（×100 为百分比）
 - 页面柱图近 200 个交易日；零轴 = 近 200 个交易日 CR5 均值
 
@@ -24,13 +24,14 @@ SERIES_FILE = RESULT_DIR / "series.json"
 
 CHART_DAYS = 200
 MEAN_DAYS = 200
-PCT_MIN = 7.0
+PCT_MIN = 11.0  # 两日累计涨幅严格大于该值：(今收/两日前收-1)*100
+AMOUNT_MIN = 3e8  # 当日成交额 > 3 亿元（元）
 CR_TOP = 5
-SCHEMA = 1
+SCHEMA = 3
 SOURCE = "local_10cm_cr5"
 NOTE = (
-    "10cm缩圈：主板涨幅≥7% 池内，权重=涨幅×成交额，CR5=前5/合计；"
-    "柱图近200日，零轴近200日均值。"
+    "10cm缩圈：主板两日累计涨幅>11%且当日成交额>3亿池内，"
+    "权重=涨幅×成交额，CR5=前5/合计；柱图近200日，零轴近200日均值。"
 )
 
 
@@ -88,41 +89,54 @@ def _day_cr5(
     stocks: list[dict],
     d: date,
 ) -> tuple[float | None, int]:
-    """返回 (cr5_pct, n_pool)。"""
+    """返回 (cr5_pct, n_pool)。
+
+    入池：两日累计涨幅 (今收/两日前收 − 1) > PCT_MIN，且当日成交额 > AMOUNT_MIN。
+    """
     ds = d.isoformat()
     weights: list[float] = []
     for s in stocks:
         code = str(s.get("code") or "")
         rows = cache.get(code) or []
-        if len(rows) < 2:
+        if len(rows) < 3:
             continue
         idx = {r["date"]: i for i, r in enumerate(rows)}
         i = idx.get(ds)
-        if i is None or i < 1:
+        if i is None or i < 2:
             continue
         row = rows[i]
         prev = rows[i - 1]
+        prev2 = rows[i - 2]
         try:
             close = float(row["close"])
             pc = float(prev["close"])
+            pc2 = float(prev2["close"])
             amt = float(row["amount"]) if row.get("amount") is not None else 0.0
         except (TypeError, ValueError, KeyError):
             continue
-        if pc <= 0 or close <= 0 or amt <= 0:
+        if pc2 <= 0 or pc <= 0 or close <= 0 or amt <= 0:
             continue
-        pct = (close / pc - 1.0) * 100.0
-        if pct < PCT_MIN:
+        if amt <= AMOUNT_MIN:
             continue
-        weights.append(pct * amt)
+        pct_2d = (close / pc2 - 1.0) * 100.0
+        if pct_2d <= PCT_MIN:
+            continue
+        pct_today = (close / pc - 1.0) * 100.0
+        weights.append(pct_today * amt)
     return _cr5_from_weights(weights), len(weights)
 
 
 def _day_ok(cur: dict) -> bool:
-    return (
-        str(cur.get("source") or "") == SOURCE
-        and cur.get("cr5") is not None
-        and int(cur.get("schema") or 0) == SCHEMA
-    )
+    """已按当前口径算过即可（空池 cr5=null 也算完成，避免反复重算）。"""
+    if str(cur.get("source") or "") != SOURCE:
+        return False
+    if int(cur.get("schema") or 0) != SCHEMA:
+        return False
+    if float(cur.get("pct_min") or 0) != PCT_MIN:
+        return False
+    if float(cur.get("amount_min") or 0) != AMOUNT_MIN:
+        return False
+    return "n_pool" in cur and "cr5" in cur
 
 
 def ensure_series_window(
@@ -183,7 +197,9 @@ def ensure_series_window(
                 "source": SOURCE,
                 "schema": SCHEMA,
                 "pct_min": PCT_MIN,
+                "amount_min": AMOUNT_MIN,
                 "cr_top": CR_TOP,
+                "streak_days": 2,
             }
             if progress:
                 print(
@@ -211,10 +227,11 @@ def series_daily_rows(as_of: date | str, *, n_days: int | None = None) -> list[d
             continue
         if not _day_ok(val):
             continue
+        raw = val.get("cr5")
         rows.append(
             {
                 "date": d.isoformat(),
-                "cr5": float(val["cr5"]),
+                "cr5": None if raw is None else float(raw),
                 "n_pool": int(val.get("n_pool") or 0),
             }
         )
