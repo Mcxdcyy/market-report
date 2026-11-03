@@ -1026,17 +1026,17 @@ def _macro_bias_cycle_text(series: list[dict]) -> str:
 
 
 def _macro_bias_cycle_tags_html(series: list[dict]) -> str:
-    """宏观周期标签：与模块1 .mkt-env-pills 同形，整块图表上方单独一行。"""
+    """宏观图下周期标签：长期指数趋势-做多/做空周期；未进入任一周期则不写。"""
     regime = _macro_bias_regime(series)
     if regime == "long":
         return (
-            '<div class="mkt-env-pills" aria-label="宏观·多空策略周期">'
+            '<div class="chart-tags vol20-tags">'
             '<span class="pill ok">长期指数趋势-做多周期</span>'
             "</div>"
         )
     if regime == "short":
         return (
-            '<div class="mkt-env-pills" aria-label="宏观·多空策略周期">'
+            '<div class="chart-tags vol20-tags">'
             '<span class="pill bad">长期指数趋势-做空周期</span>'
             "</div>"
         )
@@ -4101,14 +4101,11 @@ def render_html(ctx: dict) -> str:
   .hero-home svg {{ width: 18px; height: 18px; display: block; }}
   .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 4px; }}
   /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框）
-     周期 pill 用 .mkt-env-pills，整块图上方单独一行（对齐模块1顶栏） */
+     顺序：图名 → 柱图 → 周期标签（图下）→ 结论条 */
   .macro-bias-wrap {{
     margin-top: 16px; padding-top: 16px; padding-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
-  }}
-  .macro-bias-wrap > .mkt-env-pills {{
-    margin: 0; /* 与 wrap 的 gap 衔接，勿再叠 14px 底边 */
   }}
   .macro-bias-wrap > .vol20-head {{
     margin-bottom: 0;
@@ -4120,12 +4117,13 @@ def render_html(ctx: dict) -> str:
     font-weight: 600;
   }}
   /* 大盘环境顶 · 指数/量能 pill（2026-10-29 由表头短期迁入；好红/中橙/不好绿）
-     宏观周期 pill 共用本类；字号与近30日量能图下标签统一 */
+     字体样式与宏观图下标签 / 近30日成交金额图下标签统一 */
   .mkt-env-pills {{
     display: flex; flex-wrap: wrap; gap: 6px;
     margin: 0 0 14px;
   }}
   .mkt-env-pills .pill,
+  .macro-bias-wrap .chart-tags .pill,
   .vol30-tags .pill {{
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }}
@@ -5105,8 +5103,8 @@ def render_html(ctx: dict) -> str:
       padding: 12px 12px; font-size: 15px;
     }}
     .mkt-env-pills {{ margin-bottom: 12px; gap: 6px; }}
-    .macro-bias-wrap > .mkt-env-pills {{ margin: 0; }}
     .mkt-env-pills .pill,
+    .macro-bias-wrap .chart-tags .pill,
     .vol30-tags .pill {{ font-size: 13px; padding: 5px 11px; }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
@@ -5867,9 +5865,8 @@ def _render_macro_bias_one(
     )
     tags_html = _macro_bias_cycle_tags_html(series)
     cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
-    # 周期 pill 单独一行置顶（对齐模块1顶栏）；其下才是图名+柱图；结论条仍在图下
+    # 顺序：图名 → 柱图 → 周期标签 → 结论条（标签在图下）
     return f'''<div class="macro-bias-wrap" aria-label="宏观·多空策略">
-  {tags_html}
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
@@ -5881,12 +5878,13 @@ def _render_macro_bias_one(
     </div>
     <div class="vol20-axis">{''.join(ticks)}</div>
   </div>
+  {tags_html}
   {cycle_html}
 </div>'''
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """表头：近200日宏观·多空策略；周期 pill 在整块图上方单独一行；结论条在图下；无分层外框。"""
+    """表头：近200日宏观·多空策略；周期标签与结论条均在图下；无分层外框。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""

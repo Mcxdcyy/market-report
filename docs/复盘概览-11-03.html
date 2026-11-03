@@ -76,14 +76,11 @@
   .hero-home svg { width: 18px; height: 18px; display: block; }
   .hero-meta { font-size: 12px; color: var(--sub); margin-top: 4px; }
   /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框）
-     周期 pill 用 .mkt-env-pills，整块图上方单独一行（对齐模块1顶栏） */
+     顺序：图名 → 柱图 → 周期标签（图下）→ 结论条 */
   .macro-bias-wrap {
     margin-top: 16px; padding-top: 16px; padding-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
-  }
-  .macro-bias-wrap > .mkt-env-pills {
-    margin: 0; /* 与 wrap 的 gap 衔接，勿再叠 14px 底边 */
   }
   .macro-bias-wrap > .vol20-head {
     margin-bottom: 0;
@@ -95,12 +92,13 @@
     font-weight: 600;
   }
   /* 大盘环境顶 · 指数/量能 pill（2026-10-29 由表头短期迁入；好红/中橙/不好绿）
-     宏观周期 pill 共用本类；字号与近30日量能图下标签统一 */
+     字体样式与宏观图下标签 / 近30日成交金额图下标签统一 */
   .mkt-env-pills {
     display: flex; flex-wrap: wrap; gap: 6px;
     margin: 0 0 14px;
   }
   .mkt-env-pills .pill,
+  .macro-bias-wrap .chart-tags .pill,
   .vol30-tags .pill {
     font-size: 11px; font-weight: 600; padding: 4px 10px;
   }
@@ -1080,8 +1078,8 @@
       padding: 12px 12px; font-size: 15px;
     }
     .mkt-env-pills { margin-bottom: 12px; gap: 6px; }
-    .macro-bias-wrap > .mkt-env-pills { margin: 0; }
     .mkt-env-pills .pill,
+    .macro-bias-wrap .chart-tags .pill,
     .vol30-tags .pill { font-size: 13px; padding: 5px 11px; }
     .section { padding: 12px; margin-bottom: 8px; }
     .section-head { flex-wrap: wrap; gap: 6px; }
@@ -1219,7 +1217,6 @@
       数据 2026-11-03（周二）｜下一交易日 2026-11-04（周三）
     </div>
     <div class="macro-bias-wrap" aria-label="宏观·多空策略">
-  <div class="mkt-env-pills" aria-label="宏观·多空策略周期"><span class="pill bad">长期指数趋势-做空周期</span></div>
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">近200日 · 今日 <span class="meta-today down">-3</span></div>
@@ -1231,6 +1228,7 @@
     </div>
     <div class="vol20-axis"><div class="vol20-tick show"><span>01/05</span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick show"><span>04/16</span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick show"><span>07/24</span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick"><span></span></div><div class="vol20-tick show latest"><span>11/03</span></div></div>
   </div>
+  <div class="chart-tags vol20-tags"><span class="pill bad">长期指数趋势-做空周期</span></div>
   <div class="vol-mkt-sum-wrap"><div class="vol-mkt-sum bad">做空周期：主观看空，等待，极限低吸。——市场差，做多买进去就跌穿。</div></div>
 </div>
   </header>
@@ -1576,7 +1574,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 00:50</div>
+  <div class="footer">生成于 2026-11-04 00:53</div>
 </div>
 </body>
 </html>
