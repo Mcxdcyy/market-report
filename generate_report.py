@@ -4097,15 +4097,22 @@ def render_html(ctx: dict) -> str:
   .hero-home:hover {{ background: #0a84ff18; color: #0070e0; }}
   .hero-home svg {{ width: 18px; height: 18px; display: block; }}
   .hero-meta {{ font-size: 12px; color: var(--sub); margin-top: 4px; }}
-  /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框） */
-  /* 与近30日成交金额 .vol20-wrap 同系：column + gap 10 */
+  /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框）
+     与标题区之间用稍强分隔；周期标签在图上方（对齐模块1 .mkt-env-pills） */
   .macro-bias-wrap {{
-    margin-top: 14px; padding-top: 14px; padding-bottom: 0;
+    margin-top: 16px; padding-top: 16px; padding-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
   .macro-bias-wrap > .vol20-head {{
     margin-bottom: 0;
+  }}
+  /* 周期 pill 紧贴标题下、图上方（同 .mkt-env-pills 角色） */
+  .macro-bias-wrap > .chart-tags {{
+    margin: 0;
+  }}
+  .macro-bias-wrap > .vol-mkt-sum-wrap {{
+    margin-top: 4px;
   }}
   .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
     font-weight: 600;
@@ -5864,11 +5871,13 @@ def _render_macro_bias_one(
             'class="chart-tags"', 'class="chart-tags vol20-tags"', 1
         )
     cycle_html = _module_sum_html(_macro_bias_cycle_text(series))
+    # 周期标签在图上方（对齐模块1 .mkt-env-pills）；结论条仍在图下
     return f'''<div class="macro-bias-wrap" aria-label="宏观·多空策略">
   <div class="vol20-head">
     <div class="vol20-title">宏观·多空策略</div>
     <div class="vol20-meta">{window_label} · 今日 {today_html}</div>
   </div>
+  {tags_html}
   <div class="macro-bias-plot">
     <div class="macro-bias-chart {chart_mod}" aria-label="宏观多空策略 {window_label}">
       <div class="macro-bias-zero"></div>
@@ -5876,13 +5885,12 @@ def _render_macro_bias_one(
     </div>
     <div class="vol20-axis">{''.join(ticks)}</div>
   </div>
-  {tags_html}
   {cycle_html}
 </div>'''
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """表头：近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条；无分层外框。"""
+    """表头：近200日宏观·多空策略（已删近120日对比图）；周期标签在图上、结论条在图下；无分层外框。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
