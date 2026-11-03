@@ -3847,23 +3847,11 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and vol30_after:
         vol30_html = vol30_after
-    xh200 = ctx.get("xh200_series") or ctx.get("xh120_series") or []
-    xh200_html = _render_new_high_mean_zero_chart(
-        xh200,
-        baseline=ctx.get("xh_mean_200d"),
-        title="百日新高",
-    )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
-    # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
-    # 趋势强度图表：强趋势占比 → 结构占比 → 百日新高；脚注模块最末
+    # 1 大盘·风险指针：指数趋势 → 近30日成交金额（标签+周期结论）
+    # 2026-11-03 晚间：已删整模块「趋势强度」（含强趋势占比/结构占比/百日新高/脚注）
     # 2026-11-03：已删「10cm缩圈」；板块-资金认可度已删「题材缩圈」
     # 2026-10-29：已删「资金追高情绪」模块、追高活跃度图/标签/结论/表头 pill
-    ts_def_note_html = (
-        '<div class="ts-note">'
-        "强趋势定义（同时满足）：连续3天收盘价在五日线上方，连续5天最低价在十日线上方，"
-        "3日内创20日新高，五日线向上，非跌停。"
-        "</div>"
-    )
     macro_bias_html = render_macro_bias_html(ctx.get("macro_bias") or {})
     index_outlook_html = render_index_outlook_html(ctx.get("index_downtrend") or {})
     vol20_html = f"{index_outlook_html}{vol30_html}"
@@ -3927,7 +3915,6 @@ def render_html(ctx: dict) -> str:
         ctx.get("as_of"),
     )
 
-    trend_strength_html = render_trend_strength_html(ctx.get("trend_strength") or {})
     fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
 
     return f"""<!DOCTYPE html>
@@ -5158,41 +5145,30 @@ def render_html(ctx: dict) -> str:
     {vol20_html}
   </div>
 
-  <!-- 2 趋势强度 -->
-  <div class="section" id="sec-ts">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">趋势强度</div>
-    </div>
-    {trend_strength_html}
-    {xh200_html}
-    {ts_def_note_html}
-  </div>
-
-  <!-- 3 涨停板块 -->
+  <!-- 2 涨停板块（2026-11-03：已删「趋势强度」整模块） -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">涨停板块</div>
     </div>
     {sector_block}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 4 公告与政策 -->
+  <!-- 3 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">3</div>
       <div class="section-title">公告与政策</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 5 事件（2026-11-02：放回涨停/公告之后） -->
+  <!-- 4 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5202,10 +5178,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 6 板块-资金认可度（2026-11-02：放回涨停/公告之后） -->
+  <!-- 5 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">6</div>
+      <div class="section-num">5</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -6614,37 +6590,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         kpl_rows,
     )
 
-    xh200_series: list[dict] = []
-    xh_mean_200d: float | None = None
-    try:
-        from new_high_count import CHART_DAYS, MEAN_DAYS, compute_new_high_count
-
-        # 本地日K：当日最高=近200日；柱图近120日；零轴均值近200日（与追高/强趋势统一）。
-        xh_payload = compute_new_high_count(
-            report_d, force=False, progress=True
-        )
-        xh_daily = list(xh_payload.get("daily") or [])
-
-        def _xh_row_to_point(row: dict) -> dict | None:
-            ds = str(row.get("date") or "")[:10]
-            if not ds:
-                return None
-            try:
-                v = float(row.get("count"))
-            except (TypeError, ValueError):
-                return None
-            return {"date": ds, "value": v}
-
-        points = [p for p in (_xh_row_to_point(r) for r in xh_daily) if p]
-        if points:
-            look_mean = points[-MEAN_DAYS:] if len(points) >= MEAN_DAYS else points
-            xh_mean_200d = sum(float(p["value"]) for p in look_mean) / len(look_mean)
-            xh200_series = (
-                points[-CHART_DAYS:] if len(points) >= CHART_DAYS else points
-            )
-    except Exception as exc:  # noqa: BLE001
-        print(f"[newhigh] 新高数量统计失败: {exc}")
-
+    # 2026-11-03：已删「趋势强度」整模块（含百日新高），日常生成不再拉新高序列
     market_news = load_market_news(dt, env_weak=env_weak)
     news_raw = {}
     if NEWS_FILE.exists():
@@ -6687,7 +6633,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         latest_dt = datetime(_latest.year, _latest.month, _latest.day)
     except Exception:  # noqa: BLE001
         latest_dt = dt
-    trend_strength = load_trend_strength_block(dt, latest_dt=latest_dt)
+    # 2026-11-03：已删「趋势强度」整模块，日常生成不再算 trend_strength
     chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
     index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
     macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
@@ -6712,8 +6658,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "trend_range": "",
         "trend_headline": "",
         "vol20_bars": vol20_bars,
-        "xh200_series": xh200_series,
-        "xh_mean_200d": xh_mean_200d,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
         "vol_regime": vol_regime,
@@ -6730,7 +6674,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "modes": modes,
         "advice": {"modes": [], "alerts": "", "nxt_label": ""},
         "emo": 0,
-        "trend_strength": trend_strength,
         "chase_sentiment": chase_sentiment,
         "index_downtrend": index_downtrend,
         "macro_bias": macro_bias,
