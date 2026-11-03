@@ -1714,6 +1714,119 @@ def _render_new_high_mean_zero_chart(
   </div>'''
 
 
+def _render_pct_mean_zero_chart(
+    series: list[dict],
+    *,
+    baseline: float | None,
+    title: str,
+    value_key: str = "value",
+) -> str:
+    """百分比序列均值零轴柱图（上红下绿）；纵轴按 |偏离| 约 90 分位定尺。
+
+    meta：「横轴 M% · 今日 N%」。用于 10cm缩圈 CR5 等。
+    """
+    vals = [
+        float(x[value_key])
+        for x in series
+        if x.get(value_key) is not None
+    ]
+    if not vals:
+        return ""
+
+    base = float(baseline) if baseline is not None else 0.0
+    if baseline is not None:
+        abs_deltas = [abs(v - base) for v in vals]
+        scale = _chase_robust_scale(abs_deltas, pct=0.90)
+    else:
+        scale = _chase_robust_scale(vals, pct=0.90)
+        base = 0.0
+    if scale < 1e-9:
+        scale = 1.0
+    scale *= 1.08
+
+    n_bars = len(series)
+    tick_idxs = {0, n_bars - 1}
+    if n_bars >= 8:
+        tick_idxs.add(n_bars // 3)
+        tick_idxs.add((2 * n_bars) // 3)
+
+    axis_title = (
+        f' title="近200日均值 {base:.1f}%"'
+        if baseline is not None
+        else ""
+    )
+
+    cols: list[str] = []
+    ticks: list[str] = []
+    for i, row in enumerate(series):
+        raw = row.get(value_key)
+        ds = str(row.get("date") or "")
+        try:
+            dt = datetime.strptime(ds[:10], "%Y-%m-%d")
+            lab = fmt_md(dt)
+            wd = WEEKDAY[dt.weekday()]
+        except ValueError:
+            lab = ds[5:].replace("-", "/") if len(ds) >= 10 else ds
+            wd = ""
+        is_latest = i == n_bars - 1
+        n_pool = row.get("n_pool")
+        pool_tip = f" · 池{int(n_pool)}只" if n_pool is not None else ""
+        if raw is None:
+            cols.append(
+                f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{lab} 无样本">
+      <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div></div>
+    </div>'''
+            )
+        else:
+            v = float(raw)
+            if baseline is not None:
+                delta = v - base
+                h = min(50.0, abs(delta) / scale * 50.0)
+                side = "pos" if delta >= 0 else "neg"
+            else:
+                h = min(100.0, v / scale * 100.0)
+                side = "pos"
+            tip_mean = f" · 均值{base:.1f}%" if baseline is not None else ""
+            tip_clip = ""
+            if baseline is not None and abs(v - base) > scale:
+                tip_clip = " · 柱高已封顶"
+            cols.append(
+                f'''<div class="vol120z-col{" latest" if is_latest else ""}" title="{lab} 周{wd} · {v:.1f}%{pool_tip}{tip_mean}{tip_clip}">
+      <div class="vol120z-track"><div class="vol120z-zero"{axis_title}></div><div class="vol120z-bar {side}" style="height:{h:.1f}%"></div></div>
+    </div>'''
+            )
+        ticks.append(
+            f'<div class="vol20-tick{" show" if i in tick_idxs else ""}{" latest" if is_latest else ""}">'
+            f'{"<span>" + lab + "</span>" if i in tick_idxs else ""}</div>'
+        )
+
+    last = next(
+        (x for x in reversed(series) if x.get(value_key) is not None), None
+    )
+    today_v = float(last[value_key]) if last is not None else None
+    today_txt = (
+        f"今日 {today_v:.1f}%" if today_v is not None else "今日 —"
+    )
+    if baseline is not None:
+        today_span = _meta_today_vs_mean_span(
+            today_v, float(base), today_txt, round_digits=1
+        )
+        meta = f"横轴 {base:.1f}% · {today_span}"
+    else:
+        meta = today_txt
+
+    return f'''<div class="vol20-wrap vol120 mean-zero">
+    <div class="vol20-head">
+      <span class="vol20-title">{title}</span>
+      <span class="vol20-meta">{meta}</span>
+    </div>
+    <div class="vol20-chart">
+      <div class="vol120z-bars">{"".join(cols)}</div>
+      <div class="vol20-axis">{"".join(ticks)}</div>
+    </div>
+  </div>'''
+
+
 def analyze_3d(df: pd.DataFrame, row: pd.Series) -> list[tuple[str, str]]:
     """近3日方向标签，仅用于环境结论（不展示在八维卡片）。"""
     prev = df.iloc[-2] if len(df) >= 2 else row
@@ -3740,9 +3853,16 @@ def render_html(ctx: dict) -> str:
         baseline=ctx.get("xh_mean_200d"),
         title="百日新高",
     )
+    cr5_series = ctx.get("cr5_10cm_series") or []
+    cr5_html = _render_pct_mean_zero_chart(
+        cr5_series,
+        baseline=ctx.get("cr5_10cm_mean_200d"),
+        title="10cm缩圈",
+        value_key="cr5",
+    )
     # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
     # 1 大盘环境：指数趋势 → 近30日成交金额（标签+周期结论）
-    # 百日新高在趋势强度模块图表区最后；强趋势定义脚注再跟在百日新高之后（模块最末）
+    # 趋势强度图表：强趋势占比 → 结构占比 → 百日新高 → 10cm缩圈；脚注模块最末
     # 2026-10-29：已删「资金追高情绪」模块、追高活跃度图/标签/结论/表头 pill
     ts_def_note_html = (
         '<div class="ts-note">'
@@ -5052,6 +5172,7 @@ def render_html(ctx: dict) -> str:
     </div>
     {trend_strength_html}
     {xh200_html}
+    {cr5_html}
     {ts_def_note_html}
   </div>
 
@@ -6558,6 +6679,18 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     except Exception as exc:  # noqa: BLE001
         print(f"[newhigh] 新高数量统计失败: {exc}")
 
+    cr5_10cm_series: list[dict] = []
+    cr5_10cm_mean_200d: float | None = None
+    try:
+        from market_cr5 import compute_market_cr5
+
+        # 10cm缩圈：主板≥7% 池 CR5；柱图近30日；零轴近200日均值
+        cr5_payload = compute_market_cr5(report_d, force=False, progress=True)
+        cr5_10cm_mean_200d = cr5_payload.get("mean_200d")
+        cr5_10cm_series = list(cr5_payload.get("daily") or [])
+    except Exception as exc:  # noqa: BLE001
+        print(f"[cr5-10cm] 10cm缩圈统计失败: {exc}")
+
     market_news = load_market_news(dt, env_weak=env_weak)
     news_raw = {}
     if NEWS_FILE.exists():
@@ -6627,6 +6760,8 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         "vol20_bars": vol20_bars,
         "xh200_series": xh200_series,
         "xh_mean_200d": xh_mean_200d,
+        "cr5_10cm_series": cr5_10cm_series,
+        "cr5_10cm_mean_200d": cr5_10cm_mean_200d,
         "vol_note": vol_note,
         "vol_tags": vol_tags,
         "vol_regime": vol_regime,
