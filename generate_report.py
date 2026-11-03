@@ -4141,7 +4141,6 @@ def render_html(ctx: dict) -> str:
   .mkt-env-pills .pill.sys {{
     background: #7c3aed; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
-    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
   }}
 
   /* ── 区块 ── */
