@@ -5,6 +5,8 @@
 - 板块：近 20 个交易日开盘啦涨停原因中出现过的全部板块
 - 个股池：该板块 20 日内曾上榜代码去重
 - 按日：池内成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
+- 题材缩圈 CR3：同池；池内当日有成交且涨幅>0，权重=涨幅×成交额；
+  CR3=前3名权重/权重合计（%）；附上涨家数 n_up（广度）
 - 结果：每板块近 20 个交易日序列
 - 成交额：重算时一律 QQ 日 K（万元→元）刷新，不信任共享 K 线缓存里的旧 amount
   （盘中缓存或其它源可能少算；最新交易日生成报表时 force 重算）
@@ -243,6 +245,38 @@ def _stock_day_flags(rows: list[dict], day: date) -> tuple[bool, bool]:
     return True, (close > ma5 and close > ma10)
 
 
+def _stock_day_contrib(rows: list[dict], day: date) -> tuple[float, float] | None:
+    """题材缩圈权重用：(涨幅%, 成交额元)。须有昨收与当日成交额。"""
+    ds = day.isoformat()
+    idx = {r["date"]: i for i, r in enumerate(rows)}
+    i = idx.get(ds)
+    if i is None or i < 1:
+        return None
+    row = rows[i]
+    amt = row.get("amount")
+    if amt is None or float(amt) <= 0:
+        return None
+    try:
+        close = float(row["close"])
+        prev = float(rows[i - 1]["close"])
+    except (TypeError, ValueError, KeyError):
+        return None
+    if prev <= 0 or close <= 0:
+        return None
+    pct = (close / prev - 1.0) * 100.0
+    return pct, float(amt)
+
+
+def _cr3_from_weights(weights: list[float]) -> float | None:
+    if not weights:
+        return None
+    total = sum(weights)
+    if total <= 0:
+        return None
+    top = sum(sorted(weights, reverse=True)[:3])
+    return round(100.0 * top / total, 1)
+
+
 def compute_sector_series(
     codes: list[str],
     cache: dict[str, list[dict]],
@@ -250,7 +284,10 @@ def compute_sector_series(
     *,
     first_appear: date | None = None,
 ) -> list[dict]:
-    """按日序列。first_appear 之前（窗口内尚未上榜）标记 before_debut，不计入展示柱。"""
+    """按日序列。first_appear 之前（窗口内尚未上榜）标记 before_debut，不计入展示柱。
+
+    另算题材缩圈 CR3：同池上涨票（涨幅>0）按 涨幅×成交额，前3/合计。
+    """
     out = []
     for d in series_days:
         if first_appear is not None and d < first_appear:
@@ -260,17 +297,27 @@ def compute_sector_series(
                     "pct": None,
                     "n_ok": 0,
                     "n_amt": 0,
+                    "cr3": None,
+                    "n_up": 0,
                     "before_debut": True,
                 }
             )
             continue
         n_ok = 0
         n_amt = 0
+        up_weights: list[float] = []
         for code in codes:
             rows = cache.get(code) or []
             if not rows:
                 continue
             truncated = ts.truncate_as_of(rows, d)
+            if len(truncated) < 2:
+                continue
+            contrib = _stock_day_contrib(truncated, d)
+            if contrib is not None:
+                pct_ch, amt = contrib
+                if pct_ch > 0 and amt > 0:
+                    up_weights.append(pct_ch * amt)
             if len(truncated) < 10:
                 continue
             in_denom, ok = _stock_day_flags(truncated, d)
@@ -278,6 +325,8 @@ def compute_sector_series(
                 n_amt += 1
                 if ok:
                     n_ok += 1
+        n_up = len(up_weights)
+        cr3 = _cr3_from_weights(up_weights)
         if n_amt <= 0:
             out.append(
                 {
@@ -285,6 +334,8 @@ def compute_sector_series(
                     "pct": None,
                     "n_ok": 0,
                     "n_amt": 0,
+                    "cr3": cr3,
+                    "n_up": n_up,
                     "before_debut": False,
                 }
             )
@@ -295,6 +346,8 @@ def compute_sector_series(
                     "pct": round(100.0 * n_ok / n_amt, 1),
                     "n_ok": n_ok,
                     "n_amt": n_amt,
+                    "cr3": cr3,
+                    "n_up": n_up,
                     "before_debut": False,
                 }
             )
@@ -318,7 +371,10 @@ def compute_fund_recognition(
             # 须带 first_appear（柱图起点）+ amount_via=qq_refresh（成交额口径）
             has_debut = bool(items) and bool(items[0].get("first_appear"))
             amount_ok = cached.get("amount_via") == "qq_refresh"
-            if items and n_ser >= SERIES_DAYS and has_debut and amount_ok:
+            # 须带题材缩圈 CR3 字段（与资金认可度同序列）
+            ser0 = (items[0].get("series") or [{}])[-1] if items else {}
+            has_cr3 = isinstance(ser0, dict) and ("cr3" in ser0)
+            if items and n_ser >= SERIES_DAYS and has_debut and amount_ok and has_cr3:
                 return cached
         except json.JSONDecodeError:
             pass

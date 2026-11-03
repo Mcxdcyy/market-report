@@ -4235,6 +4235,10 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-core-v.empty {{ color: var(--muted); font-weight: 400; }}
   .fund-chart {{ width: 100%; display: flex; flex-direction: column; gap: 2px; }}
+  .fund-chart-label {{
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    margin: 0 0 2px;
+  }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
     width: 100%;
@@ -4949,6 +4953,7 @@ def render_html(ctx: dict) -> str:
     .module-summary {{ font-size: 13px; }}
     .fund-card-title {{ font-size: 16px; }}
     .fund-card-meta {{ font-size: 13px; }}
+    .fund-chart-label {{ font-size: 13px; }}
     .fund-core {{ font-size: 14px; }}
     .fund-core-k {{ font-size: 13px; }}
     .idx-outlook-table th,
@@ -6271,39 +6276,40 @@ def render_fund_recognition_html(block: dict) -> str:
                 f"东财个股人气名次未就绪，板块核心个股无法生成: {exc}"
             ) from exc
 
-    cards = []
-    for it in items:
-        series = it.get("series") or []
-        if not series:
-            continue
+    def _fund_bar_chart(
+        series: list,
+        *,
+        value_key: str,
+        count_key: str,
+        count_label: str,
+        empty_no_sample: str,
+        value_title_fmt,
+    ) -> tuple[str, str, str]:
+        """返回 (cols_html, ticks_html, count_row_html)。"""
         n = len(series)
         tick_idx = {0, n - 1}
         if n >= 4:
             tick_idx.add(n // 3)
             tick_idx.add((2 * n) // 3)
-        cols = []
-        ticks = []
-        amt_nums = []
+        cols: list[str] = []
+        ticks: list[str] = []
+        count_nums: list[str] = []
         for i, pt in enumerate(series):
-            pct = pt.get("pct")
-            n_amt = int(pt.get("n_amt") or 0)
-            n_ok = int(pt.get("n_ok") or 0)
+            val = pt.get(value_key)
+            cnt = int(pt.get(count_key) or 0)
             is_latest = i == n - 1
             before_debut = bool(pt.get("before_debut"))
             if before_debut:
                 bar = '<div class="fund-bar empty" style="height:0"></div>'
                 title = f'{pt.get("date", "")} · 尚未上榜'
-            elif pct is None:
+            elif val is None:
                 bar = '<div class="fund-bar empty" style="height:0"></div>'
-                title = f'{pt.get("date", "")} · 无样本 · 3亿以上 {n_amt} 只'
+                title = f'{pt.get("date", "")} · {empty_no_sample}'
             else:
-                h = max(0.0, min(100.0, float(pct)))
-                level = "strong" if float(pct) > 50.0 else "weak"
+                h = max(0.0, min(100.0, float(val)))
+                level = "strong" if float(val) > 50.0 else "weak"
                 bar = f'<div class="fund-bar {level}" style="height:{h:.1f}%"></div>'
-                title = (
-                    f'{pt.get("date", "")} · 占比{pct}%'
-                    f'（{n_ok}/{n_amt}）· 3亿以上 {n_amt} 只'
-                )
+                title = value_title_fmt(pt, float(val), cnt)
             cols.append(
                 f'<div class="fund-col{" latest" if is_latest else ""}" title="{title}">'
                 f'<div class="fund-bar-track">{bar}</div></div>'
@@ -6312,26 +6318,55 @@ def render_fund_recognition_html(block: dict) -> str:
             lab = ""
             if show:
                 ds = str(pt.get("date") or "")
-                lab = ds[5:] if len(ds) >= 10 else ds  # MM-DD
+                lab = ds[5:] if len(ds) >= 10 else ds
             ticks.append(
                 f'<div class="fund-tick{" show" if show else ""}{" latest" if is_latest else ""}">'
                 f'{f"<span>{lab}</span>" if show else ""}</div>'
             )
             if before_debut:
-                amt_nums.append(
+                count_nums.append(
                     f'<div class="fund-amt-n before" '
                     f'title="{pt.get("date", "")} · 尚未上榜"></div>'
                 )
             else:
-                zero_cls = " zero" if n_amt <= 0 else ""
+                zero_cls = " zero" if cnt <= 0 else ""
                 latest_cls = " latest" if is_latest else ""
-                amt_nums.append(
+                count_nums.append(
                     f'<div class="fund-amt-n{latest_cls}{zero_cls}" '
-                    f'title="{pt.get("date", "")} · 3亿以上 {n_amt} 只">{n_amt}</div>'
+                    f'title="{pt.get("date", "")} · {count_label} {cnt}">{cnt}</div>'
                 )
+        return "".join(cols), "".join(ticks), "".join(count_nums)
+
+    cards = []
+    for it in items:
+        series = it.get("series") or []
+        if not series:
+            continue
+        cols, ticks, amt_nums = _fund_bar_chart(
+            series,
+            value_key="pct",
+            count_key="n_amt",
+            count_label="3亿以上",
+            empty_no_sample="无样本",
+            value_title_fmt=lambda pt, val, cnt: (
+                f'{pt.get("date", "")} · 占比{val:.1f}%'
+                f'（{int(pt.get("n_ok") or 0)}/{cnt}）· 3亿以上 {cnt} 只'
+            ),
+        )
+        cr_cols, cr_ticks, cr_nums = _fund_bar_chart(
+            series,
+            value_key="cr3",
+            count_key="n_up",
+            count_label="上涨",
+            empty_no_sample="无上涨样本",
+            value_title_fmt=lambda pt, val, cnt: (
+                f'{pt.get("date", "")} · 缩圈CR3 {val:.1f}% · 上涨 {cnt} 只'
+            ),
+        )
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
         today_amt = int(last_pt.get("n_amt") or 0)
+        today_cr3 = last_pt.get("cr3")
         tags_html = ""
         if today is not None:
             today_f = float(today)
@@ -6339,6 +6374,15 @@ def render_fund_recognition_html(block: dict) -> str:
             tags_html = (
                 f'<div class="chart-tags vol20-tags">'
                 f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
+                f"</div>"
+            )
+        cr_tags_html = ""
+        if today_cr3 is not None:
+            cr_f = float(today_cr3)
+            cr_cls = "ok" if cr_f > 50.0 else "bad"
+            cr_tags_html = (
+                f'<div class="chart-tags vol20-tags">'
+                f'<span class="pill {cr_cls}">缩圈 CR3 {cr_f:.1f}%</span>'
                 f"</div>"
             )
         meta = (
@@ -6375,11 +6419,19 @@ def render_fund_recognition_html(block: dict) -> str:
     </div>
     {core_html}
     <div class="fund-chart">
-      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{"".join(cols)}</div>
-      <div class="fund-axis">{"".join(ticks)}</div>
-      <div class="fund-amt-row" aria-label="每日3亿以上家数">{"".join(amt_nums)}</div>
+      <div class="fund-chart-label">资金认可度</div>
+      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{cols}</div>
+      <div class="fund-axis">{ticks}</div>
+      <div class="fund-amt-row" aria-label="每日3亿以上家数">{amt_nums}</div>
     </div>
     {tags_html}
+    <div class="fund-chart">
+      <div class="fund-chart-label">题材缩圈</div>
+      <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{cr_cols}</div>
+      <div class="fund-axis">{cr_ticks}</div>
+      <div class="fund-amt-row" aria-label="每日上涨家数">{cr_nums}</div>
+    </div>
+    {cr_tags_html}
   </div>'''
         )
 
