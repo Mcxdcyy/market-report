@@ -6,7 +6,7 @@
 - 池：当日涨幅 ≥7%，有成交额
 - 权重 w = 涨幅(%) × 成交额
 - CR5 = 前 5 名权重 / 池内权重合计（×100 为百分比）
-- 页面柱图近 30 个交易日；零轴 = 近 200 个交易日 CR5 均值
+- 页面柱图近 200 个交易日；零轴 = 近 200 个交易日 CR5 均值
 
 缓存：`market_cr5_results/series.json`
 """
@@ -22,7 +22,7 @@ BASE = Path(__file__).resolve().parent
 RESULT_DIR = BASE / "market_cr5_results"
 SERIES_FILE = RESULT_DIR / "series.json"
 
-CHART_DAYS = 30
+CHART_DAYS = 200
 MEAN_DAYS = 200
 PCT_MIN = 7.0
 CR_TOP = 5
@@ -30,7 +30,7 @@ SCHEMA = 1
 SOURCE = "local_10cm_cr5"
 NOTE = (
     "10cm缩圈：主板涨幅≥7% 池内，权重=涨幅×成交额，CR5=前5/合计；"
-    "柱图近30日，零轴近200日均值。"
+    "柱图近200日，零轴近200日均值。"
 )
 
 

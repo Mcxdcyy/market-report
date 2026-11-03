@@ -6684,7 +6684,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     try:
         from market_cr5 import compute_market_cr5
 
-        # 10cm缩圈：主板≥7% 池 CR5；柱图近30日；零轴近200日均值
+        # 10cm缩圈：主板≥7% 池 CR5；柱图近200日；零轴近200日均值
         cr5_payload = compute_market_cr5(report_d, force=False, progress=True)
         cr5_10cm_mean_200d = cr5_payload.get("mean_200d")
         cr5_10cm_series = list(cr5_payload.get("daily") or [])
