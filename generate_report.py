@@ -3061,6 +3061,7 @@ def _seed_covers_event(seed: dict, ev: dict) -> bool:
         "WAIC", "人工智能大会", "中报", "预告", "CPIC", "医药创新",
         "低空", "政治局", "具身", "机器人", "宇树", "世界机器人大会",
         "医学人工智能", "MAIC", "吹风会", "五年规划",
+        "封测", "半导体封装", "乌镇", "进博会", "百度世界", "光伏与储能",
     )
     return any(k in st and k in et for k in keys) or st in et or et in st
 
