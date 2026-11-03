@@ -3847,8 +3847,8 @@ def render_html(ctx: dict) -> str:
     )
     if not vol30_html and vol30_after:
         vol30_html = vol30_after
-    # 表头长期：宏观·多空策略（图+周期结论条）；短期风险 pill 另区
-    # 1 大盘·风险指针：指数趋势 → 近30日成交金额（标签+周期结论）
+    # 1 宏观大势·指数周期：宏观·多空策略（图+周期结论条；2026-11-03 从表头拆出）
+    # 2 大盘·风险指针：指数趋势 → 近30日成交金额（标签+周期结论）
     # 2026-11-03 晚间：已删整模块「趋势强度」（含强趋势占比/结构占比/百日新高/脚注）
     # 2026-11-03：已删「10cm缩圈」；板块-资金认可度已删「题材缩圈」
     # 2026-10-29：已删「资金追高情绪」模块、追高活跃度图/标签/结论/表头 pill
@@ -5132,43 +5132,51 @@ def render_html(ctx: dict) -> str:
     <div class="hero-meta">
       数据 {ctx['data_date']}（周{ctx['data_weekday']}）｜下一交易日 {ctx['next_date']}（周{ctx['next_weekday']}）
     </div>
-    {macro_bias_html}
   </header>
 
-  <!-- 1 大盘·风险指针（顶栏指数/量能 pill；2026-10-29 已删追高；原名大盘环境） -->
-  <div class="section" id="sec-mkt">
+  <!-- 1 宏观大势·指数周期（2026-11-03：宏观·多空策略从表头拆出） -->
+  <div class="section" id="sec-macro">
     <div class="section-head">
       <div class="section-num">1</div>
+      <div class="section-title">宏观大势·指数周期</div>
+    </div>
+    {macro_bias_html}
+  </div>
+
+  <!-- 2 大盘·风险指针（顶栏指数/量能 pill；2026-10-29 已删追高；原名大盘环境） -->
+  <div class="section" id="sec-mkt">
+    <div class="section-head">
+      <div class="section-num">2</div>
       <div class="section-title">大盘·风险指针</div>
     </div>
     {_mkt_env_pills_html(ctx)}
     {vol20_html}
   </div>
 
-  <!-- 2 涨停板块（2026-11-03：已删「趋势强度」整模块） -->
+  <!-- 3 涨停板块（2026-11-03：已删「趋势强度」整模块） -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">2</div>
+      <div class="section-num">3</div>
       <div class="section-title">涨停板块</div>
     </div>
     {sector_block}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
   </div>
 
-  <!-- 3 公告与政策 -->
+  <!-- 4 公告与政策 -->
   <div class="section" id="sec-post">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">4</div>
       <div class="section-title">公告与政策</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 4 事件 -->
+  <!-- 5 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5178,10 +5186,10 @@ def render_html(ctx: dict) -> str:
     {fwd_section_html}
   </div>
 
-  <!-- 5 板块-资金认可度 -->
+  <!-- 6 板块-资金认可度 -->
   <div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">6</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -5715,7 +5723,7 @@ def _render_macro_bias_one(
 ) -> str:
     """单张宏观·多空策略柱图（近200日 · chart_mod=is-200）。
 
-    表头扁平：标题 → 柱图 → 做多/做空周期标签 → 周期结论条（图下方；2026-10-29）。
+    图内扁平：图名「宏观·多空策略」→ 柱图 → 做多/做空周期标签 → 周期结论条（图下方）。
     """
     if not series:
         return ""
@@ -5779,7 +5787,7 @@ def _render_macro_bias_one(
 
 
 def render_macro_bias_html(block: dict) -> str:
-    """表头：近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条；无分层外框。"""
+    """模块「宏观大势·指数周期」：近200日宏观·多空策略（已删近120日对比图）+ 图下周期结论条。"""
     series = [s for s in (block.get("series") or []) if isinstance(s, dict)]
     if not series:
         return ""
