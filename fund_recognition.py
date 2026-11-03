@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""板块-资金认可度：开盘啦近20日涨停板块整合池 × 近20日均线认可占比。
+"""板块-资金认可度：开盘啦近20日涨停板块 × 按日累计池 × 均线认可占比。
 
 口径：
 - 板块：近 20 个交易日开盘啦涨停原因中出现过的全部板块
-- 个股池：该板块 20 日内曾上榜代码去重
-- 按日：池内成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
-- 题材缩圈 CR3：同池；池内当日有成交且涨幅>0，权重=涨幅×成交额；
-  CR3=前3名权重/权重合计（%）；附上涨家数 n_up（广度）
+- 个股池（按日累计，禁止用末日总池回算历史日）：
+  · 窗口内首次上榜日：池 = 当日该板块涨停代码
+  · 之后每一天：把当日新上榜代码并入池（只增不减）；当日未上榜则池不变
+- 按日：截至当日累计池内，成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
+- 题材缩圈 CR3：同当日累计池；上涨票权重=涨幅×成交额；CR3=前3/合计；附 n_up
 - 结果：每板块近 20 个交易日序列
-- 成交额：重算时一律 QQ 日 K（万元→元）刷新，不信任共享 K 线缓存里的旧 amount
-  （盘中缓存或其它源可能少算；最新交易日生成报表时 force 重算）
+- 成交额：重算时一律 QQ 日 K（万元→元）刷新；最新交易日生成报表时 force 重算
 """
 
 from __future__ import annotations
@@ -36,6 +36,8 @@ SERIES_DAYS = 20
 AMOUNT_MIN = 3e8  # 3 亿元
 KLINE_NEED = 40  # MA10 + 20 日余量
 WORKERS = 48
+# 个股池按日累计（首日=当日涨停；之后只新增）。旧缓存用末日总池回算，须强制重算。
+POOL_VIA = "cumulative_daily"
 
 
 def _as_date(v: date | datetime | str) -> date:
@@ -278,17 +280,19 @@ def _cr3_from_weights(weights: list[float]) -> float | None:
 
 
 def compute_sector_series(
-    codes: list[str],
+    daily_codes: dict[str, list[str]],
     cache: dict[str, list[dict]],
     series_days: list[date],
     *,
     first_appear: date | None = None,
 ) -> list[dict]:
-    """按日序列。first_appear 之前（窗口内尚未上榜）标记 before_debut，不计入展示柱。
+    """按日序列。first_appear 之前标记 before_debut。
 
-    另算题材缩圈 CR3：同池上涨票（涨幅>0）按 涨幅×成交额，前3/合计。
+    个股池按日累计：首日=当日涨停代码；之后把新上榜代码并入（只增不减）。
+    禁止用窗口末日总池回算历史日。
     """
-    out = []
+    out: list[dict] = []
+    cum: set[str] = set()
     for d in series_days:
         if first_appear is not None and d < first_appear:
             out.append(
@@ -297,16 +301,21 @@ def compute_sector_series(
                     "pct": None,
                     "n_ok": 0,
                     "n_amt": 0,
+                    "n_pool": 0,
                     "cr3": None,
                     "n_up": 0,
                     "before_debut": True,
                 }
             )
             continue
+        for c in daily_codes.get(d.isoformat()) or []:
+            code = str(c).zfill(6)
+            if code:
+                cum.add(code)
         n_ok = 0
         n_amt = 0
         up_weights: list[float] = []
-        for code in codes:
+        for code in cum:
             rows = cache.get(code) or []
             if not rows:
                 continue
@@ -327,6 +336,7 @@ def compute_sector_series(
                     n_ok += 1
         n_up = len(up_weights)
         cr3 = _cr3_from_weights(up_weights)
+        n_pool = len(cum)
         if n_amt <= 0:
             out.append(
                 {
@@ -334,6 +344,7 @@ def compute_sector_series(
                     "pct": None,
                     "n_ok": 0,
                     "n_amt": 0,
+                    "n_pool": n_pool,
                     "cr3": cr3,
                     "n_up": n_up,
                     "before_debut": False,
@@ -346,6 +357,7 @@ def compute_sector_series(
                     "pct": round(100.0 * n_ok / n_amt, 1),
                     "n_ok": n_ok,
                     "n_amt": n_amt,
+                    "n_pool": n_pool,
                     "cr3": cr3,
                     "n_up": n_up,
                     "before_debut": False,
@@ -368,13 +380,20 @@ def compute_fund_recognition(
             cached = json.loads(out_path.read_text(encoding="utf-8"))
             items = cached.get("items") or []
             n_ser = len((items[0].get("series") or [])) if items else 0
-            # 须带 first_appear（柱图起点）+ amount_via=qq_refresh（成交额口径）
+            # 须带 first_appear + qq_refresh 成交额 + 按日累计池口径
             has_debut = bool(items) and bool(items[0].get("first_appear"))
             amount_ok = cached.get("amount_via") == "qq_refresh"
-            # 须带题材缩圈 CR3 字段（与资金认可度同序列）
+            pool_ok = cached.get("pool_via") == POOL_VIA
             ser0 = (items[0].get("series") or [{}])[-1] if items else {}
             has_cr3 = isinstance(ser0, dict) and ("cr3" in ser0)
-            if items and n_ser >= SERIES_DAYS and has_debut and amount_ok and has_cr3:
+            if (
+                items
+                and n_ser >= SERIES_DAYS
+                and has_debut
+                and amount_ok
+                and pool_ok
+                and has_cr3
+            ):
                 return cached
         except json.JSONDecodeError:
             pass
@@ -404,13 +423,21 @@ def compute_fund_recognition(
 
     items = []
     for p in pools:
+        name = p["name"]
         fa = _as_date(p["first_appear"]) if p.get("first_appear") else None
+        daily_codes: dict[str, list[str]] = {}
+        for d in series_days:
+            ds = d.isoformat()
+            day_map = stocks_hist.get(ds) or {}
+            daily_codes[ds] = [
+                str(c).zfill(6) for c in (day_map.get(name) or []) if c
+            ]
         series = compute_sector_series(
-            p["codes"], cache, series_days, first_appear=fa
+            daily_codes, cache, series_days, first_appear=fa
         )
         items.append(
             {
-                "name": p["name"],
+                "name": name,
                 "pool_n": p["pool_n"],
                 "codes": list(p.get("codes") or []),
                 "hit_count": p["hit_count"],
@@ -426,6 +453,7 @@ def compute_fund_recognition(
         "series_end": series_days[-1].isoformat(),
         "amount_min_yi": 3,
         "amount_via": "qq_refresh",
+        "pool_via": POOL_VIA,
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "items": items,
     }
