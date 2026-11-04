@@ -4569,25 +4569,35 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  /* 核心个股：柱图下方；与占比 pill 同一行（左标签 / 右占比），chip 另起一行 */
-  .fund-after {{
-    display: flex; flex-direction: column; gap: 6px;
+  /* 核心个股套件：柱图下方一整块 —— 上行左「核心个股」右占比 pill（强制同行），下行 chip */
+  .fund-core {{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 8px;
+    align-items: center;
     margin: 0; padding: 0;
   }}
-  .fund-after-row {{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px 12px; flex-wrap: wrap;
-  }}
   .fund-core-k {{
+    grid-column: 1; grid-row: 1;
     font-size: 11px; font-weight: 600; color: var(--muted);
     letter-spacing: 0.02em;
+    line-height: 1.2;
   }}
-  .fund-after-row .chart-tags {{
-    margin: 0; padding: 0; justify-content: flex-end;
+  .fund-core-pct {{
+    grid-column: 2; grid-row: 1;
+    justify-self: end;
+    align-self: center;
+    margin: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
   }}
   .fund-core-list {{
+    grid-column: 1 / -1; grid-row: 2;
     display: flex; flex-wrap: wrap; gap: 6px 8px;
     align-items: center;
+    min-width: 0;
   }}
   .fund-core-chip {{
     display: inline-block;
@@ -4883,11 +4893,13 @@ def render_html(ctx: dict) -> str:
   }}
   /* 图表标签 .pill：A 股红强绿弱（近30日成交金额 / 追高活跃度 / 板块-资金认可度 统一） */
   .chart-tags .pill.ok,
-  .vol20-tags .pill.ok {{ background: #ffebee; color: #c62828; }}
+  .vol20-tags .pill.ok,
+  .fund-core-pct.ok {{ background: #ffebee; color: #c62828; }}
   .chart-tags .pill.warn,
   .vol20-tags .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
   .chart-tags .pill.bad,
-  .vol20-tags .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
+  .vol20-tags .pill.bad,
+  .fund-core-pct.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .vol20-note {{
     margin-top: 12px; padding: 8px 10px;
     background: var(--accent-bg); border-left: 3px solid var(--accent);
@@ -6810,21 +6822,18 @@ def render_fund_recognition_html(block: dict) -> str:
         if today is not None:
             today_f = float(today)
             cls = "ok" if today_f > 50.0 else "bad"
-            pct_pill = (
-                f'<div class="chart-tags vol20-tags">'
-                f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
-                f"</div>"
-            )
+            # 占比 pill 直接挂在 .fund-core 网格右上角（勿再套 chart-tags，避免换行/下沉）
+            pct_pill = f'<span class="pill fund-core-pct {cls}">占比 {today_f:.1f}%</span>'
         meta = (
             f'共 {it.get("pool_n", 0)} 只 · '
             f'3亿以上 {today_amt} 只'
         )
-        # 核心个股：同花顺小时榜优先，不足 5 用东财全市场名次补足（含 3 亿以下）
-        # 版式：柱图下方；「核心个股」与占比 pill 同一行（左/右），chip 另起一行
+        # 核心个股套件：同花顺小时榜优先，不足 5 用东财全市场名次补足（含 3 亿以下）
+        # 版式：柱图下方一整块；上行左「核心个股」右占比 pill（grid 强制同行），下行 chip
         chips_html = ""
-        show_core_k = False
+        show_core = False
         if ths_core_stocks_from_pool is not None or em_core_stocks_from_pool is not None:
-            show_core_k = True
+            show_core = True
             pool_codes = _fund_pool_codes(it)
             core = _core_stocks_ths_then_em(pool_codes, top_n=5)
             if core:
@@ -6836,11 +6845,11 @@ def render_fund_recognition_html(block: dict) -> str:
                 chips = '<span class="fund-core-chip empty">暂无人气名次</span>'
             chips_html = f'<div class="fund-core-list">{chips}</div>'
         after_html = ""
-        if show_core_k or pct_pill:
-            left = '<div class="fund-core-k">核心个股</div>' if show_core_k else "<div></div>"
+        if show_core or pct_pill:
+            k_html = '<div class="fund-core-k">核心个股</div>' if show_core else ""
             after_html = (
-                f'<div class="fund-after">'
-                f'<div class="fund-after-row">{left}{pct_pill}</div>'
+                f'<div class="fund-core">'
+                f"{k_html}{pct_pill}"
                 f"{chips_html}"
                 f"</div>"
             )
