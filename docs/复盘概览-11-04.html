@@ -423,7 +423,7 @@
     border-top: 1px solid var(--border);
     background: transparent;
     min-width: 0;
-    display: flex; flex-direction: column; gap: 12px;
+    display: flex; flex-direction: column; gap: 10px;
   }
   .fund-card-head {
     display: flex; align-items: baseline; justify-content: space-between;
@@ -431,14 +431,17 @@
   }
   .fund-card-title { font-size: 14px; font-weight: 700; color: var(--text); }
   .fund-card-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  /* 核心个股套件：柱图下方一整块 —— 上行左「核心个股」右占比 pill（强制同行），下行 chip */
+  /* 核心个股套件：柱图紧下方；左列=标题+chip，右列=占比 pill 顶对齐（明显高于 chip 行） */
+  .fund-chart + .fund-core {
+    margin-top: -2px; /* 贴紧柱图家数行，整套上移 */
+  }
   .fund-core {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
-    column-gap: 10px;
-    row-gap: 8px;
-    align-items: center;
+    column-gap: 12px;
+    row-gap: 6px;
+    align-items: start;
     margin: 0; padding: 0;
   }
   .fund-core-k {
@@ -446,17 +449,19 @@
     font-size: 11px; font-weight: 600; color: var(--muted);
     letter-spacing: 0.02em;
     line-height: 1.2;
+    padding-top: 2px; /* 与右侧 pill 顶缘视觉齐平 */
   }
   .fund-core-pct {
-    grid-column: 2; grid-row: 1;
+    grid-column: 2; grid-row: 1 / span 2; /* 跨标题+chip 两行，钉在套件右上 */
     justify-self: end;
-    align-self: center;
+    align-self: start;
     margin: 0;
     flex-shrink: 0;
     white-space: nowrap;
+    line-height: 1.2;
   }
   .fund-core-list {
-    grid-column: 1 / -1; grid-row: 2;
+    grid-column: 1; grid-row: 2; /* 只占左列，右侧留给占比 */
     display: flex; flex-wrap: wrap; gap: 6px 8px;
     align-items: center;
     min-width: 0;
@@ -1722,7 +1727,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 23:46</div>
+  <div class="footer">生成于 2026-11-04 23:49</div>
 </div>
 </body>
 </html>
