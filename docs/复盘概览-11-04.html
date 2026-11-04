@@ -900,11 +900,19 @@
   .post-row.ok { border-left-color: var(--bar-ok); }
   .post-row.warn { border-left-color: var(--bar-warn); }
   .post-row.bad { border-left-color: var(--bar-bad); }
-  .post-type {
-    font-size: 11px; font-weight: 700; color: var(--muted);
-    align-self: flex-start;
+  .post-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
+    min-width: 0;
   }
-  .post-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }
+  .post-type {
+    flex: 0 0 auto;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    line-height: 1.5; white-space: nowrap;
+  }
+  .post-title {
+    flex: 1 1 12em; min-width: 0;
+    font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
+  }
   .post-summary {
     font-size: 12px; color: var(--sub); margin: 0;
     /* 与涨停板块段内换行同尺 */
@@ -1224,6 +1232,7 @@
     :root { --logic-gap: 10px; }
     .sector-muted { font-size: 14px; }
     .post-meta { font-size: 13px; }
+    .post-type { font-size: 14px; }
     .post-title { font-size: 15px; }
     .post-summary { font-size: 14px; }
     .news-empty { font-size: 14px; }
@@ -1572,32 +1581,46 @@
       <div class="section-title">公告与政策</div>
     </div>
     <div class="post-list"><div class="post-row ok">
-      <div class="post-type">公告</div>
-      <div class="post-title">云南锗业：控股子公司与美国AOI签订磷化铟衬底长期供货协议</div>
+      <div class="post-head">
+        <span class="post-type">[公告]</span>
+        <span class="post-title">云南锗业：控股子公司与美国AOI签订磷化铟衬底长期供货协议</span>
+      </div>
       <p class="post-summary">云南锗业公告，控股子公司与美国Applied Optoelectronics, Inc.签订磷化铟衬底长期供货协议，预计2027年至2031年每年采购18万片、合计90万片；2027年度合同金额约1.94亿美元（不含税），折合人民币约13.05亿元。</p>
     </div><div class="post-row ok">
-      <div class="post-type">公告</div>
-      <div class="post-title">均胜电子：拟以1.5亿元至3亿元回购股份并注销</div>
+      <div class="post-head">
+        <span class="post-type">[公告]</span>
+        <span class="post-title">均胜电子：拟以1.5亿元至3亿元回购股份并注销</span>
+      </div>
       <p class="post-summary">均胜电子公告，拟以1.5亿元至3亿元回购公司股份，全部用于注销并减少注册资本。</p>
     </div><div class="post-row bad">
-      <div class="post-type">公告</div>
-      <div class="post-title">通光线缆：子公司因提供虚假资料被暂停中标资格</div>
+      <div class="post-head">
+        <span class="post-type">[公告]</span>
+        <span class="post-title">通光线缆：子公司因提供虚假资料被暂停中标资格</span>
+      </div>
       <p class="post-summary">通光线缆公告，全资子公司因向国网天津市电力公司提供虚假资料，被暂停中标资格两年；同时存在被国家电网全品类暂停中标资格两年的风险，若实施预计未来两年营业收入合计减少约4.3亿元（含税）。</p>
     </div><div class="post-row bad">
-      <div class="post-type">公告</div>
-      <div class="post-title">*ST闻泰：Nexperia B.V.向荷兰法院起诉公司及实控人索赔约20亿美元</div>
+      <div class="post-head">
+        <span class="post-type">[公告]</span>
+        <span class="post-title">*ST闻泰：Nexperia B.V.向荷兰法院起诉公司及实控人索赔约20亿美元</span>
+      </div>
       <p class="post-summary">*ST闻泰公告，Nexperia B.V.已向荷兰法院起诉公司及实际控制人，索赔金额约20亿美元。</p>
     </div><div class="post-row bad">
-      <div class="post-type">公告</div>
-      <div class="post-title">光迅科技：关于物料短缺及生产停工等市场传闻的澄清公告</div>
+      <div class="post-head">
+        <span class="post-type">[公告]</span>
+        <span class="post-title">光迅科技：关于物料短缺及生产停工等市场传闻的澄清公告</span>
+      </div>
       <p class="post-summary">光迅科技发布澄清公告称，有关物料短缺及生产停工的市场传闻不属实；公司围绕光传输、光互连等方向的在研项目有序推进。</p>
     </div><div class="post-row ok">
-      <div class="post-type">政策</div>
-      <div class="post-title">中国人民银行加力实施股票回购增持再贷款并下调利率至1%</div>
+      <div class="post-head">
+        <span class="post-type">[政策]</span>
+        <span class="post-title">中国人民银行加力实施股票回购增持再贷款并下调利率至1%</span>
+      </div>
       <p class="post-summary">中国人民银行公告，自2026年11月4日起下调股票回购增持再贷款利率0.25个百分点至1%；支持对象为21家全国性银行和5家系统重要性城商行，支持比例100%、期限1年可视情展期。座谈会后银行已向央行报送额度申请超过2000亿元，后续将充分满足银行再贷款需求，增强上市公司与主要股东市值管理能力。</p>
     </div><div class="post-row warn">
-      <div class="post-type">政策</div>
-      <div class="post-title">中国人民银行上调金融机构外汇存款准备金率至6%</div>
+      <div class="post-head">
+        <span class="post-type">[政策]</span>
+        <span class="post-title">中国人民银行上调金融机构外汇存款准备金率至6%</span>
+      </div>
       <p class="post-summary">中国人民银行决定，自2026年11月15日起上调金融机构外汇存款准备金率2个百分点，由4%提高至6%，以加强金融机构外汇流动性管理。</p>
     </div></div>
     <div class="module-summary">候选池 11 条 → 精选 7 条</div>
@@ -1668,7 +1691,7 @@
       <span class="fund-card-title">通信</span>
       <span class="fund-card-meta">共 14 只 · 3亿以上 13 只</span>
     </div>
-    <div class="fund-core"><span class="fund-core-k">核心个股</span><span class="fund-core-v">金安国纪、华正新材、兴森科技、沪电股份、中钨高新</span></div>
+    <div class="fund-core"><span class="fund-core-k">核心个股</span><span class="fund-core-v">金安国纪、兴森科技、沪电股份、中钨高新、大族激光</span></div>
     <div class="fund-chart">
       <div class="fund-chart-label">资金认可度</div>
       <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div><div class="fund-col" title="2026-10-08 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-09 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-12 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-13 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-14 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-15 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-16 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-19 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-20 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-21 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-22 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-23 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-26 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-27 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-28 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-29 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-30 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-11-02 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-11-03 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col latest" title="2026-11-04 · 占比30.8%（4/13）· 3亿以上 13 只"><div class="fund-bar-track"><div class="fund-bar weak" style="height:30.8%"></div></div></div></div>
@@ -1692,7 +1715,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 22:14</div>
+  <div class="footer">生成于 2026-11-04 22:20</div>
 </div>
 </body>
 </html>

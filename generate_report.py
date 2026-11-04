@@ -4031,8 +4031,10 @@ def render_html(ctx: dict) -> str:
             '<div class="post-list">'
             + "".join(
                 f'''<div class="post-row {_announce_edge_tag(it)}">
-      <div class="post-type">{it.get("type", "公告")}</div>
-      <div class="post-title">{it.get("title", "")}</div>
+      <div class="post-head">
+        <span class="post-type">[{it.get("type", "公告")}]</span>
+        <span class="post-title">{it.get("title", "")}</span>
+      </div>
       <p class="post-summary">{it.get("content", it.get("text", ""))}</p>
     </div>'''
                 for it in items
@@ -4986,11 +4988,19 @@ def render_html(ctx: dict) -> str:
   .post-row.ok {{ border-left-color: var(--bar-ok); }}
   .post-row.warn {{ border-left-color: var(--bar-warn); }}
   .post-row.bad {{ border-left-color: var(--bar-bad); }}
-  .post-type {{
-    font-size: 11px; font-weight: 700; color: var(--muted);
-    align-self: flex-start;
+  .post-head {{
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
+    min-width: 0;
   }}
-  .post-title {{ font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }}
+  .post-type {{
+    flex: 0 0 auto;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    line-height: 1.5; white-space: nowrap;
+  }}
+  .post-title {{
+    flex: 1 1 12em; min-width: 0;
+    font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
+  }}
   .post-summary {{
     font-size: 12px; color: var(--sub); margin: 0;
     /* 与涨停板块段内换行同尺 */
@@ -5310,6 +5320,7 @@ def render_html(ctx: dict) -> str:
     :root {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}
+    .post-type {{ font-size: 14px; }}
     .post-title {{ font-size: 15px; }}
     .post-summary {{ font-size: 14px; }}
     .news-empty {{ font-size: 14px; }}
