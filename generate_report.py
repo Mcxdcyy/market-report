@@ -5219,14 +5219,13 @@ def render_html(ctx: dict) -> str:
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-venue {{
-    display: flex; align-items: flex-start; gap: 5px;
+    display: flex; align-items: center; gap: 5px;
     font-size: 12px; color: var(--muted); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
   }}
   .fwd-cal-venue-ico {{
     flex: 0 0 auto;
     display: inline-flex; align-items: center; justify-content: center;
-    margin-top: 0.28em; /* 与首行字面顶齐 */
     color: var(--muted); opacity: .9;
   }}
   .fwd-cal-venue-ico svg {{ display: block; }}
