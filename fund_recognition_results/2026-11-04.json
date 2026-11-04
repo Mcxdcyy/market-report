@@ -7,7 +7,7 @@
   "amount_min_yi": 3,
   "amount_via": "qq_refresh",
   "pool_via": "cumulative_daily_amt10",
-  "generated": "2026-11-04 17:01:25",
+  "generated": "2026-11-04 17:04:05",
   "items": [
     {
       "name": "机器人概念",
@@ -293,16 +293,16 @@
           "n_ok": 61,
           "n_amt": 69,
           "n_pool": 101,
-          "cr3": 22.2,
-          "n_up": 87,
+          "cr3": 22.0,
+          "n_up": 88,
           "before_debut": false,
           "before_amt10": false
         },
         {
           "date": "2026-10-29",
-          "pct": 56.5,
+          "pct": 55.6,
           "n_ok": 35,
-          "n_amt": 62,
+          "n_amt": 63,
           "n_pool": 104,
           "cr3": 50.4,
           "n_up": 20,
@@ -311,9 +311,9 @@
         },
         {
           "date": "2026-10-30",
-          "pct": 31.7,
+          "pct": 31.2,
           "n_ok": 20,
-          "n_amt": 63,
+          "n_amt": 64,
           "n_pool": 107,
           "cr3": 57.7,
           "n_up": 17,
@@ -326,8 +326,8 @@
           "n_ok": 21,
           "n_amt": 64,
           "n_pool": 111,
-          "cr3": 35.4,
-          "n_up": 66,
+          "cr3": 35.3,
+          "n_up": 67,
           "before_debut": false,
           "before_amt10": false
         },
@@ -348,8 +348,8 @@
           "n_ok": 34,
           "n_amt": 63,
           "n_pool": 116,
-          "cr3": 16.0,
-          "n_up": 97,
+          "cr3": 15.9,
+          "n_up": 98,
           "before_debut": false,
           "before_amt10": false
         }
