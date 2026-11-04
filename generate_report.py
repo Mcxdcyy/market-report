@@ -1037,7 +1037,7 @@ def _macro_bias_cycle_tags_html(series: list[dict]) -> str:
     if regime == "short":
         return (
             '<div class="chart-tags vol20-tags">'
-            '<span class="pill bad">长期指数趋势-做空周期</span>'
+            '<span class="pill bad macro-short">长期指数趋势-做空周期</span>'
             "</div>"
         )
     return ""
@@ -4141,6 +4141,11 @@ def render_html(ctx: dict) -> str:
     background: #7c3aed; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
+  }}
+  /* 宏观·做空周期标签：浅绿描边外框，刻意突出（对齐系统杠杆外框手法） */
+  .macro-bias-wrap .chart-tags .pill.macro-short {{
+    font-weight: 700; letter-spacing: 0.02em;
+    box-shadow: 0 0 0 1px rgba(46, 125, 50, 0.35);
   }}
 
   /* ── 区块 ── */

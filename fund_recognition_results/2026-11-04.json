@@ -7,7 +7,7 @@
   "amount_min_yi": 3,
   "amount_via": "qq_refresh",
   "pool_via": "cumulative_daily_amt10",
-  "generated": "2026-11-04 10:52:35",
+  "generated": "2026-11-04 10:54:53",
   "items": [
     {
       "name": "机器人概念",
@@ -346,8 +346,8 @@
           "n_ok": 18,
           "n_amt": 46,
           "n_pool": 114,
-          "cr3": 20.4,
-          "n_up": 81,
+          "cr3": 20.7,
+          "n_up": 84,
           "before_debut": false,
           "before_amt10": false
         }
@@ -637,8 +637,8 @@
           "n_ok": 19,
           "n_amt": 25,
           "n_pool": 61,
-          "cr3": 39.7,
-          "n_up": 32,
+          "cr3": 41.4,
+          "n_up": 30,
           "before_debut": false,
           "before_amt10": false
         }
@@ -923,8 +923,8 @@
           "n_ok": 5,
           "n_amt": 10,
           "n_pool": 56,
-          "cr3": 79.8,
-          "n_up": 14,
+          "cr3": 80.0,
+          "n_up": 15,
           "before_debut": false,
           "before_amt10": false
         }
@@ -1179,7 +1179,7 @@
           "n_ok": 2,
           "n_amt": 7,
           "n_pool": 26,
-          "cr3": 62.0,
+          "cr3": 65.8,
           "n_up": 12,
           "before_debut": false,
           "before_amt10": false
@@ -1425,8 +1425,8 @@
         },
         {
           "date": "2026-11-04",
-          "pct": 70.0,
-          "n_ok": 7,
+          "pct": 60.0,
+          "n_ok": 6,
           "n_amt": 10,
           "n_pool": 20,
           "cr3": 93.9,
@@ -1928,8 +1928,8 @@
           "n_ok": 0,
           "n_amt": 2,
           "n_pool": 17,
-          "cr3": 94.5,
-          "n_up": 5,
+          "cr3": 98.9,
+          "n_up": 4,
           "before_debut": false,
           "before_amt10": true
         }
@@ -2419,7 +2419,7 @@
           "n_ok": 2,
           "n_amt": 3,
           "n_pool": 14,
-          "cr3": 86.2,
+          "cr3": 84.5,
           "n_up": 6,
           "before_debut": false,
           "before_amt10": true
@@ -2669,7 +2669,7 @@
           "n_ok": 1,
           "n_amt": 2,
           "n_pool": 20,
-          "cr3": 61.2,
+          "cr3": 69.3,
           "n_up": 11,
           "before_debut": false,
           "before_amt10": false
@@ -2913,7 +2913,7 @@
           "n_ok": 5,
           "n_amt": 11,
           "n_pool": 14,
-          "cr3": 79.1,
+          "cr3": 80.2,
           "n_up": 9,
           "before_debut": false,
           "before_amt10": false
@@ -3154,7 +3154,7 @@
           "n_ok": 1,
           "n_amt": 3,
           "n_pool": 11,
-          "cr3": 95.2,
+          "cr3": 96.4,
           "n_up": 6,
           "before_debut": false,
           "before_amt10": true
@@ -3400,7 +3400,7 @@
           "n_ok": 0,
           "n_amt": 3,
           "n_pool": 16,
-          "cr3": 68.6,
+          "cr3": 69.4,
           "n_up": 11,
           "before_debut": false,
           "before_amt10": false
@@ -3642,7 +3642,7 @@
           "n_ok": 2,
           "n_amt": 6,
           "n_pool": 12,
-          "cr3": 99.7,
+          "cr3": 99.9,
           "n_up": 4,
           "before_debut": false,
           "before_amt10": true
@@ -4121,8 +4121,8 @@
           "n_ok": 1,
           "n_amt": 2,
           "n_pool": 9,
-          "cr3": 96.7,
-          "n_up": 5,
+          "cr3": 100.0,
+          "n_up": 3,
           "before_debut": false,
           "before_amt10": true
         }
@@ -4602,7 +4602,7 @@
         {
           "date": "2026-11-04",
           "pct": null,
-          "n_ok": 1,
+          "n_ok": 2,
           "n_amt": 4,
           "n_pool": 11,
           "cr3": 100.0,
@@ -4845,7 +4845,7 @@
           "n_ok": 4,
           "n_amt": 4,
           "n_pool": 10,
-          "cr3": 96.2,
+          "cr3": 96.0,
           "n_up": 6,
           "before_debut": false,
           "before_amt10": true
@@ -5087,7 +5087,7 @@
           "n_ok": 8,
           "n_amt": 9,
           "n_pool": 12,
-          "cr3": 81.3,
+          "cr3": 81.5,
           "n_up": 9,
           "before_debut": false,
           "before_amt10": false
@@ -5326,8 +5326,8 @@
           "n_ok": 0,
           "n_amt": 0,
           "n_pool": 9,
-          "cr3": 95.8,
-          "n_up": 5,
+          "cr3": 97.8,
+          "n_up": 4,
           "before_debut": false,
           "before_amt10": true
         }
@@ -5564,7 +5564,7 @@
           "n_ok": 1,
           "n_amt": 6,
           "n_pool": 8,
-          "cr3": 87.7,
+          "cr3": 88.5,
           "n_up": 6,
           "before_debut": false,
           "before_amt10": true
@@ -5803,7 +5803,7 @@
           "n_ok": 3,
           "n_amt": 5,
           "n_pool": 9,
-          "cr3": 89.5,
+          "cr3": 89.8,
           "n_up": 6,
           "before_debut": false,
           "before_amt10": true
@@ -6276,7 +6276,7 @@
         {
           "date": "2026-11-04",
           "pct": null,
-          "n_ok": 5,
+          "n_ok": 4,
           "n_amt": 5,
           "n_pool": 7,
           "cr3": 100.0,
@@ -6754,7 +6754,7 @@
           "n_ok": 6,
           "n_amt": 7,
           "n_pool": 7,
-          "cr3": 60.9,
+          "cr3": 59.3,
           "n_up": 6,
           "before_debut": false,
           "before_amt10": true
@@ -6991,8 +6991,8 @@
           "n_ok": 2,
           "n_amt": 2,
           "n_pool": 7,
-          "cr3": 99.8,
-          "n_up": 4,
+          "cr3": 100.0,
+          "n_up": 3,
           "before_debut": false,
           "before_amt10": true
         }
@@ -10033,7 +10033,7 @@
           "n_amt": 1,
           "n_pool": 3,
           "cr3": 100.0,
-          "n_up": 2,
+          "n_up": 1,
           "before_debut": false,
           "before_amt10": true
         }
@@ -10732,7 +10732,7 @@
           "n_amt": 0,
           "n_pool": 3,
           "cr3": 100.0,
-          "n_up": 1,
+          "n_up": 2,
           "before_debut": false,
           "before_amt10": true
         }
@@ -15376,7 +15376,7 @@
         {
           "date": "2026-11-04",
           "pct": null,
-          "n_ok": 0,
+          "n_ok": 1,
           "n_amt": 1,
           "n_pool": 2,
           "cr3": 100.0,
@@ -15611,8 +15611,8 @@
           "n_ok": 0,
           "n_amt": 0,
           "n_pool": 2,
-          "cr3": 100.0,
-          "n_up": 1,
+          "cr3": null,
+          "n_up": 0,
           "before_debut": false,
           "before_amt10": true
         }
@@ -15844,7 +15844,7 @@
           "n_amt": 1,
           "n_pool": 2,
           "cr3": 100.0,
-          "n_up": 2,
+          "n_up": 1,
           "before_debut": false,
           "before_amt10": true
         }
@@ -16075,8 +16075,8 @@
           "n_ok": 1,
           "n_amt": 1,
           "n_pool": 2,
-          "cr3": 100.0,
-          "n_up": 1,
+          "cr3": null,
+          "n_up": 0,
           "before_debut": false,
           "before_amt10": true
         }
@@ -16999,8 +16999,8 @@
           "n_ok": 0,
           "n_amt": 0,
           "n_pool": 1,
-          "cr3": 100.0,
-          "n_up": 1,
+          "cr3": null,
+          "n_up": 0,
           "before_debut": false,
           "before_amt10": true
         }
