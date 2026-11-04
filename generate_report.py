@@ -4943,25 +4943,26 @@ def render_html(ctx: dict) -> str:
   .sector-label-event {{ color: #b25000; }}
   .sector-label-forecast {{ color: #b25000; }}
   .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  /* 逻辑 1/2/3：固定序号列 + 徽标与首行光学对齐 */
+  /* 逻辑/后续事件 1/2/3：序号顶对齐文案首行字面（扣半行距） */
   .sector-logic-list {{
     display: flex; flex-direction: column; gap: 8px;
     margin: 0; padding: 0;
   }}
   .sector-logic-item {{
     display: grid;
-    grid-template-columns: 18px minmax(0, 1fr);
-    column-gap: 10px;
+    grid-template-columns: 1.2em minmax(0, 1fr);
+    column-gap: 0.65em;
     align-items: start;
   }}
   .sector-logic-n {{
     box-sizing: border-box;
-    width: 18px; height: 18px;
-    margin-top: 0.5px; /* 12px × 1.55 首行 ≈ 18.6，与徽标居中对齐 */
-    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.2em; height: 1.2em;
+    /* line-height 1.55 的上半行距 ≈ 0.275em，圆标顶与汉字顶齐 */
+    margin-top: 0.275em;
+    display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
     background: #fff4eb; color: #b25000;
-    font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+    font-size: 0.92em; font-weight: 700; font-variant-numeric: tabular-nums;
     line-height: 1; letter-spacing: 0;
   }}
   .sector-logic-t {{
@@ -5300,11 +5301,6 @@ def render_html(ctx: dict) -> str:
     .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
     .sector-logic-list {{ gap: 10px; }}
-    .sector-logic-item {{ grid-template-columns: 20px minmax(0, 1fr); column-gap: 10px; }}
-    .sector-logic-n {{
-      width: 20px; height: 20px; margin-top: 0.85px; /* 14px × 1.55 ≈ 21.7 */
-      font-size: 12px;
-    }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}
     .post-title {{ font-size: 15px; }}
