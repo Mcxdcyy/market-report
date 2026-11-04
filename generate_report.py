@@ -7003,7 +7003,7 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
         fund_range = (
             f"{fund_recognition['series_start'][5:].replace('-', '/')}–"
-            f"{fund_recognition['series_end'][5:].replace('-', '/')} · 近20日占比"
+            f"{fund_recognition['series_end'][5:].replace('-', '/')}"
         )
 
     return {
