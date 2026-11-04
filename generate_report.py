@@ -6441,17 +6441,6 @@ def render_fund_recognition_html(block: dict) -> str:
         pct = (series[-1] or {}).get("pct")
         return None if pct is None else float(pct)
 
-    def _mean_pct_last5(it: dict) -> float:
-        series = it.get("series") or []
-        vals = [
-            float(p["pct"])
-            for p in series[-5:]
-            if p.get("pct") is not None
-        ]
-        if not vals:
-            return -1.0
-        return sum(vals) / len(vals)
-
     def _below_50_streak_from_end(series: list) -> int:
         """自报表日起往前，连续「占比<50%」天数（无样本日视为未达50%）。
 
@@ -6486,8 +6475,7 @@ def render_fund_recognition_html(block: dict) -> str:
             continue
         items.append(it)
 
-    # 排序：当日占比>50%优先（按当日占比降序）；
-    # ≤50%：先按当日 3 亿以上家数降序，相同再按近 5 日占比均值降序
+    # 排序：先按当日 3 亿以上家数降序；家数相同再按当日占比降序
     def _today_n_amt(it: dict) -> int:
         series = it.get("series") or []
         if not series:
@@ -6496,9 +6484,8 @@ def render_fund_recognition_html(block: dict) -> str:
 
     def _sort_key(it: dict):
         tp = _today_pct(it)
-        if tp is not None and tp > 50.0:
-            return (0, -tp, 0, str(it.get("name") or ""))
-        return (1, -_today_n_amt(it), -_mean_pct_last5(it), str(it.get("name") or ""))
+        pct_key = float(tp) if tp is not None else -1.0
+        return (-_today_n_amt(it), -pct_key, str(it.get("name") or ""))
 
     items.sort(key=_sort_key)
 
