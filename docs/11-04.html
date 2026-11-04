@@ -431,7 +431,7 @@
   }
   .fund-card-title { font-size: 14px; font-weight: 700; color: var(--text); }
   .fund-card-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  /* 核心个股套件：柱图紧下方；左列=标题+chip，右列=占比 pill 顶对齐（明显高于 chip 行） */
+  /* 核心个股套件：柱图紧下方；上行「核心个股」与占比 pill 同行顶对齐；下行 chip 通栏 */
   .fund-chart + .fund-core {
     margin-top: -2px; /* 贴紧柱图家数行，整套上移 */
   }
@@ -441,7 +441,7 @@
     grid-template-rows: auto auto;
     column-gap: 12px;
     row-gap: 6px;
-    align-items: start;
+    align-items: start; /* 顶对齐 */
     margin: 0; padding: 0;
   }
   .fund-core-k {
@@ -449,19 +449,22 @@
     font-size: 11px; font-weight: 600; color: var(--muted);
     letter-spacing: 0.02em;
     line-height: 1.2;
-    padding-top: 2px; /* 与右侧 pill 顶缘视觉齐平 */
+    /* 与占比 pill 顶缘齐：pill padding-top 4px */
+    padding-top: 4px;
   }
   .fund-core-pct {
-    grid-column: 2; grid-row: 1 / span 2; /* 跨标题+chip 两行，钉在套件右上 */
+    grid-column: 2; grid-row: 1; /* 与「核心个股」严格同一行 */
     justify-self: end;
     align-self: start;
     margin: 0;
     flex-shrink: 0;
     white-space: nowrap;
+    /* 与量能/环境标签同档，勿缩成更小 pill */
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
     line-height: 1.2;
   }
   .fund-core-list {
-    grid-column: 1; grid-row: 2; /* 只占左列，右侧留给占比 */
+    grid-column: 1 / -1; grid-row: 2; /* chip 通栏在下一行 */
     display: flex; flex-wrap: wrap; gap: 6px 8px;
     align-items: center;
     min-width: 0;
@@ -1239,7 +1242,8 @@
     .module-summary { font-size: 13px; }
     .fund-card-title { font-size: 16px; }
     .fund-card-meta { font-size: 13px; }
-    .fund-core-k { font-size: 13px; }
+    .fund-core-k { font-size: 13px; padding-top: 5px; }
+    .fund-core-pct { font-size: 13px; padding: 5px 11px; }
     .fund-core-chip { font-size: 14px; padding: 5px 10px; }
     .idx-outlook-table th,
     .idx-outlook-table td { font-size: 12px; padding: 9px 6px; }
@@ -1679,7 +1683,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-08</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-16</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-27</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-04</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-08 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-09 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-12 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-13 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-14 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-15 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-16 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-19 · 3亿以上未满10（0）"></div><div class="fund-amt-n" title="2026-10-20 · 3亿以上 8">8</div><div class="fund-amt-n" title="2026-10-21 · 3亿以上 13">13</div><div class="fund-amt-n" title="2026-10-22 · 3亿以上 20">20</div><div class="fund-amt-n" title="2026-10-23 · 3亿以上 41">41</div><div class="fund-amt-n" title="2026-10-26 · 3亿以上 51">51</div><div class="fund-amt-n" title="2026-10-27 · 3亿以上 59">59</div><div class="fund-amt-n" title="2026-10-28 · 3亿以上 67">67</div><div class="fund-amt-n" title="2026-10-29 · 3亿以上 63">63</div><div class="fund-amt-n" title="2026-10-30 · 3亿以上 64">64</div><div class="fund-amt-n" title="2026-11-02 · 3亿以上 64">64</div><div class="fund-amt-n" title="2026-11-03 · 3亿以上 58">58</div><div class="fund-amt-n latest" title="2026-11-04 · 3亿以上 63">63</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 54.0%</span><div class="fund-core-list"><span class="fund-core-chip">襄阳轴承</span><span class="fund-core-chip">宇树科技</span><span class="fund-core-chip">大业股份</span><span class="fund-core-chip">闽发铝业</span><span class="fund-core-chip">福莱新材</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 54.0%</span><div class="fund-core-list"><span class="fund-core-chip">襄阳轴承</span><span class="fund-core-chip">宇树科技</span><span class="fund-core-chip">闽发铝业</span><span class="fund-core-chip">大业股份</span><span class="fund-core-chip">福莱新材</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">AI应用</span>
@@ -1690,7 +1694,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-08</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-16</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-27</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-04</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-08 · 尚未上榜"></div><div class="fund-amt-n" title="2026-10-09 · 3亿以上 17">17</div><div class="fund-amt-n" title="2026-10-12 · 3亿以上 20">20</div><div class="fund-amt-n" title="2026-10-13 · 3亿以上 23">23</div><div class="fund-amt-n" title="2026-10-14 · 3亿以上 26">26</div><div class="fund-amt-n" title="2026-10-15 · 3亿以上 22">22</div><div class="fund-amt-n" title="2026-10-16 · 3亿以上 21">21</div><div class="fund-amt-n" title="2026-10-19 · 3亿以上 23">23</div><div class="fund-amt-n" title="2026-10-20 · 3亿以上 27">27</div><div class="fund-amt-n" title="2026-10-21 · 3亿以上 28">28</div><div class="fund-amt-n" title="2026-10-22 · 3亿以上 29">29</div><div class="fund-amt-n" title="2026-10-23 · 3亿以上 31">31</div><div class="fund-amt-n" title="2026-10-26 · 3亿以上 29">29</div><div class="fund-amt-n" title="2026-10-27 · 3亿以上 33">33</div><div class="fund-amt-n" title="2026-10-28 · 3亿以上 30">30</div><div class="fund-amt-n" title="2026-10-29 · 3亿以上 26">26</div><div class="fund-amt-n" title="2026-10-30 · 3亿以上 28">28</div><div class="fund-amt-n" title="2026-11-02 · 3亿以上 41">41</div><div class="fund-amt-n" title="2026-11-03 · 3亿以上 38">38</div><div class="fund-amt-n latest" title="2026-11-04 · 3亿以上 37">37</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.7%</span><div class="fund-core-list"><span class="fund-core-chip">浙文影业</span><span class="fund-core-chip">文投控股</span><span class="fund-core-chip">龙版传媒</span><span class="fund-core-chip">芒果超媒</span><span class="fund-core-chip">掌阅科技</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.7%</span><div class="fund-core-list"><span class="fund-core-chip">浙文影业</span><span class="fund-core-chip">龙版传媒</span><span class="fund-core-chip">文投控股</span><span class="fund-core-chip">芒果超媒</span><span class="fund-core-chip">掌阅科技</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">芯片</span>
@@ -1701,7 +1705,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-08</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-16</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-27</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-04</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-08 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-09 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-12 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-13 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-14 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-15 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-16 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-19 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-20 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-21 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-22 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-23 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-26 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-27 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-28 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-29 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-30 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-11-02 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-11-03 · 3亿以上未满10（0）"></div><div class="fund-amt-n latest" title="2026-11-04 · 3亿以上 31">31</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 51.6%</span><div class="fund-core-list"><span class="fund-core-chip">云南锗业</span><span class="fund-core-chip">金螳螂</span><span class="fund-core-chip">有研新材</span><span class="fund-core-chip">长电科技</span><span class="fund-core-chip">扬子新材</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 51.6%</span><div class="fund-core-list"><span class="fund-core-chip">云南锗业</span><span class="fund-core-chip">金螳螂</span><span class="fund-core-chip">有研新材</span><span class="fund-core-chip">扬子新材</span><span class="fund-core-chip">长电科技</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">通信</span>
@@ -1712,7 +1716,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-08</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-16</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-27</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-04</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-08 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-09 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-12 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-13 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-14 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-15 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-16 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-19 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-20 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-21 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-22 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-23 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-26 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-27 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-28 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-29 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-30 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-11-02 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-11-03 · 3亿以上未满10（0）"></div><div class="fund-amt-n latest" title="2026-11-04 · 3亿以上 13">13</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct bad">占比 30.8%</span><div class="fund-core-list"><span class="fund-core-chip">金安国纪</span><span class="fund-core-chip">兴森科技</span><span class="fund-core-chip">沪电股份</span><span class="fund-core-chip">中钨高新</span><span class="fund-core-chip">大族激光</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct bad">占比 30.8%</span><div class="fund-core-list"><span class="fund-core-chip">金安国纪</span><span class="fund-core-chip">沪电股份</span><span class="fund-core-chip">兴森科技</span><span class="fund-core-chip">中钨高新</span><span class="fund-core-chip">大族激光</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">黄金</span>
@@ -1727,7 +1731,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 00:13</div>
+  <div class="footer">生成于 2026-11-05 00:29</div>
 </div>
 </body>
 </html>

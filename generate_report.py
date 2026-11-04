@@ -4569,7 +4569,7 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  /* 核心个股套件：柱图紧下方；左列=标题+chip，右列=占比 pill 顶对齐（明显高于 chip 行） */
+  /* 核心个股套件：柱图紧下方；上行「核心个股」与占比 pill 同行顶对齐；下行 chip 通栏 */
   .fund-chart + .fund-core {{
     margin-top: -2px; /* 贴紧柱图家数行，整套上移 */
   }}
@@ -4579,7 +4579,7 @@ def render_html(ctx: dict) -> str:
     grid-template-rows: auto auto;
     column-gap: 12px;
     row-gap: 6px;
-    align-items: start;
+    align-items: start; /* 顶对齐 */
     margin: 0; padding: 0;
   }}
   .fund-core-k {{
@@ -4587,19 +4587,22 @@ def render_html(ctx: dict) -> str:
     font-size: 11px; font-weight: 600; color: var(--muted);
     letter-spacing: 0.02em;
     line-height: 1.2;
-    padding-top: 2px; /* 与右侧 pill 顶缘视觉齐平 */
+    /* 与占比 pill 顶缘齐：pill padding-top 4px */
+    padding-top: 4px;
   }}
   .fund-core-pct {{
-    grid-column: 2; grid-row: 1 / span 2; /* 跨标题+chip 两行，钉在套件右上 */
+    grid-column: 2; grid-row: 1; /* 与「核心个股」严格同一行 */
     justify-self: end;
     align-self: start;
     margin: 0;
     flex-shrink: 0;
     white-space: nowrap;
+    /* 与量能/环境标签同档，勿缩成更小 pill */
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
     line-height: 1.2;
   }}
   .fund-core-list {{
-    grid-column: 1; grid-row: 2; /* 只占左列，右侧留给占比 */
+    grid-column: 1 / -1; grid-row: 2; /* chip 通栏在下一行 */
     display: flex; flex-wrap: wrap; gap: 6px 8px;
     align-items: center;
     min-width: 0;
@@ -5377,7 +5380,8 @@ def render_html(ctx: dict) -> str:
     .module-summary {{ font-size: 13px; }}
     .fund-card-title {{ font-size: 16px; }}
     .fund-card-meta {{ font-size: 13px; }}
-    .fund-core-k {{ font-size: 13px; }}
+    .fund-core-k {{ font-size: 13px; padding-top: 5px; }}
+    .fund-core-pct {{ font-size: 13px; padding: 5px 11px; }}
     .fund-core-chip {{ font-size: 14px; padding: 5px 10px; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
