@@ -6442,12 +6442,19 @@ def render_fund_recognition_html(block: dict) -> str:
             continue
         items.append(it)
 
-    # 排序：当日占比>50%优先（按当日占比降序）；其余按近5日占比均值降序
+    # 排序：当日占比>50%优先（按当日占比降序）；
+    # ≤50%：先按当日 3 亿以上家数降序，相同再按近 5 日占比均值降序
+    def _today_n_amt(it: dict) -> int:
+        series = it.get("series") or []
+        if not series:
+            return 0
+        return int((series[-1] or {}).get("n_amt") or 0)
+
     def _sort_key(it: dict):
         tp = _today_pct(it)
         if tp is not None and tp > 50.0:
-            return (0, -tp, str(it.get("name") or ""))
-        return (1, -_mean_pct_last5(it), str(it.get("name") or ""))
+            return (0, -tp, 0, str(it.get("name") or ""))
+        return (1, -_today_n_amt(it), -_mean_pct_last5(it), str(it.get("name") or ""))
 
     items.sort(key=_sort_key)
 
