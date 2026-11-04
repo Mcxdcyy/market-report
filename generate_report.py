@@ -3359,17 +3359,13 @@ def _normalize_event_priority(raw) -> str:
     return ""
 
 
-def _format_sector_reason_html(reason) -> str:
-    """涨停板块「逻辑」：1/2/3 分条展示。
-
-    market_news.json 优先写 list[str]；旧版整段字符串仍兼容。
-    """
+def _parse_sector_list_items(value) -> list[str]:
+    """板块逻辑 / 后续事件：优先 list[str]；旧版整段字符串仍兼容。"""
     items: list[str] = []
-    if isinstance(reason, list):
-        items = [str(x).strip() for x in reason if str(x).strip()]
-    elif isinstance(reason, str) and reason.strip():
-        raw = reason.strip()
-        # 已是「1. …」分行
+    if isinstance(value, list):
+        return [str(x).strip() for x in value if str(x).strip()]
+    if isinstance(value, str) and value.strip():
+        raw = value.strip()
         lines = [ln.strip() for ln in raw.splitlines() if ln.strip()]
         numbered = []
         for ln in lines:
@@ -3379,10 +3375,16 @@ def _format_sector_reason_html(reason) -> str:
             else:
                 numbered = []
                 break
-        items = numbered if numbered else [raw]
+        return numbered if numbered else [raw]
+    return items
+
+
+def _format_sector_list_html(value) -> str:
+    """涨停板块「板块逻辑 / 后续事件」：1/2/3 分条展示。"""
+    items = _parse_sector_list_items(value)
     if not items:
         return ""
-    if len(items) == 1 and not isinstance(reason, list):
+    if len(items) == 1 and not isinstance(value, list):
         return items[0]
     parts = []
     for i, text in enumerate(items, 1):
@@ -3393,6 +3395,11 @@ def _format_sector_reason_html(reason) -> str:
             f"</div>"
         )
     return f'<div class="sector-logic-list">{"".join(parts)}</div>'
+
+
+def _format_sector_reason_html(reason) -> str:
+    """兼容旧调用名 → 1/2/3 分条。"""
+    return _format_sector_list_html(reason)
 
 
 def enrich_sector_event_priority(
@@ -3413,14 +3420,17 @@ def enrich_sector_event_priority(
     for s in sectors:
         name = s.get("name", "")
         manual = s.get("events")
-        if isinstance(manual, str) and manual.strip():
-            events = [manual.strip()]
-        elif isinstance(manual, list) and manual:
+        if isinstance(manual, list) and manual:
             events = [str(x).strip() for x in manual if str(x).strip()]
+        elif isinstance(manual, str) and manual.strip():
+            events = _parse_sector_list_items(manual)
         else:
             events = _sector_near_events(name, as_of)
         _dir_tag, dir_hint = _find_sector_direction(name, directions)
-        events_near = "；".join(events) if events else "暂无直接催化"
+        events_near = events if events else ["暂无直接催化"]
+        # 方向提示并入后续事件分条，避免模板里拼「｜」破坏 1/2/3 排版
+        if dir_hint and dir_hint not in "；".join(events_near):
+            events_near = list(events_near) + [dir_hint]
 
         priority = _normalize_event_priority(
             s.get("event_priority") or s.get("priority") or s.get("persist")
@@ -3433,7 +3443,7 @@ def enrich_sector_event_priority(
         enriched.append({
             **s,
             "events_near": events_near,
-            "dir_hint": dir_hint or "",
+            "dir_hint": "",
             "event_priority": priority,
             "event_priority_label": label,
             "persist": label,  # 兼容旧模板字段名
@@ -4051,7 +4061,7 @@ def render_html(ctx: dict) -> str:
           {f'<div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>' if s.get("reason") else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'}
         </div>
         <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{s.get("events_near", "—")}{("｜" + s.get("dir_hint")) if s.get("dir_hint") and s.get("dir_hint") not in (s.get("events_near") or "") else ""}</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{_format_sector_list_html(s.get("events_near") or "—")}</div></div>
         </div>
       </div>
     </div>'''
