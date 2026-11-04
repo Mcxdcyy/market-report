@@ -4569,14 +4569,21 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  /* 核心个股：标签独立一行，个股轻量 chip，减少挤在标题下的顿号长串 */
-  .fund-core {{
+  /* 核心个股：柱图下方；与占比 pill 同一行（左标签 / 右占比），chip 另起一行 */
+  .fund-after {{
     display: flex; flex-direction: column; gap: 6px;
     margin: 0; padding: 0;
+  }}
+  .fund-after-row {{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px 12px; flex-wrap: wrap;
   }}
   .fund-core-k {{
     font-size: 11px; font-weight: 600; color: var(--muted);
     letter-spacing: 0.02em;
+  }}
+  .fund-after-row .chart-tags {{
+    margin: 0; padding: 0; justify-content: flex-end;
   }}
   .fund-core-list {{
     display: flex; flex-wrap: wrap; gap: 6px 8px;
@@ -4594,10 +4601,6 @@ def render_html(ctx: dict) -> str:
     color: var(--muted); font-weight: 400; background: transparent; padding: 0;
   }}
   .fund-chart {{ width: 100%; display: flex; flex-direction: column; gap: 2px; }}
-  .fund-chart-label {{
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    margin: 0 0 4px;
-  }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
     width: 100%;
@@ -5357,7 +5360,6 @@ def render_html(ctx: dict) -> str:
     .module-summary {{ font-size: 13px; }}
     .fund-card-title {{ font-size: 16px; }}
     .fund-card-meta {{ font-size: 13px; }}
-    .fund-chart-label {{ font-size: 13px; }}
     .fund-core-k {{ font-size: 13px; }}
     .fund-core-chip {{ font-size: 14px; padding: 5px 10px; }}
     .idx-outlook-table th,
@@ -6804,11 +6806,11 @@ def render_fund_recognition_html(block: dict) -> str:
         last_pt = series[-1] or {}
         today = last_pt.get("pct")
         today_amt = int(last_pt.get("n_amt") or 0)
-        tags_html = ""
+        pct_pill = ""
         if today is not None:
             today_f = float(today)
             cls = "ok" if today_f > 50.0 else "bad"
-            tags_html = (
+            pct_pill = (
                 f'<div class="chart-tags vol20-tags">'
                 f'<span class="pill {cls}">占比 {today_f:.1f}%</span>'
                 f"</div>"
@@ -6818,8 +6820,11 @@ def render_fund_recognition_html(block: dict) -> str:
             f'3亿以上 {today_amt} 只'
         )
         # 核心个股：同花顺小时榜优先，不足 5 用东财全市场名次补足（含 3 亿以下）
-        core_html = ""
+        # 版式：柱图下方；「核心个股」与占比 pill 同一行（左/右），chip 另起一行
+        chips_html = ""
+        show_core_k = False
         if ths_core_stocks_from_pool is not None or em_core_stocks_from_pool is not None:
+            show_core_k = True
             pool_codes = _fund_pool_codes(it)
             core = _core_stocks_ths_then_em(pool_codes, top_n=5)
             if core:
@@ -6827,35 +6832,30 @@ def render_fund_recognition_html(block: dict) -> str:
                     f'<span class="fund-core-chip">{c.get("name") or c.get("code") or ""}</span>'
                     for c in core
                 )
-                core_html = (
-                    f'<div class="fund-core">'
-                    f'<div class="fund-core-k">核心个股</div>'
-                    f'<div class="fund-core-list">{chips}</div>'
-                    f"</div>"
-                )
             else:
-                core_html = (
-                    f'<div class="fund-core">'
-                    f'<div class="fund-core-k">核心个股</div>'
-                    f'<div class="fund-core-list">'
-                    f'<span class="fund-core-chip empty">暂无人气名次</span>'
-                    f"</div>"
-                    f"</div>"
-                )
+                chips = '<span class="fund-core-chip empty">暂无人气名次</span>'
+            chips_html = f'<div class="fund-core-list">{chips}</div>'
+        after_html = ""
+        if show_core_k or pct_pill:
+            left = '<div class="fund-core-k">核心个股</div>' if show_core_k else "<div></div>"
+            after_html = (
+                f'<div class="fund-after">'
+                f'<div class="fund-after-row">{left}{pct_pill}</div>'
+                f"{chips_html}"
+                f"</div>"
+            )
         cards.append(
             f'''<div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">{it.get("name", "")}</span>
       <span class="fund-card-meta">{meta}</span>
     </div>
-    {core_html}
     <div class="fund-chart">
-      <div class="fund-chart-label">资金认可度</div>
       <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div>{cols}</div>
       <div class="fund-axis">{ticks}</div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数">{amt_nums}</div>
     </div>
-    {tags_html}
+    {after_html}
   </div>'''
         )
 
