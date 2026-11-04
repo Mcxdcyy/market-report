@@ -4123,8 +4123,15 @@ def render_html(ctx: dict) -> str:
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
+  /* 宏观图名对齐模块标题 .section-title / .section-head（字号+底部分隔间距） */
   .macro-bias-wrap > .vol20-head {{
-    margin-bottom: 0;
+    align-items: center;
+    margin-bottom: 0; /* 与 wrap gap:10 合计，对齐 section-head 的 padding-bottom+margin-bottom */
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }}
+  .macro-bias-wrap > .vol20-head .vol20-title {{
+    font-size: 15px; font-weight: 700; color: var(--text);
   }}
   .macro-bias-wrap > .vol-mkt-sum-wrap {{
     margin-top: 4px;
@@ -5123,7 +5130,7 @@ def render_html(ctx: dict) -> str:
     .hero-home svg {{ width: 20px; height: 20px; }}
     .hero h1 {{ font-size: 24px; }}
     .hero-meta {{ font-size: 14px; }}
-    .macro-bias-wrap > .vol20-head .vol20-title {{ font-size: 16px; }}
+    .macro-bias-wrap > .vol20-head .vol20-title {{ font-size: 18px; }}
     .macro-bias-wrap > .vol-mkt-sum-wrap .vol-mkt-sum {{
       padding: 12px 12px; font-size: 15px;
     }}
