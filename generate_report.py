@@ -4557,33 +4557,46 @@ def render_html(ctx: dict) -> str:
     .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   }}
   .fund-card {{
-    margin-top: 0; padding: 14px 0 0; border: none; border-radius: 0;
+    margin-top: 0; padding: 16px 0 2px; border: none; border-radius: 0;
     border-top: 1px solid var(--border);
     background: transparent;
     min-width: 0;
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
   }}
   .fund-card-head {{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; margin-bottom: 0; flex-wrap: wrap;
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px 12px; margin-bottom: 0; flex-wrap: wrap;
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
-  .fund-card-meta {{ font-size: 11px; color: var(--muted); }}
+  .fund-card-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
+  /* 核心个股：标签独立一行，个股轻量 chip，减少挤在标题下的顿号长串 */
   .fund-core {{
-    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-    margin: 0; font-size: 12px; line-height: 1.45;
+    display: flex; flex-direction: column; gap: 6px;
+    margin: 0; padding: 0;
   }}
   .fund-core-k {{
-    flex: 0 0 auto; font-size: 11px; font-weight: 600; color: var(--muted);
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.02em;
   }}
-  .fund-core-v {{
-    flex: 1 1 12em; min-width: 0; color: var(--text); font-weight: 500;
+  .fund-core-list {{
+    display: flex; flex-wrap: wrap; gap: 6px 8px;
+    align-items: center;
   }}
-  .fund-core-v.empty {{ color: var(--muted); font-weight: 400; }}
+  .fund-core-chip {{
+    display: inline-block;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    line-height: 1.3;
+    padding: 4px 9px;
+    background: #f2f2f7; border-radius: 6px;
+  }}
+  .fund-core-chip.empty,
+  .fund-core-v.empty {{
+    color: var(--muted); font-weight: 400; background: transparent; padding: 0;
+  }}
   .fund-chart {{ width: 100%; display: flex; flex-direction: column; gap: 2px; }}
   .fund-chart-label {{
     font-size: 11px; font-weight: 600; color: var(--muted);
-    margin: 0 0 2px;
+    margin: 0 0 4px;
   }}
   .fund-bars {{
     position: relative; display: flex; align-items: flex-end; gap: 2px; height: 88px;
@@ -5345,8 +5358,8 @@ def render_html(ctx: dict) -> str:
     .fund-card-title {{ font-size: 16px; }}
     .fund-card-meta {{ font-size: 13px; }}
     .fund-chart-label {{ font-size: 13px; }}
-    .fund-core {{ font-size: 14px; }}
     .fund-core-k {{ font-size: 13px; }}
+    .fund-core-chip {{ font-size: 14px; padding: 5px 10px; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
     .idx-outlook-table thead th {{ font-size: 12px; }}
@@ -6810,20 +6823,23 @@ def render_fund_recognition_html(block: dict) -> str:
             pool_codes = _fund_pool_codes(it)
             core = _core_stocks_ths_then_em(pool_codes, top_n=5)
             if core:
-                names = "、".join(
-                    str(c.get("name") or c.get("code") or "") for c in core
+                chips = "".join(
+                    f'<span class="fund-core-chip">{c.get("name") or c.get("code") or ""}</span>'
+                    for c in core
                 )
                 core_html = (
                     f'<div class="fund-core">'
-                    f'<span class="fund-core-k">核心个股</span>'
-                    f'<span class="fund-core-v">{names}</span>'
+                    f'<div class="fund-core-k">核心个股</div>'
+                    f'<div class="fund-core-list">{chips}</div>'
                     f"</div>"
                 )
             else:
                 core_html = (
                     f'<div class="fund-core">'
-                    f'<span class="fund-core-k">核心个股</span>'
-                    f'<span class="fund-core-v empty">暂无人气名次</span>'
+                    f'<div class="fund-core-k">核心个股</div>'
+                    f'<div class="fund-core-list">'
+                    f'<span class="fund-core-chip empty">暂无人气名次</span>'
+                    f"</div>"
                     f"</div>"
                 )
         cards.append(
