@@ -4123,12 +4123,13 @@ def render_html(ctx: dict) -> str:
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
-  /* 宏观图名：字号对齐模块标题；夹在上下分隔线之间时上下内边距等距 */
+  /* 宏观图名对齐模块标题区：上=section padding 14，下到分隔线=section-head padding-bottom 8；
+     线后再靠 wrap gap:10 ≈ section-head margin-bottom 10 */
   .macro-bias-wrap > .vol20-head {{
     align-items: center;
     margin-bottom: 0;
     padding-top: 14px;
-    padding-bottom: 14px;
+    padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
   }}
   .macro-bias-wrap > .vol20-head .vol20-title {{
