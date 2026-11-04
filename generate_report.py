@@ -4987,7 +4987,7 @@ def render_html(ctx: dict) -> str:
   .sector-muted {{ color: var(--muted); font-size: 12px; }}
   .sector-label {{
     display: inline-block;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.02em; /* 与正文 .sector-text 同字号 */
     margin-bottom: 6px;
   }}
   .sector-label-logic {{ color: #b25000; }}
@@ -5368,7 +5368,7 @@ def render_html(ctx: dict) -> str:
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
     .sector-priority-pill {{ font-size: 12px; }}
-    .sector-label {{ font-size: 13px; }}
+    .sector-label {{ font-size: 14px; }} /* 与正文同字号 */
     .sector-text {{ font-size: 14px; }}
     :root {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
