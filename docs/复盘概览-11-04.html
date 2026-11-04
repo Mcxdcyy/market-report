@@ -900,18 +900,11 @@
   .post-row.ok { border-left-color: var(--bar-ok); }
   .post-row.warn { border-left-color: var(--bar-warn); }
   .post-row.bad { border-left-color: var(--bar-bad); }
-  .post-head {
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
-    min-width: 0;
-  }
-  .post-type {
-    flex: 0 0 auto;
-    font-size: 12px; font-weight: 700; color: var(--muted);
-    line-height: 1.5; white-space: nowrap;
-  }
+  /* 标题整段一体：`[政策] …` / `[公告] …`，颜色字重不分段 */
   .post-title {
-    flex: 1 1 12em; min-width: 0;
-    font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
+    font-size: 13px; font-weight: 700; color: var(--text);
+    line-height: calc(1em + var(--logic-gap));
+    white-space: normal; overflow-wrap: anywhere; word-break: break-word;
   }
   .post-summary {
     font-size: 12px; color: var(--sub); margin: 0;
@@ -1090,9 +1083,17 @@
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }
   .fwd-cal-venue {
+    display: flex; align-items: flex-start; gap: 5px;
     font-size: 12px; color: var(--muted); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
   }
+  .fwd-cal-venue-ico {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: 0.28em; /* 与首行字面顶齐 */
+    color: var(--muted); opacity: .9;
+  }
+  .fwd-cal-venue-ico svg { display: block; }
   .fwd-cal-note {
     font-size: 12px; color: var(--sub); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
@@ -1237,7 +1238,6 @@
     :root { --logic-gap: 10px; }
     .sector-muted { font-size: 14px; }
     .post-meta { font-size: 13px; }
-    .post-type { font-size: 14px; }
     .post-title { font-size: 15px; }
     .post-summary { font-size: 14px; }
     .news-empty { font-size: 14px; }
@@ -1588,46 +1588,25 @@
       <div class="section-title">政策与公告</div>
     </div>
     <div class="post-list"><div class="post-row ok">
-      <div class="post-head">
-        <span class="post-type">[政策]</span>
-        <span class="post-title">中国人民银行加力实施股票回购增持再贷款并下调利率至1%</span>
-      </div>
+      <div class="post-title">[政策] 中国人民银行加力实施股票回购增持再贷款并下调利率至1%</div>
       <p class="post-summary">中国人民银行公告，自2026年11月4日起下调股票回购增持再贷款利率0.25个百分点至1%；支持对象为21家全国性银行和5家系统重要性城商行，支持比例100%、期限1年可视情展期。座谈会后银行已向央行报送额度申请超过2000亿元，后续将充分满足银行再贷款需求，增强上市公司与主要股东市值管理能力。</p>
     </div><div class="post-row warn">
-      <div class="post-head">
-        <span class="post-type">[政策]</span>
-        <span class="post-title">中国人民银行上调金融机构外汇存款准备金率至6%</span>
-      </div>
+      <div class="post-title">[政策] 中国人民银行上调金融机构外汇存款准备金率至6%</div>
       <p class="post-summary">中国人民银行决定，自2026年11月15日起上调金融机构外汇存款准备金率2个百分点，由4%提高至6%，以加强金融机构外汇流动性管理。</p>
     </div><div class="post-row ok">
-      <div class="post-head">
-        <span class="post-type">[公告]</span>
-        <span class="post-title">云南锗业：控股子公司与美国AOI签订磷化铟衬底长期供货协议</span>
-      </div>
+      <div class="post-title">[公告] 云南锗业：控股子公司与美国AOI签订磷化铟衬底长期供货协议</div>
       <p class="post-summary">云南锗业公告，控股子公司与美国Applied Optoelectronics, Inc.签订磷化铟衬底长期供货协议，预计2027年至2031年每年采购18万片、合计90万片；2027年度合同金额约1.94亿美元（不含税），折合人民币约13.05亿元。</p>
     </div><div class="post-row ok">
-      <div class="post-head">
-        <span class="post-type">[公告]</span>
-        <span class="post-title">均胜电子：拟以1.5亿元至3亿元回购股份并注销</span>
-      </div>
+      <div class="post-title">[公告] 均胜电子：拟以1.5亿元至3亿元回购股份并注销</div>
       <p class="post-summary">均胜电子公告，拟以1.5亿元至3亿元回购公司股份，全部用于注销并减少注册资本。</p>
     </div><div class="post-row bad">
-      <div class="post-head">
-        <span class="post-type">[公告]</span>
-        <span class="post-title">通光线缆：子公司因提供虚假资料被暂停中标资格</span>
-      </div>
+      <div class="post-title">[公告] 通光线缆：子公司因提供虚假资料被暂停中标资格</div>
       <p class="post-summary">通光线缆公告，全资子公司因向国网天津市电力公司提供虚假资料，被暂停中标资格两年；同时存在被国家电网全品类暂停中标资格两年的风险，若实施预计未来两年营业收入合计减少约4.3亿元（含税）。</p>
     </div><div class="post-row bad">
-      <div class="post-head">
-        <span class="post-type">[公告]</span>
-        <span class="post-title">*ST闻泰：Nexperia B.V.向荷兰法院起诉公司及实控人索赔约20亿美元</span>
-      </div>
+      <div class="post-title">[公告] *ST闻泰：Nexperia B.V.向荷兰法院起诉公司及实控人索赔约20亿美元</div>
       <p class="post-summary">*ST闻泰公告，Nexperia B.V.已向荷兰法院起诉公司及实际控制人，索赔金额约20亿美元。</p>
     </div><div class="post-row bad">
-      <div class="post-head">
-        <span class="post-type">[公告]</span>
-        <span class="post-title">光迅科技：关于物料短缺及生产停工等市场传闻的澄清公告</span>
-      </div>
+      <div class="post-title">[公告] 光迅科技：关于物料短缺及生产停工等市场传闻的澄清公告</div>
       <p class="post-summary">光迅科技发布澄清公告称，有关物料短缺及生产停工的市场传闻不属实；公司围绕光传输、光互连等方向的在研项目有序推进。</p>
     </div></div>
     <div class="module-summary">候选池 11 条 → 精选 7 条</div>
@@ -1643,7 +1622,7 @@
         <span class="event-sync-note">已联网 · 展示8条</span>
       </div>
     </div>
-    <div class="fwd-cal-wrap"><div class="fwd-cal"><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/2–5</span><span class="fwd-cal-wd">本周一 至 周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026世界互联网大会乌镇峰会</span></div><p class="fwd-cal-venue">于浙江乌镇举行</p><p class="fwd-cal-note">主题为“开源开放 共建共享”；分论坛覆盖智能体互联、机器人与具身智能、时空智能等议题，同期“互联网之光”博览会汇聚多家企业与技术成果展示；峰会期间发布《中国互联网发展报告2026》《世界互联网发展报告2026》蓝皮书。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/4–6</span><span class="fwd-cal-wd">本周三 至 周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第二十四届中国半导体封装测试技术与市场年会</span></div><p class="fwd-cal-venue">于南京举行</p><p class="fwd-cal-note">围绕先进封装、玻璃基板、硅通孔等方向展开研讨，参会企业包括封测龙头及相关设计、制造与材料环节公司。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/5–10</span><span class="fwd-cal-wd">本周四 至 下周二</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第九届中国国际进口博览会</span></div><p class="fwd-cal-venue">于上海国家会展中心举行</p><p class="fwd-cal-note">设置汽车及智慧出行、医疗器械及医药保健、技术装备等展区，观察进口替代、消费与高端装备相关订单与合作线索。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/7–9</span><span class="fwd-cal-wd">本周六 至 下周一</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026广州电子信息·半导体·集成电路与人工智能算力展览会</span></div><p class="fwd-cal-venue">于广州保利世贸博览馆举行</p><p class="fwd-cal-note">聚焦电子信息、半导体、集成电路与人工智能算力产业链，观察设计、制造、封测及算力硬件环节的产品与合作线索。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/10–12</span><span class="fwd-cal-wd">下周二 至 周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（上海）半导体产业与应用博览会（IC EXPO）</span></div><p class="fwd-cal-venue">于上海新国际博览中心举行</p><p class="fwd-cal-note">面向半导体产业与终端应用对接，观察集成电路设计、制造、材料设备及下游应用合作进展。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/12</span><span class="fwd-cal-wd">下周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">百度世界2026</span></div><p class="fwd-cal-venue">于北京国家会议中心二期举行</p><p class="fwd-cal-note">主题围绕智能组织与企业级人工智能应用，关注大模型产品、智能云与行业落地进展。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/12–14</span><span class="fwd-cal-wd">下周四 至 周六</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第二十三届中国国际半导体博览会（IC China）</span></div><p class="fwd-cal-venue">于北京国家会议中心举行</p><p class="fwd-cal-note">以全景链条展示、终端应用赋能、龙头企业带动为主线，覆盖集成电路材料、设备、设计、制造、封测及人工智能、汽车、机器人等应用场景。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/17–20</span><span class="fwd-cal-wd">下下周二 至 周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第九届中国国际光伏与储能产业大会</span></div><p class="fwd-cal-venue">于四川成都举行</p><p class="fwd-cal-note">主题围绕光伏与储能融合及产业链协同，观察光伏产能出清节奏与储能装机、订单验证。</p></div></div></div></div>
+    <div class="fwd-cal-wrap"><div class="fwd-cal"><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/2–5</span><span class="fwd-cal-wd">本周一 至 周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026世界互联网大会乌镇峰会</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>浙江乌镇</p><p class="fwd-cal-note">主题为“开源开放 共建共享”；分论坛覆盖智能体互联、机器人与具身智能、时空智能等议题，同期“互联网之光”博览会汇聚多家企业与技术成果展示；峰会期间发布《中国互联网发展报告2026》《世界互联网发展报告2026》蓝皮书。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/4–6</span><span class="fwd-cal-wd">本周三 至 周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第二十四届中国半导体封装测试技术与市场年会</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>南京</p><p class="fwd-cal-note">围绕先进封装、玻璃基板、硅通孔等方向展开研讨，参会企业包括封测龙头及相关设计、制造与材料环节公司。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/5–10</span><span class="fwd-cal-wd">本周四 至 下周二</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第九届中国国际进口博览会</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>上海国家会展中心</p><p class="fwd-cal-note">设置汽车及智慧出行、医疗器械及医药保健、技术装备等展区，观察进口替代、消费与高端装备相关订单与合作线索。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/7–9</span><span class="fwd-cal-wd">本周六 至 下周一</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">2026广州电子信息·半导体·集成电路与人工智能算力展览会</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>广州保利世贸博览馆</p><p class="fwd-cal-note">聚焦电子信息、半导体、集成电路与人工智能算力产业链，观察设计、制造、封测及算力硬件环节的产品与合作线索。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/10–12</span><span class="fwd-cal-wd">下周二 至 周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">中国（上海）半导体产业与应用博览会（IC EXPO）</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>上海新国际博览中心</p><p class="fwd-cal-note">面向半导体产业与终端应用对接，观察集成电路设计、制造、材料设备及下游应用合作进展。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/12</span><span class="fwd-cal-wd">下周四</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">百度世界2026</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>北京国家会议中心二期</p><p class="fwd-cal-note">主题围绕智能组织与企业级人工智能应用，关注大模型产品、智能云与行业落地进展。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/12–14</span><span class="fwd-cal-wd">下周四 至 周六</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第二十三届中国国际半导体博览会（IC China）</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>北京国家会议中心</p><p class="fwd-cal-note">以全景链条展示、终端应用赋能、龙头企业带动为主线，覆盖集成电路材料、设备、设计、制造、封测及人工智能、汽车、机器人等应用场景。</p></div></div><div class="fwd-cal-item hot"><div class="fwd-cal-head"><span class="fwd-cal-mark hot" aria-hidden="true"></span><span class="fwd-cal-md">11/17–20</span><span class="fwd-cal-wd">下下周二 至 周五</span></div><div class="fwd-cal-body"><div class="fwd-cal-top"><span class="fwd-cal-title">第九届中国国际光伏与储能产业大会</span></div><p class="fwd-cal-venue"><span class="fwd-cal-venue-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" focusable="false"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>四川成都</p><p class="fwd-cal-note">主题围绕光伏与储能融合及产业链协同，观察光伏产能出清节奏与储能装机、订单验证。</p></div></div></div></div>
   </div>
 
   <!-- 5 板块-资金认可度 -->
@@ -1698,7 +1677,7 @@
       <span class="fund-card-title">通信</span>
       <span class="fund-card-meta">共 14 只 · 3亿以上 13 只</span>
     </div>
-    <div class="fund-core"><span class="fund-core-k">核心个股</span><span class="fund-core-v">金安国纪、兴森科技、沪电股份、中钨高新、大族激光</span></div>
+    <div class="fund-core"><span class="fund-core-k">核心个股</span><span class="fund-core-v">金安国纪、华正新材、兴森科技、沪电股份、中钨高新</span></div>
     <div class="fund-chart">
       <div class="fund-chart-label">资金认可度</div>
       <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div><div class="fund-col" title="2026-10-08 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-09 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-12 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-13 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-14 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-15 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-16 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-19 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-20 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-21 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-22 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-23 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-26 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-27 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-28 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-29 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-30 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-11-02 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-11-03 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col latest" title="2026-11-04 · 占比30.8%（4/13）· 3亿以上 13 只"><div class="fund-bar-track"><div class="fund-bar weak" style="height:30.8%"></div></div></div></div>
@@ -1722,7 +1701,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 22:35</div>
+  <div class="footer">生成于 2026-11-04 22:38</div>
 </div>
 </body>
 </html>

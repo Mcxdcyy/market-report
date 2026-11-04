@@ -3998,7 +3998,13 @@ def render_fwd_section_html(
         if not note and not venue:
             note = "暂无补充说明。"
         venue_html = (
-            f'<p class="fwd-cal-venue">于{venue}举行</p>' if venue else ""
+            f'<p class="fwd-cal-venue">'
+            f'<span class="fwd-cal-venue-ico" aria-hidden="true">'
+            f'<svg viewBox="0 0 24 24" width="12" height="12" focusable="false">'
+            f'<path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5'
+            f'A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>'
+            f'{venue}</p>'
+            if venue else ""
         )
         note_html = f'<p class="fwd-cal-note">{note}</p>' if note else ""
         tags = _peak_tags_for_label(label, peak)
@@ -4076,10 +4082,7 @@ def render_html(ctx: dict) -> str:
             '<div class="post-list">'
             + "".join(
                 f'''<div class="post-row {_announce_edge_tag(it)}">
-      <div class="post-head">
-        <span class="post-type">[{it.get("type", "公告")}]</span>
-        <span class="post-title">{it.get("title", "")}</span>
-      </div>
+      <div class="post-title">[{it.get("type", "公告")}] {it.get("title", "")}</div>
       <p class="post-summary">{it.get("content", it.get("text", ""))}</p>
     </div>'''
                 for it in items
@@ -5033,18 +5036,11 @@ def render_html(ctx: dict) -> str:
   .post-row.ok {{ border-left-color: var(--bar-ok); }}
   .post-row.warn {{ border-left-color: var(--bar-warn); }}
   .post-row.bad {{ border-left-color: var(--bar-bad); }}
-  .post-head {{
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px;
-    min-width: 0;
-  }}
-  .post-type {{
-    flex: 0 0 auto;
-    font-size: 12px; font-weight: 700; color: var(--muted);
-    line-height: 1.5; white-space: nowrap;
-  }}
+  /* 标题整段一体：`[政策] …` / `[公告] …`，颜色字重不分段 */
   .post-title {{
-    flex: 1 1 12em; min-width: 0;
-    font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
+    font-size: 13px; font-weight: 700; color: var(--text);
+    line-height: calc(1em + var(--logic-gap));
+    white-space: normal; overflow-wrap: anywhere; word-break: break-word;
   }}
   .post-summary {{
     font-size: 12px; color: var(--sub); margin: 0;
@@ -5223,9 +5219,17 @@ def render_html(ctx: dict) -> str:
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-venue {{
+    display: flex; align-items: flex-start; gap: 5px;
     font-size: 12px; color: var(--muted); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
   }}
+  .fwd-cal-venue-ico {{
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: 0.28em; /* 与首行字面顶齐 */
+    color: var(--muted); opacity: .9;
+  }}
+  .fwd-cal-venue-ico svg {{ display: block; }}
   .fwd-cal-note {{
     font-size: 12px; color: var(--sub); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
@@ -5370,7 +5374,6 @@ def render_html(ctx: dict) -> str:
     :root {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}
-    .post-type {{ font-size: 14px; }}
     .post-title {{ font-size: 15px; }}
     .post-summary {{ font-size: 14px; }}
     .news-empty {{ font-size: 14px; }}
