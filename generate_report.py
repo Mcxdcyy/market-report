@@ -3243,6 +3243,7 @@ def build_events_window(as_of: datetime) -> tuple:
             "title": ev["title"],
             "short": ev.get("short") or _event_short(ev.get("title", "")),
             "sub": ev.get("short", ev["title"]),
+            "venue": ev.get("venue") or "",
             "brief": ev["brief"],
             "hot": ev.get("hot", False),
             "importance": ev.get("importance", 0),
