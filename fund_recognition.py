@@ -3,11 +3,11 @@
 
 口径：
 - 板块：近 20 个交易日开盘啦涨停原因中出现过的全部板块
-- 个股池（按日累计，禁止用末日总池回算历史日）：
-  · 窗口内首次上榜日：池 = 当日该板块涨停代码
-  · 之后每一天：把当日新上榜代码并入池（只增不减）；当日未上榜则池不变
+- 建池 / 起画门槛（同一日）：近 2 个交易日内，该板块涨停票里成交额>3 亿的
+  **去重家数** ≥10 → 当日起才开始统计池子并画柱。
+  · 门槛日之前的涨停个股 **不计入** 池子
+  · 门槛日起：池 = 当日涨停代码；之后每日把新上榜代码并入（只增不减）
 - 按日：截至当日累计池内，成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
-- 起画门槛：自首个「3亿以上家数 ≥10」的交易日起才画柱（之前留空，含已上榜但样本不足）
 - 题材缩圈 CR3：同当日累计池；上涨票权重=涨幅×成交额；CR3=前3/合计；附 n_up
 - 结果：每板块近 20 个交易日序列
 - 成交额：重算时一律 QQ 日 K（万元→元）刷新；最新交易日生成报表时 force 重算
@@ -37,9 +37,10 @@ SERIES_DAYS = 20
 AMOUNT_MIN = 3e8  # 3 亿元
 KLINE_NEED = 40  # MA10 + 20 日余量
 WORKERS = 48
-# 个股池按日累计（首日=当日涨停；之后只新增）。旧缓存用末日总池回算，须强制重算。
-# SCHEMA 含起画门槛：自首个 n_amt≥10 日起画柱。
-POOL_VIA = "cumulative_daily_amt10"
+# 个股池：近2日涨停票中 >3亿去重≥10 才建池；此前涨停不进池。旧缓存须强制重算。
+POOL_VIA = "cumulative_from_2d_amt10"
+AMT10_LOOKBACK_DAYS = 2
+AMT10_MIN_NAMES = 10
 
 
 def _as_date(v: date | datetime | str) -> date:
@@ -281,18 +282,74 @@ def _cr3_from_weights(weights: list[float]) -> float | None:
     return round(100.0 * top / total, 1)
 
 
+def _limit_up_amt_codes(
+    daily_codes: dict[str, list[str]],
+    cache: dict[str, list[dict]],
+    day: date,
+) -> set[str]:
+    """当日该板块涨停代码里，成交额 >3 亿的集合。"""
+    out: set[str] = set()
+    for c in daily_codes.get(day.isoformat()) or []:
+        code = str(c).zfill(6)
+        if not code:
+            continue
+        rows = cache.get(code) or []
+        if not rows:
+            continue
+        truncated = ts.truncate_as_of(rows, day)
+        if len(truncated) < 10:
+            continue
+        in_denom, _ok = _stock_day_flags(truncated, day)
+        if in_denom:
+            out.add(code)
+    return out
+
+
+def _find_pool_start_day(
+    daily_codes: dict[str, list[str]],
+    cache: dict[str, list[dict]],
+    series_days: list[date],
+    *,
+    first_appear: date | None = None,
+) -> date | None:
+    """近 2 个交易日涨停票中 >3 亿去重家数 ≥10 的首日 → 建池/起画日。"""
+    day_amt: dict[date, set[str]] = {}
+    for d in series_days:
+        if first_appear is not None and d < first_appear:
+            day_amt[d] = set()
+            continue
+        day_amt[d] = _limit_up_amt_codes(daily_codes, cache, d)
+    for i, d in enumerate(series_days):
+        if first_appear is not None and d < first_appear:
+            continue
+        union = set(day_amt.get(d) or ())
+        for j in range(1, AMT10_LOOKBACK_DAYS):
+            if i - j < 0:
+                break
+            prev = series_days[i - j]
+            if first_appear is not None and prev < first_appear:
+                continue
+            union |= day_amt.get(prev) or set()
+        if len(union) >= AMT10_MIN_NAMES:
+            return d
+    return None
+
+
 def compute_sector_series(
     daily_codes: dict[str, list[str]],
     cache: dict[str, list[dict]],
     series_days: list[date],
     *,
     first_appear: date | None = None,
-) -> list[dict]:
-    """按日序列。first_appear 之前标记 before_debut。
+) -> tuple[list[dict], list[str]]:
+    """按日序列。返回 (series, 窗口末日累计池 codes)。
 
-    个股池按日累计：首日=当日涨停代码；之后把新上榜代码并入（只增不减）。
-    禁止用窗口末日总池回算历史日。
+    建池/起画：近 2 日涨停票中 >3 亿去重 ≥10 的首日才开始；此前涨停不进池。
+    起画日后池按日累计（只增不减）。禁止用窗口末日总池回算历史日。
     """
+    pool_start = _find_pool_start_day(
+        daily_codes, cache, series_days, first_appear=first_appear
+    )
     out: list[dict] = []
     cum: set[str] = set()
     for d in series_days:
@@ -307,6 +364,22 @@ def compute_sector_series(
                     "cr3": None,
                     "n_up": 0,
                     "before_debut": True,
+                    "before_amt10": True,
+                }
+            )
+            continue
+        if pool_start is None or d < pool_start:
+            # 门槛未到：不建池、不画柱（即便当日已有涨停）
+            out.append(
+                {
+                    "date": d.isoformat(),
+                    "pct": None,
+                    "n_ok": 0,
+                    "n_amt": 0,
+                    "n_pool": 0,
+                    "cr3": None,
+                    "n_up": 0,
+                    "before_debut": False,
                     "before_amt10": True,
                 }
             )
@@ -351,7 +424,7 @@ def compute_sector_series(
                     "cr3": cr3,
                     "n_up": n_up,
                     "before_debut": False,
-                    "before_amt10": True,
+                    "before_amt10": False,
                 }
             )
         else:
@@ -365,26 +438,10 @@ def compute_sector_series(
                     "cr3": cr3,
                     "n_up": n_up,
                     "before_debut": False,
-                    "before_amt10": True,
+                    "before_amt10": False,
                 }
             )
-    # 起画门槛：自首个「3亿以上家数 ≥10」的交易日起才画柱；之前留空（含已上榜但样本不足日）
-    ready = False
-    for row in out:
-        if row.get("before_debut"):
-            row["before_amt10"] = True
-            row["pct"] = None
-            continue
-        if not ready:
-            if int(row.get("n_amt") or 0) >= 10:
-                ready = True
-                row["before_amt10"] = False
-            else:
-                row["before_amt10"] = True
-                row["pct"] = None
-        else:
-            row["before_amt10"] = False
-    return out
+    return out, sorted(cum)
 
 
 def compute_fund_recognition(
@@ -453,16 +510,24 @@ def compute_fund_recognition(
             daily_codes[ds] = [
                 str(c).zfill(6) for c in (day_map.get(name) or []) if c
             ]
-        series = compute_sector_series(
+        series, pool_codes = compute_sector_series(
             daily_codes, cache, series_days, first_appear=fa
         )
         items.append(
             {
                 "name": name,
-                "pool_n": p["pool_n"],
-                "codes": list(p.get("codes") or []),
+                "pool_n": len(pool_codes),
+                "codes": pool_codes,
                 "hit_count": p["hit_count"],
                 "first_appear": p.get("first_appear"),
+                "pool_start": next(
+                    (
+                        pt["date"]
+                        for pt in series
+                        if not pt.get("before_debut") and not pt.get("before_amt10")
+                    ),
+                    None,
+                ),
                 "series": series,
             }
         )
