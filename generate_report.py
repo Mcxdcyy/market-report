@@ -4119,15 +4119,16 @@ def render_html(ctx: dict) -> str:
   /* 表头 · 宏观·多空策略：与正文图表同系（顶部分隔线，无内层卡片外框）
      顺序：图名 → 柱图 → 周期标签（图下）→ 结论条 */
   .macro-bias-wrap {{
-    margin-top: 16px; padding-top: 16px; padding-bottom: 0;
+    margin-top: 16px; padding-top: 0; padding-bottom: 0;
     border-top: 1px solid var(--border);
     display: flex; flex-direction: column; gap: 10px;
   }}
-  /* 宏观图名对齐模块标题 .section-title / .section-head（字号+底部分隔间距） */
+  /* 宏观图名：字号对齐模块标题；夹在上下分隔线之间时上下内边距等距 */
   .macro-bias-wrap > .vol20-head {{
     align-items: center;
-    margin-bottom: 0; /* 与 wrap gap:10 合计，对齐 section-head 的 padding-bottom+margin-bottom */
-    padding-bottom: 8px;
+    margin-bottom: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
     border-bottom: 1px solid var(--border);
   }}
   .macro-bias-wrap > .vol20-head .vol20-title {{
