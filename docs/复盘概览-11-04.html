@@ -857,12 +857,10 @@
   .sector-label-event { color: #b25000; }
   .sector-label-forecast { color: #b25000; }
   .sector-text { font-size: 12px; color: var(--sub); line-height: 1.55; }
-  /* 逻辑/后续事件 1/2/3：段内换行与分段视觉间距同一尺度
-     行高多出的半行距在相邻两段首尾相接时刚好合成一段间距；
-     故 list 的 gap 必须为 0，否则会叠成约 2 倍（手机尤明显）。 */
+  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度 */
   .sector-logic-list {
     --logic-gap: 8px;
-    display: flex; flex-direction: column; gap: 0;
+    display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
   }
   .sector-logic-item {
@@ -874,7 +872,7 @@
   .sector-logic-n {
     box-sizing: border-box;
     width: 1.2em; height: 1.2em;
-    /* 半行距 = logic-gap/2，圆标顶与首行汉字顶齐 */
+    /* 半行距 = 段间距/2，圆标顶与首行汉字顶齐 */
     margin-top: calc(var(--logic-gap) / 2);
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
@@ -884,6 +882,7 @@
   }
   .sector-logic-t {
     min-width: 0;
+    /* 段内换行行距 = 1/2/3 分段间距 */
     line-height: calc(1em + var(--logic-gap));
   }
 
@@ -1664,7 +1663,7 @@
       <span class="fund-card-title">通信</span>
       <span class="fund-card-meta">共 14 只 · 3亿以上 13 只</span>
     </div>
-    <div class="fund-core"><span class="fund-core-k">核心个股</span><span class="fund-core-v">金安国纪、沪电股份、兴森科技、中钨高新、大族激光</span></div>
+    <div class="fund-core"><span class="fund-core-k">核心个股</span><span class="fund-core-v">金安国纪、华正新材、兴森科技、沪电股份、中钨高新</span></div>
     <div class="fund-chart">
       <div class="fund-chart-label">资金认可度</div>
       <div class="fund-bars"><div class="fund-mark fund-mark-100" title="100%" aria-hidden="true"></div><div class="fund-mark fund-mark-50" title="50%" aria-hidden="true"></div><div class="fund-mark fund-mark-0" title="0%" aria-hidden="true"></div><div class="fund-col" title="2026-10-08 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-09 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-12 · 尚未上榜"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-13 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-14 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-15 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-16 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-19 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-20 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-21 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-22 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-23 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-26 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-27 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-28 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-29 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-10-30 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-11-02 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col" title="2026-11-03 · 3亿以上未满10（0）· 起画前"><div class="fund-bar-track"><div class="fund-bar empty" style="height:0"></div></div></div><div class="fund-col latest" title="2026-11-04 · 占比30.8%（4/13）· 3亿以上 13 只"><div class="fund-bar-track"><div class="fund-bar weak" style="height:30.8%"></div></div></div></div>
@@ -1688,7 +1687,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 22:10</div>
+  <div class="footer">生成于 2026-11-04 22:12</div>
 </div>
 </body>
 </html>
