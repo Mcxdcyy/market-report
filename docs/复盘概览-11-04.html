@@ -857,6 +857,14 @@
   .sector-label-event { color: #b25000; }
   .sector-label-forecast { color: #b25000; }
   .sector-text { font-size: 12px; color: var(--sub); line-height: 1.55; }
+  .sector-logic-list { display: flex; flex-direction: column; gap: 6px; }
+  .sector-logic-item { display: flex; gap: 8px; align-items: flex-start; }
+  .sector-logic-n {
+    flex: 0 0 16px; width: 16px; height: 16px; margin-top: 1px;
+    border-radius: 50%; background: #ffe8d6; color: #b25000;
+    font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+  }
+  .sector-logic-t { flex: 1; min-width: 0; }
 
   /* ── 盘后公告 ── */
   .post-list {
@@ -1440,10 +1448,10 @@
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">硬催化来自海外算力景气与产业数据共振：AMD第三季度营收与数据中心业务超预期并上调指引，美国半导体行业协会数据显示全球半导体销售额同比大幅增长；同时全球半导体库存周转天数降至约121天、封测产能利用率升至较高水平，行业供需改善预期强化。国内侧，半导体设备与先进封装、存储相关公司三季报利润高增，北方华创、通富微电、京仪装备等批量涨停，叠加南京半导体封装测试年会窗口，形成“全球景气+国产设备与封测兑现”的结构判断。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><span class="sector-logic-n">1</span><span class="sector-logic-t">AMD第三季度营收与数据中心业务超预期并上调指引，美国半导体行业协会数据显示全球半导体销售额同比大幅增长。</span></div><div class="sector-logic-item"><span class="sector-logic-n">2</span><span class="sector-logic-t">全球半导体库存周转天数降至约121天、封测产能利用率升至较高水平，供需改善预期强化；国内半导体设备、先进封装与存储相关公司三季报利润高增。</span></div><div class="sector-logic-item"><span class="sector-logic-n">3</span><span class="sector-logic-t">叠加南京半导体封装测试年会窗口，结构上为全球景气与国产设备、封测兑现共振。</span></div></div></div></div>
         </div>
         <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">关注封测年会及后续设备、先进封装与存储环节订单、产能利用率披露。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">封测年会及后续设备、先进封装与存储环节订单、产能利用率披露。</div></div>
           <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">全球半导体库存周转降至近三年低位、封测产能利用率升至较高水平，叠加海外算力与设备环节业绩兑现，行业供需与景气已出现阶段性改善，后续仍可能有订单与产能利用率数据跟进。</div></div>
         </div>
       </div>
@@ -1461,10 +1469,10 @@
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">硬催化来自人工智能算力带动的高端印制电路板与覆铜板景气：产业链反馈高密度互连及高多层板存量产线订单超过现有产能，海外覆铜板厂商年内多次上调售价；金安国纪等覆铜板龙头前三季度净利润大幅增长，并推进电子级玻纤布扩产以保障基材供应。盘面通信（含印制电路板、覆铜板）方向涨停家数居前，金安国纪等高标反复活跃，结构上属于算力硬件材料涨价与业绩兑现共振。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><span class="sector-logic-n">1</span><span class="sector-logic-t">人工智能算力带动高端印制电路板与覆铜板景气，产业链反馈高密度互连及高多层板存量产线订单超过现有产能。</span></div><div class="sector-logic-item"><span class="sector-logic-n">2</span><span class="sector-logic-t">海外覆铜板厂商年内多次上调售价；国内覆铜板龙头前三季度净利润大幅增长，并推进电子级玻纤布扩产以保障基材供应。</span></div><div class="sector-logic-item"><span class="sector-logic-n">3</span><span class="sector-logic-t">结构上属算力硬件材料涨价与业绩兑现共振。</span></div></div></div></div>
         </div>
         <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">关注覆铜板与电子布后续涨价函、高端印制电路板扩产投产及龙头排产验证。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">覆铜板与电子布后续涨价函、高端印制电路板扩产投产及龙头排产验证。</div></div>
           <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">高端印制电路板与覆铜板涨价已多次落地且订单饱和，供需关系阶段性偏紧已体现在价格与排产上，后续仍可能有涨价函与扩产进度跟进。</div></div>
         </div>
       </div>
@@ -1482,10 +1490,10 @@
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">硬催化来自国际金价与需求数据共振：伦敦现货黄金午后快速拉升并重新站上约4000美元/盎司，白银同步走强；世界黄金协会披露三季度全球央行净购金约321吨、同比增长约42%，中国市场黄金需求约192吨、同比增长约12%，金饰与黄金ETF需求回暖。盘面山金国际、招金黄金、赤峰黄金、盛达资源等批量涨停，属贵金属价格驱动的单发交易行情。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><span class="sector-logic-n">1</span><span class="sector-logic-t">伦敦现货黄金快速拉升并重新站上约4000美元/盎司，白银同步走强。</span></div><div class="sector-logic-item"><span class="sector-logic-n">2</span><span class="sector-logic-t">世界黄金协会披露三季度全球央行净购金约321吨、同比增长约42%；中国市场黄金需求约192吨、同比增长约12%，金饰与黄金ETF需求回暖。</span></div><div class="sector-logic-item"><span class="sector-logic-n">3</span><span class="sector-logic-t">属国际金价与央行购金、消费需求数据共振驱动的贵金属交易行情。</span></div></div></div></div>
         </div>
         <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">关注国际金价能否站稳、央行购金与国内金饰季节性需求数据。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">国际金价能否站稳、央行购金与国内金饰季节性需求数据。</div></div>
           <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">国际金价快速反弹与黄金协会需求数据属阶段性价格与需求催化，后续仍可能有金价与央行购金数据跟进，但矿产端供需未确认系统性重定价。</div></div>
         </div>
       </div>
@@ -1503,10 +1511,10 @@
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">硬催化来自世界互联网大会乌镇峰会窗口与具身智能主题延续：峰会分论坛覆盖机器人与具身智能、智能体互联等议题，市场风险偏好回升背景下灵巧手、减速器、控制器等环节跟随活跃。盘面兆威机电、征和工业、三联锻造、均胜电子等涨停，属主题会议与硬件零部件共振的单发扩散。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><span class="sector-logic-n">1</span><span class="sector-logic-t">世界互联网大会乌镇峰会窗口，分论坛覆盖机器人与具身智能、智能体互联等议题。</span></div><div class="sector-logic-item"><span class="sector-logic-n">2</span><span class="sector-logic-t">市场风险偏好回升背景下，灵巧手、减速器、控制器等硬件零部件环节跟随扩散。</span></div><div class="sector-logic-item"><span class="sector-logic-n">3</span><span class="sector-logic-t">属主题会议催化下的具身智能链条单发扩散。</span></div></div></div></div>
         </div>
         <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">关注乌镇峰会闭幕后续报道及人形机器人零部件订单、样机交付披露。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">乌镇峰会闭幕后续报道及人形机器人零部件订单、样机交付披露。</div></div>
           <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">乌镇峰会及具身智能议题属会议与主题扩散催化，短期内仍可能有产业链订单与样机进展跟进，但行业供需未确认当下已变。</div></div>
         </div>
       </div>
@@ -1524,10 +1532,10 @@
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">硬催化来自医药合同研发生产组织（CXO）业绩与订单验证：药明康德前三季度营收约455.4亿元、同比增长约38.6%，持续经营业务在手订单约767.4亿元并上调全年收入指引；三季度CXO板块收入与归母净利润同比高增，叠加创新药对外授权与医保谈判窗口落地后的情绪修复。盘面药明康德、凯莱英、昭衍新药等涨停，结构上属CXO景气兑现带动创新药链条修复。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><span class="sector-logic-n">1</span><span class="sector-logic-t">药明康德前三季度营收约455.4亿元、同比增长约38.6%，持续经营业务在手订单约767.4亿元并上调全年收入指引。</span></div><div class="sector-logic-item"><span class="sector-logic-n">2</span><span class="sector-logic-t">三季度医药合同研发生产组织（CXO）板块收入与归母净利润同比高增。</span></div><div class="sector-logic-item"><span class="sector-logic-n">3</span><span class="sector-logic-t">叠加创新药对外授权与医保谈判窗口落地后的情绪修复，结构上属CXO景气兑现带动创新药链条修复。</span></div></div></div></div>
         </div>
         <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">关注CXO在手订单、创新药对外授权及后续临床与商业化进展。</div></div>
+          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">CXO在手订单、创新药对外授权及后续临床与商业化进展。</div></div>
           <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">CXO龙头订单与全年指引上修属业绩验证型单发催化，后续仍可能有对外授权与订单数据跟进，但行业供需未由此确认结构性重定价。</div></div>
         </div>
       </div>
@@ -1662,7 +1670,7 @@
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-04 19:21</div>
+  <div class="footer">生成于 2026-11-04 19:33</div>
 </div>
 </body>
 </html>

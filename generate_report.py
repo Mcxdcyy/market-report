@@ -3359,6 +3359,42 @@ def _normalize_event_priority(raw) -> str:
     return ""
 
 
+def _format_sector_reason_html(reason) -> str:
+    """涨停板块「逻辑」：1/2/3 分条展示。
+
+    market_news.json 优先写 list[str]；旧版整段字符串仍兼容。
+    """
+    items: list[str] = []
+    if isinstance(reason, list):
+        items = [str(x).strip() for x in reason if str(x).strip()]
+    elif isinstance(reason, str) and reason.strip():
+        raw = reason.strip()
+        # 已是「1. …」分行
+        lines = [ln.strip() for ln in raw.splitlines() if ln.strip()]
+        numbered = []
+        for ln in lines:
+            m = re.match(r"^(\d+)[\.、\)]\s*(.+)$", ln)
+            if m:
+                numbered.append(m.group(2).strip())
+            else:
+                numbered = []
+                break
+        items = numbered if numbered else [raw]
+    if not items:
+        return ""
+    if len(items) == 1 and not isinstance(reason, list):
+        return items[0]
+    parts = []
+    for i, text in enumerate(items, 1):
+        parts.append(
+            f'<div class="sector-logic-item">'
+            f'<span class="sector-logic-n">{i}</span>'
+            f'<span class="sector-logic-t">{text}</span>'
+            f"</div>"
+        )
+    return f'<div class="sector-logic-list">{"".join(parts)}</div>'
+
+
 def enrich_sector_event_priority(
     sectors: list,
     *,
@@ -4012,7 +4048,7 @@ def render_html(ctx: dict) -> str:
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          {f'<div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">{s.get("reason", "")}</div></div>' if s.get("reason") else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'}
+          {f'<div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>' if s.get("reason") else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'}
         </div>
         <div class="sector-col-right">
           <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{s.get("events_near", "—")}{("｜" + s.get("dir_hint")) if s.get("dir_hint") and s.get("dir_hint") not in (s.get("events_near") or "") else ""}</div></div>
@@ -4898,6 +4934,14 @@ def render_html(ctx: dict) -> str:
   .sector-label-event {{ color: #b25000; }}
   .sector-label-forecast {{ color: #b25000; }}
   .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
+  .sector-logic-list {{ display: flex; flex-direction: column; gap: 6px; }}
+  .sector-logic-item {{ display: flex; gap: 8px; align-items: flex-start; }}
+  .sector-logic-n {{
+    flex: 0 0 16px; width: 16px; height: 16px; margin-top: 1px;
+    border-radius: 50%; background: #ffe8d6; color: #b25000;
+    font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+  }}
+  .sector-logic-t {{ flex: 1; min-width: 0; }}
 
   /* ── 盘后公告 ── */
   .post-list {{
@@ -6397,7 +6441,10 @@ def load_fund_recognition_block(
 
 
 def _fund_pool_codes(it: dict) -> list[str]:
-    """板块池代码（含 3 亿以下）；来自 fund 结果里的 codes。"""
+    """与柱图同一套建池后累计 codes（含 3 亿以下）。
+
+    近2日>3亿去重≥10 起建；门槛前涨停不在此列。供「核心个股」使用。
+    """
     raw = it.get("codes")
     if isinstance(raw, list) and raw:
         return [str(c).zfill(6) for c in raw if c]
