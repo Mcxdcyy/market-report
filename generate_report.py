@@ -4901,13 +4901,11 @@ def render_html(ctx: dict) -> str:
   }}
   /* 图表标签 .pill：A 股红强绿弱（近30日成交金额 / 追高活跃度 / 板块-资金认可度 统一） */
   .chart-tags .pill.ok,
-  .vol20-tags .pill.ok,
-  .fund-core-pct.ok {{ background: #ffebee; color: #c62828; }}
+  .vol20-tags .pill.ok {{ background: #ffebee; color: #c62828; }}
   .chart-tags .pill.warn,
   .vol20-tags .pill.warn {{ background: var(--warn-bg); color: #b25000; }}
   .chart-tags .pill.bad,
-  .vol20-tags .pill.bad,
-  .fund-core-pct.bad {{ background: #e8f5e9; color: #2e7d32; }}
+  .vol20-tags .pill.bad {{ background: #e8f5e9; color: #2e7d32; }}
   .vol20-note {{
     margin-top: 12px; padding: 8px 10px;
     background: var(--accent-bg); border-left: 3px solid var(--accent);
@@ -5290,6 +5288,9 @@ def render_html(ctx: dict) -> str:
   .pill.sector-priority-pill.ok {{ background: #ffebee; color: #c62828; }}   /* P1 红 */
   .pill.sector-priority-pill.warn {{ background: #fff3e0; color: #ef6c00; }} /* P2 橙 */
   .pill.sector-priority-pill.weak {{ background: #eef2f6; color: #5a6472; }} /* P3 灰 */
+  /* 资金认可度占比：须压过通用 .pill.ok 绿 / .pill.bad 红；A 股 >50% 红、<50% 绿 */
+  .pill.fund-core-pct.ok {{ background: #ffebee; color: #c62828; }}
+  .pill.fund-core-pct.bad {{ background: #e8f5e9; color: #2e7d32; }}
 
   .footer {{
     text-align: center; color: var(--muted); font-size: 11px;
