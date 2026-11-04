@@ -17,23 +17,23 @@
   "primary": "daily_b",
   "note": "主口径为日线下跌趋势（连续3日收盘<MA5且创3日低开灯；收盘>MA5为=（待次日确认），次日仍>MA5结束为-）。60分钟下跌通道仅在日线仍全非下跌时作前置预警。",
   "b_regime": "全下跌",
-  "a_regime": "全下跌",
+  "a_regime": "全-",
   "early_warn": false,
   "early_warn_text": "",
-  "fetched": "2026-11-04 11:19:55",
+  "fetched": "2026-11-04 16:34:52",
   "indices": [
     {
       "name": "上证指数",
       "symbol": "sh000001",
-      "label": "下跌",
-      "status": "down",
+      "label": "=",
+      "status": "pending",
       "risk_on": true,
       "downtrend": true,
-      "pill": "bad",
-      "a_downtrend": true,
-      "a_status": "down",
-      "last_bar": "2026-11-04 11:30:00",
-      "last_close": 3605.148,
+      "pill": "warn",
+      "a_downtrend": false,
+      "a_status": "ok",
+      "last_bar": "2026-11-04 15:00:00",
+      "last_close": 3686.173,
       "series": [
         {
           "date": "2026-10-22",
@@ -127,13 +127,13 @@
         },
         {
           "date": "2026-11-04",
-          "status": "down",
-          "label": "下跌",
+          "status": "pending",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
-          "close": 3604.71,
-          "a_downtrend": true,
-          "a_status": "down"
+          "close": 3686.17,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
@@ -141,15 +141,15 @@
     {
       "name": "深成指",
       "symbol": "sz399001",
-      "label": "下跌",
-      "status": "down",
+      "label": "=",
+      "status": "pending",
       "risk_on": true,
       "downtrend": true,
-      "pill": "bad",
-      "a_downtrend": true,
-      "a_status": "down",
-      "last_bar": "2026-11-04 11:30:00",
-      "last_close": 10908.489,
+      "pill": "warn",
+      "a_downtrend": false,
+      "a_status": "ok",
+      "last_bar": "2026-11-04 15:00:00",
+      "last_close": 11335.687,
       "series": [
         {
           "date": "2026-10-22",
@@ -243,13 +243,13 @@
         },
         {
           "date": "2026-11-04",
-          "status": "down",
-          "label": "下跌",
+          "status": "pending",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
-          "close": 10896.94,
-          "a_downtrend": true,
-          "a_status": "down"
+          "close": 11335.69,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
@@ -257,15 +257,15 @@
     {
       "name": "创业板指数",
       "symbol": "sz399006",
-      "label": "下跌",
-      "status": "down",
+      "label": "=",
+      "status": "pending",
       "risk_on": true,
       "downtrend": true,
-      "pill": "bad",
-      "a_downtrend": true,
-      "a_status": "down",
-      "last_bar": "2026-11-04 11:30:00",
-      "last_close": 2402.264,
+      "pill": "warn",
+      "a_downtrend": false,
+      "a_status": "ok",
+      "last_bar": "2026-11-04 15:00:00",
+      "last_close": 2544.73,
       "series": [
         {
           "date": "2026-10-22",
@@ -359,13 +359,13 @@
         },
         {
           "date": "2026-11-04",
-          "status": "down",
-          "label": "下跌",
+          "status": "pending",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
-          "close": 2397.97,
-          "a_downtrend": true,
-          "a_status": "down"
+          "close": 2544.73,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
@@ -373,15 +373,15 @@
     {
       "name": "科创综指",
       "symbol": "sh000680",
-      "label": "下跌",
-      "status": "down",
+      "label": "=",
+      "status": "pending",
       "risk_on": true,
       "downtrend": true,
-      "pill": "bad",
-      "a_downtrend": true,
-      "a_status": "down",
-      "last_bar": "2026-11-04 11:30:00",
-      "last_close": 1411.06,
+      "pill": "warn",
+      "a_downtrend": false,
+      "a_status": "ok",
+      "last_bar": "2026-11-04 15:00:00",
+      "last_close": 1525.307,
       "series": [
         {
           "date": "2026-10-22",
@@ -475,13 +475,13 @@
         },
         {
           "date": "2026-11-04",
-          "status": "down",
-          "label": "下跌",
+          "status": "pending",
+          "label": "=",
           "risk_on": true,
           "downtrend": true,
-          "close": 1410.16,
-          "a_downtrend": true,
-          "a_status": "down"
+          "close": 1525.31,
+          "a_downtrend": false,
+          "a_status": "ok"
         }
       ],
       "error": null
