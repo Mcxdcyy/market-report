@@ -5159,7 +5159,7 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
   }}
-  /* 与公告/板块正文对齐：标题 13/1.5，描述 12/1.55 */
+  /* 与公告/板块正文对齐：标题 13/1.5；描述行距与涨停板块段内换行同尺 */
   .fwd-cal-title {{
     font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
   }}
@@ -5168,7 +5168,8 @@ def render_html(ctx: dict) -> str:
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-note {{
-    font-size: 12px; line-height: 1.55; color: var(--sub); margin: 4px 0 0;
+    font-size: 12px; color: var(--sub); margin: 4px 0 0;
+    line-height: calc(1em + var(--logic-gap));
   }}
 
   .pill {{
@@ -5320,7 +5321,7 @@ def render_html(ctx: dict) -> str:
     .event-block-body {{ font-size: 14px; }}
     .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
     .fwd-cal-title {{ font-size: 15px; line-height: 1.5; }}
-    .fwd-cal-note {{ font-size: 14px; line-height: 1.55; margin-top: 3px; }}
+    .fwd-cal-note {{ font-size: 14px; margin-top: 3px; }}
     .fwd-cal-md {{ font-size: 16px; }}
     .fwd-cal-wd {{ font-size: 13px; }}
     .fwd-cal-mark {{ width: 10px; height: 10px; }}
