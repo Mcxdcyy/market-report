@@ -3388,8 +3388,8 @@ def _format_sector_reason_html(reason) -> str:
     for i, text in enumerate(items, 1):
         parts.append(
             f'<div class="sector-logic-item">'
-            f'<span class="sector-logic-n">{i}</span>'
-            f'<span class="sector-logic-t">{text}</span>'
+            f'<div class="sector-logic-n" aria-hidden="true">{i}</div>'
+            f'<div class="sector-logic-t">{text}</div>'
             f"</div>"
         )
     return f'<div class="sector-logic-list">{"".join(parts)}</div>'
@@ -4927,20 +4927,37 @@ def render_html(ctx: dict) -> str:
   .sector-label {{
     display: inline-block;
     font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }}
   .sector-label-logic {{ color: #b25000; }}
   .sector-label-event {{ color: #b25000; }}
   .sector-label-forecast {{ color: #b25000; }}
   .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  .sector-logic-list {{ display: flex; flex-direction: column; gap: 6px; }}
-  .sector-logic-item {{ display: flex; gap: 8px; align-items: flex-start; }}
-  .sector-logic-n {{
-    flex: 0 0 16px; width: 16px; height: 16px; margin-top: 1px;
-    border-radius: 50%; background: #ffe8d6; color: #b25000;
-    font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+  /* 逻辑 1/2/3：固定序号列 + 徽标与首行光学对齐 */
+  .sector-logic-list {{
+    display: flex; flex-direction: column; gap: 8px;
+    margin: 0; padding: 0;
   }}
-  .sector-logic-t {{ flex: 1; min-width: 0; }}
+  .sector-logic-item {{
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    column-gap: 10px;
+    align-items: start;
+  }}
+  .sector-logic-n {{
+    box-sizing: border-box;
+    width: 18px; height: 18px;
+    margin-top: 0.5px; /* 12px × 1.55 首行 ≈ 18.6，与徽标居中对齐 */
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: #fff4eb; color: #b25000;
+    font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+    line-height: 1; letter-spacing: 0;
+  }}
+  .sector-logic-t {{
+    min-width: 0;
+    line-height: 1.55;
+  }}
 
   /* ── 盘后公告 ── */
   .post-list {{
@@ -5272,6 +5289,12 @@ def render_html(ctx: dict) -> str:
     .sector-priority-pill {{ font-size: 12px; }}
     .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
+    .sector-logic-list {{ gap: 10px; }}
+    .sector-logic-item {{ grid-template-columns: 20px minmax(0, 1fr); column-gap: 10px; }}
+    .sector-logic-n {{
+      width: 20px; height: 20px; margin-top: 0.85px; /* 14px × 1.55 ≈ 21.7 */
+      font-size: 12px;
+    }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}
     .post-title {{ font-size: 15px; }}
