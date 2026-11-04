@@ -20,7 +20,7 @@
   "a_regime": "全下跌",
   "early_warn": false,
   "early_warn_text": "",
-  "fetched": "2026-11-04 10:51:09",
+  "fetched": "2026-11-04 10:52:28",
   "indices": [
     {
       "name": "上证指数",
@@ -33,7 +33,7 @@
       "a_downtrend": true,
       "a_status": "down",
       "last_bar": "2026-11-04 11:30:00",
-      "last_close": 3599.114,
+      "last_close": 3595.954,
       "series": [
         {
           "date": "2026-10-22",
@@ -131,7 +131,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 3598.76,
+          "close": 3595.49,
           "a_downtrend": true,
           "a_status": "down"
         }
@@ -149,7 +149,7 @@
       "a_downtrend": true,
       "a_status": "down",
       "last_bar": "2026-11-04 11:30:00",
-      "last_close": 10875.856,
+      "last_close": 10860.814,
       "series": [
         {
           "date": "2026-10-22",
@@ -247,7 +247,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 10872.43,
+          "close": 10860.51,
           "a_downtrend": true,
           "a_status": "down"
         }
@@ -265,7 +265,7 @@
       "a_downtrend": true,
       "a_status": "down",
       "last_bar": "2026-11-04 11:30:00",
-      "last_close": 2391.085,
+      "last_close": 2387.877,
       "series": [
         {
           "date": "2026-10-22",
@@ -363,7 +363,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 2390.18,
+          "close": 2386.69,
           "a_downtrend": true,
           "a_status": "down"
         }
@@ -381,7 +381,7 @@
       "a_downtrend": true,
       "a_status": "down",
       "last_bar": "2026-11-04 11:30:00",
-      "last_close": 1404.893,
+      "last_close": 1402.095,
       "series": [
         {
           "date": "2026-10-22",
@@ -479,7 +479,7 @@
           "label": "下跌",
           "risk_on": true,
           "downtrend": true,
-          "close": 1404.09,
+          "close": 1402.16,
           "a_downtrend": true,
           "a_status": "down"
         }
