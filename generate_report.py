@@ -4943,10 +4943,12 @@ def render_html(ctx: dict) -> str:
   .sector-label-event {{ color: #b25000; }}
   .sector-label-forecast {{ color: #b25000; }}
   .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度 */
+  /* 逻辑/后续事件 1/2/3：段内换行与分段视觉间距同一尺度
+     行高多出的半行距在相邻两段首尾相接时刚好合成一段间距；
+     故 list 的 gap 必须为 0，否则会叠成约 2 倍（手机尤明显）。 */
   .sector-logic-list {{
     --logic-gap: 8px;
-    display: flex; flex-direction: column; gap: var(--logic-gap);
+    display: flex; flex-direction: column; gap: 0;
     margin: 0; padding: 0;
   }}
   .sector-logic-item {{
@@ -4958,7 +4960,7 @@ def render_html(ctx: dict) -> str:
   .sector-logic-n {{
     box-sizing: border-box;
     width: 1.2em; height: 1.2em;
-    /* 半行距 = 段间距/2，圆标顶与首行汉字顶齐 */
+    /* 半行距 = logic-gap/2，圆标顶与首行汉字顶齐 */
     margin-top: calc(var(--logic-gap) / 2);
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
@@ -4968,7 +4970,6 @@ def render_html(ctx: dict) -> str:
   }}
   .sector-logic-t {{
     min-width: 0;
-    /* 段内换行行距 = 1/2/3 分段间距 */
     line-height: calc(1em + var(--logic-gap));
   }}
 
