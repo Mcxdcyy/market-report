@@ -2436,6 +2436,7 @@ def load_market_news(
 # 只保留仍可能落入「报表日+未来2周」的 seed；已结束节点靠日期过滤剔除，不必长期堆在 seed 里。
 SEED_EVENT_CATALOG: list[dict] = [
     # 过期节点勿再写入；强主题窗口与需提前展示的产业链级 IPO 在此维护
+    # venue=地点（页面单独一行「于…举行」）；brief=概述（不含地址）
     {
         "month": 11,
         "day": 2,
@@ -2443,8 +2444,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/2–5",
         "title": "2026世界互联网大会乌镇峰会",
         "short": "乌镇峰会",
+        "venue": "浙江乌镇",
         "brief": (
-            "于浙江乌镇举行，主题为“开源开放 共建共享”；"
+            "主题为“开源开放 共建共享”；"
             "分论坛覆盖智能体互联、机器人与具身智能、时空智能等议题，"
             "同期“互联网之光”博览会汇聚多家企业与技术成果展示；"
             "峰会期间发布《中国互联网发展报告2026》《世界互联网发展报告2026》蓝皮书。"
@@ -2461,8 +2463,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/4–6",
         "title": "第二十四届中国半导体封装测试技术与市场年会",
         "short": "半导体封测年会",
+        "venue": "南京",
         "brief": (
-            "于南京举行，围绕先进封装、玻璃基板、硅通孔等方向展开研讨，"
+            "围绕先进封装、玻璃基板、硅通孔等方向展开研讨，"
             "参会企业包括封测龙头及相关设计、制造与材料环节公司。"
         ),
         "hot": True,
@@ -2477,8 +2480,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/5–10",
         "title": "第九届中国国际进口博览会",
         "short": "进博会",
+        "venue": "上海国家会展中心",
         "brief": (
-            "于上海国家会展中心举行，设置汽车及智慧出行、医疗器械及医药保健、"
+            "设置汽车及智慧出行、医疗器械及医药保健、"
             "技术装备等展区，观察进口替代、消费与高端装备相关订单与合作线索。"
         ),
         "hot": True,
@@ -2493,8 +2497,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/7–9",
         "title": "2026广州电子信息·半导体·集成电路与人工智能算力展览会",
         "short": "广州半导体展",
+        "venue": "广州保利世贸博览馆",
         "brief": (
-            "于广州保利世贸博览馆举行，聚焦电子信息、半导体、集成电路与人工智能算力产业链，"
+            "聚焦电子信息、半导体、集成电路与人工智能算力产业链，"
             "观察设计、制造、封测及算力硬件环节的产品与合作线索。"
         ),
         "hot": True,
@@ -2509,8 +2514,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/10–12",
         "title": "中国（上海）半导体产业与应用博览会（IC EXPO）",
         "short": "上海IC EXPO",
+        "venue": "上海新国际博览中心",
         "brief": (
-            "于上海新国际博览中心举行，面向半导体产业与终端应用对接，"
+            "面向半导体产业与终端应用对接，"
             "观察集成电路设计、制造、材料设备及下游应用合作进展。"
         ),
         "hot": True,
@@ -2525,8 +2531,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/12",
         "title": "百度世界2026",
         "short": "百度世界",
+        "venue": "北京国家会议中心二期",
         "brief": (
-            "于北京国家会议中心二期举行，主题围绕智能组织与企业级人工智能应用，"
+            "主题围绕智能组织与企业级人工智能应用，"
             "关注大模型产品、智能云与行业落地进展。"
         ),
         "hot": True,
@@ -2540,8 +2547,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/12–14",
         "title": "第二十三届中国国际半导体博览会（IC China）",
         "short": "IC China",
+        "venue": "北京国家会议中心",
         "brief": (
-            "于北京国家会议中心举行，以全景链条展示、终端应用赋能、龙头企业带动为主线，"
+            "以全景链条展示、终端应用赋能、龙头企业带动为主线，"
             "覆盖集成电路材料、设备、设计、制造、封测及人工智能、汽车、机器人等应用场景。"
         ),
         "hot": True,
@@ -2556,8 +2564,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "label": "11/17–20",
         "title": "第九届中国国际光伏与储能产业大会",
         "short": "光储大会",
+        "venue": "四川成都",
         "brief": (
-            "于四川成都举行，主题围绕光伏与储能融合及产业链协同，"
+            "主题围绕光伏与储能融合及产业链协同，"
             "观察光伏产能出清节奏与储能装机、订单验证。"
         ),
         "hot": True,
@@ -2997,6 +3006,8 @@ def _merge_event(base: dict, incoming: dict) -> dict:
     merged = dict(incoming)
     if base.get("source") == "seed" and base.get("brief"):
         merged["brief"] = base["brief"]
+        if base.get("venue"):
+            merged["venue"] = base["venue"]
         merged["title"] = base.get("title", merged["title"])
         merged["short"] = base.get("short", merged.get("short"))
         merged["dot"] = base.get("dot", merged.get("dot"))
@@ -3007,9 +3018,26 @@ def _merge_event(base: dict, incoming: dict) -> dict:
         merged["source"] = "seed"
     elif incoming.get("source") == "wscn" and base.get("brief") and len(base["brief"]) > len(incoming.get("brief", "")):
         merged["brief"] = base["brief"]
+        if base.get("venue") and not merged.get("venue"):
+            merged["venue"] = base["venue"]
     merged["importance"] = max(int(base.get("importance") or 0), int(incoming.get("importance") or 0))
     merged["hot"] = bool(base.get("hot") or incoming.get("hot"))
     return merged
+
+
+def _split_event_venue_brief(n: dict) -> tuple[str, str]:
+    """地点与概述拆开：优先 venue 字段；旧 brief「于…举行，…」可解析。"""
+    venue = str(n.get("venue") or "").strip()
+    brief = str(n.get("brief") or "").strip()
+    if venue:
+        return venue, brief
+    m = re.match(r"^于(.+?)举行[，,；;。]\s*(.*)$", brief, flags=re.S)
+    if m:
+        return m.group(1).strip(), (m.group(2) or "").strip()
+    m = re.match(r"^于(.+?)举行$", brief)
+    if m:
+        return m.group(1).strip(), ""
+    return "", brief
 
 
 def fetch_wscn_events(as_of: datetime, days: int = 14, retries: int = 3) -> list[dict]:
@@ -3955,7 +3983,13 @@ def render_fwd_section_html(
     for n in cal_items:
         label = n.get("label", "")
         title = n.get("title", n.get("short", ""))
-        note = (n.get("brief") or "").strip() or "暂无补充说明。"
+        venue, note = _split_event_venue_brief(n)
+        if not note and not venue:
+            note = "暂无补充说明。"
+        venue_html = (
+            f'<p class="fwd-cal-venue">于{venue}举行</p>' if venue else ""
+        )
+        note_html = f'<p class="fwd-cal-note">{note}</p>' if note else ""
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         hot = bool(
@@ -3975,7 +4009,7 @@ def render_fwd_section_html(
             f'<div class="fwd-cal-top">'
             f'<span class="fwd-cal-title">{title}</span>'
             f'{tag_html}</div>'
-            f'<p class="fwd-cal-note">{note}</p>'
+            f'{venue_html}{note_html}'
             f"</div></div>"
         )
     cal_html = (
@@ -5177,10 +5211,15 @@ def render_html(ctx: dict) -> str:
     font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
+  .fwd-cal-venue {{
+    font-size: 12px; color: var(--muted); margin: 4px 0 0;
+    line-height: calc(1em + var(--logic-gap));
+  }}
   .fwd-cal-note {{
     font-size: 12px; color: var(--sub); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
   }}
+  .fwd-cal-venue + .fwd-cal-note {{ margin-top: 2px; }}
 
   .pill {{
     display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;
@@ -5332,7 +5371,9 @@ def render_html(ctx: dict) -> str:
     .event-block-body {{ font-size: 14px; }}
     .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
     .fwd-cal-title {{ font-size: 15px; line-height: 1.5; }}
+    .fwd-cal-venue {{ font-size: 14px; margin-top: 3px; }}
     .fwd-cal-note {{ font-size: 14px; margin-top: 3px; }}
+    .fwd-cal-venue + .fwd-cal-note {{ margin-top: 2px; }}
     .fwd-cal-md {{ font-size: 16px; }}
     .fwd-cal-wd {{ font-size: 13px; }}
     .fwd-cal-mark {{ width: 10px; height: 10px; }}
