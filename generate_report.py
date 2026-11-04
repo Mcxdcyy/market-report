@@ -2143,10 +2143,20 @@ def curate_post_close(
         selected.append({k: v for k, v in item.items() if k != "_sort"})
         selected_titles.add(title)
 
-    # 总排序：板块匹配 > 类别优先级 A,B,C,D
+    # 总排序：政策在前、上市公司披露（公告/预告）在后；组内再按板块匹配 > 类别 A,B,C,D
     cat_order = {"A": 4, "B": 3, "C": 2, "D": 1}
+
+    def _type_bucket(x: dict) -> int:
+        t = str(x.get("type") or "")
+        if t == "政策":
+            return 0
+        if t in ("公告", "预告"):
+            return 1
+        return 2
+
     selected.sort(
         key=lambda x: (
+            -_type_bucket(x),  # 与 reverse=True 配合：政策(0) 最大
             int(_sector_match(x, sector_names)),
             cat_order.get(x.get("category"), 0),
             _curate_sort_key(x, sector_names, env_weak),
@@ -5430,11 +5440,11 @@ def render_html(ctx: dict) -> str:
     <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
   </div>
 
-  <!-- 3 公告与政策 -->
+  <!-- 3 政策与公告（政策在前、公告/预告在后） -->
   <div class="section" id="sec-post">
     <div class="section-head">
       <div class="section-num">3</div>
-      <div class="section-title">公告与政策</div>
+      <div class="section-title">政策与公告</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
