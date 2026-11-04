@@ -5385,7 +5385,7 @@ def render_html(ctx: dict) -> str:
     </div>
     {sector_block}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
-    <div class="module-summary">事件优先级——P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
+    <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
   </div>
 
   <!-- 3 公告与政策 -->
