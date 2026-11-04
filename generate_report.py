@@ -4048,7 +4048,7 @@ def render_html(ctx: dict) -> str:
       </div>
       <div class="sector-cols">
         <div class="sector-col-left">
-          {f'<div class="sector-block"><div class="sector-label sector-label-logic">逻辑</div><div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>' if s.get("reason") else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'}
+          {f'<div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>' if s.get("reason") else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'}
         </div>
         <div class="sector-col-right">
           <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{s.get("events_near", "—")}{("｜" + s.get("dir_hint")) if s.get("dir_hint") and s.get("dir_hint") not in (s.get("events_near") or "") else ""}</div></div>
