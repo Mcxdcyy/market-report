@@ -4052,7 +4052,6 @@ def render_html(ctx: dict) -> str:
         </div>
         <div class="sector-col-right">
           <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{s.get("events_near", "—")}{("｜" + s.get("dir_hint")) if s.get("dir_hint") and s.get("dir_hint") not in (s.get("events_near") or "") else ""}</div></div>
-          <div class="sector-block"><div class="sector-label sector-label-forecast">事件优先级</div><div class="sector-text">{s.get("persist_note", "")}</div></div>
         </div>
       </div>
     </div>'''
