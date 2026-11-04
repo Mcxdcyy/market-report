@@ -2461,8 +2461,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "同期“互联网之光”博览会汇聚多家企业与技术成果展示；"
             "峰会期间发布《中国互联网发展报告2026》《世界互联网发展报告2026》蓝皮书。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 5),
     },
@@ -2478,8 +2478,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "围绕先进封装、玻璃基板、硅通孔等方向展开研讨，"
             "参会企业包括封测龙头及相关设计、制造与材料环节公司。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 6),
     },
@@ -2495,8 +2495,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "设置汽车及智慧出行、医疗器械及医药保健、"
             "技术装备等展区，观察进口替代、消费与高端装备相关订单与合作线索。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 10),
     },
@@ -2512,8 +2512,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "聚焦电子信息、半导体、集成电路与人工智能算力产业链，"
             "观察设计、制造、封测及算力硬件环节的产品与合作线索。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 9),
     },
@@ -2529,8 +2529,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "面向半导体产业与终端应用对接，"
             "观察集成电路设计、制造、材料设备及下游应用合作进展。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 12),
     },
@@ -2546,8 +2546,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "主题围绕智能组织与企业级人工智能应用，"
             "关注大模型产品、智能云与行业落地进展。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
     },
     {
@@ -2562,8 +2562,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "以全景链条展示、终端应用赋能、龙头企业带动为主线，"
             "覆盖集成电路材料、设备、设计、制造、封测及人工智能、汽车、机器人等应用场景。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 14),
     },
@@ -2579,8 +2579,8 @@ SEED_EVENT_CATALOG: list[dict] = [
             "主题围绕光伏与储能融合及产业链协同，"
             "观察光伏产能出清节奏与储能装机、订单验证。"
         ),
-        "hot": True,
-        "importance": 4,
+        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
+        "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 20),
     },
@@ -2746,14 +2746,16 @@ EVENT_HOT_MIN_IMPORTANCE = 4
 
 
 def _event_is_hot(title: str, ev: dict | None = None) -> bool:
-    """重要（红点）vs 一般（蓝点）。通用规则，可随未来事件自然适用。
+    """重要（红点）vs 一般（蓝点）。
 
-    命中任一即为重要：
-    1. seed / 上游显式 `hot=True`（人工认定的强节点）
-    2. 日历 `importance >= EVENT_HOT_MIN_IMPORTANCE`（数据源通用评级）
-    3. 产业链级 IPO/申购（结构规则，见 `_event_is_chain_ipo`）
+    红点=更可能带来板块交易的强节点；蓝点=普通窗口提醒。
+    命中任一即为红：
+    1. seed / 上游显式 `hot=True`（人工：政策落地、业绩验证高峰、已确认硬催化映射的会议等）
+    2. 日历 `importance >= EVENT_HOT_MIN_IMPORTANCE`（见闻评级，保留自动红）
+    3. 产业链级 IPO/申购（`_event_is_chain_ipo`）
 
-    不做：用 WAIC/吹风会/中报 等具体会议名硬编码标红（无通用性）。
+    例行峰会/展会/年会默认蓝：seed 写 `hot=False` 且 `importance<4`。
+    不做：用 WAIC/吹风会/中报 等具体会议名硬编码标红。
     """
     if ev is not None and ev.get("hot") is True:
         return True
@@ -4987,7 +4989,7 @@ def render_html(ctx: dict) -> str:
   .sector-muted {{ color: var(--muted); font-size: 12px; }}
   .sector-label {{
     display: inline-block;
-    font-size: 12px; font-weight: 800; letter-spacing: 0.02em; /* 与正文 .sector-text 同字号 */
+    font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
     margin-bottom: 6px;
   }}
   .sector-label-logic {{ color: #b25000; }}
@@ -5368,7 +5370,7 @@ def render_html(ctx: dict) -> str:
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
     .sector-priority-pill {{ font-size: 12px; }}
-    .sector-label {{ font-size: 14px; }} /* 与正文同字号 */
+    .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
     :root {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
