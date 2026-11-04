@@ -4943,9 +4943,10 @@ def render_html(ctx: dict) -> str:
   .sector-label-event {{ color: #b25000; }}
   .sector-label-forecast {{ color: #b25000; }}
   .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  /* 逻辑/后续事件 1/2/3：序号顶对齐文案首行字面（扣半行距） */
+  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度 */
   .sector-logic-list {{
-    display: flex; flex-direction: column; gap: 8px;
+    --logic-gap: 8px;
+    display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
   }}
   .sector-logic-item {{
@@ -4957,8 +4958,8 @@ def render_html(ctx: dict) -> str:
   .sector-logic-n {{
     box-sizing: border-box;
     width: 1.2em; height: 1.2em;
-    /* line-height 1.55 的上半行距 ≈ 0.275em，圆标顶与汉字顶齐 */
-    margin-top: 0.275em;
+    /* 半行距 = 段间距/2，圆标顶与首行汉字顶齐 */
+    margin-top: calc(var(--logic-gap) / 2);
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
     background: #fff4eb; color: #b25000;
@@ -4967,7 +4968,8 @@ def render_html(ctx: dict) -> str:
   }}
   .sector-logic-t {{
     min-width: 0;
-    line-height: 1.55;
+    /* 段内换行行距 = 1/2/3 分段间距 */
+    line-height: calc(1em + var(--logic-gap));
   }}
 
   /* ── 盘后公告 ── */
@@ -5300,7 +5302,7 @@ def render_html(ctx: dict) -> str:
     .sector-priority-pill {{ font-size: 12px; }}
     .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
-    .sector-logic-list {{ gap: 10px; }}
+    .sector-logic-list {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}
     .post-title {{ font-size: 15px; }}
