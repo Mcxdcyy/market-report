@@ -4118,6 +4118,7 @@ def render_html(ctx: dict) -> str:
     --shadow: 0 1px 2px rgba(0,0,0,.03), 0 4px 16px rgba(0,0,0,.04);
     --radius: 14px;
     --radius-sm: 10px;
+    --logic-gap: 8px; /* 涨停板块段内/分段 · 公告摘要换行同尺；手机 10px */
   }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{
@@ -4943,9 +4944,8 @@ def render_html(ctx: dict) -> str:
   .sector-label-event {{ color: #b25000; }}
   .sector-label-forecast {{ color: #b25000; }}
   .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度 */
+  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度（--logic-gap 在 :root） */
   .sector-logic-list {{
-    --logic-gap: 8px;
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
   }}
@@ -4991,7 +4991,11 @@ def render_html(ctx: dict) -> str:
     align-self: flex-start;
   }}
   .post-title {{ font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; }}
-  .post-summary {{ font-size: 12px; color: var(--sub); line-height: 1.55; margin: 0; }}
+  .post-summary {{
+    font-size: 12px; color: var(--sub); margin: 0;
+    /* 与涨停板块段内换行同尺 */
+    line-height: calc(1em + var(--logic-gap));
+  }}
   .news-empty {{ font-size: 12px; color: var(--muted); padding: 4px 0; }}
   /* 模块底部说明：顶部分隔线 + 灰色脚注（无外框） */
   .module-summary,
@@ -5302,7 +5306,7 @@ def render_html(ctx: dict) -> str:
     .sector-priority-pill {{ font-size: 12px; }}
     .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
-    .sector-logic-list {{ --logic-gap: 10px; }}
+    :root {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}
     .post-title {{ font-size: 15px; }}
