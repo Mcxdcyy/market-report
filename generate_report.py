@@ -4534,9 +4534,14 @@ def render_html(ctx: dict) -> str:
 
   /* 符合条件个股 · 成交额分档（100% 堆叠） */
   /* ── 板块-资金认可度 ── */
+  /* 提示条上下分隔线间距均为 14px（上=标题底线→条，下=条→首卡顶线） */
+  #sec-fund > .section-head {{
+    margin-bottom: 14px;
+  }}
   #sec-fund > .vol-mkt-sum-wrap {{
-    margin: 0 0 0;
+    margin: 0;
     padding-top: 0;
+    padding-bottom: 0; /* 勿与下方 tip margin 叠成 28px */
     border-top: none;
   }}
   #sec-fund > .vol-mkt-sum-wrap .vol-mkt-sum,
