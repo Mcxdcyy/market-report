@@ -4551,19 +4551,19 @@ def render_html(ctx: dict) -> str:
   .fund-list {{
     display: grid;
     grid-template-columns: 1fr;
-    gap: 8px; /* 卡间距主要靠卡底 padding，勿再叠大 gap 把分隔线挤糊 */
+    gap: 0; /* 卡间距交给 .fund-card 上下 padding + 加粗卡间线 */
   }}
   @media (min-width: 960px) {{
-    .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+    .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }}
   }}
   .fund-card {{
     margin-top: 0;
-    /* 底 padding 加大：核心个股明确落在本卡内，与下一卡顶部分隔线拉开 */
-    padding: 16px 0 18px; border: none; border-radius: 0;
-    border-top: 1px solid var(--border);
+    /* 卡间线加粗加深，与图内刻度/模块细线分层；上下留白把核心个股留在本卡 */
+    padding: 18px 0 22px; border: none; border-radius: 0;
+    border-top: 1px solid rgba(60, 60, 67, 0.28);
     background: transparent;
     min-width: 0;
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
   }}
   .fund-card-head {{
     display: flex; align-items: baseline; justify-content: space-between;
@@ -4571,7 +4571,7 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  /* 核心个股套件：挂在柱图下方（本卡页脚）；顶部分隔线绑住上图，底 padding 离开下一卡 */
+  /* 核心个股：本卡页脚；与柱图只用留白衔接，不再加横线（避免和卡间线同级） */
   .fund-core {{
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -4579,9 +4579,9 @@ def render_html(ctx: dict) -> str:
     column-gap: 12px;
     row-gap: 8px;
     align-items: start; /* 顶对齐 */
-    margin: 2px 0 0;
-    padding: 10px 0 0;
-    border-top: 1px solid rgba(60, 60, 67, 0.12); /* 与柱图弱分隔，标明同属本卡 */
+    margin: 0;
+    padding: 2px 0 0;
+    border-top: none;
   }}
   .fund-core-k {{
     grid-column: 1; grid-row: 1;
@@ -4627,8 +4627,8 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-mark {{
     position: absolute; left: 0; right: 0; height: 0;
-    /* 浅灰实线刻度，弱于柱色、异于图表分隔线 */
-    border-top: 1px solid rgba(60, 60, 67, 0.18);
+    /* 刻度线极淡，勿与卡间分隔同级 */
+    border-top: 1px solid rgba(60, 60, 67, 0.10);
     pointer-events: none; z-index: 1;
   }}
   .fund-mark-0 {{ bottom: 0; }}
@@ -5386,7 +5386,8 @@ def render_html(ctx: dict) -> str:
     .fund-core-k {{ font-size: 14px; padding-top: 5px; }}
     .fund-core-pct {{ font-size: 13px; padding: 5px 11px; }}
     .fund-core-chip {{ font-size: 14px; padding: 5px 10px; }}
-    .fund-card {{ padding: 16px 0 20px; }}
+    .fund-card {{ padding: 18px 0 24px; }}
+    .fund-list {{ column-gap: 0; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
     .idx-outlook-table thead th {{ font-size: 12px; }}

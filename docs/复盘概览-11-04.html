@@ -413,19 +413,19 @@
   .fund-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 8px; /* 卡间距主要靠卡底 padding，勿再叠大 gap 把分隔线挤糊 */
+    gap: 0; /* 卡间距交给 .fund-card 上下 padding + 加粗卡间线 */
   }
   @media (min-width: 960px) {
-    .fund-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fund-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
   }
   .fund-card {
     margin-top: 0;
-    /* 底 padding 加大：核心个股明确落在本卡内，与下一卡顶部分隔线拉开 */
-    padding: 16px 0 18px; border: none; border-radius: 0;
-    border-top: 1px solid var(--border);
+    /* 卡间线加粗加深，与图内刻度/模块细线分层；上下留白把核心个股留在本卡 */
+    padding: 18px 0 22px; border: none; border-radius: 0;
+    border-top: 1px solid rgba(60, 60, 67, 0.28);
     background: transparent;
     min-width: 0;
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
   }
   .fund-card-head {
     display: flex; align-items: baseline; justify-content: space-between;
@@ -433,7 +433,7 @@
   }
   .fund-card-title { font-size: 14px; font-weight: 700; color: var(--text); }
   .fund-card-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  /* 核心个股套件：挂在柱图下方（本卡页脚）；顶部分隔线绑住上图，底 padding 离开下一卡 */
+  /* 核心个股：本卡页脚；与柱图只用留白衔接，不再加横线（避免和卡间线同级） */
   .fund-core {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -441,9 +441,9 @@
     column-gap: 12px;
     row-gap: 8px;
     align-items: start; /* 顶对齐 */
-    margin: 2px 0 0;
-    padding: 10px 0 0;
-    border-top: 1px solid rgba(60, 60, 67, 0.12); /* 与柱图弱分隔，标明同属本卡 */
+    margin: 0;
+    padding: 2px 0 0;
+    border-top: none;
   }
   .fund-core-k {
     grid-column: 1; grid-row: 1;
@@ -489,8 +489,8 @@
   }
   .fund-mark {
     position: absolute; left: 0; right: 0; height: 0;
-    /* 浅灰实线刻度，弱于柱色、异于图表分隔线 */
-    border-top: 1px solid rgba(60, 60, 67, 0.18);
+    /* 刻度线极淡，勿与卡间分隔同级 */
+    border-top: 1px solid rgba(60, 60, 67, 0.10);
     pointer-events: none; z-index: 1;
   }
   .fund-mark-0 { bottom: 0; }
@@ -1248,7 +1248,8 @@
     .fund-core-k { font-size: 14px; padding-top: 5px; }
     .fund-core-pct { font-size: 13px; padding: 5px 11px; }
     .fund-core-chip { font-size: 14px; padding: 5px 10px; }
-    .fund-card { padding: 16px 0 20px; }
+    .fund-card { padding: 18px 0 24px; }
+    .fund-list { column-gap: 0; }
     .idx-outlook-table th,
     .idx-outlook-table td { font-size: 12px; padding: 9px 6px; }
     .idx-outlook-table thead th { font-size: 12px; }
@@ -1698,7 +1699,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-08</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-16</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-27</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-04</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-08 · 尚未上榜"></div><div class="fund-amt-n" title="2026-10-09 · 3亿以上 17">17</div><div class="fund-amt-n" title="2026-10-12 · 3亿以上 20">20</div><div class="fund-amt-n" title="2026-10-13 · 3亿以上 23">23</div><div class="fund-amt-n" title="2026-10-14 · 3亿以上 26">26</div><div class="fund-amt-n" title="2026-10-15 · 3亿以上 22">22</div><div class="fund-amt-n" title="2026-10-16 · 3亿以上 21">21</div><div class="fund-amt-n" title="2026-10-19 · 3亿以上 23">23</div><div class="fund-amt-n" title="2026-10-20 · 3亿以上 27">27</div><div class="fund-amt-n" title="2026-10-21 · 3亿以上 28">28</div><div class="fund-amt-n" title="2026-10-22 · 3亿以上 29">29</div><div class="fund-amt-n" title="2026-10-23 · 3亿以上 31">31</div><div class="fund-amt-n" title="2026-10-26 · 3亿以上 29">29</div><div class="fund-amt-n" title="2026-10-27 · 3亿以上 33">33</div><div class="fund-amt-n" title="2026-10-28 · 3亿以上 30">30</div><div class="fund-amt-n" title="2026-10-29 · 3亿以上 26">26</div><div class="fund-amt-n" title="2026-10-30 · 3亿以上 28">28</div><div class="fund-amt-n" title="2026-11-02 · 3亿以上 41">41</div><div class="fund-amt-n" title="2026-11-03 · 3亿以上 38">38</div><div class="fund-amt-n latest" title="2026-11-04 · 3亿以上 37">37</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.7%</span><div class="fund-core-list"><span class="fund-core-chip">慈文传媒</span><span class="fund-core-chip">浙文影业</span><span class="fund-core-chip">龙版传媒</span><span class="fund-core-chip">文投控股</span><span class="fund-core-chip">引力传媒</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.7%</span><div class="fund-core-list"><span class="fund-core-chip">慈文传媒</span><span class="fund-core-chip">浙文影业</span><span class="fund-core-chip">文投控股</span><span class="fund-core-chip">龙版传媒</span><span class="fund-core-chip">引力传媒</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">芯片</span>
@@ -1731,11 +1732,11 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-08</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-16</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-27</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-04</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-08 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-09 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-12 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-13 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-14 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-15 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-16 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-19 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-20 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-21 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-22 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-23 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-26 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-27 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-28 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-29 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-30 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-11-02 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-11-03 · 尚未上榜"></div><div class="fund-amt-n latest" title="2026-11-04 · 3亿以上 12">12</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.0%</span><div class="fund-core-list"><span class="fund-core-chip">赤峰黄金</span><span class="fund-core-chip">盛达资源</span><span class="fund-core-chip">白银有色</span><span class="fund-core-chip">晓程科技</span><span class="fund-core-chip">湖南白银</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.0%</span><div class="fund-core-list"><span class="fund-core-chip">赤峰黄金</span><span class="fund-core-chip">白银有色</span><span class="fund-core-chip">盛达资源</span><span class="fund-core-chip">湖南白银</span><span class="fund-core-chip">晓程科技</span></div></div>
   </div></div>
   </div>
 
-  <div class="footer">生成于 2026-11-05 15:32</div>
+  <div class="footer">生成于 2026-11-05 16:01</div>
 </div>
 </body>
 </html>
