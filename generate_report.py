@@ -4551,13 +4551,15 @@ def render_html(ctx: dict) -> str:
   .fund-list {{
     display: grid;
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 8px; /* 卡间距主要靠卡底 padding，勿再叠大 gap 把分隔线挤糊 */
   }}
   @media (min-width: 960px) {{
     .fund-list {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   }}
   .fund-card {{
-    margin-top: 0; padding: 16px 0 2px; border: none; border-radius: 0;
+    margin-top: 0;
+    /* 底 padding 加大：核心个股明确落在本卡内，与下一卡顶部分隔线拉开 */
+    padding: 16px 0 18px; border: none; border-radius: 0;
     border-top: 1px solid var(--border);
     background: transparent;
     min-width: 0;
@@ -4569,22 +4571,22 @@ def render_html(ctx: dict) -> str:
   }}
   .fund-card-title {{ font-size: 14px; font-weight: 700; color: var(--text); }}
   .fund-card-meta {{ font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }}
-  /* 核心个股套件：柱图紧下方；上行「核心个股」与占比 pill 同行顶对齐；下行 chip 通栏 */
-  .fund-chart + .fund-core {{
-    margin-top: -2px; /* 贴紧柱图家数行，整套上移 */
-  }}
+  /* 核心个股套件：挂在柱图下方（本卡页脚）；顶部分隔线绑住上图，底 padding 离开下一卡 */
   .fund-core {{
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
     column-gap: 12px;
-    row-gap: 6px;
+    row-gap: 8px;
     align-items: start; /* 顶对齐 */
-    margin: 0; padding: 0;
+    margin: 2px 0 0;
+    padding: 10px 0 0;
+    border-top: 1px solid rgba(60, 60, 67, 0.12); /* 与柱图弱分隔，标明同属本卡 */
   }}
   .fund-core-k {{
     grid-column: 1; grid-row: 1;
-    font-size: 11px; font-weight: 600; color: var(--muted);
+    /* 小标题：比 muted 脚注更清楚，对齐板块小标题量级 */
+    font-size: 12px; font-weight: 700; color: var(--sub);
     letter-spacing: 0.02em;
     line-height: 1.2;
     /* 与占比 pill 顶缘齐：pill padding-top 4px */
@@ -5381,9 +5383,10 @@ def render_html(ctx: dict) -> str:
     .module-summary {{ font-size: 13px; }}
     .fund-card-title {{ font-size: 16px; }}
     .fund-card-meta {{ font-size: 13px; }}
-    .fund-core-k {{ font-size: 13px; padding-top: 5px; }}
+    .fund-core-k {{ font-size: 14px; padding-top: 5px; }}
     .fund-core-pct {{ font-size: 13px; padding: 5px 11px; }}
     .fund-core-chip {{ font-size: 14px; padding: 5px 10px; }}
+    .fund-card {{ padding: 16px 0 20px; }}
     .idx-outlook-table th,
     .idx-outlook-table td {{ font-size: 12px; padding: 9px 6px; }}
     .idx-outlook-table thead th {{ font-size: 12px; }}
