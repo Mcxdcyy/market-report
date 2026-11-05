@@ -4560,7 +4560,7 @@ def render_html(ctx: dict) -> str:
     margin-top: 0;
     /* 卡间线加粗加深，与图内刻度/模块细线分层；上下留白把核心个股留在本卡 */
     padding: 18px 0 22px; border: none; border-radius: 0;
-    border-top: 1px solid rgba(60, 60, 67, 0.28);
+    border-top: 1px solid rgba(60, 60, 67, 0.18);
     background: transparent;
     min-width: 0;
     display: flex; flex-direction: column; gap: 12px;
