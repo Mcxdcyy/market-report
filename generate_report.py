@@ -973,7 +973,7 @@ _SUM_TONE_BY_TEXT: dict[str, str] = {
     # 短期指数趋势 · 四档（2026-10-30）
     "指数趋势正常": "ok",
     "指数趋势正常（待次日确认）": "warn",
-    "指数异常-部分下跌通道": "warn",
+    "指数异常-部分下跌通道": "bad",
     "指数风险-全下跌通道": "bad",
     "追高活跃：积极做多。——多锁仓。": "ok",
     "追高不活跃：冲高容易回落。——主动卖出。": "bad",
@@ -5512,20 +5512,31 @@ def render_html(ctx: dict) -> str:
     <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
   </div>
 
-  <!-- 3 政策与公告（政策在前、公告/预告在后） -->
-  <div class="section" id="sec-post">
+  <!-- 3 板块-资金认可度（2026-11-05 方案A：紧跟涨停，便于筛题材真假） -->
+  <div class="section" id="sec-fund">
     <div class="section-head">
       <div class="section-num">3</div>
+      <div class="section-title">板块-资金认可度</div>
+      <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
+    </div>
+    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。", tone="tip")}
+    {fund_recognition_html}
+  </div>
+
+  <!-- 4 政策与公告（政策在前、公告/预告在后） -->
+  <div class="section" id="sec-post">
+    <div class="section-head">
+      <div class="section-num">4</div>
       <div class="section-title">政策与公告</div>
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
-  <!-- 4 事件 -->
+  <!-- 5 事件 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">4</div>
+      <div class="section-num">5</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5533,17 +5544,6 @@ def render_html(ctx: dict) -> str:
       </div>
     </div>
     {fwd_section_html}
-  </div>
-
-  <!-- 5 板块-资金认可度 -->
-  <div class="section" id="sec-fund">
-    <div class="section-head">
-      <div class="section-num">5</div>
-      <div class="section-title">板块-资金认可度</div>
-      <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
-    </div>
-    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。", tone="tip")}
-    {fund_recognition_html}
   </div>
 
   <div class="footer">生成于 {ctx['generated']}</div>
@@ -6006,7 +6006,7 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     elif idx_sum == "指数趋势正常（待次日确认）":
         pills.append(("warn", "指数趋势正常（待次日确认）"))
     elif idx_sum == "指数异常-部分下跌通道":
-        pills.append(("warn", "指数异常-部分下跌通道"))
+        pills.append(("bad", "指数异常-部分下跌通道"))
     elif idx_sum == "指数风险-全下跌通道":
         pills.append(("bad", "指数风险-全下跌通道"))
 
