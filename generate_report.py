@@ -2492,13 +2492,33 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "进博会",
         "venue": "上海国家会展中心",
         "brief": (
-            "设置汽车及智慧出行、医疗器械及医药保健、"
-            "技术装备等展区，观察进口替代、消费与高端装备相关订单与合作线索。"
+            "设置汽车及智慧出行、医疗器械及医药保健、技术装备等展区；"
+            "同期虹桥论坛于11月5日举办“人形机器人与具身智能产业创新发展合作”分论坛，"
+            "并由中国人形机器人与具身智能百人会发布“人形机器人应用场景图谱”；"
+            "观察进口替代、高端装备与具身智能相关订单与合作线索。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 10),
+    },
+    {
+        "month": 11,
+        "day": 15,
+        "dot": "光",
+        "label": "11/15",
+        "title": "工信部光伏制造行业规范条件（2026年本）征求意见截止",
+        "short": "光伏规范征求意见截止",
+        "venue": "",
+        "brief": (
+            "工业和信息化部电子信息司就《光伏制造行业规范条件（2026年本）》"
+            "及公告管理办法公开征求意见，截止日期为11月15日；"
+            "草案提高n型电池与组件效率、能耗等门槛，引导产能出清与高质量发展，"
+            "关注最终条款对新建与存量产能的约束力度。"
+        ),
+        "hot": True,  # 政策落地窗口：红点
+        "importance": 4,
+        "source": "seed",
     },
     {
         "month": 11,
@@ -2576,8 +2596,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "光储大会",
         "venue": "四川成都",
         "brief": (
-            "主题围绕光伏与储能融合及产业链协同，"
-            "观察光伏产能出清节奏与储能装机、订单验证。"
+            "主题围绕光伏与储能融合及产业链协同；"
+            "结合近期硅料排产收缩、逆变器提价与规范条件征求意见窗口，"
+            "观察产能出清节奏、储能装机与订单、价格传导能否继续改善。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -4577,7 +4598,7 @@ def render_html(ctx: dict) -> str:
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
     column-gap: 12px;
-    row-gap: 8px;
+    row-gap: 12px; /* 标题/占比行 ↔ chip：桌面拉开；手机另加大 */
     align-items: start; /* 顶对齐 */
     margin: 0;
     padding: 2px 0 0;
@@ -5383,6 +5404,7 @@ def render_html(ctx: dict) -> str:
     .module-summary {{ font-size: 13px; }}
     .fund-card-title {{ font-size: 16px; }}
     .fund-card-meta {{ font-size: 13px; }}
+    .fund-core {{ row-gap: 14px; }} /* 手机：占比 pill 底缘与 chip 顶别贴太近 */
     .fund-core-k {{ font-size: 14px; padding-top: 5px; }}
     .fund-core-pct {{ font-size: 13px; padding: 5px 11px; }}
     .fund-core-chip {{ font-size: 14px; padding: 5px 10px; }}
