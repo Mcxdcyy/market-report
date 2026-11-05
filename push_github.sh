@@ -4,7 +4,7 @@
 # 访问: https://mcxdcyy.github.io/market-report/
 
 set -e
-cd "/Users/machengxiang/Desktop/xyzc"
+cd "/Users/machengxiang/Desktop/增长2026"
 
 echo "-> 生成最新报表并同步 docs/ ..."
 python3 generate_report.py

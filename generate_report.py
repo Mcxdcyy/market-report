@@ -4106,7 +4106,7 @@ def render_html(ctx: dict) -> str:
             + "".join(
                 f'''<div class="post-row {_announce_edge_tag(it)}">
       <div class="post-title">[{it.get("type", "公告")}] {it.get("title", "")}</div>
-      <p class="post-summary">{it.get("content", it.get("text", ""))}</p>
+      <p class="post-summary">{it.get("content") or it.get("text") or it.get("summary") or ""}</p>
     </div>'''
                 for it in items
             )
