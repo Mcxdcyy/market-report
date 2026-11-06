@@ -10,12 +10,15 @@ __pycache__/
 # 趋势强度 K 线缓存（体积大，按需重拉）
 /trend_klines_cache.json
 /trend_klines_cache_long.json
-/_backtest_all_trend_200d.py
 /trend_strength_results/all_ratio_last200.json
+
+# 助手自生成脚本/分析产物（本地）
+/脚本文件/
 
 # 根目录 HTML 为本地副本，Pages 发布 docs/
 /复盘概览-*.html
 /index.html
 
-# 历史归档（可选本地保留）
+# 历史归档（本地保留；Pages 仍用 docs/）
+/复盘概览-归档/
 /历史复盘文档/
