@@ -2252,34 +2252,26 @@ def sync_sector_count(sector: dict) -> dict:
 
 
 def filter_display_sectors(sectors: list) -> list:
-    """涨停板块展示过滤（固定 · 两段流水线）：
-
-    1) 资格筛选
-       - 若存在涨停家数 ≥5 的板块：只保留这些
-       - 若没有任何 ≥5：只保留家数并列最高（最强可能不止 1 个）
-    2) 数量上限
-       - 按家数降序，默认最多展示 5 个
-       - 若第 5 与第 6 家数相同，则一并展示第 6（及之后与第 5 家数相同的并列）
-    """
+    """兼容旧调用：仅按家数做轻量同步。正式展示改走 build_core_display_sectors（核心题材并集）。"""
     synced = [sync_sector_count(dict(s)) for s in (sectors or [])]
-    synced = [s for s in synced if int(s.get("count") or 0) > 0]
-    if not synced:
-        return []
-    synced.sort(key=lambda s: (-int(s.get("count") or 0), s.get("name") or ""))
-    ge5 = [s for s in synced if int(s.get("count") or 0) >= 5]
-    qualified = ge5 if ge5 else [
-        s for s in synced if int(s.get("count") or 0) == int(synced[0].get("count") or 0)
-    ]
-    if len(qualified) <= 5:
-        return qualified
-    fifth_count = int(qualified[4].get("count") or 0)
-    out = qualified[:5]
-    for s in qualified[5:]:
-        if int(s.get("count") or 0) == fifth_count:
-            out.append(s)
-        else:
-            break
-    return out
+    return [s for s in synced if str(s.get("name") or "").strip()]
+
+
+def build_display_sectors(
+    as_of: datetime | date,
+    json_sectors: list | None,
+    *,
+    fund_block: dict | None = None,
+) -> list:
+    """涨停板块展示（2026-11-06）：资金展示卡 ∪ 近5日有效上榜≥2 ∪ 当日≥5；P1→P3 后按当日家数。"""
+    try:
+        from core_sectors import build_core_display_sectors
+
+        return build_core_display_sectors(as_of, json_sectors, fund_block=fund_block)
+    except Exception as exc:  # noqa: BLE001
+        # 并集失败时回退 JSON 原文（仍同步 count）
+        print(f"[sectors] core union failed, fallback JSON: {exc}", flush=True)
+        return filter_display_sectors(json_sectors or [])
 
 
 def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:
@@ -2408,8 +2400,9 @@ def load_market_news(
     as_of: datetime,
     *,
     env_weak: bool = False,
+    fund_block: dict | None = None,
 ) -> dict:
-    """读取消息面并精选盘后公告。"""
+    """读取消息面并精选盘后公告。涨停板块按核心题材并集展示。"""
     key = as_of.strftime("%Y-%m-%d")
     empty = {
         "top_sectors": [],
@@ -2429,7 +2422,9 @@ def load_market_news(
     day = raw.get(key)
     if not day:
         return empty
-    sectors = filter_display_sectors(day.get("top_sectors") or [])
+    sectors = build_display_sectors(
+        as_of, day.get("top_sectors") or [], fund_block=fund_block
+    )
     pool = day.get("post_close_pool") or day.get("post_close") or []
     curated, stats = curate_post_close(pool, sectors, env_weak, as_of)
     return {
@@ -7021,8 +7016,23 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         kpl_rows,
     )
 
-    # 2026-11-03：已删「趋势强度」整模块（含百日新高），日常生成不再拉新高序列
-    market_news = load_market_news(dt, env_weak=env_weak)
+    modes = empty_trading_modes()
+    # 真·最新交易日：历史日重生成时不得把 as_of 当成 latest，以免覆盖 means_200d / 追高等缓存
+    try:
+        from trading_calendar import resolve_report_as_of
+
+        _latest = resolve_report_as_of(refresh=False, progress=False)
+        latest_dt = datetime(_latest.year, _latest.month, _latest.day)
+    except Exception:  # noqa: BLE001
+        latest_dt = dt
+    # 2026-11-03：已删「趋势强度」整模块，日常生成不再算 trend_strength
+    chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
+    index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
+    macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
+    fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
+
+    # 涨停板块核心并集依赖资金展示卡 → 先算 fund 再拼板块
+    market_news = load_market_news(dt, env_weak=env_weak, fund_block=fund_recognition)
     news_raw = {}
     if NEWS_FILE.exists():
         try:
@@ -7054,21 +7064,6 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
             as_of=dt,
             directions=directions,
         )
-
-    modes = empty_trading_modes()
-    # 真·最新交易日：历史日重生成时不得把 as_of 当成 latest，以免覆盖 means_200d / 追高等缓存
-    try:
-        from trading_calendar import resolve_report_as_of
-
-        _latest = resolve_report_as_of(refresh=False, progress=False)
-        latest_dt = datetime(_latest.year, _latest.month, _latest.day)
-    except Exception:  # noqa: BLE001
-        latest_dt = dt
-    # 2026-11-03：已删「趋势强度」整模块，日常生成不再算 trend_strength
-    chase_sentiment = load_chase_sentiment_block(dt, latest_dt=latest_dt)
-    index_downtrend = load_index_downtrend_block(dt, latest_dt=latest_dt)
-    macro_bias = load_macro_bias_block(dt, latest_dt=latest_dt)
-    fund_recognition = load_fund_recognition_block(dt, latest_dt=latest_dt)
     fund_range = ""
     if fund_recognition.get("series_start") and fund_recognition.get("series_end"):
         fund_range = (
