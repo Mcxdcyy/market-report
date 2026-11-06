@@ -5,8 +5,8 @@
 - 板块：近 20 个交易日开盘啦涨停原因中出现过的全部板块
 - 建池 / 起画门槛（同一日）：近 2 个交易日内，该板块涨停票里成交额>3 亿的
   **去重家数** ≥15 → 当日起才开始统计池子并画柱。（2026-11-06 由 ≥10 改定）
-  · 门槛日之前的涨停个股 **不计入** 池子
-  · 门槛日起：池 = 当日涨停代码；之后每日把新上榜代码并入（只增不减）
+  · 门槛日之前的涨停个股默认不进池；**例外**：建池首日把**前一交易日**该板块涨停一并并入（与近2日宽度对齐）
+  · 建池首日：池 = 前一日涨停 ∪ 当日涨停；之后每日把新上榜代码并入（只增不减）
 - 按日：截至当日累计池内，成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
 - 题材缩圈 CR3：同当日累计池；上涨票权重=涨幅×成交额；CR3=前3/合计；附 n_up
 - 结果：每板块近 20 个交易日序列
@@ -37,8 +37,8 @@ SERIES_DAYS = 20
 AMOUNT_MIN = 3e8  # 3 亿元
 KLINE_NEED = 40  # MA10 + 20 日余量
 WORKERS = 48
-# 个股池：近2日涨停票中 >3亿去重≥15 才建池；此前涨停不进池。旧缓存须强制重算。
-POOL_VIA = "cumulative_from_2d_amt15"
+# 个股池：近2日涨停票中 >3亿去重≥15 才建池；首日并入前一日涨停。旧缓存须强制重算。
+POOL_VIA = "cumulative_from_2d_amt15_seed_prev"
 AMT10_LOOKBACK_DAYS = 2
 AMT10_MIN_NAMES = 15
 
@@ -344,7 +344,8 @@ def compute_sector_series(
 ) -> tuple[list[dict], list[str]]:
     """按日序列。返回 (series, 窗口末日累计池 codes)。
 
-    建池/起画：近 2 日涨停票中 >3 亿去重 ≥15 的首日才开始；此前涨停不进池。
+    建池/起画：近 2 日涨停票中 >3 亿去重 ≥15 的首日才开始；此前涨停默认不进池。
+    建池首日例外：并入前一交易日该板块全部涨停代码（与近2日宽度门槛对齐）。
     起画日后池按日累计（只增不减）。禁止用窗口末日总池回算历史日。
     """
     pool_start = _find_pool_start_day(
@@ -352,6 +353,7 @@ def compute_sector_series(
     )
     out: list[dict] = []
     cum: set[str] = set()
+    day_index = {d: i for i, d in enumerate(series_days)}
     for d in series_days:
         if first_appear is not None and d < first_appear:
             out.append(
@@ -384,6 +386,16 @@ def compute_sector_series(
                 }
             )
             continue
+        # 建池首日：先并入前一交易日涨停，再并入当日
+        if d == pool_start:
+            si = day_index.get(d, 0)
+            if si >= 1:
+                prev = series_days[si - 1]
+                if first_appear is None or prev >= first_appear:
+                    for c in daily_codes.get(prev.isoformat()) or []:
+                        code = str(c).zfill(6)
+                        if code:
+                            cum.add(code)
         for c in daily_codes.get(d.isoformat()) or []:
             code = str(c).zfill(6)
             if code:
