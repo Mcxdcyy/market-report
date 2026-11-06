@@ -5197,9 +5197,9 @@ def render_html(ctx: dict) -> str:
     flex-shrink: 0; text-align: right; align-self: center;
   }}
   .sector-priority-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
-  /* 板块序：浅蓝圆角方（与模块 section-num 同形异色；不再用圆，避免与文案序号撞形） */
+  /* 板块序：浅蓝实心圆（与模块 section-num 圆角方区分；文案分条已是 1. 无圆底） */
   .sector-rank {{
-    width: 22px; height: 22px; border-radius: 6px;
+    width: 22px; height: 22px; border-radius: 50%;
     background: #64B5F6; color: #fff; border: none;
     font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
     display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
