@@ -5672,21 +5672,10 @@ def render_html(ctx: dict) -> str:
     {vol20_html}
   </div>
 
-  <!-- 2 涨停板块逻辑（2026-11-06 模块名改定） -->
-  <div class="section" id="sec-sectors">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">涨停板块逻辑</div>
-    </div>
-    {sector_block}
-    {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
-    <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
-  </div>
-
-  <!-- 3 板块-资金认可度（无符合条件柱图时整模块不显示） -->
+  <!-- 2 板块-资金认可度（2026-11-06 序改定；无符合条件柱图时整模块不显示） -->
   {f'''<div class="section" id="sec-fund">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">板块-资金认可度</div>
       <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
     </div>
@@ -5694,20 +5683,21 @@ def render_html(ctx: dict) -> str:
     {fund_recognition_html}
   </div>''' if fund_recognition_html else ''}
 
-  <!-- 4 政策与公告（政策在前、公告/预告在后） -->
-  <div class="section" id="sec-post">
+  <!-- 3 涨停板块逻辑 -->
+  <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">4</div>
-      <div class="section-title">政策与公告</div>
+      <div class="section-num">3</div>
+      <div class="section-title">涨停板块逻辑</div>
     </div>
-    {post_block}
-    {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
+    {sector_block}
+    {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
+    <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
   </div>
 
-  <!-- 5 事件 -->
+  <!-- 4 未来2周 · 事件与方向 -->
   <div class="section" id="sec-event">
     <div class="section-head">
-      <div class="section-num">5</div>
+      <div class="section-num">4</div>
       <div class="section-title">未来2周 · 事件与方向</div>
       <div class="section-sub event-meta">
         <span class="event-window">{ctx['event_window']}</span>
@@ -5715,6 +5705,16 @@ def render_html(ctx: dict) -> str:
       </div>
     </div>
     {fwd_section_html}
+  </div>
+
+  <!-- 5 政策与公告（置末；政策在前、公告/预告在后） -->
+  <div class="section" id="sec-post">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div class="section-title">政策与公告</div>
+    </div>
+    {post_block}
+    {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
   </div>
 
   <div class="footer">生成于 {ctx['generated']}</div>
