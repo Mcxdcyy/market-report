@@ -4597,6 +4597,12 @@ def render_html(ctx: dict) -> str:
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
   }}
+  /* 趋势/抱团提示：双红或一红一绿；青蓝强调（非紫、非红非绿） */
+  .mkt-env-pills .pill.cue {{
+    background: #0e7490; color: #fff;
+    font-weight: 700; letter-spacing: 0.02em;
+    box-shadow: 0 0 0 1px rgba(14, 116, 144, 0.35);
+  }}
   /* 宏观·做多/做空周期标签：描边外框，刻意突出（对齐系统杠杆外框手法） */
   .macro-bias-wrap .chart-tags .pill.macro-long {{
     font-weight: 700; letter-spacing: 0.02em;
@@ -6321,41 +6327,57 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 
 
 def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
-    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys。缺数据的项跳过。
+    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys/cue。缺数据的项跳过。
 
-    若「指数风险-全下跌通道」且「量能-增量周期」同时成立 → 最前追加「系统杠杆风险」(sys，紫强调)。
+    前置提示（与系统杠杆同系外框，青蓝 cue，非紫）：
+    - 指数「正常」+ 量能「增量」两红 → 「关注趋势-锁仓」
+    - 一红一绿（正常/增量 vs 异常/缩量）→ 「关注抱团-主板」
+    - 「待次日确认」(warn) 不计入上述两档
+    若「指数风险-全下跌通道」且「量能-增量周期」→ 最前「系统杠杆风险」(sys，紫)；命中时不再叠 cue。
     """
     pills: list[tuple[str, str]] = []
 
     # 1) 指数趋势（与表下结论四档同一套文案）
     idx_sum = _index_outlook_sum_text(ctx.get("index_downtrend") or {})
+    idx_tone = ""
     if idx_sum == "指数趋势正常":
+        idx_tone = "ok"
         pills.append(("ok", "指数趋势正常"))
     elif idx_sum == "指数趋势正常（待次日确认）":
+        idx_tone = "warn"
         pills.append(("warn", "指数趋势正常（待次日确认）"))
     elif idx_sum == "指数异常-部分下跌通道":
+        idx_tone = "bad"
         pills.append(("bad", "指数异常-部分下跌通道"))
     elif idx_sum == "指数风险-全下跌通道":
+        idx_tone = "bad"
         pills.append(("bad", "指数风险-全下跌通道"))
 
     # 2) 近30日成交金额（只看末日柱色；与图下量能标签同文案）
     vol30 = ctx.get("vol20_bars") or []
     vol_expand = bool(vol30) and vol30[-1].get("tag") == "up"
+    vol_tone = ""
     if vol30:
         if vol_expand:
+            vol_tone = "ok"
             pills.append(("ok", "量能-增量周期"))
         else:
+            vol_tone = "bad"
             pills.append(("bad", "量能-缩量周期"))
 
-    # 3) 全下跌 + 增量 → 系统杠杆风险（置顶，紫强调）
+    # 3) 前置：系统杠杆优先；否则双红 / 一红一绿 cue
     if idx_sum == "指数风险-全下跌通道" and vol_expand:
         pills.insert(0, ("sys", "系统杠杆风险"))
+    elif idx_tone == "ok" and vol_tone == "ok":
+        pills.insert(0, ("cue", "关注趋势-锁仓"))
+    elif {idx_tone, vol_tone} == {"ok", "bad"}:
+        pills.insert(0, ("cue", "关注抱团-主板"))
 
     return pills
 
 
 def _mkt_env_pills_html(ctx: dict) -> str:
-    """大盘环境模块标题下、图表上：指数/量能 pill（条件命中时含系统杠杆风险）。"""
+    """大盘环境模块标题下、图表上：指数/量能 pill（条件命中时含系统杠杆 / 趋势·抱团 cue）。"""
     pills = [
         f'<span class="pill {tone}">{label}</span>'
         for tone, label in _mkt_env_pills(ctx)
