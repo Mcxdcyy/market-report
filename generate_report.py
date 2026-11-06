@@ -4335,19 +4335,18 @@ def render_fwd_section_html(
         wd = _rel_week_label(label, as_of)
         wd_html = f'<span class="fwd-cal-wd">{wd}</span>' if wd else ""
         mark_cls = " hot" if hot else ""
-        # 板块标签放日期行右侧，更醒目；标题行只留标题 + 峰值 badge
+        # 板块标签放 brief（.fwd-cal-note）下方独立一行；日期行只留日期/周几
         cal_rows.append(
             f'<div class="fwd-cal-item{" hot" if hot else ""}">'
             f'<div class="fwd-cal-head">'
             f'<div class="fwd-cal-head-left">'
             f'<span class="fwd-cal-mark{mark_cls}" aria-hidden="true"></span>'
-            f'<span class="fwd-cal-md">{label}</span>{wd_html}</div>'
-            f'{sec_html}</div>'
+            f'<span class="fwd-cal-md">{label}</span>{wd_html}</div></div>'
             f'<div class="fwd-cal-body">'
             f'<div class="fwd-cal-top">'
             f'<span class="fwd-cal-title">{title}</span>'
             f'{tag_html}</div>'
-            f'{venue_html}{note_html}'
+            f'{venue_html}{note_html}{sec_html}'
             f"</div></div>"
         )
     cal_html = (
@@ -5558,11 +5557,10 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-item:last-child {{ border-bottom: none; }}
   .fwd-cal-head {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
-    justify-content: space-between;
   }}
   .fwd-cal-head-left {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
-    min-width: 0; flex: 1 1 auto;
+    min-width: 0;
   }}
   .fwd-cal-mark {{
     width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
@@ -5580,11 +5578,13 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-wd {{
     font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.3;
   }}
-  /* 板块标签：日期行右侧，加粗加色 */
+  /* 板块标签：brief 下方独立一行，加粗蓝底 */
   .fwd-cal-sectors {{
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
-    gap: 6px; flex: 0 1 auto; margin-left: auto;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;
+    gap: 6px; margin: 8px 0 0;
   }}
+  .fwd-cal-note + .fwd-cal-sectors {{ margin-top: 8px; }}
+  .fwd-cal-venue + .fwd-cal-sectors {{ margin-top: 8px; }}
   .fwd-cal-body {{ min-width: 0; width: 100%; }}
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
