@@ -4039,11 +4039,20 @@ def _merge_sector_events_into_cal(
             cur.append(name)
         item["sectors"] = cur[:2]  # 最多 2 个
 
-    # 已有日历项：标题/概述命中板块名 → 打标签
+    # 板块名 → 日历文案别名（标题未必写开盘啦全称）
+    _ALIASES: dict[str, tuple[str, ...]] = {
+        "机器人概念": ("机器人", "人形机器人", "具身智能"),
+        "AI应用": ("人工智能", "智能体", "短剧", "百度世界", "AI应用"),
+        "芯片": ("芯片", "半导体", "集成电路", "晶圆", "IC China", "IC EXPO"),
+        "光伏": ("光伏", "硅料", "储能产业大会"),
+    }
+
+    # 已有日历项：标题/概述命中板块名或别名 → 打标签
     for it in items:
         blob = f"{it.get('title') or ''} {it.get('brief') or ''} {it.get('note') or ''}"
         for name in sector_names:
-            if name and name in blob:
+            keys = _ALIASES.get(name, (name,))
+            if name and any(k and k in blob for k in keys):
                 _attach(it, name)
 
     # 板块 events 里带明确日期的 → 写入日历
