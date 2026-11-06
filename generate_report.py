@@ -5219,33 +5219,31 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; color: var(--sub);
     line-height: calc(1em + var(--logic-gap));
   }}
-  /* 文案分条：括号序号 (1)(2)，深色；与首行文字同 line-height 对齐 */
+  /* 文案分条：上一版 1. 2. 样式；色略深，与首行同 line-height 中对齐 */
   .sector-logic-list {{
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
   }}
   .sector-logic-item {{
     display: grid;
-    grid-template-columns: 1.75em minmax(0, 1fr);
-    column-gap: 0.5em;
+    grid-template-columns: 1.35em minmax(0, 1fr);
+    column-gap: 0.55em;
     align-items: start;
   }}
   .sector-logic-n {{
     box-sizing: border-box;
-    width: auto; min-width: 1.75em; height: auto;
+    width: auto; min-width: 1.35em; height: auto;
     margin-top: 0;
     display: block;
     border-radius: 0;
     background: transparent;
     color: var(--sub);
     font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
-    /* 与正文同尺，数字落在首行中轴，不再偏上 */
     line-height: calc(1em + var(--logic-gap));
     letter-spacing: 0;
     text-align: right;
   }}
-  .sector-logic-n::before {{ content: "("; font-weight: 600; }}
-  .sector-logic-n::after {{ content: ")"; font-weight: 600; }}
+  .sector-logic-n::after {{ content: "."; }}
   .sector-logic-t {{
     min-width: 0;
     line-height: calc(1em + var(--logic-gap));
