@@ -4597,11 +4597,11 @@ def render_html(ctx: dict) -> str:
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
   }}
-  /* 趋势/抱团提示：双红或一红一绿；青蓝强调（非紫、非红非绿） */
+  /* 趋势/抱团提示：双红或一红一绿；钴蓝强调（非紫、非红非绿） */
   .mkt-env-pills .pill.cue {{
-    background: #0e7490; color: #fff;
+    background: #1d4ed8; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
-    box-shadow: 0 0 0 1px rgba(14, 116, 144, 0.35);
+    box-shadow: 0 0 0 1px rgba(29, 78, 216, 0.35);
   }}
   /* 宏观·做多/做空周期标签：描边外框，刻意突出（对齐系统杠杆外框手法） */
   .macro-bias-wrap .chart-tags .pill.macro-long {{
@@ -6329,7 +6329,7 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys/cue。缺数据的项跳过。
 
-    前置提示（与系统杠杆同系外框，青蓝 cue，非紫）：
+    前置提示（与系统杠杆同系外框，钴蓝 cue，非紫/非红绿）：
     - 指数「正常」+ 量能「增量」两红 → 「关注趋势-锁仓」
     - 一红一绿（正常/增量 vs 异常/缩量）→ 「关注抱团-主板」
     - 「待次日确认」(warn) 不计入上述两档
