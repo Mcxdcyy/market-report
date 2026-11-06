@@ -20,7 +20,7 @@
   "a_regime": "全-",
   "early_warn": false,
   "early_warn_text": "",
-  "fetched": "2026-11-06 18:36:31",
+  "fetched": "2026-11-06 18:41:41",
   "indices": [
     {
       "name": "上证指数",
@@ -31,89 +31,89 @@
       "downtrend": false,
       "pill": "ok",
       "a_downtrend": false,
-      "a_status": "ok",
-      "last_bar": "2026-11-06 15:00:00",
-      "last_close": 3649.177,
+      "a_status": "unknown",
+      "last_bar": "",
+      "last_close": null,
       "series": [
         {
           "date": "2026-10-26",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3697.52,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-27",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3648.3,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-28",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3681.47,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-29",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3651.43,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-30",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3599.02,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-02",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3638.03,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-03",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3608.1,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-04",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 3686.17,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-05",
@@ -121,9 +121,9 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 3689.91,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-06",
@@ -131,12 +131,12 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 3649.18,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         }
       ],
-      "error": null
+      "error": "无日K: sh000001"
     },
     {
       "name": "深成指",
@@ -147,89 +147,89 @@
       "downtrend": false,
       "pill": "ok",
       "a_downtrend": false,
-      "a_status": "ok",
-      "last_bar": "2026-11-06 15:00:00",
-      "last_close": 11175.78,
+      "a_status": "unknown",
+      "last_bar": "",
+      "last_close": null,
       "series": [
         {
           "date": "2026-10-26",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 11534.38,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-27",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 11245.73,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-28",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 11473.18,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-29",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 11138.2,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-30",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 10833.78,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-02",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 11010.68,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-03",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 10876.99,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-04",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 11335.69,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-05",
@@ -237,9 +237,9 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 11471.09,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-06",
@@ -247,12 +247,12 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 11175.78,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         }
       ],
-      "error": null
+      "error": "无日K: sz399001"
     },
     {
       "name": "创业板指数",
@@ -263,89 +263,89 @@
       "downtrend": false,
       "pill": "ok",
       "a_downtrend": false,
-      "a_status": "ok",
-      "last_bar": "2026-11-06 15:00:00",
-      "last_close": 2465.232,
+      "a_status": "unknown",
+      "last_bar": "",
+      "last_close": null,
       "series": [
         {
           "date": "2026-10-26",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2638.23,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-27",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2548.15,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-28",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2634.76,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-29",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2517.59,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-30",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2413.63,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-02",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2458.7,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-03",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2391.65,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-04",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 2544.73,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-05",
@@ -353,9 +353,9 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 2566.8,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-06",
@@ -363,12 +363,12 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 2465.23,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         }
       ],
-      "error": null
+      "error": "无日K: sz399006"
     },
     {
       "name": "科创综指",
@@ -379,9 +379,9 @@
       "downtrend": false,
       "pill": "ok",
       "a_downtrend": false,
-      "a_status": "ok",
-      "last_bar": "2026-11-06 15:00:00",
-      "last_close": 1496.359,
+      "a_status": "unknown",
+      "last_bar": "",
+      "last_close": null,
       "series": [
         {
           "date": "2026-10-26",
@@ -389,9 +389,9 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 1573.83,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-27",
@@ -399,9 +399,9 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 1511.95,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-28",
@@ -409,59 +409,59 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 1560.38,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-29",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 1490.79,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-10-30",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 1421.31,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-02",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 1458.5,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-03",
-          "status": "down",
-          "label": "下跌",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 1387.95,
-          "a_downtrend": true,
-          "a_status": "down"
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
+          "a_downtrend": false,
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-04",
-          "status": "pending",
-          "label": "=",
-          "risk_on": true,
-          "downtrend": true,
-          "close": 1525.31,
+          "status": "ok",
+          "label": "-",
+          "risk_on": false,
+          "downtrend": false,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-05",
@@ -469,9 +469,9 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 1546.42,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         },
         {
           "date": "2026-11-06",
@@ -479,12 +479,12 @@
           "label": "-",
           "risk_on": false,
           "downtrend": false,
-          "close": 1496.36,
+          "close": null,
           "a_downtrend": false,
-          "a_status": "ok"
+          "a_status": "unknown"
         }
       ],
-      "error": null
+      "error": "无日K: sh000680"
     }
   ]
 }

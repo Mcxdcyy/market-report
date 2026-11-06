@@ -4283,13 +4283,12 @@ def render_html(ctx: dict) -> str:
                 )
             else:
                 stats = ""
-            logic = (
-                f'<div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div>'
-                f'<div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>'
+            # 模块标题已是「涨停板块逻辑」，卡内不再重复「板块逻辑」小标题
+            body = (
+                f'<div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div>'
                 if s.get("reason")
-                else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'
+                else '<div class="sector-text sector-muted">—</div>'
             )
-            # 后续事件已归并到「未来2周·事件与方向」，板块卡只留逻辑 + P 档
             return f'''<div class="sector-row">
       <div class="sector-head">
         <div class="sector-head-left">
@@ -4301,9 +4300,7 @@ def render_html(ctx: dict) -> str:
           <span class="pill {s.get("persist_tag", "warn")} sector-priority-pill">{s.get("event_priority_label") or s.get("persist") or "—"}</span>
         </div>
       </div>
-      <div class="sector-body">
-          {logic}
-      </div>
+      <div class="sector-body">{body}</div>
     </div>'''
 
         sector_block = (
@@ -5173,23 +5170,24 @@ def render_html(ctx: dict) -> str:
     border-left-color: var(--accent);
   }}
 
-  /* ── 涨停板块 ── */
-  .sector-list {{ display: flex; flex-direction: column; gap: 10px; }}
+  /* ── 涨停板块逻辑（卡内不再重复「板块逻辑」小标题） ── */
+  .sector-list {{ display: flex; flex-direction: column; gap: 12px; }}
   .sector-row {{
     position: relative;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 12px 14px; background: #fff;
+    padding: 14px 16px; background: #fff;
   }}
   .sector-head {{
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-    padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #f0f0f5;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding-bottom: 10px; margin-bottom: 10px;
+    border-bottom: 1px solid rgba(60, 60, 67, 0.12);
   }}
   .sector-head-left {{
     display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
-    flex: 1; min-width: 0; padding-right: 8px;
+    flex: 1; min-width: 0; padding-right: 4px;
   }}
   .sector-forecast-corner {{
-    flex-shrink: 0; text-align: right;
+    flex-shrink: 0; text-align: right; align-self: center;
   }}
   .sector-priority-pill {{ font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }}
   /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
@@ -5199,33 +5197,22 @@ def render_html(ctx: dict) -> str:
     font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
     display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   }}
-  .sector-name {{ font-size: 15px; font-weight: 800; letter-spacing: -0.2px; margin-right: 4px; }}
+  .sector-name {{ font-size: 15px; font-weight: 800; letter-spacing: -0.2px; }}
   .sector-stat {{
     font-size: 11px; font-weight: 700; color: var(--sub);
     background: #f2f2f7; padding: 3px 9px; border-radius: 999px; white-space: nowrap;
   }}
   .sector-stat.hot {{ color: var(--bad); background: var(--bad-bg); }}
-  /* 2026-11-06：板块卡只留逻辑（后续事件归并未来2周）；旧双栏 class 保留兼容 */
   .sector-body {{ min-width: 0; }}
-  .sector-cols {{
-    display: grid; grid-template-columns: 1fr; gap: 0;
-  }}
-  .sector-col-left {{ min-width: 0; }}
-  .sector-col-right {{ display: none; }}
-  .sector-block {{ margin-bottom: 8px; }}
-  .sector-block:last-child {{ margin-bottom: 0; }}
-  .sector-block-empty {{ opacity: .5; }}
   .sector-muted {{ color: var(--muted); font-size: 12px; }}
-  .sector-label {{
-    display: inline-block;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
-    margin-bottom: 6px;
+  /* 旧小标题/双栏 class 保留兼容，页面不再渲染 */
+  .sector-cols {{ display: none; }}
+  .sector-label {{ display: none; }}
+  .sector-text {{
+    font-size: 12px; color: var(--sub);
+    line-height: calc(1em + var(--logic-gap));
   }}
-  .sector-label-logic {{ color: #b25000; }}
-  .sector-label-event {{ color: #b25000; }}
-  .sector-label-forecast {{ color: #b25000; }}
-  .sector-text {{ font-size: 12px; color: var(--sub); line-height: 1.55; }}
-  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度（--logic-gap 在 :root） */
+  /* 1/2/3 分条：段间距与段内换行同尺（--logic-gap） */
   .sector-logic-list {{
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
@@ -5239,17 +5226,15 @@ def render_html(ctx: dict) -> str:
   .sector-logic-n {{
     box-sizing: border-box;
     width: 1.2em; height: 1.2em;
-    /* 半行距 = 段间距/2，圆标顶与首行汉字顶齐 */
     margin-top: calc(var(--logic-gap) / 2);
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
-    background: #fff4eb; color: #b25000;
+    background: #f2f2f7; color: var(--sub);
     font-size: 0.92em; font-weight: 700; font-variant-numeric: tabular-nums;
     line-height: 1; letter-spacing: 0;
   }}
   .sector-logic-t {{
     min-width: 0;
-    /* 段内换行行距 = 1/2/3 分段间距 */
     line-height: calc(1em + var(--logic-gap));
   }}
 
@@ -5609,8 +5594,8 @@ def render_html(ctx: dict) -> str:
     .sector-name {{ font-size: 17px; }}
     .sector-stat {{ font-size: 13px; }}
     .sector-priority-pill {{ font-size: 12px; }}
-    .sector-label {{ font-size: 13px; }}
     .sector-text {{ font-size: 14px; }}
+    .sector-row {{ padding: 14px 14px; }}
     :root {{ --logic-gap: 10px; }}
     .sector-muted {{ font-size: 14px; }}
     .post-meta {{ font-size: 13px; }}

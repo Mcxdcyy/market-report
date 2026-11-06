@@ -843,23 +843,24 @@
     border-left-color: var(--accent);
   }
 
-  /* ── 涨停板块 ── */
-  .sector-list { display: flex; flex-direction: column; gap: 10px; }
+  /* ── 涨停板块逻辑（卡内不再重复「板块逻辑」小标题） ── */
+  .sector-list { display: flex; flex-direction: column; gap: 12px; }
   .sector-row {
     position: relative;
     border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 12px 14px; background: #fff;
+    padding: 14px 16px; background: #fff;
   }
   .sector-head {
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-    padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #f0f0f5;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding-bottom: 10px; margin-bottom: 10px;
+    border-bottom: 1px solid rgba(60, 60, 67, 0.12);
   }
   .sector-head-left {
     display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
-    flex: 1; min-width: 0; padding-right: 8px;
+    flex: 1; min-width: 0; padding-right: 4px;
   }
   .sector-forecast-corner {
-    flex-shrink: 0; text-align: right;
+    flex-shrink: 0; text-align: right; align-self: center;
   }
   .sector-priority-pill { font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }
   /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
@@ -869,33 +870,22 @@
     font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
     display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .sector-name { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; margin-right: 4px; }
+  .sector-name { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; }
   .sector-stat {
     font-size: 11px; font-weight: 700; color: var(--sub);
     background: #f2f2f7; padding: 3px 9px; border-radius: 999px; white-space: nowrap;
   }
   .sector-stat.hot { color: var(--bad); background: var(--bad-bg); }
-  /* 2026-11-06：板块卡只留逻辑（后续事件归并未来2周）；旧双栏 class 保留兼容 */
   .sector-body { min-width: 0; }
-  .sector-cols {
-    display: grid; grid-template-columns: 1fr; gap: 0;
-  }
-  .sector-col-left { min-width: 0; }
-  .sector-col-right { display: none; }
-  .sector-block { margin-bottom: 8px; }
-  .sector-block:last-child { margin-bottom: 0; }
-  .sector-block-empty { opacity: .5; }
   .sector-muted { color: var(--muted); font-size: 12px; }
-  .sector-label {
-    display: inline-block;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
-    margin-bottom: 6px;
+  /* 旧小标题/双栏 class 保留兼容，页面不再渲染 */
+  .sector-cols { display: none; }
+  .sector-label { display: none; }
+  .sector-text {
+    font-size: 12px; color: var(--sub);
+    line-height: calc(1em + var(--logic-gap));
   }
-  .sector-label-logic { color: #b25000; }
-  .sector-label-event { color: #b25000; }
-  .sector-label-forecast { color: #b25000; }
-  .sector-text { font-size: 12px; color: var(--sub); line-height: 1.55; }
-  /* 逻辑/后续事件 1/2/3：段间距与段内换行行距同一尺度（--logic-gap 在 :root） */
+  /* 1/2/3 分条：段间距与段内换行同尺（--logic-gap） */
   .sector-logic-list {
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
@@ -909,17 +899,15 @@
   .sector-logic-n {
     box-sizing: border-box;
     width: 1.2em; height: 1.2em;
-    /* 半行距 = 段间距/2，圆标顶与首行汉字顶齐 */
     margin-top: calc(var(--logic-gap) / 2);
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
-    background: #fff4eb; color: #b25000;
+    background: #f2f2f7; color: var(--sub);
     font-size: 0.92em; font-weight: 700; font-variant-numeric: tabular-nums;
     line-height: 1; letter-spacing: 0;
   }
   .sector-logic-t {
     min-width: 0;
-    /* 段内换行行距 = 1/2/3 分段间距 */
     line-height: calc(1em + var(--logic-gap));
   }
 
@@ -1279,8 +1267,8 @@
     .sector-name { font-size: 17px; }
     .sector-stat { font-size: 13px; }
     .sector-priority-pill { font-size: 12px; }
-    .sector-label { font-size: 13px; }
     .sector-text { font-size: 14px; }
+    .sector-row { padding: 14px 14px; }
     :root { --logic-gap: 10px; }
     .sector-muted { font-size: 14px; }
     .post-meta { font-size: 13px; }
@@ -1577,9 +1565,7 @@
           <span class="pill ok sector-priority-pill">事件优先级 P1</span>
         </div>
       </div>
-      <div class="sector-body">
-          <div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">隔夜美股科技股大幅回调拖累A股普跌，高位算力硬件承压，存量资金向具备装机与反内卷政策锚的光伏及绿色电力方向切换，板块在弱势市中维持相对活跃。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">国家能源局数据显示国内光伏装机持续抬升、清洁能源新增电量占比维持高位，叠加工业和信息化部《光伏制造行业规范条件（2026年本）》征求意见窗口临近，市场继续交易产能出清与先进产能溢价预期。</div></div></div></div></div>
-      </div>
+      <div class="sector-body"><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">隔夜美股科技股大幅回调拖累A股普跌，高位算力硬件承压，存量资金向具备装机与反内卷政策锚的光伏及绿色电力方向切换，板块在弱势市中维持相对活跃。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">国家能源局数据显示国内光伏装机持续抬升、清洁能源新增电量占比维持高位，叠加工业和信息化部《光伏制造行业规范条件（2026年本）》征求意见窗口临近，市场继续交易产能出清与先进产能溢价预期。</div></div></div></div></div>
     </div><div class="sector-row">
       <div class="sector-head">
         <div class="sector-head-left">
@@ -1591,9 +1577,7 @@
           <span class="pill warn sector-priority-pill">事件优先级 P2</span>
         </div>
       </div>
-      <div class="sector-body">
-          <div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">人工智能生成内容显著压降短剧制作成本，红果等平台用户与供给维持高位，影视传媒链条对人工智能工具商业化验证敏感，短剧与互动内容仍是应用侧交易主叙事。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">工业和信息化部发布智能体终端进网管理通知，完善智能体终端进网与分发规则，强化人工智能手机、平板与可穿戴等终端侧落地预期，对应用生态形成政策侧补充。</div></div></div></div></div>
-      </div>
+      <div class="sector-body"><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">人工智能生成内容显著压降短剧制作成本，红果等平台用户与供给维持高位，影视传媒链条对人工智能工具商业化验证敏感，短剧与互动内容仍是应用侧交易主叙事。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">工业和信息化部发布智能体终端进网管理通知，完善智能体终端进网与分发规则，强化人工智能手机、平板与可穿戴等终端侧落地预期，对应用生态形成政策侧补充。</div></div></div></div></div>
     </div><div class="sector-row">
       <div class="sector-head">
         <div class="sector-head-left">
@@ -1605,9 +1589,7 @@
           <span class="pill warn sector-priority-pill">事件优先级 P2</span>
         </div>
       </div>
-      <div class="sector-body">
-          <div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">国内晶圆厂扩产与设备国产化导入仍是主线，SEMI口径下中国大陆半导体设备采购额居全球前列，刻蚀、薄膜沉积等环节国产设备渗透率提升支撑板块反复活跃。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">在风险偏好回落的交易日，芯片仍作为电子主线中军获存量资金轮动关注，但需区分设备/材料与高位存储、算力硬件的强弱分化。</div></div></div></div></div>
-      </div>
+      <div class="sector-body"><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">国内晶圆厂扩产与设备国产化导入仍是主线，SEMI口径下中国大陆半导体设备采购额居全球前列，刻蚀、薄膜沉积等环节国产设备渗透率提升支撑板块反复活跃。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">在风险偏好回落的交易日，芯片仍作为电子主线中军获存量资金轮动关注，但需区分设备/材料与高位存储、算力硬件的强弱分化。</div></div></div></div></div>
     </div><div class="sector-row">
       <div class="sector-head">
         <div class="sector-head-left">
@@ -1619,9 +1601,7 @@
           <span class="pill warn sector-priority-pill">事件优先级 P2</span>
         </div>
       </div>
-      <div class="sector-body">
-          <div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">第九届中国国际进口博览会展期内，人形机器人由表演展示转向拍照、递送、茶艺与乒乓球对打等真实交互任务，应用场景叙事升温。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">民政部等部门适老用品消费措施提出加快具身智能、外骨骼等在养老场景应用，强化机器人与银发经济的中期映射，但短线仍偏情绪与订单预期交易。</div></div></div></div></div>
-      </div>
+      <div class="sector-body"><div class="sector-text"><div class="sector-logic-list"><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">1</div><div class="sector-logic-t">第九届中国国际进口博览会展期内，人形机器人由表演展示转向拍照、递送、茶艺与乒乓球对打等真实交互任务，应用场景叙事升温。</div></div><div class="sector-logic-item"><div class="sector-logic-n" aria-hidden="true">2</div><div class="sector-logic-t">民政部等部门适老用品消费措施提出加快具身智能、外骨骼等在养老场景应用，强化机器人与银发经济的中期映射，但短线仍偏情绪与订单预期交易。</div></div></div></div></div>
     </div></div>
     
     <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
@@ -1662,7 +1642,7 @@
     <div class="module-summary">候选池 4 条 → 精选 4 条</div>
   </div>
 
-  <div class="footer">生成于 2026-11-06 18:36</div>
+  <div class="footer">生成于 2026-11-06 18:41</div>
 </div>
 </body>
 </html>
