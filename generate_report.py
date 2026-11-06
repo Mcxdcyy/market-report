@@ -2451,10 +2451,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "进博会",
         "venue": "上海国家会展中心",
         "brief": (
-            "设置汽车及智慧出行、医疗器械及医药保健、技术装备等展区；"
-            "同期虹桥论坛已举办“人形机器人与具身智能产业创新发展合作”分论坛，"
-            "并由中国人形机器人与具身智能百人会发布“人形机器人应用场景图谱”；"
-            "观察进口替代、高端装备与具身智能相关订单与合作线索。"
+            "展区：汽车及智慧出行、医疗器械、技术装备等；"
+            "虹桥论坛已办「人形机器人与具身智能」分论坛，并发布应用场景图谱——"
+            "观察进口替代、高端装备与具身智能订单线索。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -2470,8 +2469,8 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "广州半导体展",
         "venue": "广州保利世贸博览馆",
         "brief": (
-            "聚焦电子信息、半导体、集成电路与人工智能算力产业链，"
-            "观察设计、制造、封测及算力硬件环节的产品与合作线索。"
+            "聚焦：电子信息、半导体、集成电路与「人工智能算力」链——"
+            "观察设计、制造、封测及算力硬件的产品与合作线索。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -2487,8 +2486,8 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "上海IC EXPO",
         "venue": "上海新国际博览中心",
         "brief": (
-            "面向半导体产业与终端应用对接，"
-            "观察集成电路设计、制造、材料设备及下游应用合作进展。"
+            "面向：半导体产业与终端应用对接——"
+            "观察设计、制造、材料设备及下游应用合作进展。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -2504,8 +2503,8 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "IC China",
         "venue": "北京国家会议中心",
         "brief": (
-            "以全景链条展示、终端应用赋能、龙头企业带动为主线，"
-            "覆盖集成电路材料、设备、设计、制造、封测及人工智能、汽车、机器人等应用场景。"
+            "主线：全景链条展示、终端应用赋能、龙头带动；"
+            "覆盖材料、设备、设计、制造、封测，以及人工智能、汽车、机器人等应用场景。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -2521,9 +2520,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "超聚变IPO上会",
         "venue": "",
         "brief": (
-            "深圳证券交易所上市审核委员会定于11月12日审议超聚变数字技术股份有限公司"
-            "创业板首发事项；公司主营服务器与算力基础设施，"
-            "属人工智能算力产业链供给端关键节点，关注审核结果与发行节奏对板块预期的影响。"
+            "深交所上市审委会审议超聚变创业板首发："
+            "主业为服务器与算力基础设施，属算力供给关键节点——"
+            "观察审核结果与发行节奏对板块预期的影响。"
         ),
         "hot": True,  # 产业链级 IPO：红点
         "importance": 4,
@@ -2538,8 +2537,8 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "百度世界",
         "venue": "北京国家会议中心二期",
         "brief": (
-            "主题围绕智能组织与企业级人工智能应用，"
-            "关注大模型产品、智能云与行业落地进展。"
+            "主题：智能组织与企业级人工智能应用——"
+            "观察大模型产品、智能云与行业落地进展。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -2554,10 +2553,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "光伏规范征求意见截止",
         "venue": "",
         "brief": (
-            "工业和信息化部电子信息司就《光伏制造行业规范条件（2026年本）》"
-            "及公告管理办法公开征求意见，截止日期为11月15日；"
-            "草案提高n型电池与组件效率、能耗等门槛，引导产能出清与高质量发展，"
-            "关注最终条款对新建与存量产能的约束力度。"
+            "工信部就《光伏制造行业规范条件（2026年本）》及公告管理办法征求意见，11月15日截止："
+            "草案抬高n型电池与组件效率、能耗等门槛，引导产能出清——"
+            "观察最终条款对新建与存量产能的约束力度。"
         ),
         "hot": True,  # 政策落地窗口：红点
         "importance": 4,
@@ -2572,9 +2570,9 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "光储大会",
         "venue": "四川成都",
         "brief": (
-            "主题围绕光伏与储能融合及产业链协同；"
-            "结合近期硅料排产收缩、逆变器提价与规范条件征求意见窗口，"
-            "观察产能出清节奏、储能装机与订单、价格传导能否继续改善。"
+            "主题：光伏与储能融合、产业链协同；"
+            "叠加上游排产收缩、逆变器提价与规范条件征求意见窗口——"
+            "观察产能出清、储能订单与价格传导能否继续改善。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
@@ -2590,9 +2588,8 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "APEC工商峰会",
         "venue": "广东深圳",
         "brief": (
-            "中国国际贸易促进委员会主办，汇聚亚太工商界代表；"
-            "观察贸易投资、供应链与科技创新等议题表述，"
-            "及其对跨境产业合作预期的边际影响。"
+            "主办：中国国际贸易促进委员会，汇聚亚太工商界代表——"
+            "观察贸易投资、供应链与科技创新等议题表述，及其对跨境产业合作预期的边际影响。"
         ),
         "hot": False,  # 例行峰会：蓝点
         "importance": 3,
@@ -2608,8 +2605,8 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "APEC领导人会议",
         "venue": "广东深圳",
         "brief": (
-            "主题为“建设亚太共同体，促进共同繁荣”；"
-            "关注领导人声明与经贸合作成果对区域供应链、科技与绿色产业预期的指引。"
+            "主题：「建设亚太共同体，促进共同繁荣」——"
+            "观察领导人声明与经贸合作成果，对区域供应链、科技与绿色产业预期的指引。"
         ),
         "hot": False,  # 例行峰会：蓝点；有硬产业映射再改 True
         "importance": 3,
@@ -4008,18 +4005,35 @@ def _parse_sector_event_dates(
             end = datetime(year, int(m2) if m2 else m1, int(d2))
         except ValueError:
             end = start
-        label = f"{m1}/{d1}–{end.month}/{end.day}"
+        # 同月写成 11/5–10，与 seed 标签对齐，便于归并去重
+        if end.month == m1:
+            label = f"{m1}/{d1}–{end.day}"
+        else:
+            label = f"{m1}/{d1}–{end.month}/{end.day}"
     else:
         label = f"{m1}/{d1}"
-    # 去掉开头日期套话作标题；全文作 brief
-    title = re.sub(
-        r"^\d{1,2}月\d{1,2}日(?:至(?:\d{1,2}月)?\d{1,2}日)?[，,、]?",
+    # 去掉开头日期；剥掉「在…举行」地点套话；标题=事件名，brief=方向概述（禁止省略截断）
+    rest = re.sub(
+        r"^\d{1,2}月\d{1,2}日(?:至(?:\d{1,2}月)?\d{1,2}日)?[，,、：:]?",
         "",
         t,
     ).strip() or t
-    if len(title) > 36:
-        title = title[:36].rstrip("，,。；; ") + "…"
-    return label, title, t
+    rest = re.sub(
+        r"在[\u4e00-\u9fffA-Za-z0-9·\s]{1,20}举行",
+        "",
+        rest,
+    ).strip(" ，,：:；;")
+    parts = re.split(r"[，,：:；;]", rest, maxsplit=1)
+    title = (parts[0] or rest).strip()
+    title = re.sub(r"举行$", "", title).strip() or title
+    # 方向句：冒号/逗号后半段；无则用整句（已去地点）
+    if len(parts) > 1 and parts[1].strip():
+        brief = parts[1].strip()
+        if not brief.endswith(("。", "！", "？")):
+            brief += "。"
+    else:
+        brief = rest if rest.endswith(("。", "！", "？")) else (rest + "。" if rest else "")
+    return label, title, brief
 
 
 def _merge_sector_events_into_cal(
@@ -4027,7 +4041,9 @@ def _merge_sector_events_into_cal(
     sectors: list | None,
     as_of: datetime | None,
 ) -> list[dict]:
-    """把涨停板块「后续事件」归并进未来2周日历，并打板块名标签。"""
+    """把涨停板块「后续事件」归并进未来2周日历，并打板块名标签。
+    seed 已覆盖同一会议时只打标签，禁止再开一条截断标题行。
+    """
     if not sectors:
         return cal_items
     items = [dict(x) for x in cal_items]
@@ -4041,12 +4057,69 @@ def _merge_sector_events_into_cal(
 
     # 板块名 → 日历文案别名（标题未必写开盘啦全称）
     _ALIASES: dict[str, tuple[str, ...]] = {
-        "机器人概念": ("机器人", "人形机器人", "具身智能"),
-        # 不用单独「人工智能」（易误打到算力/服务器节点）；应用侧用更贴题材的词
+        "机器人概念": ("机器人", "人形机器人", "具身智能", "进博会"),
         "AI应用": ("智能体", "短剧", "漫剧", "百度世界", "AI应用", "文心"),
-        "芯片": ("芯片", "半导体", "集成电路", "晶圆", "IC China", "IC EXPO"),
-        "光伏": ("光伏", "硅料", "储能产业大会"),
+        "芯片": ("芯片", "半导体", "集成电路", "晶圆", "IC China", "IC EXPO", "广州电子"),
+        "光伏": ("光伏", "硅料", "储能产业大会", "规范条件"),
     }
+
+    def _title_core(t: str) -> str:
+        """去掉届次/年份等共性前缀，避免「第九届中国国际…」误并不同大会。"""
+        s = (t or "").strip()
+        s = re.sub(r"^第[一二三四五六七八九十百千\d]+届", "", s)
+        s = re.sub(r"^20\d{2}", "", s)
+        s = re.sub(r"^中国（[^）]+）", "", s)
+        s = re.sub(r"^中国国际", "", s)
+        return s.strip(" ·—-")
+
+    def _titles_related(a: str, b: str) -> bool:
+        a, b = (a or "").strip(), (b or "").strip()
+        if not a or not b:
+            return False
+        if a == b:
+            return True
+        # 完整互含，且较短一方足够长（防「中国」「大会」误伤）
+        short, long = (a, b) if len(a) <= len(b) else (b, a)
+        if len(short) >= 8 and short in long:
+            return True
+        ca, cb = _title_core(a), _title_core(b)
+        if ca and cb and ca == cb:
+            return True
+        if ca and cb:
+            cs, cl = (ca, cb) if len(ca) <= len(cb) else (cb, ca)
+            if len(cs) >= 6 and cs in cl:
+                return True
+        # 英文缩写节点（IC EXPO / IC China）
+        for token in ("IC EXPO", "IC China", "WAIC"):
+            if token in a and token in b:
+                return True
+        return False
+
+    def _label_start_end(lab: str) -> tuple[tuple[int, int], tuple[int, int]] | None:
+        sm, sd = _parse_cal_sort_key(lab)
+        em, ed = _parse_cal_end_key(lab)
+        if not (1 <= sm <= 12 and 1 <= sd <= 31 and 1 <= em <= 12 and 1 <= ed <= 31):
+            return None
+        return (sm, sd), (em, ed)
+
+    def _dates_close(lab_a: str, lab_b: str, year: int) -> bool:
+        """同起止，或区间重叠，或起日相差 ≤2 天（防 11/12 vs 11/13 百度世界这类）。"""
+        ra, rb = _label_start_end(lab_a), _label_start_end(lab_b)
+        if not ra or not rb:
+            return lab_a == lab_b
+        (as_, ae), (bs, be) = ra, rb
+        try:
+            a0 = datetime(year, as_[0], as_[1]).date()
+            a1 = datetime(year, ae[0], ae[1]).date()
+            b0 = datetime(year, bs[0], bs[1]).date()
+            b1 = datetime(year, be[0], be[1]).date()
+        except ValueError:
+            return lab_a == lab_b
+        if a0 == b0 and a1 == b1:
+            return True
+        if a0 <= b1 and b0 <= a1:
+            return True
+        return abs((a0 - b0).days) <= 2
 
     # 已有日历项：标题/概述命中板块名或别名 → 打标签
     for it in items:
@@ -4056,10 +4129,11 @@ def _merge_sector_events_into_cal(
             if name and any(k and k in blob for k in keys):
                 _attach(it, name)
 
-    # 板块 events 里带明确日期的 → 写入日历
+    # 板块 events 里带明确日期的 → 优先并入已有 seed，否则才新建
     seen = {f"{x.get('label', '')}|{x.get('title', '')}" for x in items}
     cutoff = as_of.date() if as_of is not None and hasattr(as_of, "date") else None
     end = (as_of + timedelta(days=14)).date() if as_of is not None else None
+    year = as_of.year if as_of is not None else datetime.now().year
     for s in sectors:
         name = str(s.get("name") or "").strip()
         raw_ev = s.get("events") or s.get("events_near") or []
@@ -4085,12 +4159,30 @@ def _merge_sector_events_into_cal(
                 if ev_end < cutoff or ev_start > end:
                     continue
             key = f"{label}|{title}"
-            # 与已有项标题高度重合则只打标签
             merged = False
+            alias_keys = _ALIASES.get(name, (name,))
             for it in items:
-                if it.get("label") == label and (
-                    title[:12] in (it.get("title") or "")
-                    or (it.get("title") or "")[:12] in title
+                it_title = it.get("title") or ""
+                it_short = str(it.get("short") or "")
+                it_blob = f"{it_title} {it_short} {it.get('brief') or ''} {it.get('note') or ''}"
+                related = (
+                    _titles_related(title, it_title)
+                    or _titles_related(title, it_short)
+                    or any(k and k in title and k in it_blob for k in alias_keys if len(k) >= 2)
+                )
+                if related and _dates_close(label, it.get("label") or "", year):
+                    _attach(it, name)
+                    # seed 已有概述则保留；仅空时用板块句
+                    if brief and not (it.get("brief") or it.get("note")):
+                        it["brief"] = brief
+                    merged = True
+                    break
+            if merged:
+                continue
+            # 同名会议、日期接近失败时：仅当标题严格相关才并入（不再用短前缀误并）
+            for it in items:
+                if _titles_related(title, it.get("title") or "") or _titles_related(
+                    title, str(it.get("short") or "")
                 ):
                     _attach(it, name)
                     if brief and not (it.get("brief") or it.get("note")):
@@ -4101,6 +4193,9 @@ def _merge_sector_events_into_cal(
                 continue
             if key in seen:
                 continue
+            # 禁止把整段跟踪话术当标题
+            if len(title) > 40 or "跟踪" in title or "观察" in title:
+                title = re.split(r"[：:，,]", title, maxsplit=1)[0].strip()[:40]
             seen.add(key)
             items.append(
                 {
@@ -4112,8 +4207,36 @@ def _merge_sector_events_into_cal(
                     "sectors": [name] if name else [],
                 }
             )
-    items.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
-    return items
+    # 末轮去重：严格同名会议只留一条（优先 seed）
+    kept: list[dict] = []
+    for it in items:
+        dup = None
+        for k in kept:
+            if _titles_related(it.get("title") or "", k.get("title") or "") or (
+                it.get("short")
+                and _titles_related(str(it.get("short")), k.get("title") or "")
+            ) or (
+                k.get("short")
+                and _titles_related(it.get("title") or "", str(k.get("short")))
+            ):
+                dup = k
+                break
+        if dup is None:
+            kept.append(it)
+            continue
+        for sn in it.get("sectors") or []:
+            _attach(dup, sn)
+        if (it.get("brief") or it.get("note")) and not (
+            dup.get("brief") or dup.get("note")
+        ):
+            dup["brief"] = it.get("brief") or it.get("note")
+        if it.get("source") == "seed" and dup.get("source") != "seed":
+            for fld in ("label", "title", "short", "venue", "brief", "note", "hot"):
+                if it.get(fld) not in (None, ""):
+                    dup[fld] = it.get(fld)
+            dup["source"] = "seed"
+    kept.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
+    return kept
 
 
 def render_fwd_section_html(
@@ -4183,7 +4306,24 @@ def render_fwd_section_html(
         note_html = f'<p class="fwd-cal-note">{note}</p>' if note else ""
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
-        sec_tags = [str(x) for x in (n.get("sectors") or []) if str(x).strip()][:2]
+        def _sector_tag_label(raw: str) -> str:
+            """开盘啦名若以「概念」结尾，事件标签去掉「概念」（机器人概念→机器人）。"""
+            s = str(raw or "").strip()
+            if s.endswith("概念") and len(s) > 2:
+                return s[:-2]
+            return s
+
+        sec_tags = [
+            _sector_tag_label(x)
+            for x in (n.get("sectors") or [])
+            if str(x).strip()
+        ][:2]
+        # 去重（别名打标后可能撞）
+        seen_tags: list[str] = []
+        for x in sec_tags:
+            if x and x not in seen_tags:
+                seen_tags.append(x)
+        sec_tags = seen_tags
         sec_html = (
             f'<div class="fwd-cal-sectors">'
             + "".join(f'<span class="fwd-cal-sector">{x}</span>' for x in sec_tags)
@@ -4350,6 +4490,8 @@ def render_html(ctx: dict) -> str:
     --surface: #ffffff;
     --text: #1c1c1e;
     --sub: #636366;
+    /* 模块正文（逻辑/事件概述/公告摘要）：深于 --sub，浅于标题 --text */
+    --body: #4a4a4f;
     --muted: #8e8e93;
     --ok: #30d158;
     --ok-bg: #30d15812;
@@ -5216,7 +5358,7 @@ def render_html(ctx: dict) -> str:
   .sector-cols {{ display: none; }}
   .sector-label {{ display: none; }}
   .sector-text {{
-    font-size: 12px; color: var(--sub);
+    font-size: 12px; color: var(--body);
     line-height: calc(1em + var(--logic-gap));
   }}
   /* 文案分条：1. 2.；色浅于正文；与首行正文基线/底部对齐 */
@@ -5238,7 +5380,7 @@ def render_html(ctx: dict) -> str:
     display: block;
     border-radius: 0;
     background: transparent;
-    color: #7a7a80; /* 浅于正文 --sub(#636366)，深于 --muted(#8e8e93) */
+    color: #7a7a80; /* 浅于正文 --body，深于 --muted */
     font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums;
     line-height: calc(1em + var(--logic-gap));
     letter-spacing: 0;
@@ -5247,6 +5389,7 @@ def render_html(ctx: dict) -> str:
   .sector-logic-n::after {{ content: "."; }}
   .sector-logic-t {{
     min-width: 0;
+    color: var(--body);
     line-height: calc(1em + var(--logic-gap));
   }}
 
@@ -5271,7 +5414,7 @@ def render_html(ctx: dict) -> str:
     white-space: normal; overflow-wrap: anywhere; word-break: break-word;
   }}
   .post-summary {{
-    font-size: 12px; color: var(--sub); margin: 0;
+    font-size: 12px; color: var(--body); margin: 0;
     /* 与涨停板块段内换行同尺 */
     line-height: calc(1em + var(--logic-gap));
   }}
@@ -5405,14 +5548,16 @@ def render_html(ctx: dict) -> str:
     font-size: 10px; font-weight: 500; color: var(--muted); margin-left: 6px;
   }}
   .fwd-cal-wrap {{ margin-top: 0; }}
+  /* 扁平列表：不用白底描边卡片壳 */
   .fwd-cal {{
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: #fff; overflow: hidden;
+    border: none; border-radius: 0;
+    background: transparent; overflow: visible;
   }}
   /* 上下排布：日期行 + 全文通栏 */
   .fwd-cal-item {{
     display: flex; flex-direction: column; gap: 6px;
-    padding: 13px 14px; border-bottom: 1px solid #f0f0f5;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(60, 60, 67, 0.12);
   }}
   .fwd-cal-item:last-child {{ border-bottom: none; }}
   .fwd-cal-head {{
@@ -5448,9 +5593,11 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
   }}
-  /* 与公告/板块正文对齐：标题 13/1.5；描述行距与涨停板块段内换行同尺 */
+  /* 与公告/板块正文对齐：标题 13/1.5；完整换行，不做省略 */
   .fwd-cal-title {{
     font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5;
+    white-space: normal; overflow: visible; text-overflow: clip;
+    overflow-wrap: anywhere; word-break: break-word;
   }}
   .fwd-cal-badge {{
     font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
@@ -5473,10 +5620,11 @@ def render_html(ctx: dict) -> str:
   }}
   .fwd-cal-venue-ico svg {{ display: block; }}
   .fwd-cal-note {{
-    font-size: 12px; color: var(--sub); margin: 4px 0 0;
+    font-size: 12px; color: var(--body); margin: 4px 0 0;
     line-height: calc(1em + var(--logic-gap));
   }}
   .fwd-cal-venue + .fwd-cal-note {{ margin-top: 2px; }}
+  /* 地址行保持 muted，勿跟正文 --body */
 
   .pill {{
     display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px;
@@ -5631,8 +5779,11 @@ def render_html(ctx: dict) -> str:
     .event-note {{ font-size: 13px; }}
     .event-block-title {{ font-size: 16px; }}
     .event-block-body {{ font-size: 14px; }}
-    .fwd-cal-item {{ padding: 12px 12px; gap: 5px; }}
-    .fwd-cal-title {{ font-size: 15px; line-height: 1.5; }}
+    .fwd-cal-item {{ padding: 12px 0; gap: 5px; }}
+    .fwd-cal-title {{
+      font-size: 15px; line-height: 1.5;
+      white-space: normal; overflow: visible; text-overflow: clip;
+    }}
     .fwd-cal-venue {{ font-size: 14px; margin-top: 3px; }}
     .fwd-cal-note {{ font-size: 14px; margin-top: 3px; }}
     .fwd-cal-venue + .fwd-cal-note {{ margin-top: 2px; }}
