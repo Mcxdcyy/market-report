@@ -5604,7 +5604,8 @@ def render_html(ctx: dict) -> str:
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-sector {{
-    font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 6px;
+    /* 介于旧 10px pill 与过大 12px 之间：桌面 11 / 手机 12 */
+    font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 6px;
     background: #e3f0ff; color: #1565c0; border: 1px solid #90caf9;
     letter-spacing: 0.02em; white-space: nowrap;
   }}
@@ -5789,7 +5790,7 @@ def render_html(ctx: dict) -> str:
     .fwd-cal-venue + .fwd-cal-note {{ margin-top: 2px; }}
     .fwd-cal-md {{ font-size: 16px; }}
     .fwd-cal-wd {{ font-size: 13px; }}
-    .fwd-cal-sector {{ font-size: 13px; padding: 4px 10px; }}
+    .fwd-cal-sector {{ font-size: 12px; padding: 3px 9px; }}
     .fwd-cal-mark {{ width: 10px; height: 10px; }}
     .footer {{ font-size: 13px; }}
   }}
