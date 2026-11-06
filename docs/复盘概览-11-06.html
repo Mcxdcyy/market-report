@@ -885,7 +885,7 @@
     font-size: 12px; color: var(--sub);
     line-height: calc(1em + var(--logic-gap));
   }
-  /* 文案分条：上一版 1. 2. 样式；色略深，与首行同 line-height 中对齐 */
+  /* 文案分条：1. 2.；色浅于正文 sub，落在 muted↔sub 之间；首行中线对齐 */
   .sector-logic-list {
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
@@ -898,16 +898,19 @@
   }
   .sector-logic-n {
     box-sizing: border-box;
-    width: auto; min-width: 1.35em; height: auto;
+    width: auto; min-width: 1.35em;
+    /* 高度=正文首行行高，数字在行盒内垂直居中 */
+    height: calc(1em + var(--logic-gap));
     margin-top: 0;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     border-radius: 0;
     background: transparent;
-    color: var(--sub);
-    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
-    line-height: calc(1em + var(--logic-gap));
+    color: #7a7a80; /* 浅于正文 --sub(#636366)，深于 --muted(#8e8e93) */
+    font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums;
+    line-height: 1;
     letter-spacing: 0;
-    text-align: right;
   }
   .sector-logic-n::after { content: "."; }
   .sector-logic-t {
@@ -1549,7 +1552,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-12</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-20</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-29</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-06</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-12 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-13 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-14 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-15 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-16 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-19 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-20 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-21 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-22 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-23 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-26 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-27 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-28 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-29 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-30 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-11-02 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-11-03 · 3亿以上未满10（0）"></div><div class="fund-amt-n" title="2026-11-04 · 3亿以上 31">31</div><div class="fund-amt-n" title="2026-11-05 · 3亿以上 35">35</div><div class="fund-amt-n latest" title="2026-11-06 · 3亿以上 35">35</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 77.1%</span><div class="fund-core-list"><span class="fund-core-chip">有研新材</span><span class="fund-core-chip">金螳螂</span><span class="fund-core-chip">云南锗业</span><span class="fund-core-chip">先导基电</span><span class="fund-core-chip">东方嘉盛</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 77.1%</span><div class="fund-core-list"><span class="fund-core-chip">有研新材</span><span class="fund-core-chip">金螳螂</span><span class="fund-core-chip">先导基电</span><span class="fund-core-chip">云南锗业</span><span class="fund-core-chip">东方嘉盛</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">AI应用</span>
@@ -1658,7 +1661,7 @@
     <div class="module-summary">候选池 4 条 → 精选 4 条</div>
   </div>
 
-  <div class="footer">生成于 2026-11-06 20:50</div>
+  <div class="footer">生成于 2026-11-06 22:13</div>
 </div>
 </body>
 </html>

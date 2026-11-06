@@ -5219,7 +5219,7 @@ def render_html(ctx: dict) -> str:
     font-size: 12px; color: var(--sub);
     line-height: calc(1em + var(--logic-gap));
   }}
-  /* 文案分条：上一版 1. 2. 样式；色略深，与首行同 line-height 中对齐 */
+  /* 文案分条：1. 2.；色浅于正文 sub，落在 muted↔sub 之间；首行中线对齐 */
   .sector-logic-list {{
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
@@ -5232,16 +5232,19 @@ def render_html(ctx: dict) -> str:
   }}
   .sector-logic-n {{
     box-sizing: border-box;
-    width: auto; min-width: 1.35em; height: auto;
+    width: auto; min-width: 1.35em;
+    /* 高度=正文首行行高，数字在行盒内垂直居中 */
+    height: calc(1em + var(--logic-gap));
     margin-top: 0;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     border-radius: 0;
     background: transparent;
-    color: var(--sub);
-    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
-    line-height: calc(1em + var(--logic-gap));
+    color: #7a7a80; /* 浅于正文 --sub(#636366)，深于 --muted(#8e8e93) */
+    font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums;
+    line-height: 1;
     letter-spacing: 0;
-    text-align: right;
   }}
   .sector-logic-n::after {{ content: "."; }}
   .sector-logic-t {{
