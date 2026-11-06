@@ -968,7 +968,7 @@ def _vol_cycle_tag_html(
 
 # 图表/模块结论条语气（展示色）：ok=好(红) / bad=不好(绿) / warn=谨慎(橙)
 _SUM_TONE_BY_TEXT: dict[str, str] = {
-    "增量周期：市场量能 - 稳定 / 放大。": "ok",
+    "增量周期：市场量能稳定 / 量能放大。": "ok",
     "缩量周期：卖出持仓。——资金撤退，别大亏。": "bad",
     # 短期指数趋势 · 四档（2026-10-30）
     "指数趋势正常": "ok",
@@ -1063,7 +1063,7 @@ def _vol_cycle_summary_html(vol30: list[dict]) -> str:
     if not vol30:
         return ""
     if vol30[-1].get("tag") == "up":
-        text = "增量周期：市场量能 - 稳定 / 放大。"
+        text = "增量周期：市场量能稳定 / 量能放大。"
     else:
         text = "缩量周期：卖出持仓。——资金撤退，别大亏。"
     return _module_sum_html(text)
