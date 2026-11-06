@@ -3980,6 +3980,132 @@ def _render_fwd_timeline_html(nodes: list[dict]) -> str:
     )
 
 
+def _parse_sector_event_dates(
+    text: str, as_of: datetime | None
+) -> tuple[str, str, str] | None:
+    """从板块后续事件文案解析日期标签。返回 (label, title, brief) 或 None（无明确日期则不进日历）。"""
+    t = (text or "").strip()
+    if not t:
+        return None
+    year = (as_of.year if as_of else datetime.now().year)
+    # 11月17日至20日 / 11月15日
+    m = re.search(
+        r"(?P<m1>\d{1,2})月(?P<d1>\d{1,2})日"
+        r"(?:至(?:(?P<m2>\d{1,2})月)?(?P<d2>\d{1,2})日)?",
+        t,
+    )
+    if not m:
+        return None
+    m1, d1 = int(m.group("m1")), int(m.group("d1"))
+    d2 = m.group("d2")
+    m2 = m.group("m2")
+    try:
+        start = datetime(year, m1, d1)
+    except ValueError:
+        return None
+    if d2:
+        try:
+            end = datetime(year, int(m2) if m2 else m1, int(d2))
+        except ValueError:
+            end = start
+        label = f"{m1}/{d1}–{end.month}/{end.day}"
+    else:
+        label = f"{m1}/{d1}"
+    # 去掉开头日期套话作标题；全文作 brief
+    title = re.sub(
+        r"^\d{1,2}月\d{1,2}日(?:至(?:\d{1,2}月)?\d{1,2}日)?[，,、]?",
+        "",
+        t,
+    ).strip() or t
+    if len(title) > 36:
+        title = title[:36].rstrip("，,。；; ") + "…"
+    return label, title, t
+
+
+def _merge_sector_events_into_cal(
+    cal_items: list[dict],
+    sectors: list | None,
+    as_of: datetime | None,
+) -> list[dict]:
+    """把涨停板块「后续事件」归并进未来2周日历，并打板块名标签。"""
+    if not sectors:
+        return cal_items
+    items = [dict(x) for x in cal_items]
+    sector_names = [str(s.get("name") or "").strip() for s in sectors if s.get("name")]
+
+    def _attach(item: dict, name: str) -> None:
+        cur = list(item.get("sectors") or [])
+        if name and name not in cur:
+            cur.append(name)
+        item["sectors"] = cur[:2]  # 最多 2 个
+
+    # 已有日历项：标题/概述命中板块名 → 打标签
+    for it in items:
+        blob = f"{it.get('title') or ''} {it.get('brief') or ''} {it.get('note') or ''}"
+        for name in sector_names:
+            if name and name in blob:
+                _attach(it, name)
+
+    # 板块 events 里带明确日期的 → 写入日历
+    seen = {f"{x.get('label', '')}|{x.get('title', '')}" for x in items}
+    cutoff = as_of.date() if as_of is not None and hasattr(as_of, "date") else None
+    end = (as_of + timedelta(days=14)).date() if as_of is not None else None
+    for s in sectors:
+        name = str(s.get("name") or "").strip()
+        raw_ev = s.get("events") or s.get("events_near") or []
+        if isinstance(raw_ev, str):
+            raw_ev = _parse_sector_list_items(raw_ev)
+        for line in raw_ev:
+            line = str(line).strip()
+            if not line or line == "暂无直接催化":
+                continue
+            parsed = _parse_sector_event_dates(line, as_of)
+            if not parsed:
+                continue
+            label, title, brief = parsed
+            # 窗口外跳过
+            if cutoff and end:
+                em, ed = _parse_cal_end_key(label)
+                sm, sd = _parse_cal_sort_key(label)
+                try:
+                    ev_end = datetime(as_of.year, em, ed).date()
+                    ev_start = datetime(as_of.year, sm, sd).date()
+                except ValueError:
+                    continue
+                if ev_end < cutoff or ev_start > end:
+                    continue
+            key = f"{label}|{title}"
+            # 与已有项标题高度重合则只打标签
+            merged = False
+            for it in items:
+                if it.get("label") == label and (
+                    title[:12] in (it.get("title") or "")
+                    or (it.get("title") or "")[:12] in title
+                ):
+                    _attach(it, name)
+                    if brief and not (it.get("brief") or it.get("note")):
+                        it["brief"] = brief
+                    merged = True
+                    break
+            if merged:
+                continue
+            if key in seen:
+                continue
+            seen.add(key)
+            items.append(
+                {
+                    "label": label,
+                    "title": title,
+                    "brief": brief,
+                    "hot": False,
+                    "source": "sector",
+                    "sectors": [name] if name else [],
+                }
+            )
+    items.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
+    return items
+
+
 def render_fwd_section_html(
     event_nodes: list,
     peak: str,
@@ -3987,8 +4113,11 @@ def render_fwd_section_html(
     rhythm: str,
     directions: list,
     as_of: datetime | None = None,
+    sectors: list | None = None,
 ) -> tuple[str, str]:
-    """未来2周模块：仅事件列表（已删除研判摘要、时间轴、题材方向卡片）。"""
+    """未来2周模块：仅事件列表（已删除研判摘要、时间轴、题材方向卡片）。
+    涨停板块后续事件归并至此，并展示板块名标签。
+    """
     _ = summary  # 兼容旧入参；页面不再展示研判摘要
 
     # ── 融合日历（事件库 + 节奏补点；跳过已过期节点）──
@@ -4022,6 +4151,7 @@ def render_fwd_section_html(
         cal_items.append(ex)
     # directions 参数保留兼容（旧 JSON themes）；页面不再渲染题材方向卡片
     _ = directions
+    cal_items = _merge_sector_events_into_cal(cal_items, sectors, as_of)
     cal_items.sort(key=lambda x: _parse_cal_sort_key(x.get("label", "")))
 
     cal_rows: list[str] = []
@@ -4043,6 +4173,10 @@ def render_fwd_section_html(
         note_html = f'<p class="fwd-cal-note">{note}</p>' if note else ""
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
+        sec_tags = [str(x) for x in (n.get("sectors") or []) if str(x).strip()][:2]
+        sec_html = "".join(
+            f'<span class="fwd-cal-sector">{x}</span>' for x in sec_tags
+        )
         hot = bool(
             n.get("hot")
             or _event_is_hot(title, n)
@@ -4059,7 +4193,7 @@ def render_fwd_section_html(
             f'<div class="fwd-cal-body">'
             f'<div class="fwd-cal-top">'
             f'<span class="fwd-cal-title">{title}</span>'
-            f'{tag_html}</div>'
+            f'{sec_html}{tag_html}</div>'
             f'{venue_html}{note_html}'
             f"</div></div>"
         )
@@ -4127,31 +4261,46 @@ def render_html(ctx: dict) -> str:
     news = ctx["market_news"]
     sectors = news["top_sectors"]
     if sectors:
-        sector_cards = "".join(
-            f'''<div class="sector-row">
+        def _sector_card_html(i: int, s: dict) -> str:
+            cnt = int(s.get("count") or 0)
+            # 当日涨停 <5：不写涨停数量、已持续天数标签
+            if cnt >= 5:
+                streak = int(s.get("streak_days") or 0)
+                stats = (
+                    f'<span class="sector-stat hot">{cnt} 涨停</span>'
+                    f'<span class="sector-stat{" hot" if streak >= 3 else ""}">'
+                    f"已持续 {streak} 天</span>"
+                )
+            else:
+                stats = ""
+            logic = (
+                f'<div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div>'
+                f'<div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>'
+                if s.get("reason")
+                else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'
+            )
+            # 后续事件已归并到「未来2周·事件与方向」，板块卡只留逻辑 + P 档
+            return f'''<div class="sector-row">
       <div class="sector-head">
         <div class="sector-head-left">
           <span class="sector-rank">{i}</span>
           <span class="sector-name">{s.get("name", "")}</span>
-          <span class="sector-stat hot">{s.get("count", "—")} 涨停</span>
-          <span class="sector-stat{" hot" if int(s.get("streak_days") or 0) >= 3 else ""}">已持续 {int(s.get("streak_days") or 0)} 天</span>
+          {stats}
         </div>
         <div class="sector-forecast-corner">
           <span class="pill {s.get("persist_tag", "warn")} sector-priority-pill">{s.get("event_priority_label") or s.get("persist") or "—"}</span>
         </div>
       </div>
-      <div class="sector-cols">
-        <div class="sector-col-left">
-          {f'<div class="sector-block"><div class="sector-label sector-label-logic">板块逻辑</div><div class="sector-text">{_format_sector_reason_html(s.get("reason"))}</div></div>' if s.get("reason") else '<div class="sector-block sector-block-empty"><div class="sector-text sector-muted">—</div></div>'}
-        </div>
-        <div class="sector-col-right">
-          <div class="sector-block"><div class="sector-label sector-label-event">后续事件</div><div class="sector-text">{_format_sector_list_html(s.get("events_near") or "—")}</div></div>
-        </div>
+      <div class="sector-body">
+          {logic}
       </div>
     </div>'''
-            for i, s in enumerate(sectors, 1)
+
+        sector_block = (
+            f'<div class="sector-list">'
+            f'{"".join(_sector_card_html(i, s) for i, s in enumerate(sectors, 1))}'
+            f"</div>"
         )
-        sector_block = f'<div class="sector-list">{sector_cards}</div>'
     else:
         sector_block = '<div class="news-empty">暂无板块数据，请在 market_news.json 填写 top_sectors</div>'
     post_summary = news.get("post_summary", "")
@@ -4164,6 +4313,7 @@ def render_html(ctx: dict) -> str:
         ctx.get("rhythm") or "",
         ctx.get("directions") or [],
         ctx.get("as_of"),
+        sectors=sectors,
     )
 
     fund_recognition_html = render_fund_recognition_html(ctx.get("fund_recognition") or {})
@@ -5045,17 +5195,13 @@ def render_html(ctx: dict) -> str:
     background: #f2f2f7; padding: 3px 9px; border-radius: 999px; white-space: nowrap;
   }}
   .sector-stat.hot {{ color: var(--bad); background: var(--bad-bg); }}
+  /* 2026-11-06：板块卡只留逻辑（后续事件归并未来2周）；旧双栏 class 保留兼容 */
+  .sector-body {{ min-width: 0; }}
   .sector-cols {{
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
+    display: grid; grid-template-columns: 1fr; gap: 0;
   }}
-  @media (max-width: 640px) {{ .sector-cols {{ grid-template-columns: 1fr; gap: 10px; }} }}
-  .sector-col-left {{ min-width: 0; flex: 1; }}
-  .sector-col-right {{
-    min-width: 0; flex: 1; padding-left: 16px; border-left: 1px solid #f0f0f5;
-  }}
-  @media (max-width: 640px) {{
-    .sector-col-right {{ padding-left: 0; border-left: none; padding-top: 10px; border-top: 1px solid #f0f0f5; }}
-  }}
+  .sector-col-left {{ min-width: 0; }}
+  .sector-col-right {{ display: none; }}
   .sector-block {{ margin-bottom: 8px; }}
   .sector-block:last-child {{ margin-bottom: 0; }}
   .sector-block-empty {{ opacity: .5; }}
@@ -5292,6 +5438,10 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-badge {{
     font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
+  }}
+  .fwd-cal-sector {{
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+    background: #eef5ff; color: #3d6ea8; border: 1px solid #d0e2ff;
   }}
   .fwd-cal-venue {{
     display: flex; align-items: center; gap: 5px;
