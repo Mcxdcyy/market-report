@@ -6630,7 +6630,7 @@ def load_fund_recognition_block(
 def _fund_pool_codes(it: dict) -> list[str]:
     """与柱图同一套建池后累计 codes（含 3 亿以下）。
 
-    近2日>3亿去重≥10 起建；门槛前涨停不在此列。供「核心个股」使用。
+    近2日>3亿去重≥15 起建；门槛前涨停不在此列。供「核心个股」使用。
     """
     raw = it.get("codes")
     if isinstance(raw, list) and raw:

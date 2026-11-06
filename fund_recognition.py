@@ -4,7 +4,7 @@
 口径：
 - 板块：近 20 个交易日开盘啦涨停原因中出现过的全部板块
 - 建池 / 起画门槛（同一日）：近 2 个交易日内，该板块涨停票里成交额>3 亿的
-  **去重家数** ≥10 → 当日起才开始统计池子并画柱。
+  **去重家数** ≥15 → 当日起才开始统计池子并画柱。（2026-11-06 由 ≥10 改定）
   · 门槛日之前的涨停个股 **不计入** 池子
   · 门槛日起：池 = 当日涨停代码；之后每日把新上榜代码并入（只增不减）
 - 按日：截至当日累计池内，成交额 >3 亿 → 再算收盘>MA5 且收盘>MA10 的占比
@@ -37,10 +37,10 @@ SERIES_DAYS = 20
 AMOUNT_MIN = 3e8  # 3 亿元
 KLINE_NEED = 40  # MA10 + 20 日余量
 WORKERS = 48
-# 个股池：近2日涨停票中 >3亿去重≥10 才建池；此前涨停不进池。旧缓存须强制重算。
-POOL_VIA = "cumulative_from_2d_amt10"
+# 个股池：近2日涨停票中 >3亿去重≥15 才建池；此前涨停不进池。旧缓存须强制重算。
+POOL_VIA = "cumulative_from_2d_amt15"
 AMT10_LOOKBACK_DAYS = 2
-AMT10_MIN_NAMES = 10
+AMT10_MIN_NAMES = 15
 
 
 def _as_date(v: date | datetime | str) -> date:
@@ -312,7 +312,7 @@ def _find_pool_start_day(
     *,
     first_appear: date | None = None,
 ) -> date | None:
-    """近 2 个交易日涨停票中 >3 亿去重家数 ≥10 的首日 → 建池/起画日。"""
+    """近 2 个交易日涨停票中 >3 亿去重家数 ≥15 的首日 → 建池/起画日。"""
     day_amt: dict[date, set[str]] = {}
     for d in series_days:
         if first_appear is not None and d < first_appear:
@@ -344,7 +344,7 @@ def compute_sector_series(
 ) -> tuple[list[dict], list[str]]:
     """按日序列。返回 (series, 窗口末日累计池 codes)。
 
-    建池/起画：近 2 日涨停票中 >3 亿去重 ≥10 的首日才开始；此前涨停不进池。
+    建池/起画：近 2 日涨停票中 >3 亿去重 ≥15 的首日才开始；此前涨停不进池。
     起画日后池按日累计（只增不减）。禁止用窗口末日总池回算历史日。
     """
     pool_start = _find_pool_start_day(
