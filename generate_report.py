@@ -5672,11 +5672,11 @@ def render_html(ctx: dict) -> str:
     {vol20_html}
   </div>
 
-  <!-- 2 涨停板块（2026-11-03：已删「趋势强度」整模块） -->
+  <!-- 2 涨停板块逻辑（2026-11-06 模块名改定） -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
       <div class="section-num">2</div>
-      <div class="section-title">涨停板块</div>
+      <div class="section-title">涨停板块逻辑</div>
     </div>
     {sector_block}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
