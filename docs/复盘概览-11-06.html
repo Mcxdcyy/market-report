@@ -863,9 +863,9 @@
     flex-shrink: 0; text-align: right; align-self: center;
   }
   .sector-priority-pill { font-size: 10px; font-weight: 600; padding: 3px 9px; white-space: nowrap; }
-  /* 与模块 .section-num（实心方块）区分：浅蓝色实心圆 */
+  /* 板块序：浅蓝圆角方（与模块 section-num 同形异色；不再用圆，避免与文案序号撞形） */
   .sector-rank {
-    width: 22px; height: 22px; border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 6px;
     background: #64B5F6; color: #fff; border: none;
     font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
     display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -885,27 +885,29 @@
     font-size: 12px; color: var(--sub);
     line-height: calc(1em + var(--logic-gap));
   }
-  /* 1/2/3 分条：段间距与段内换行同尺（--logic-gap） */
+  /* 文案分条：纯数字序号（无圆底），与板块序圆角方区分 */
   .sector-logic-list {
     display: flex; flex-direction: column; gap: var(--logic-gap);
     margin: 0; padding: 0;
   }
   .sector-logic-item {
     display: grid;
-    grid-template-columns: 1.2em minmax(0, 1fr);
-    column-gap: 0.65em;
+    grid-template-columns: 1.35em minmax(0, 1fr);
+    column-gap: 0.55em;
     align-items: start;
   }
   .sector-logic-n {
     box-sizing: border-box;
-    width: 1.2em; height: 1.2em;
+    width: auto; min-width: 1.35em; height: auto;
     margin-top: calc(var(--logic-gap) / 2);
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
-    background: #f2f2f7; color: var(--sub);
-    font-size: 0.92em; font-weight: 700; font-variant-numeric: tabular-nums;
-    line-height: 1; letter-spacing: 0;
+    display: block;
+    border-radius: 0;
+    background: transparent; color: var(--muted);
+    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+    line-height: 1em; letter-spacing: 0;
+    text-align: right;
   }
+  .sector-logic-n::after { content: "."; }
   .sector-logic-t {
     min-width: 0;
     line-height: calc(1em + var(--logic-gap));
@@ -1642,7 +1644,7 @@
     <div class="module-summary">候选池 4 条 → 精选 4 条</div>
   </div>
 
-  <div class="footer">生成于 2026-11-06 19:04</div>
+  <div class="footer">生成于 2026-11-06 19:05</div>
 </div>
 </body>
 </html>
