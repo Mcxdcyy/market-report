@@ -4184,8 +4184,12 @@ def render_fwd_section_html(
         tags = _peak_tags_for_label(label, peak)
         tag_html = "".join(f'<span class="fwd-cal-badge">{t}</span>' for t in tags)
         sec_tags = [str(x) for x in (n.get("sectors") or []) if str(x).strip()][:2]
-        sec_html = "".join(
-            f'<span class="fwd-cal-sector">{x}</span>' for x in sec_tags
+        sec_html = (
+            f'<div class="fwd-cal-sectors">'
+            + "".join(f'<span class="fwd-cal-sector">{x}</span>' for x in sec_tags)
+            + "</div>"
+            if sec_tags
+            else ""
         )
         hot = bool(
             n.get("hot")
@@ -4195,15 +4199,18 @@ def render_fwd_section_html(
         wd = _rel_week_label(label, as_of)
         wd_html = f'<span class="fwd-cal-wd">{wd}</span>' if wd else ""
         mark_cls = " hot" if hot else ""
+        # 板块标签放日期行右侧，更醒目；标题行只留标题 + 峰值 badge
         cal_rows.append(
             f'<div class="fwd-cal-item{" hot" if hot else ""}">'
             f'<div class="fwd-cal-head">'
+            f'<div class="fwd-cal-head-left">'
             f'<span class="fwd-cal-mark{mark_cls}" aria-hidden="true"></span>'
             f'<span class="fwd-cal-md">{label}</span>{wd_html}</div>'
+            f'{sec_html}</div>'
             f'<div class="fwd-cal-body">'
             f'<div class="fwd-cal-top">'
             f'<span class="fwd-cal-title">{title}</span>'
-            f'{sec_html}{tag_html}</div>'
+            f'{tag_html}</div>'
             f'{venue_html}{note_html}'
             f"</div></div>"
         )
@@ -5410,7 +5417,12 @@ def render_html(ctx: dict) -> str:
   }}
   .fwd-cal-item:last-child {{ border-bottom: none; }}
   .fwd-cal-head {{
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+    justify-content: space-between;
+  }}
+  .fwd-cal-head-left {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+    min-width: 0; flex: 1 1 auto;
   }}
   .fwd-cal-mark {{
     width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
@@ -5428,6 +5440,11 @@ def render_html(ctx: dict) -> str:
   .fwd-cal-wd {{
     font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.3;
   }}
+  /* 板块标签：日期行右侧，加粗加色 */
+  .fwd-cal-sectors {{
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+    gap: 6px; flex: 0 1 auto; margin-left: auto;
+  }}
   .fwd-cal-body {{ min-width: 0; width: 100%; }}
   .fwd-cal-top {{
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
@@ -5441,8 +5458,9 @@ def render_html(ctx: dict) -> str:
     background: #fff3e0; color: #b25000; border: 1px solid #ffe0b2;
   }}
   .fwd-cal-sector {{
-    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
-    background: #eef5ff; color: #3d6ea8; border: 1px solid #d0e2ff;
+    font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 6px;
+    background: #e3f0ff; color: #1565c0; border: 1px solid #90caf9;
+    letter-spacing: 0.02em; white-space: nowrap;
   }}
   .fwd-cal-venue {{
     display: flex; align-items: center; gap: 5px;
@@ -5621,6 +5639,7 @@ def render_html(ctx: dict) -> str:
     .fwd-cal-venue + .fwd-cal-note {{ margin-top: 2px; }}
     .fwd-cal-md {{ font-size: 16px; }}
     .fwd-cal-wd {{ font-size: 13px; }}
+    .fwd-cal-sector {{ font-size: 13px; padding: 4px 10px; }}
     .fwd-cal-mark {{ width: 10px; height: 10px; }}
     .footer {{ font-size: 13px; }}
   }}
