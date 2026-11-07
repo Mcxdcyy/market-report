@@ -4591,13 +4591,14 @@ def render_html(ctx: dict) -> str:
   .mkt-env-pills .pill.bad {{
     background: #e8f5e9; color: #2e7d32;
   }}
-  /* 系统杠杆风险：全下跌 + 增量周期；紫强调（非红非绿） */
-  .mkt-env-pills .pill.sys {{
+  /* 系统杠杆风险 / 难做-等机会：紫强调（非红非绿） */
+  .mkt-env-pills .pill.sys,
+  .mkt-env-pills .pill.cue-hard {{
     background: #7c3aed; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
   }}
-  /* 趋势提示：双红 → 钴蓝；缩圈抱团：一红一绿 → 石板灰蓝（均非紫） */
+  /* 趋势提示：双红 → 钴蓝；缩圈抱团：一红一绿 → 石板灰蓝 */
   .mkt-env-pills .pill.cue-trend {{
     background: #1d4ed8; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
@@ -6332,12 +6333,13 @@ def _index_day_down_flags(items: list, day: str) -> list[bool]:
 
 
 def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
-    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys/cue-trend/cue-crowd。缺数据的项跳过。
+    """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys/cue-trend/cue-crowd/cue-hard。缺数据的项跳过。
 
-    前置提示（与系统杠杆同系外框；非紫）：
+    前置提示（与系统杠杆同系外框）：
     - 两红 → 「关注趋势-锁仓」(cue-trend，钴蓝 #1d4ed8)
     - 一红一绿 → 「关注缩圈-抱团」(cue-crowd，石板灰蓝 #334155)
-    - 「待次日确认」(warn) 不计入上述两档
+    - 两绿 → 「难做-等机会」(cue-hard，紫，同系统杠杆色)
+    - 「待次日确认」(warn) 不计入上述各档
     若「指数风险-全下跌通道」且「量能-增量周期」→ 最前「系统杠杆风险」(sys，紫)；命中时不再叠 cue。
     """
     pills: list[tuple[str, str]] = []
@@ -6370,19 +6372,21 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
             vol_tone = "bad"
             pills.append(("bad", "量能-缩量周期"))
 
-    # 3) 前置：系统杠杆优先；否则双红 / 一红一绿 cue
+    # 3) 前置：系统杠杆优先；否则双红 / 一红一绿 / 两绿 cue
     if idx_sum == "指数风险-全下跌通道" and vol_expand:
         pills.insert(0, ("sys", "系统杠杆风险"))
     elif idx_tone == "ok" and vol_tone == "ok":
         pills.insert(0, ("cue-trend", "关注趋势-锁仓"))
     elif {idx_tone, vol_tone} == {"ok", "bad"}:
         pills.insert(0, ("cue-crowd", "关注缩圈-抱团"))
+    elif idx_tone == "bad" and vol_tone == "bad":
+        pills.insert(0, ("cue-hard", "难做-等机会"))
 
     return pills
 
 
 def _mkt_env_pills_html(ctx: dict) -> str:
-    """大盘环境模块标题下、图表上：指数/量能 pill（条件命中时含系统杠杆 / 趋势·抱团 cue）。"""
+    """大盘环境模块标题下、图表上：指数/量能 pill（条件命中时含系统杠杆 / 趋势·缩圈·难做 cue）。"""
     pills = [
         f'<span class="pill {tone}">{label}</span>'
         for tone, label in _mkt_env_pills(ctx)
