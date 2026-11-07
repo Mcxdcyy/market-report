@@ -4597,16 +4597,16 @@ def render_html(ctx: dict) -> str:
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
   }}
-  /* 趋势提示：双红 → 琥珀橙；抱团提示：一红一绿 → 钴蓝（均非紫） */
+  /* 趋势提示：双红 → 钴蓝；缩圈抱团：一红一绿 → 石板灰蓝（均非紫） */
   .mkt-env-pills .pill.cue-trend {{
-    background: #d97706; color: #fff;
-    font-weight: 700; letter-spacing: 0.02em;
-    box-shadow: 0 0 0 1px rgba(217, 119, 6, 0.35);
-  }}
-  .mkt-env-pills .pill.cue-crowd {{
     background: #1d4ed8; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(29, 78, 216, 0.35);
+  }}
+  .mkt-env-pills .pill.cue-crowd {{
+    background: #334155; color: #fff;
+    font-weight: 700; letter-spacing: 0.02em;
+    box-shadow: 0 0 0 1px rgba(51, 65, 85, 0.4);
   }}
   /* 宏观·做多/做空周期标签：描边外框，刻意突出（对齐系统杠杆外框手法） */
   .macro-bias-wrap .chart-tags .pill.macro-long {{
@@ -6335,8 +6335,8 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys/cue-trend/cue-crowd。缺数据的项跳过。
 
     前置提示（与系统杠杆同系外框；非紫）：
-    - 两红 → 「关注趋势-锁仓」(cue-trend，琥珀橙 #d97706)
-    - 一红一绿 → 「关注缩圈抱团」(cue-crowd，钴蓝 #1d4ed8)
+    - 两红 → 「关注趋势-锁仓」(cue-trend，钴蓝 #1d4ed8)
+    - 一红一绿 → 「关注缩圈-抱团」(cue-crowd，石板灰蓝 #334155)
     - 「待次日确认」(warn) 不计入上述两档
     若「指数风险-全下跌通道」且「量能-增量周期」→ 最前「系统杠杆风险」(sys，紫)；命中时不再叠 cue。
     """
@@ -6376,7 +6376,7 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     elif idx_tone == "ok" and vol_tone == "ok":
         pills.insert(0, ("cue-trend", "关注趋势-锁仓"))
     elif {idx_tone, vol_tone} == {"ok", "bad"}:
-        pills.insert(0, ("cue-crowd", "关注缩圈抱团"))
+        pills.insert(0, ("cue-crowd", "关注缩圈-抱团"))
 
     return pills
 
