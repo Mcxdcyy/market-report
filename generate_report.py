@@ -4597,11 +4597,11 @@ def render_html(ctx: dict) -> str:
     font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
   }}
-  /* 趋势提示：双红 → 亮橙；抱团提示：一红一绿 → 钴蓝（均非紫） */
+  /* 趋势提示：双红 → 琥珀橙；抱团提示：一红一绿 → 钴蓝（均非紫） */
   .mkt-env-pills .pill.cue-trend {{
-    background: #ea580c; color: #fff;
+    background: #d97706; color: #fff;
     font-weight: 700; letter-spacing: 0.02em;
-    box-shadow: 0 0 0 1px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 0 0 1px rgba(217, 119, 6, 0.35);
   }}
   .mkt-env-pills .pill.cue-crowd {{
     background: #1d4ed8; color: #fff;
@@ -6335,7 +6335,7 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     """返回 [(tone, label), ...]，tone ∈ ok/warn/bad/sys/cue-trend/cue-crowd。缺数据的项跳过。
 
     前置提示（与系统杠杆同系外框；非紫）：
-    - 两红 → 「关注趋势-锁仓」(cue-trend，亮橙 #ea580c)
+    - 两红 → 「关注趋势-锁仓」(cue-trend，琥珀橙 #d97706)
     - 一红一绿 → 「关注抱团-主板」(cue-crowd，钴蓝 #1d4ed8)
     - 「待次日确认」(warn) 不计入上述两档
     若「指数风险-全下跌通道」且「量能-增量周期」→ 最前「系统杠杆风险」(sys，紫)；命中时不再叠 cue。
