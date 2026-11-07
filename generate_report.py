@@ -6336,7 +6336,7 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
 
     前置提示（与系统杠杆同系外框；非紫）：
     - 两红 → 「关注趋势-锁仓」(cue-trend，琥珀橙 #d97706)
-    - 一红一绿 → 「关注抱团-主板」(cue-crowd，钴蓝 #1d4ed8)
+    - 一红一绿 → 「关注缩圈抱团」(cue-crowd，钴蓝 #1d4ed8)
     - 「待次日确认」(warn) 不计入上述两档
     若「指数风险-全下跌通道」且「量能-增量周期」→ 最前「系统杠杆风险」(sys，紫)；命中时不再叠 cue。
     """
@@ -6376,7 +6376,7 @@ def _mkt_env_pills(ctx: dict) -> list[tuple[str, str]]:
     elif idx_tone == "ok" and vol_tone == "ok":
         pills.insert(0, ("cue-trend", "关注趋势-锁仓"))
     elif {idx_tone, vol_tone} == {"ok", "bad"}:
-        pills.insert(0, ("cue-crowd", "关注抱团-主板"))
+        pills.insert(0, ("cue-crowd", "关注缩圈抱团"))
 
     return pills
 
