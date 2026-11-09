@@ -807,6 +807,13 @@
   .idx-outlook-wrap > .vol-mkt-sum-wrap {
     margin-top: 2px; /* + gap 12 → 14 */
   }
+  /* 前置预警 tip + 结论条连续：抵消父级 gap，使上条 padding-bottom 14 直达下条 border（上下分隔线间距一致） */
+  .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {
+    margin-top: 0;
+  }
+  .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {
+    margin-top: -12px; /* 抵消 idx-outlook-wrap gap:12 */
+  }
   .chase-grid > .vol-mkt-sum-wrap {
     margin-top: 0; /* + gap 14 → 14 */
   }
@@ -1255,6 +1262,8 @@
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap { margin-top: 4px; }
     .idx-outlook-wrap > .vol-mkt-sum-wrap { margin-top: 2px; }
+    .vol-mkt-sum-wrap + .vol-mkt-sum-wrap { margin-top: 0; }
+    .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap { margin-top: -12px; }
     .chase-grid > .vol-mkt-sum-wrap { margin-top: 0; }
     .section > .vol-mkt-sum-wrap:last-child { margin-bottom: -12px; } /* 手机 section pad 12 */
     .vol-mkt-sum { padding: 14px 14px; font-size: 15px; }
@@ -1383,7 +1392,7 @@
       <div class="section-title">大盘·风险指针</div>
     </div>
     <div class="mkt-env-pills" aria-label="大盘·风险指针标签"><span class="pill cue-crowd">关注缩圈-抱团</span><span class="pill ok">指数趋势正常</span><span class="pill bad">量能-缩量周期</span></div>
-    <div class="idx-outlook-wrap"><div class="vol20-head"><span class="vol20-title">短期指数趋势</span><span class="vol20-meta">近10日</span></div><div class="idx-outlook-scroll"><table class="idx-outlook-table"><thead><tr><th class="idx-corner">日期</th><th>上证指数</th><th>深成指</th><th>创业板指数</th><th>科创综指</th></tr></thead><tbody><tr><th scope="row">10/27</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="flat">-</td></tr><tr><th scope="row">10/28</th><td class="pending">=</td><td class="pending">=</td><td class="pending">=</td><td class="flat">-</td></tr><tr><th scope="row">10/29</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">10/30</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">11/02</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">11/03</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">11/04</th><td class="pending">=</td><td class="pending">=</td><td class="pending">=</td><td class="pending">=</td></tr><tr><th scope="row">11/05</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">11/06</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr class="latest"><th scope="row" class="latest">11/09</th><td class="flat">-</td><td class="a-weak">走弱</td><td class="a-weak">走弱</td><td class="a-weak">走弱</td></tr></tbody></table></div><div class="vol-mkt-sum-wrap"><div class="vol-mkt-sum ok">指数趋势正常——前置预警：深成指、创业板指数、科创综指60分钟已转弱，日线下跌趋势尚未确认。</div></div></div><div class="vol20-wrap">
+    <div class="idx-outlook-wrap"><div class="vol20-head"><span class="vol20-title">短期指数趋势</span><span class="vol20-meta">近10日</span></div><div class="idx-outlook-scroll"><table class="idx-outlook-table"><thead><tr><th class="idx-corner">日期</th><th>上证指数</th><th>深成指</th><th>创业板指数</th><th>科创综指</th></tr></thead><tbody><tr><th scope="row">10/27</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="flat">-</td></tr><tr><th scope="row">10/28</th><td class="pending">=</td><td class="pending">=</td><td class="pending">=</td><td class="flat">-</td></tr><tr><th scope="row">10/29</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">10/30</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">11/02</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">11/03</th><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td><td class="down">下跌</td></tr><tr><th scope="row">11/04</th><td class="pending">=</td><td class="pending">=</td><td class="pending">=</td><td class="pending">=</td></tr><tr><th scope="row">11/05</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr><th scope="row">11/06</th><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td><td class="flat">-</td></tr><tr class="latest"><th scope="row" class="latest">11/09</th><td class="flat">-</td><td class="a-weak">走弱</td><td class="a-weak">走弱</td><td class="a-weak">走弱</td></tr></tbody></table></div><div class="vol-mkt-sum-wrap"><div class="vol-mkt-sum tip">前置预警：深成指、创业板指数、科创综指60分钟已转弱，日线下跌趋势尚未确认。</div></div><div class="vol-mkt-sum-wrap"><div class="vol-mkt-sum ok">指数趋势正常</div></div></div><div class="vol20-wrap">
     <div class="vol20-head">
       <span class="vol20-title">近30日成交金额</span>
       <span class="vol20-meta">09/21–11/09 · 今日 <span class="meta-today down">1.48 万亿</span></span>
@@ -1586,7 +1595,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-13</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-21</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-30</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-09</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-13 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-14 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-15 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-16 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-19 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-20 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-21 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-22 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-23 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-26 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-27 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-28 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-29 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-30 · 3亿以上未满10（0）"></div><div class="fund-amt-n" title="2026-11-02 · 3亿以上 19">19</div><div class="fund-amt-n" title="2026-11-03 · 3亿以上 19">19</div><div class="fund-amt-n" title="2026-11-04 · 3亿以上 19">19</div><div class="fund-amt-n" title="2026-11-05 · 3亿以上 27">27</div><div class="fund-amt-n" title="2026-11-06 · 3亿以上 26">26</div><div class="fund-amt-n latest" title="2026-11-09 · 3亿以上 28">28</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.0%</span><div class="fund-core-list"><span class="fund-core-chip">浙文影业</span><span class="fund-core-chip">文投控股</span><span class="fund-core-chip">慈文传媒</span><span class="fund-core-chip">上海电影</span><span class="fund-core-chip">引力传媒</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 75.0%</span><div class="fund-core-list"><span class="fund-core-chip">浙文影业</span><span class="fund-core-chip">文投控股</span><span class="fund-core-chip">慈文传媒</span><span class="fund-core-chip">引力传媒</span><span class="fund-core-chip">上海电影</span></div></div>
   </div></div>
   </div>
 
@@ -1702,7 +1711,7 @@
     <div class="module-summary">候选池 2 条 → 精选 2 条</div>
   </div>
 
-  <div class="footer">生成于 2026-11-09 17:59</div>
+  <div class="footer">生成于 2026-11-09 18:07</div>
 </div>
 </body>
 </html>
