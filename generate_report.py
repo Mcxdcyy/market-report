@@ -5343,6 +5343,13 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-wrap > .vol-mkt-sum-wrap {{
     margin-top: 2px; /* + gap 12 → 14 */
   }}
+  /* 前置预警 tip + 结论条连续：抵消父级 gap，使上条 padding-bottom 14 直达下条 border（上下分隔线间距一致） */
+  .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{
+    margin-top: 0;
+  }}
+  .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{
+    margin-top: -12px; /* 抵消 idx-outlook-wrap gap:12 */
+  }}
   .chase-grid > .vol-mkt-sum-wrap {{
     margin-top: 0; /* + gap 14 → 14 */
   }}
@@ -5791,6 +5798,8 @@ def render_html(ctx: dict) -> str:
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
     .idx-outlook-wrap > .vol-mkt-sum-wrap {{ margin-top: 2px; }}
+    .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{ margin-top: 0; }}
+    .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{ margin-top: -12px; }}
     .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 0; }}
     .section > .vol-mkt-sum-wrap:last-child {{ margin-bottom: -12px; }} /* 手机 section pad 12 */
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}

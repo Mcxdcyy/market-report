@@ -807,6 +807,13 @@
   .idx-outlook-wrap > .vol-mkt-sum-wrap {
     margin-top: 2px; /* + gap 12 → 14 */
   }
+  /* 前置预警 tip + 结论条连续：抵消父级 gap，使上条 padding-bottom 14 直达下条 border（上下分隔线间距一致） */
+  .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {
+    margin-top: 0;
+  }
+  .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {
+    margin-top: -12px; /* 抵消 idx-outlook-wrap gap:12 */
+  }
   .chase-grid > .vol-mkt-sum-wrap {
     margin-top: 0; /* + gap 14 → 14 */
   }
@@ -1255,6 +1262,8 @@
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap { margin-top: 4px; }
     .idx-outlook-wrap > .vol-mkt-sum-wrap { margin-top: 2px; }
+    .vol-mkt-sum-wrap + .vol-mkt-sum-wrap { margin-top: 0; }
+    .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap { margin-top: -12px; }
     .chase-grid > .vol-mkt-sum-wrap { margin-top: 0; }
     .section > .vol-mkt-sum-wrap:last-child { margin-bottom: -12px; } /* 手机 section pad 12 */
     .vol-mkt-sum { padding: 14px 14px; font-size: 15px; }
@@ -1564,7 +1573,7 @@
       <div class="fund-axis"><div class="fund-tick show"><span>10-13</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-21</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show"><span>10-30</span></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick"></div><div class="fund-tick show latest"><span>11-09</span></div></div>
       <div class="fund-amt-row" aria-label="每日3亿以上家数"><div class="fund-amt-n before" title="2026-10-13 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-14 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-15 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-16 · 尚未上榜"></div><div class="fund-amt-n before" title="2026-10-19 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-20 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-21 · 3亿以上未满10（0）"></div><div class="fund-amt-n before" title="2026-10-22 · 3亿以上未满10（0）"></div><div class="fund-amt-n" title="2026-10-23 · 3亿以上 32">32</div><div class="fund-amt-n" title="2026-10-26 · 3亿以上 43">43</div><div class="fund-amt-n" title="2026-10-27 · 3亿以上 53">53</div><div class="fund-amt-n" title="2026-10-28 · 3亿以上 62">62</div><div class="fund-amt-n" title="2026-10-29 · 3亿以上 59">59</div><div class="fund-amt-n" title="2026-10-30 · 3亿以上 60">60</div><div class="fund-amt-n" title="2026-11-02 · 3亿以上 60">60</div><div class="fund-amt-n" title="2026-11-03 · 3亿以上 54">54</div><div class="fund-amt-n" title="2026-11-04 · 3亿以上 58">58</div><div class="fund-amt-n" title="2026-11-05 · 3亿以上 56">56</div><div class="fund-amt-n" title="2026-11-06 · 3亿以上 55">55</div><div class="fund-amt-n latest" title="2026-11-09 · 3亿以上 57">57</div></div>
     </div>
-    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 70.2%</span><div class="fund-core-list"><span class="fund-core-chip">宇树科技</span><span class="fund-core-chip">襄阳轴承</span><span class="fund-core-chip">凡拓数创</span><span class="fund-core-chip">光洋股份</span><span class="fund-core-chip">闽发铝业</span></div></div>
+    <div class="fund-core"><div class="fund-core-k">核心个股</div><span class="pill fund-core-pct ok">占比 70.2%</span><div class="fund-core-list"><span class="fund-core-chip">宇树科技</span><span class="fund-core-chip">襄阳轴承</span><span class="fund-core-chip">凡拓数创</span><span class="fund-core-chip">闽发铝业</span><span class="fund-core-chip">光洋股份</span></div></div>
   </div><div class="fund-card">
     <div class="fund-card-head">
       <span class="fund-card-title">芯片</span>
@@ -1702,7 +1711,7 @@
     <div class="module-summary">候选池 2 条 → 精选 2 条</div>
   </div>
 
-  <div class="footer">生成于 2026-11-09 17:07</div>
+  <div class="footer">生成于 2026-11-09 17:57</div>
 </div>
 </body>
 </html>
