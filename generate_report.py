@@ -7536,12 +7536,22 @@ def write_index_html() -> Path:
     """生成手机入口页 index.html，列出全部复盘报告。
 
     当月（以最新报表所属月为准）日期平铺；非当月按月份折叠。
+    名单以 docs/ 为准（含历史日）；根目录仅当月，不足则与 docs 去重合并。
     """
     reports: list[tuple[str, str, str, str]] = []  # mm, dd, fname, mode
-    for p in sorted(BASE.glob("复盘概览-*.html"), reverse=True):
+    seen: set[str] = set()
+    # docs/ 为 Pages 真源（含往月）；根目录补当日尚未 sync 的页
+    candidates: list[Path] = []
+    if DOCS_DIR.is_dir():
+        candidates.extend(DOCS_DIR.glob("复盘概览-*.html"))
+    candidates.extend(BASE.glob("复盘概览-*.html"))
+    for p in sorted(candidates, key=lambda x: x.name, reverse=True):
+        if p.name in seen:
+            continue
         m = re.match(r"复盘概览-(\d{2})-(\d{2})\.html", p.name)
         if not m:
             continue
+        seen.add(p.name)
         mode = ""
         try:
             text = p.read_text(encoding="utf-8")
