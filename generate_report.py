@@ -5343,13 +5343,6 @@ def render_html(ctx: dict) -> str:
   .idx-outlook-wrap > .vol-mkt-sum-wrap {{
     margin-top: 2px; /* + gap 12 → 14 */
   }}
-  /* 前置预警 tip + 结论条连续：抵消父级 gap，使上条 padding-bottom 14 直达下条 border（上下分隔线间距一致） */
-  .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{
-    margin-top: 0;
-  }}
-  .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{
-    margin-top: -12px; /* 抵消 idx-outlook-wrap gap:12 */
-  }}
   .chase-grid > .vol-mkt-sum-wrap {{
     margin-top: 0; /* + gap 14 → 14 */
   }}
@@ -5798,8 +5791,6 @@ def render_html(ctx: dict) -> str:
     .ts-cnt-wrap > .vol-mkt-sum-wrap,
     .chase-chart > .vol-mkt-sum-wrap {{ margin-top: 4px; }}
     .idx-outlook-wrap > .vol-mkt-sum-wrap {{ margin-top: 2px; }}
-    .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{ margin-top: 0; }}
-    .idx-outlook-wrap > .vol-mkt-sum-wrap + .vol-mkt-sum-wrap {{ margin-top: -12px; }}
     .chase-grid > .vol-mkt-sum-wrap {{ margin-top: 0; }}
     .section > .vol-mkt-sum-wrap:last-child {{ margin-bottom: -12px; }} /* 手机 section pad 12 */
     .vol-mkt-sum {{ padding: 14px 14px; font-size: 15px; }}
@@ -6591,7 +6582,7 @@ def render_index_outlook_html(block: dict) -> str:
     """大盘·风险指针：短期指数趋势 · 近10日对比表。
 
     主口径=日线 B：下跌 / =（待次日确认）/ - / 走弱；表下结论按 B 合成。
-    仅当 B 全- 且 60 分钟 A 已部分/全下跌时，结论条前加前置预警 tip。
+    前置预警不另出 tip：并入「指数趋势正常」同一结论条（顶栏 pill 仍为指数趋势正常）。
     """
     items = block.get("indices") or []
     days = [str(d) for d in (block.get("days") or [])]
@@ -6646,8 +6637,9 @@ def render_index_outlook_html(block: dict) -> str:
                 tds.append('<td class="flat">-</td>')
         body_rows.append(f"<tr{row_cls}>{''.join(tds)}</tr>")
 
-    warn_html = ""
-    if block.get("early_warn"):
+    sum_txt = _index_outlook_sum_text(block)
+    # 前置预警顶替独立 tip：并入「指数趋势正常」同一条（着色仍 ok；顶栏 pill 仍用短文案）
+    if block.get("early_warn") and sum_txt == "指数趋势正常":
         warn_txt = str(block.get("early_warn_text") or "").strip()
         if not warn_txt:
             weak = [
@@ -6661,8 +6653,10 @@ def render_index_outlook_html(block: dict) -> str:
                     f"前置预警：{'、'.join(weak)}60分钟已转弱，日线下跌趋势尚未确认。"
                 )
         if warn_txt:
-            warn_html = _module_sum_html(warn_txt, tone="tip")
-    sum_html = _module_sum_html(_index_outlook_sum_text(block))
+            sum_txt = f"指数趋势正常——{warn_txt}"
+    # 合并长文案不在 _SUM_TONE_BY_TEXT 表内，显式 ok；其余走短文案查表
+    sum_tone = "ok" if sum_txt.startswith("指数趋势正常——") else None
+    sum_html = _module_sum_html(sum_txt, tone=sum_tone)
     return (
         '<div class="idx-outlook-wrap">'
         '<div class="vol20-head">'
@@ -6675,7 +6669,6 @@ def render_index_outlook_html(block: dict) -> str:
         f'<tbody>{"".join(body_rows)}</tbody>'
         "</table>"
         "</div>"
-        f"{warn_html}"
         f"{sum_html}"
         "</div>"
     )
