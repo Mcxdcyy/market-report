@@ -2444,40 +2444,6 @@ SEED_EVENT_CATALOG: list[dict] = [
     # venue=地点（页面单独一行「于…举行」）；brief=概述（不含地址）
     {
         "month": 11,
-        "day": 5,
-        "dot": "进",
-        "label": "11/5–10",
-        "title": "第九届中国国际进口博览会",
-        "short": "进博会",
-        "venue": "上海国家会展中心",
-        "brief": (
-            "展区覆盖汽车及智慧出行、医疗器械、技术装备等；"
-            "虹桥论坛已办「人形机器人与具身智能」分论坛，并发布应用场景图谱。"
-        ),
-        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
-        "importance": 3,  # <4 以免自动红；硬节点再升到 4
-        "source": "seed",
-        "span_end": (11, 10),
-    },
-    {
-        "month": 11,
-        "day": 7,
-        "dot": "半",
-        "label": "11/7–9",
-        "title": "2026广州电子信息·半导体·集成电路与人工智能算力展览会",
-        "short": "广州半导体展",
-        "venue": "广州保利世贸博览馆",
-        "brief": (
-            "展会覆盖电子信息、半导体、集成电路与「人工智能算力」链条，"
-            "议题侧重设计、制造、封测及算力硬件产品与合作。"
-        ),
-        "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
-        "importance": 3,  # <4 以免自动红；硬节点再升到 4
-        "source": "seed",
-        "span_end": (11, 9),
-    },
-    {
-        "month": 11,
         "day": 10,
         "dot": "半",
         "label": "11/10–12",
@@ -2495,12 +2461,28 @@ SEED_EVENT_CATALOG: list[dict] = [
     },
     {
         "month": 11,
+        "day": 11,
+        "dot": "机",
+        "label": "11/11",
+        "title": "2026扬州具身智能产业发展大会",
+        "short": "扬州具身智能大会",
+        "venue": "江苏扬州",
+        "brief": (
+            "大会围绕具身智能产业发展与场景落地展开交流，"
+            "对接本体、零部件与行业应用合作议题。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+    },
+    {
+        "month": 11,
         "day": 12,
         "dot": "半",
         "label": "11/12–14",
         "title": "第二十三届中国国际半导体博览会（IC China）",
         "short": "IC China",
-        "venue": "北京国家会议中心",
+        "venue": "北京国家会议中心一期",
         "brief": (
             "以全景链条展示、终端应用赋能与龙头带动为主线；"
             "覆盖材料、设备、设计、制造、封测，以及人工智能、汽车、机器人等应用场景。"
@@ -2509,6 +2491,23 @@ SEED_EVENT_CATALOG: list[dict] = [
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
         "span_end": (11, 14),
+    },
+    {
+        "month": 11,
+        "day": 12,
+        "dot": "机",
+        "label": "11/12–13",
+        "title": "亚洲人形机器人创新周（Humanoid Asia 2026）",
+        "short": "亚洲人形机器人周",
+        "venue": "上海",
+        "brief": (
+            "设置人形机器人芯片与通信、材料等平行会议，"
+            "议题覆盖量产拐点、多协议通信瓶颈、轻量化材料与安全合规。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (11, 13),
     },
     {
         "month": 11,
@@ -2535,12 +2534,29 @@ SEED_EVENT_CATALOG: list[dict] = [
         "short": "百度世界",
         "venue": "北京国家会议中心二期",
         "brief": (
-            "议题围绕智能组织与企业级人工智能应用，"
-            "涵盖大模型产品、智能云与行业落地。"
+            "主题为「下一幕，智能组织」，发布全栈人工智能新品，"
+            "并围绕智能体、具身智能与人工智能赋能科学等开设分论坛与公开课。"
         ),
         "hot": False,  # 例行峰会/展会：蓝点；有硬催化再改 True
         "importance": 3,  # <4 以免自动红；硬节点再升到 4
         "source": "seed",
+    },
+    {
+        "month": 11,
+        "day": 13,
+        "dot": "系",
+        "label": "11/13–14",
+        "title": "Agentic Infra操作系统大会暨openEuler Summit 2026",
+        "short": "欧拉操作系统峰会",
+        "venue": "北京中关村国际创新中心",
+        "brief": (
+            "发布欧拉超节点操作系统相关成果，"
+            "讨论智能体基础设施、异构算力与人工智能操作系统协同生态。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (11, 14),
     },
     {
         "month": 11,
@@ -2608,22 +2624,6 @@ SEED_EVENT_CATALOG: list[dict] = [
         "importance": 3,
         "source": "seed",
         "span_end": (11, 19),
-    },
-    {
-        "month": 11,
-        "day": 9,
-        "dot": "航",
-        "label": "11/9",
-        "title": "2026中国（国际）商业航天高峰论坛",
-        "short": "商业航天高峰论坛",
-        "venue": "",
-        "brief": (
-            "论坛围绕商业发射、卫星互联网与产业链配套展开交流，"
-            "对接运力交付、组网节奏与上下游合作议题。"
-        ),
-        "hot": False,
-        "importance": 3,
-        "source": "seed",
     },
     {
         "month": 11,
