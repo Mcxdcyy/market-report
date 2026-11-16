@@ -2642,6 +2642,23 @@ SEED_EVENT_CATALOG: list[dict] = [
     },
     {
         "month": 11,
+        "day": 18,
+        "dot": "网",
+        "label": "11/18–20",
+        "title": "2026中国5G+工业互联网大会",
+        "short": "5G+工业互联网大会",
+        "venue": "湖北武汉",
+        "brief": (
+            "围绕5G与工业互联网融合应用展开交流，"
+            "议题覆盖标识解析、工业算力与行业数字化改造案例。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (11, 20),
+    },
+    {
+        "month": 11,
         "day": 19,
         "dot": "智",
         "label": "11/19–21",
@@ -2656,6 +2673,40 @@ SEED_EVENT_CATALOG: list[dict] = [
         "importance": 3,
         "source": "seed",
         "span_end": (11, 21),
+    },
+    {
+        "month": 11,
+        "day": 19,
+        "dot": "算",
+        "label": "11/19–21",
+        "title": "2026世界计算大会",
+        "short": "世界计算大会",
+        "venue": "湖南长沙国际会议中心",
+        "brief": (
+            "主题为「计算万物 湘约未来——打造智能经济新形态」，"
+            "设置主题活动与算力、智能经济等分论坛。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (11, 21),
+    },
+    {
+        "month": 11,
+        "day": 19,
+        "dot": "脑",
+        "label": "11/19–22",
+        "title": "2026脑机接口大会",
+        "short": "脑机接口大会",
+        "venue": "北京",
+        "brief": (
+            "主题为「脑智芯联 机遇昌平」，"
+            "讨论脑机接口标准、核心器件与临床及场景应用进展。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (11, 22),
     },
     {
         "month": 11,
