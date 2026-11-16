@@ -2263,15 +2263,30 @@ def build_display_sectors(
     *,
     fund_block: dict | None = None,
 ) -> list:
-    """涨停板块展示（2026-11-06）：资金展示卡 ∪ 近5日有效上榜≥2 ∪ 当日≥5；P1→P3 后按当日家数。"""
-    try:
-        from core_sectors import build_core_display_sectors
+    """涨停板块展示（2026-11-06）：资金展示卡 ∪ 近5日有效上榜≥2 ∪ 当日≥5；P1→P3 后按当日家数。
 
+    并集内每张卡必须有非空 reason；缺文案直接中断，禁止空白板块出站。
+    """
+    from core_sectors import assert_display_sectors_have_reason, build_core_display_sectors
+
+    try:
         return build_core_display_sectors(as_of, json_sectors, fund_block=fund_block)
+    except RuntimeError:
+        # reason 缺失等业务硬错误：不得回退成空白卡
+        raise
     except Exception as exc:  # noqa: BLE001
-        # 并集失败时回退 JSON 原文（仍同步 count）
+        # 并集失败时回退 JSON 原文（仍同步 count），回退后同样校验 reason
         print(f"[sectors] core union failed, fallback JSON: {exc}", flush=True)
-        return filter_display_sectors(json_sectors or [])
+        as_of_s = (
+            as_of.date().isoformat()
+            if isinstance(as_of, datetime)
+            else as_of.isoformat()
+            if hasattr(as_of, "isoformat")
+            else str(as_of)[:10]
+        )
+        out = filter_display_sectors(json_sectors or [])
+        assert_display_sectors_have_reason(out, as_of=as_of_s)
+        return out
 
 
 def _news_days_chronological(raw: dict) -> list[tuple[datetime, dict]]:

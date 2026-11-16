@@ -9,6 +9,8 @@
 永久排除：ST / 并购重组 / 实控人变更 / 季报·中报·半年报·年报
 
 排序：event_priority P1→P2→P3（无优先级靠后）；同档按当日涨停家数降序。
+
+硬约束：并集内每张展示卡必须有非空 reason；缺文案直接中断生成，禁止空白板块出站。
 """
 
 from __future__ import annotations
@@ -213,13 +215,46 @@ def _p_rank(sec: dict) -> int:
     return _P_RANK.get(p, 9)
 
 
+def _reason_lines(sec: dict) -> list[str]:
+    raw = sec.get("reason")
+    if isinstance(raw, str):
+        lines = [raw]
+    elif isinstance(raw, list):
+        lines = raw
+    else:
+        lines = []
+    return [str(x).strip() for x in lines if str(x).strip()]
+
+
+def assert_display_sectors_have_reason(sectors: list[dict], *, as_of: str = "") -> None:
+    """展示并集内每张卡必须有非空 reason；缺文案直接中断生成，禁止空白板块出站。"""
+    missing = [
+        str(s.get("name") or "").strip() or "(未命名)"
+        for s in (sectors or [])
+        if not _reason_lines(s)
+    ]
+    if not missing:
+        return
+    day = f" as_of={as_of}" if as_of else ""
+    raise RuntimeError(
+        "涨停板块逻辑展示卡缺少 reason，禁止生成空白板块"
+        f"{day}：{ '、'.join(missing) }。"
+        "请先按并集名单（资金卡∪近5日有效≥2∪当日≥5）在 market_news.json "
+        "补全对应 top_sectors[].reason（字符串数组）后再生成。"
+    )
+
+
 def build_core_display_sectors(
     as_of: date | datetime | str,
     json_sectors: list | None,
     *,
     fund_block: dict | None = None,
+    require_reason: bool = True,
 ) -> list[dict]:
-    """并集名单 + 合并 market_news 里的 reason/events/priority；按 P 再按当日家数排序。"""
+    """并集名单 + 合并 market_news 里的 reason/events/priority；按 P 再按当日家数排序。
+
+    require_reason=True（默认）时，并集内任一块缺少非空 reason 即抛错，禁止空白卡出站。
+    """
     as_of_d = _as_date(as_of)
     meta = compute_core_sector_names(as_of_d, fund_block=fund_block)
     names: set[str] = meta["names"]
@@ -257,4 +292,6 @@ def build_core_display_sectors(
         out.append(row)
 
     out.sort(key=lambda s: (_p_rank(s), -int(s.get("count") or 0), s.get("name") or ""))
+    if require_reason:
+        assert_display_sectors_have_reason(out, as_of=as_of_d.isoformat())
     return out
