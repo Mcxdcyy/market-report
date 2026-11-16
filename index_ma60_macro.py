@@ -193,20 +193,24 @@ def compute_macro_bias(as_of: date | datetime | str, *, progress: bool = False) 
     as_of_d = _as_date(as_of)
     per: dict[str, dict[str, int]] = {}
     last_dates: dict[str, str] = {}
+    as_of_s = as_of_d.isoformat()
     for name, symbol, secid in INDICES:
         rows = get_daily(symbol, secid)
         if not rows:
             raise RuntimeError(f"{name} 日K为空")
+        # 历史日补报表：源可能已更新到更新交易日，截到 as_of 再核日期
+        rows = [r for r in rows if r["date"] <= as_of_s]
+        if not rows:
+            raise RuntimeError(f"{name} 日K截到 {as_of_s} 后为空")
         last = rows[-1]["date"]
         last_dates[name] = last
-        if last != as_of_d.isoformat():
+        if last != as_of_s:
             raise RuntimeError(
-                f"{name} 日K停在 {last}，报表日 {as_of_d.isoformat()}，未核对，不采用"
+                f"{name} 日K停在 {last}，报表日 {as_of_s}，未核对，不采用"
             )
         per[name] = _flags_for(rows)
         if progress:
             print(f"[macro-bias] {name} {rows[0]['date']}→{last} n={len(rows)}")
-
     common = set(per["上证"]) & set(per["深成"]) & set(per["创业板"])
     days = sorted(d for d in common if d <= as_of_d.isoformat())
     if len(days) < WINDOW:

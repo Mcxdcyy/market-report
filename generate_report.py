@@ -2576,11 +2576,26 @@ SEED_EVENT_CATALOG: list[dict] = [
     },
     {
         "month": 11,
+        "day": 16,
+        "dot": "机",
+        "label": "11/16",
+        "title": "华为云CloudRobo具身世界模型线上发布会",
+        "short": "华为云CloudRobo发布会",
+        "venue": "线上",
+        "brief": (
+            "华为云发布昇腾原生具身世界模型CloudRobo WM1.2，"
+            "议题覆盖具身智能从实验室走向规模化落地及生态伙伴对接。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+    },
+    {
+        "month": 11,
         "day": 17,
         "dot": "光",
         "label": "11/17–20",
-        "title": "第九届中国国际光伏与储能产业大会",
-        "short": "光储大会",
+        "title": "第九届中国国际光伏与储能产业大会",        "short": "光储大会",
         "venue": "四川成都",
         "brief": (
             "大会侧重光伏与储能融合、产业链协同；"
