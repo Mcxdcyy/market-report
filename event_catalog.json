@@ -1,58 +1,6 @@
 [
   {
     "month": 11,
-    "day": 16,
-    "dot": "机",
-    "label": "11/16",
-    "title": "华为云CloudRobo具身世界模型线上发布会",
-    "short": "华为云CloudRobo发布会",
-    "venue": "线上",
-    "brief": "华为云发布昇腾原生具身世界模型CloudRobo WM1.2，议题覆盖具身智能从实验室走向规模化落地及生态伙伴对接。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed"
-  },
-  {
-    "month": 11,
-    "day": 16,
-    "dot": "16",
-    "label": "11/16",
-    "title": "小鹏汽车Q3财报与电话会",
-    "short": "小鹏汽车Q3财报…",
-    "brief": "暂无补充说明。",
-    "hot": false,
-    "importance": 0,
-    "source": "wscn",
-    "fetched_at": "2026-11-16"
-  },
-  {
-    "month": 11,
-    "day": 16,
-    "dot": "16",
-    "label": "11/16",
-    "title": "百度Q3财报与电话会",
-    "short": "百度Q3财报与电…",
-    "brief": "暂无补充说明。",
-    "hot": true,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-11-16"
-  },
-  {
-    "month": 11,
-    "day": 16,
-    "dot": "16",
-    "label": "11/16",
-    "title": "神州半导体IPO申请上会",
-    "short": "神州半导体IPO…",
-    "brief": "产业链级定价、申购或上市节点，上市前常分流场内流动性。",
-    "hot": true,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-11-16"
-  },
-  {
-    "month": 11,
     "day": 17,
     "dot": "峰",
     "label": "11/17–18",
@@ -79,7 +27,7 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-11-16"
+    "fetched_at": "2026-11-17"
   },
   {
     "month": 11,
@@ -143,7 +91,7 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-11-16"
+    "fetched_at": "2026-11-17"
   },
   {
     "month": 11,
@@ -207,7 +155,7 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-11-16"
+    "fetched_at": "2026-11-17"
   },
   {
     "month": 11,
@@ -242,5 +190,31 @@
       11,
       28
     ]
+  },
+  {
+    "month": 12,
+    "day": 1,
+    "dot": "1",
+    "label": "12/1",
+    "title": "发改委：《对外投资管理办法》自起施行",
+    "short": "发改委：《对外投…",
+    "brief": "相关规定自该日起施行，执行细则与适用范围以正式文本为准。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-11-17"
+  },
+  {
+    "month": 12,
+    "day": 1,
+    "dot": "1",
+    "label": "12/1",
+    "title": "证监会：《违规转让证券案件行政处罚实施规则》，自2026年起施行",
+    "short": "证监会：《违规转…",
+    "brief": "相关规定自该日起施行，执行细则与适用范围以正式文本为准。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-11-17"
   }
 ]
