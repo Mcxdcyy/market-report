@@ -2742,6 +2742,24 @@ SEED_EVENT_CATALOG: list[dict] = [
     },
     {
         "month": 11,
+        "day": 24,
+        "dot": "通",
+        "label": "11/24–25",
+        "title": "2026年6G发展大会",
+        "short": "6G发展大会",
+        "venue": "上海市松江区",
+        "brief": (
+            "主题为「智启星程，携手全球协同创新」，"
+            "聚焦6G全球统一标准制定与产业生态建设，"
+            "将发布6G发展理念倡议并分享第二阶段技术试验阶段性成果。"
+        ),
+        "hot": False,
+        "importance": 3,
+        "source": "seed",
+        "span_end": (11, 25),
+    },
+    {
+        "month": 11,
         "day": 26,
         "dot": "机",
         "label": "11/26–28",

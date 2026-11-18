@@ -19,19 +19,6 @@
   {
     "month": 11,
     "day": 17,
-    "dot": "17",
-    "label": "11/17",
-    "title": "京东Q3财报与电话会",
-    "short": "京东Q3财报与电…",
-    "brief": "暂无补充说明。",
-    "hot": true,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-11-17"
-  },
-  {
-    "month": 11,
-    "day": 17,
     "dot": "光",
     "label": "11/17–20",
     "title": "第九届中国国际光伏与储能产业大会",
@@ -91,7 +78,7 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-11-17"
+    "fetched_at": "2026-11-18"
   },
   {
     "month": 11,
@@ -155,7 +142,7 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-11-17"
+    "fetched_at": "2026-11-18"
   },
   {
     "month": 11,
@@ -172,6 +159,23 @@
     "span_end": [
       11,
       24
+    ]
+  },
+  {
+    "month": 11,
+    "day": 24,
+    "dot": "通",
+    "label": "11/24–25",
+    "title": "2026年6G发展大会",
+    "short": "6G发展大会",
+    "venue": "上海市松江区",
+    "brief": "主题为「智启星程，携手全球协同创新」，聚焦6G全球统一标准制定与产业生态建设，将发布6G发展理念倡议并分享第二阶段技术试验阶段性成果。",
+    "hot": false,
+    "importance": 3,
+    "source": "seed",
+    "span_end": [
+      11,
+      25
     ]
   },
   {
@@ -202,7 +206,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-17"
+    "fetched_at": "2026-11-18"
   },
   {
     "month": 12,
@@ -215,6 +219,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-17"
+    "fetched_at": "2026-11-18"
   }
 ]
