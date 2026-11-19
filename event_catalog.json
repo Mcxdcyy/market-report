@@ -2,23 +2,6 @@
   {
     "month": 11,
     "day": 17,
-    "dot": "峰",
-    "label": "11/17–18",
-    "title": "亚太经合组织工商领导人峰会",
-    "short": "APEC工商峰会",
-    "venue": "广东深圳",
-    "brief": "由中国国际贸易促进委员会主办，汇聚亚太工商界代表，议题涉及贸易投资、供应链与科技创新等。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      18
-    ]
-  },
-  {
-    "month": 11,
-    "day": 17,
     "dot": "光",
     "label": "11/17–20",
     "title": "第九届中国国际光伏与储能产业大会",
@@ -66,19 +49,6 @@
       11,
       19
     ]
-  },
-  {
-    "month": 11,
-    "day": 18,
-    "dot": "18",
-    "label": "11/18",
-    "title": "腾讯Q3财报与电话会",
-    "short": "腾讯Q3财报与电…",
-    "brief": "暂无补充说明。",
-    "hot": true,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-11-18"
   },
   {
     "month": 11,
@@ -142,7 +112,24 @@
     "hot": true,
     "importance": 4,
     "source": "wscn",
-    "fetched_at": "2026-11-18"
+    "fetched_at": "2026-11-19"
+  },
+  {
+    "month": 11,
+    "day": 20,
+    "dot": "智",
+    "label": "11/20–22",
+    "title": "虹桥国际科技周",
+    "short": "虹桥科技周",
+    "venue": "国家会展中心（上海）",
+    "brief": "以「全球科技愿景，落地中国势能」为主题，设置人工智能、智能基础设施、具身智能与创业生态等舞台，对接技术展示、会议交流与商贸配对。",
+    "hot": false,
+    "importance": 3,
+    "source": "seed",
+    "span_end": [
+      11,
+      22
+    ]
   },
   {
     "month": 11,
@@ -206,7 +193,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-18"
+    "fetched_at": "2026-11-19"
   },
   {
     "month": 12,
@@ -219,6 +206,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-18"
+    "fetched_at": "2026-11-19"
   }
 ]
