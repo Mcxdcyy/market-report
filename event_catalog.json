@@ -35,23 +35,6 @@
   },
   {
     "month": 11,
-    "day": 18,
-    "dot": "峰",
-    "label": "11/18–19",
-    "title": "亚太经合组织第三十三次领导人非正式会议",
-    "short": "APEC领导人会议",
-    "venue": "广东深圳",
-    "brief": "会议主题为「建设亚太共同体，促进共同繁荣」，将发布领导人声明并形成经贸合作成果。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      19
-    ]
-  },
-  {
-    "month": 11,
     "day": 19,
     "dot": "智",
     "label": "11/19–21",
@@ -100,19 +83,6 @@
       11,
       22
     ]
-  },
-  {
-    "month": 11,
-    "day": 19,
-    "dot": "19",
-    "label": "11/19",
-    "title": "阿里巴巴Q3财报与电话会",
-    "short": "阿里巴巴Q3财报…",
-    "brief": "暂无补充说明。",
-    "hot": true,
-    "importance": 4,
-    "source": "wscn",
-    "fetched_at": "2026-11-19"
   },
   {
     "month": 11,
@@ -168,6 +138,19 @@
   {
     "month": 11,
     "day": 26,
+    "dot": "AI",
+    "label": "11/26",
+    "title": "2026 WAIAC世界人工智能应用大会",
+    "short": "2026 WAI…",
+    "brief": "聚焦人工智能产业应用、技术进展与治理规范等议题。",
+    "hot": false,
+    "importance": 3,
+    "source": "wscn",
+    "fetched_at": "2026-11-20"
+  },
+  {
+    "month": 11,
+    "day": 26,
     "dot": "机",
     "label": "11/26–28",
     "title": "高交会亚洲机器人产业链展",
@@ -193,7 +176,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-19"
+    "fetched_at": "2026-11-20"
   },
   {
     "month": 12,
@@ -206,6 +189,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-19"
+    "fetched_at": "2026-11-20"
   }
 ]
