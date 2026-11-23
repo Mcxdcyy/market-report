@@ -1,108 +1,6 @@
 [
   {
     "month": 11,
-    "day": 17,
-    "dot": "光",
-    "label": "11/17–20",
-    "title": "第九届中国国际光伏与储能产业大会",
-    "short": "光储大会",
-    "venue": "四川成都",
-    "brief": "大会侧重光伏与储能融合、产业链协同；近期硅料排产收缩、逆变器提价与规范条件征求意见窗口并行。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      20
-    ]
-  },
-  {
-    "month": 11,
-    "day": 18,
-    "dot": "网",
-    "label": "11/18–20",
-    "title": "2026中国5G+工业互联网大会",
-    "short": "5G+工业互联网大会",
-    "venue": "湖北武汉",
-    "brief": "围绕5G与工业互联网融合应用展开交流，议题覆盖标识解析、工业算力与行业数字化改造案例。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      20
-    ]
-  },
-  {
-    "month": 11,
-    "day": 19,
-    "dot": "智",
-    "label": "11/19–21",
-    "title": "2026世界智能制造大会",
-    "short": "世界智能制造大会",
-    "venue": "南京国际博览会议中心",
-    "brief": "设置主题大会与多场专题、产业生态活动，配套展览汇聚智能制造装备、工业软件与系统集成等方向。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      21
-    ]
-  },
-  {
-    "month": 11,
-    "day": 19,
-    "dot": "算",
-    "label": "11/19–21",
-    "title": "2026世界计算大会",
-    "short": "世界计算大会",
-    "venue": "湖南长沙国际会议中心",
-    "brief": "主题为「计算万物 湘约未来——打造智能经济新形态」，设置主题活动与算力、智能经济等分论坛。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      21
-    ]
-  },
-  {
-    "month": 11,
-    "day": 19,
-    "dot": "脑",
-    "label": "11/19–22",
-    "title": "2026脑机接口大会",
-    "short": "脑机接口大会",
-    "venue": "北京",
-    "brief": "主题为「脑智芯联 机遇昌平」，讨论脑机接口标准、核心器件与临床及场景应用进展。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      22
-    ]
-  },
-  {
-    "month": 11,
-    "day": 20,
-    "dot": "智",
-    "label": "11/20–22",
-    "title": "虹桥国际科技周",
-    "short": "虹桥科技周",
-    "venue": "国家会展中心（上海）",
-    "brief": "以「全球科技愿景，落地中国势能」为主题，设置人工智能、智能基础设施、具身智能与创业生态等舞台，对接技术展示、会议交流与商贸配对。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      22
-    ]
-  },
-  {
-    "month": 11,
     "day": 23,
     "dot": "机",
     "label": "11/23–24",
@@ -138,19 +36,6 @@
   {
     "month": 11,
     "day": 26,
-    "dot": "AI",
-    "label": "11/26",
-    "title": "2026 WAIAC世界人工智能应用大会",
-    "short": "2026 WAI…",
-    "brief": "聚焦人工智能产业应用、技术进展与治理规范等议题。",
-    "hot": false,
-    "importance": 3,
-    "source": "wscn",
-    "fetched_at": "2026-11-20"
-  },
-  {
-    "month": 11,
-    "day": 26,
     "dot": "机",
     "label": "11/26–28",
     "title": "高交会亚洲机器人产业链展",
@@ -176,7 +61,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-20"
+    "fetched_at": "2026-11-23"
   },
   {
     "month": 12,
@@ -189,6 +74,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-20"
+    "fetched_at": "2026-11-23"
   }
 ]
