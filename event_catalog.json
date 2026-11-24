@@ -53,6 +53,23 @@
   {
     "month": 12,
     "day": 1,
+    "dot": "智",
+    "label": "12/1–3",
+    "title": "2026（第二届）“人工智能+”产业生态大会",
+    "short": "人工智能+产业生态大会",
+    "venue": "北京中关村展示中心会议中心",
+    "brief": "以「务实推动智能经济发展」为主题，设置开幕大会与算力协同、行业应用、生态治理等专题论坛，并发布「人工智能+」应用案例征集相关成果。",
+    "hot": false,
+    "importance": 3,
+    "source": "seed",
+    "span_end": [
+      12,
+      3
+    ]
+  },
+  {
+    "month": 12,
+    "day": 1,
     "dot": "1",
     "label": "12/1",
     "title": "发改委：《对外投资管理办法》自起施行",
@@ -61,7 +78,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-23"
+    "fetched_at": "2026-11-24"
   },
   {
     "month": 12,
@@ -74,6 +91,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-23"
+    "fetched_at": "2026-11-24"
   }
 ]
