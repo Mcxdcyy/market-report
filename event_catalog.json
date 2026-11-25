@@ -1,23 +1,6 @@
 [
   {
     "month": 11,
-    "day": 23,
-    "dot": "机",
-    "label": "11/23–24",
-    "title": "香港国际具身智能领袖峰会",
-    "short": "香港具身智能峰会",
-    "venue": "香港会议展览中心",
-    "brief": "汇聚具身智能头部企业与场景方，议题覆盖出海合规、渠道建设与场景试点对接。",
-    "hot": false,
-    "importance": 3,
-    "source": "seed",
-    "span_end": [
-      11,
-      24
-    ]
-  },
-  {
-    "month": 11,
     "day": 24,
     "dot": "通",
     "label": "11/24–25",
@@ -78,7 +61,7 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-24"
+    "fetched_at": "2026-11-25"
   },
   {
     "month": 12,
@@ -91,6 +74,6 @@
     "hot": false,
     "importance": 3,
     "source": "wscn",
-    "fetched_at": "2026-11-24"
+    "fetched_at": "2026-11-25"
   }
 ]
