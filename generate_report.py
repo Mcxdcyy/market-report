@@ -29,6 +29,10 @@ DOCS_DIR = BASE / "docs"
 NEWS_FILE = BASE / "market_news.json"
 EVENT_CATALOG_FILE = BASE / "event_catalog.json"
 
+# 2026-11-26 用户暂关：页面不渲染模块4（未来2周·事件）/ 模块5（政策与公告）；
+# 日常生成也不再强制联网补 seed / 精选盘后。改回 True 即恢复五段。
+SHOW_EVENT_AND_POST_MODULES = False
+
 try:
     from trend_strength import (
         compute_trend_strength,
@@ -6074,7 +6078,7 @@ def render_html(ctx: dict) -> str:
     <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
   </div>
 
-  <!-- 4 未来2周 · 事件与方向 -->
+  {f'''<!-- 4 未来2周 · 事件与方向 -->
   <div class="section" id="sec-event">
     <div class="section-head">
       <div class="section-num">4</div>
@@ -6095,7 +6099,7 @@ def render_html(ctx: dict) -> str:
     </div>
     {post_block}
     {f'<div class="module-summary">{post_summary}</div>' if post_summary else ''}
-  </div>
+  </div>''' if SHOW_EVENT_AND_POST_MODULES else '<!-- 模块4/5 暂关（SHOW_EVENT_AND_POST_MODULES=False） -->'}
 
   <div class="footer">生成于 {ctx['generated']}</div>
 </div>
@@ -7619,10 +7623,15 @@ def build_context(as_of: datetime | pd.Timestamp | date | None = None) -> dict:
         market_news["sector_summary"] = ""
         market_news["post_summary"] = ""
 
-    event_window, event_nodes, event_sync = build_events_window(dt)
-    directions, dir_summary, rhythm, event_peak = load_direction_analysis(
-        market_news.get("direction_analysis"),
-    )
+    if SHOW_EVENT_AND_POST_MODULES:
+        event_window, event_nodes, event_sync = build_events_window(dt)
+        directions, dir_summary, rhythm, event_peak = load_direction_analysis(
+            market_news.get("direction_analysis"),
+        )
+    else:
+        # 模块4/5暂关：跳过事件库联网与研判摘要，避免无用请求拖垮生成
+        event_window, event_nodes, event_sync = "", [], "模块暂关"
+        directions, dir_summary, rhythm, event_peak = [], "", "", ""
     if market_news["has_data"] and market_news["top_sectors"]:
         market_news["top_sectors"] = enrich_sector_streaks(
             market_news["top_sectors"], dt, news_raw, df=None
