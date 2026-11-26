@@ -6056,27 +6056,27 @@ def render_html(ctx: dict) -> str:
     {vol20_html}
   </div>
 
-  <!-- 2 资金深度介入 · 板块跟踪（2026-11-19 标题改定；无符合条件柱图时整模块不显示） -->
-  {f'''<div class="section" id="sec-fund">
-    <div class="section-head">
-      <div class="section-num">2</div>
-      <div class="section-title">资金深度介入 · 板块跟踪</div>
-      <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
-    </div>
-    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。", tone="tip")}
-    {fund_recognition_html}
-  </div>''' if fund_recognition_html else ''}
-
-  <!-- 3 涨停板块逻辑 -->
+  <!-- 2 涨停板块逻辑（2026-11-26 与资金模块互换：紧接大盘） -->
   <div class="section" id="sec-sectors">
     <div class="section-head">
-      <div class="section-num">3</div>
+      <div class="section-num">2</div>
       <div class="section-title">涨停板块逻辑</div>
     </div>
     {sector_block}
     {f'<div class="news-empty" style="margin-top:10px">{news["hint"]}</div>' if not news["has_data"] else ''}
     <div class="module-summary">P1：供需已变且后续仍可能有利好跟进，或超大国家级战略落地型；P2：单发事件，单发，短期仍可能有落地/涨价/新闻会议跟进；P3：单发事件，后续没有更大预期。</div>
   </div>
+
+  <!-- 3 资金深度介入 · 板块跟踪（2026-11-19 标题改定；2026-11-26 与涨停互换为第3段；无符合条件柱图时整模块不显示） -->
+  {f'''<div class="section" id="sec-fund">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div class="section-title">资金深度介入 · 板块跟踪</div>
+      <div class="section-sub">{ctx.get('fund_range') or ctx['data_date']}</div>
+    </div>
+    {_module_sum_html("强势票占比高，也可能突然一下崩。——看核心票。", tone="tip")}
+    {fund_recognition_html}
+  </div>''' if fund_recognition_html else ''}
 
   {f'''<!-- 4 未来2周 · 事件与方向 -->
   <div class="section" id="sec-event">
