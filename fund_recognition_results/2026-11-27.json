@@ -7,7 +7,7 @@
   "amount_min_yi": 3,
   "amount_via": "qq_refresh",
   "pool_via": "cumulative_from_2d_amt15_seed_prev",
-  "generated": "2026-11-27 16:50:56",
+  "generated": "2026-11-28 11:10:23",
   "items": [
     {
       "name": "机器人概念",
@@ -759,6 +759,7 @@
       "name": "算力",
       "pool_n": 89,
       "codes": [
+        "000032",
         "000034",
         "000158",
         "000409",
@@ -801,7 +802,6 @@
         "002990",
         "003007",
         "003018",
-        "300047",
         "300324",
         "300925",
         "301086",
@@ -1077,7 +1077,7 @@
     },
     {
       "name": "AI应用",
-      "pool_n": 57,
+      "pool_n": 56,
       "codes": [
         "000156",
         "000607",
@@ -1125,7 +1125,6 @@
         "603679",
         "603721",
         "603918",
-        "603927",
         "603956",
         "603990",
         "605069",
@@ -1137,7 +1136,7 @@
         "688078",
         "688109"
       ],
-      "hit_count": 95,
+      "hit_count": 94,
       "first_appear": "2026-11-02",
       "pool_start": "2026-11-02",
       "series": [
@@ -1355,9 +1354,9 @@
           "pct": 44.8,
           "n_ok": 13,
           "n_amt": 29,
-          "n_pool": 57,
-          "cr3": 20.9,
-          "n_up": 55,
+          "n_pool": 56,
+          "cr3": 21.2,
+          "n_up": 54,
           "before_debut": false,
           "before_amt10": false
         }
@@ -2124,7 +2123,7 @@
       "name": "农业",
       "pool_n": 0,
       "codes": [],
-      "hit_count": 37,
+      "hit_count": 36,
       "first_appear": "2026-11-02",
       "pool_start": null,
       "series": [
@@ -3501,6 +3500,236 @@
       ]
     },
     {
+      "name": "华为概念",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 26,
+      "first_appear": "2026-11-17",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
       "name": "通信",
       "pool_n": 0,
       "codes": [],
@@ -3627,236 +3856,6 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
-      "name": "华为概念",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 25,
-      "first_appear": "2026-11-17",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -9711,236 +9710,6 @@
       ]
     },
     {
-      "name": "煤炭",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 5,
-      "first_appear": "2026-11-09",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
       "name": "燃气轮机",
       "pool_n": 0,
       "codes": [],
@@ -11321,236 +11090,6 @@
       ]
     },
     {
-      "name": "核电",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 4,
-      "first_appear": "2026-11-05",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
       "name": "证券",
       "pool_n": 0,
       "codes": [],
@@ -12241,6 +11780,236 @@
       ]
     },
     {
+      "name": "煤炭",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 4,
+      "first_appear": "2026-11-09",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
       "name": "文创产品",
       "pool_n": 0,
       "codes": [],
@@ -12685,6 +12454,236 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
+      "name": "国产软件",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 3,
+      "first_appear": "2026-11-27",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -13161,11 +13160,11 @@
       ]
     },
     {
-      "name": "有色金属",
+      "name": "核电",
       "pool_n": 0,
       "codes": [],
       "hit_count": 3,
-      "first_appear": "2026-11-10",
+      "first_appear": "2026-11-05",
       "pool_start": null,
       "series": [
         {
@@ -13209,7 +13208,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -13220,7 +13219,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -13231,7 +13230,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -13911,696 +13910,6 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
-      "name": "地产链",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 3,
-      "first_appear": "2026-11-05",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
-      "name": "物流",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 3,
-      "first_appear": "2026-11-06",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
-      "name": "LED",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 2,
-      "first_appear": "2026-11-09",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -15921,11 +15230,11 @@
       ]
     },
     {
-      "name": "操作系统",
+      "name": "地产链",
       "pool_n": 0,
       "codes": [],
       "hit_count": 2,
-      "first_appear": "2026-11-27",
+      "first_appear": "2026-11-05",
       "pool_start": null,
       "series": [
         {
@@ -15969,7 +15278,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -15980,7 +15289,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -15991,7 +15300,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16002,7 +15311,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16013,7 +15322,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16024,7 +15333,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16035,7 +15344,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16046,7 +15355,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16057,7 +15366,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16068,7 +15377,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16079,7 +15388,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16090,7 +15399,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16101,7 +15410,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16112,7 +15421,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16123,7 +15432,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16134,7 +15443,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -16332,236 +15641,6 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
-      "name": "智能驾驶",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 2,
-      "first_appear": "2026-11-24",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -16841,11 +15920,11 @@
       ]
     },
     {
-      "name": "海洋经济",
+      "name": "有色金属",
       "pool_n": 0,
       "codes": [],
       "hit_count": 2,
-      "first_appear": "2026-11-11",
+      "first_appear": "2026-11-10",
       "pool_start": null,
       "series": [
         {
@@ -16922,7 +16001,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": true,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -17071,11 +16150,11 @@
       ]
     },
     {
-      "name": "消费电子",
+      "name": "海洋经济",
       "pool_n": 0,
       "codes": [],
       "hit_count": 2,
-      "first_appear": "2026-11-10",
+      "first_appear": "2026-11-11",
       "pool_start": null,
       "series": [
         {
@@ -17152,7 +16231,7 @@
           "n_pool": 0,
           "cr3": null,
           "n_up": 0,
-          "before_debut": false,
+          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -18221,236 +17300,6 @@
       ]
     },
     {
-      "name": "面板",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 2,
-      "first_appear": "2026-11-04",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
       "name": "乳业",
       "pool_n": 0,
       "codes": [],
@@ -18912,6 +17761,236 @@
     },
     {
       "name": "大飞机",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 2,
+      "first_appear": "2026-11-06",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
+      "name": "物流",
       "pool_n": 0,
       "codes": [],
       "hit_count": 2,
@@ -20291,6 +19370,236 @@
       ]
     },
     {
+      "name": "LED",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 1,
+      "first_appear": "2026-11-09",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
       "name": "OLED",
       "pool_n": 0,
       "codes": [],
@@ -20735,236 +20044,6 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": false,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
-      "name": "光学镜头",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 1,
-      "first_appear": "2026-11-27",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -21441,236 +20520,6 @@
       ]
     },
     {
-      "name": "国有企业",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 1,
-      "first_appear": "2026-11-27",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
       "name": "工程机械",
       "pool_n": 0,
       "codes": [],
@@ -22131,236 +20980,6 @@
       ]
     },
     {
-      "name": "数字经济",
-      "pool_n": 0,
-      "codes": [],
-      "hit_count": 1,
-      "first_appear": "2026-11-27",
-      "pool_start": null,
-      "series": [
-        {
-          "date": "2026-11-02",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-03",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-04",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-05",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-06",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-09",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-10",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-11",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-12",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-13",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-16",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-17",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-18",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-19",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-20",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-23",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-24",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-25",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-26",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": true,
-          "before_amt10": true
-        },
-        {
-          "date": "2026-11-27",
-          "pct": null,
-          "n_ok": 0,
-          "n_amt": 0,
-          "n_pool": 0,
-          "cr3": null,
-          "n_up": 0,
-          "before_debut": false,
-          "before_amt10": true
-        }
-      ]
-    },
-    {
       "name": "无人驾驶",
       "pool_n": 0,
       "codes": [],
@@ -22542,6 +21161,236 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
+      "name": "智能驾驶",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 1,
+      "first_appear": "2026-11-24",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
           "before_amt10": true
         },
         {
@@ -23232,6 +22081,236 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
+      "name": "消费电子",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 1,
+      "first_appear": "2026-11-10",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
           "before_amt10": true
         },
         {
@@ -25455,6 +24534,236 @@
           "cr3": null,
           "n_up": 0,
           "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-13",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-16",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-17",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-18",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-19",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-20",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-23",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-24",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-25",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-26",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-27",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        }
+      ]
+    },
+    {
+      "name": "面板",
+      "pool_n": 0,
+      "codes": [],
+      "hit_count": 1,
+      "first_appear": "2026-11-04",
+      "pool_start": null,
+      "series": [
+        {
+          "date": "2026-11-02",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-03",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": true,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-04",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-05",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-06",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-09",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-10",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-11",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
+          "before_amt10": true
+        },
+        {
+          "date": "2026-11-12",
+          "pct": null,
+          "n_ok": 0,
+          "n_amt": 0,
+          "n_pool": 0,
+          "cr3": null,
+          "n_up": 0,
+          "before_debut": false,
           "before_amt10": true
         },
         {

@@ -1354,7 +1354,7 @@ def _vol30_struct_tags(rows: list[dict]) -> list[dict]:
     1. 连续X日放量 / 连续X日缩量（X≥2，含当日）
     2. 今日放量+X% / 今日缩量-X%（较前一交易日，绝对值超过 10%）
     3. 突破前三日新高（当日成交额 > 前3日最高）
-    4. 近期大幅缩量（风险值 < -1）
+    4. 近期大幅缩量（风险值 < -1；若当日已突破前三日新高则不出）
     """
     amts = [float(r.get("amount_yi") or 0) for r in rows]
     i = len(amts) - 1
@@ -1386,10 +1386,16 @@ def _vol30_struct_tags(rows: list[dict]) -> list[dict]:
             tags.append({"text": f"今日放量+{pct}%", "cls": "ok"})
         else:
             tags.append({"text": f"今日缩量-{pct}%", "cls": "bad"})
-    if i >= 3 and amts[i] > 0 and amts[i] > max(amts[i - 3 : i]):
+    break_3d_high = i >= 3 and amts[i] > 0 and amts[i] > max(amts[i - 3 : i])
+    if break_3d_high:
         tags.append({"text": "突破前三日新高", "cls": "ok"})
     risk = _vol_risk_value(amts, i)
-    if risk is not None and risk < VOL_RISK_SHRINK:
+    # 当日量能已超前三日最高 → 无论风险值多负，不出「近期大幅缩量」
+    if (
+        risk is not None
+        and risk < VOL_RISK_SHRINK
+        and not break_3d_high
+    ):
         tags.append({"text": "近期大幅缩量", "cls": "bad"})
     return tags
 
@@ -5896,6 +5902,17 @@ def render_html(ctx: dict) -> str:
     .mkt-env-pills .pill,
     .macro-bias-wrap .chart-tags .pill,
     .vol30-tags .pill {{ font-size: 13px; padding: 5px 11px; }}
+    /* 近30日量能标签：手机多 pill 单行横滑，不挤破/竖排 */
+    .vol20-tags.vol30-tags {{
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }}
+    .vol20-tags.vol30-tags .pill {{
+      flex-shrink: 0;
+      white-space: nowrap;
+    }}
     .section {{ padding: 12px; margin-bottom: 8px; }}
     .section-head {{ flex-wrap: wrap; gap: 6px; }}
     .section-num {{ font-size: 14px; }}
